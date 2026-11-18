@@ -1,0 +1,95 @@
+; MESSAGE.COM composes a short private message to the operator.
+BDOS	EQU	0005H
+MSGP	EQU	62
+LINES	EQU	20
+WIDTH	EQU	72
+
+	ORG	0100H
+	LD	A,0FFH
+	OUT	(MSGP),A
+	XOR	A
+	LD	(COUNT),A
+	LD	DE,INTRO
+	CALL	PRINT
+PROMPT:	LD	DE,PROMPTM
+	CALL	PRINT
+	LD	HL,INPUT+1
+	LD	(HL),0
+	LD	DE,INPUT
+	LD	C,10
+	CALL	BDOS
+
+	LD	HL,INPUT+1
+	LD	B,(HL)
+	INC	HL
+	LD	A,B
+	CP	2
+	JR	NZ,BODY
+	LD	A,(HL)
+	CP	'/'
+	JR	NZ,BODY
+	INC	HL
+	LD	A,(HL)
+	AND	0DFH
+	CP	'S'
+	JR	Z,SAVE
+	CP	'C'
+	JR	Z,CANCEL
+	DEC	HL
+
+BODY:	LD	A,(COUNT)
+	CP	LINES
+	JR	Z,FULL
+	INC	A
+	LD	(COUNT),A
+	LD	A,B
+	OR	A
+	JR	Z,NEWLINE
+SEND:	LD	A,(HL)
+	CP	32
+	JR	C,SPACE
+	CP	127
+	JR	C,EMIT
+SPACE:	LD	A,' '
+EMIT:	OUT	(MSGP),A
+	INC	HL
+	DJNZ	SEND
+NEWLINE:
+	LD	A,13
+	OUT	(MSGP),A
+	LD	A,10
+	OUT	(MSGP),A
+	JR	PROMPT
+FULL:	LD	DE,FULLM
+	CALL	PRINT
+	JR	PROMPT
+
+SAVE:	LD	A,(COUNT)
+	OR	A
+	JR	Z,CANCEL
+	XOR	A
+	OUT	(MSGP),A
+	IN	A,(MSGP)
+	OR	A
+	LD	DE,SAVED
+	JR	Z,PRINT
+	LD	DE,FAILED
+	JR	PRINT
+CANCEL:	LD	A,0FFH
+	OUT	(MSGP),A
+	LD	DE,CANCELM
+PRINT:	LD	C,9
+	CALL	BDOS
+	RET
+
+INTRO:	DB	'Private message to the operator (20 lines, 72 columns).',13,10
+	DB	'Enter /S on its own line to save, or /C to cancel.',13,10,'$'
+PROMPTM:DB	13,10,'> ','$'
+FULLM:	DB	13,10,'Message is full. Enter /S to save or /C to cancel.','$'
+SAVED:	DB	13,10,'Message saved to the operator inbox.',13,10,'$'
+FAILED:	DB	13,10,'Message could not be saved.',13,10,'$'
+CANCELM:DB	13,10,'Message cancelled.',13,10,'$'
+COUNT:	DB	0
+INPUT:	DB	WIDTH,0
+	DS	WIDTH
+	END
