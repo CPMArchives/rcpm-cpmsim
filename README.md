@@ -235,6 +235,48 @@ saved message as a separate `MESSAGE.TXT.<unique suffix>` file in the
 inbox alongside completed uploads. Disconnecting before saving discards
 the draft. Z-System's `NOTE` remains available for script comments.
 
+## 8. Enable YMODEM
+
+Apply the YMODEM patch after the messages patch and rebuild cpmsim.
+With the listener and guest stopped, replace the installed upload command
+and add the download command.
+
+```sh
+git -C "$z80pack" apply "$PWD/patches/cpmsim-ymodem.patch"
+make -C "$z80pack/cpmsim/srcsim"
+cp guest/upload.asm guest/ysend.asm build/
+(cd build && "$z80pack/z80asm/z80asm" -fb -x upload.asm &&
+    "$z80pack/z80asm/z80asm" -fb -x ysend.asm)
+cpmrm -T raw -f ibm-3740 rcpm-cpm3/disks/drivea.dsk 0:UPLOAD.COM
+cpmcp -T raw -f ibm-3740 rcpm-cpm3/disks/drivea.dsk build/upload.bin 0:UPLOAD.COM
+cpmcp -T raw -f ibm-3740 rcpm-cpm3/disks/drivea.dsk build/ysend.bin 0:YSEND.COM
+```
+
+If boot startup reports a disk write error, check that the A: template has
+room for Z3PLUS startup files. Section 5 removes the unused stock
+`HELP.COM` from that image.
+
+Restart the loopback listener with `--inbox` and use a raw-TCP client with
+YMODEM batch support.
+
+- **Upload:** Enter `UPLOAD /Y`, then send one or more files in YMODEM
+  batch mode when the guest says it is ready. Use CP/M 8.3 names with
+  letters, digits, and underscores. The sender must provide each file's
+  length. The receiver accepts both 128-byte and 1 KiB blocks, and stores
+  exactly the declared bytes, up to 4 MiB per file. Each file is committed
+  before its EOF acknowledgement. If a batch is interrupted, files already
+  committed remain in the inbox and the unfinished file is discarded.
+- **Download:** Enter `YSEND P:PAYLOAD.BIN` or, after mounting a volume,
+  `YSEND J:PAYLOAD.BIN`. Start YMODEM receive when the guest says it is
+  ready. `YSEND` sends one file per command. It reads through CP/M 3 and
+  uses the recorded byte count for the last record. A file stored as full
+  records is sent at its full record length.
+- **Verify:** Download a binary from each archive and compare it with its
+  reference using `cmp`. Upload a two-file batch with lengths that aren't
+  multiples of 128. Compare both inbox files, then repeat and disconnect
+  midway through the second file. Check that only the completed file was
+  added. Both directions have been tested with lrzsz 0.13.1.
+
 ## Optional transport diagnostic
 
 ```sh
@@ -251,7 +293,8 @@ temporary port for the duration of this echo-only test.
 1. The loopback prototype starts a fresh guest per caller. Decide how to
    handle login, guest logoff, and persistent work before public access.
 2. Add a caller logoff command and short HELP/MAP.
-3. Verify command execution restrictions, work-area access, and session
+3. Add ZMODEM and Kermit uploads and downloads.
+4. Verify command execution restrictions, work-area access, and session
    cleanup before opening access.
 
 Terminal-based games and CP/NET archive mappings are future expansions.

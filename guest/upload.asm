@@ -16,7 +16,9 @@ SKIP:	LD	A,(HL)
 	INC	HL
 	DJNZ	SKIP
 	JR	USAGE
-BEGIN:	LD	A,0FFH
+BEGIN:	CP	'/'
+	JR	Z,OPTION
+	LD	A,0FFH
 	OUT	(UPLOADP),A
 NAME:	LD	A,(HL)
 	CP	' '
@@ -38,8 +40,25 @@ TRAIL:	LD	A,(HL)
 	INC	HL
 	DJNZ	TRAIL
 
+	JR	RECV
+OPTION:	DEC	B
+	JR	Z,USAGE
+	INC	HL
+	LD	A,(HL)
+	AND	0DFH
+	CP	'Y'
+	JR	NZ,USAGE
+	DEC	B
+	JR	Z,YRECV
+OPSPACE:INC	HL
+	LD	A,(HL)
+	CP	' '
+	JR	NZ,USAGE
+	DJNZ	OPSPACE
+YRECV:	LD	A,0FEH
+	JR	RUN
 RECV:	XOR	A
-	OUT	(UPLOADP),A
+RUN:	OUT	(UPLOADP),A
 	IN	A,(UPLOADP)
 	OR	A
 	LD	DE,OKMSG
@@ -53,7 +72,7 @@ PRINT:	LD	C,9
 	CALL	BDOS
 	RET
 
-USEMSG:	DB	'Usage: UPLOAD filename.ext (CP/M 8.3 name)',13,10,'$'
-FAILMSG:	DB	13,10,'Upload failed. The inbox did not receive a file.',13,10,'$'
+USEMSG:	DB	'Usage: UPLOAD filename.ext (XMODEM) or UPLOAD /Y (YMODEM)',13,10,'$'
+FAILMSG:	DB	13,10,'Upload did not complete.',13,10,'$'
 OKMSG:	DB	13,10,'Upload saved to the operator inbox.',13,10,'$'
 	END
