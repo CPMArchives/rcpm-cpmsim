@@ -10,14 +10,16 @@ START:	LD	HL,TAIL
 	INC	HL
 	LD	A,B
 	OR	A
-	JR	Z,USAGE
+	JP	Z,USAGE
 SKIP:	LD	A,(HL)
 	CP	' '
 	JR	NZ,BEGIN
 	INC	HL
 	DJNZ	SKIP
-	JR	USAGE
-BEGIN:	LD	A,0FFH
+	JP	USAGE
+BEGIN:	CP	'/'
+	JR	Z,OPTION
+	LD	A,0FFH
 	OUT	(MOUNTP),A
 NAME:	LD	A,(HL)
 	CP	' '
@@ -28,24 +30,54 @@ NAME:	LD	A,(HL)
 	JR	NC,CHECK
 	SUB	32
 CHECK:	CP	'0'		; Do not send protocol control bytes as name data.
-	JR	C,USAGE
+	JP	C,USAGE
 	CP	'_'+1
-	JR	NC,USAGE
+	JP	NC,USAGE
 SEND:	OUT	(MOUNTP),A
 	INC	HL
 	DJNZ	NAME
 	JR	REQUEST
 TRAIL:	LD	A,(HL)
 	CP	' '
-	JR	NZ,USAGE
+	JP	NZ,USAGE
 	INC	HL
 	DJNZ	TRAIL
+	JR	REQUEST
+OPTION:	DEC	B
+	JP	Z,USAGE
+	INC	HL
+	LD	A,(HL)
+	AND	0DFH
+	CP	'L'
+	JP	NZ,USAGE
+	DEC	B
+	JR	Z,LIST
+LISTSP:	INC	HL
+	LD	A,(HL)
+	CP	' '
+	JP	NZ,USAGE
+	DJNZ	LISTSP
+LIST:	LD	A,0FEH
+	OUT	(MOUNTP),A
+	IN	A,(MOUNTP)
+	CP	'J'
+	JR	Z,LISTCH
+	LD	DE,LISTERR
+	JR	PRINT
+LISTNX:	IN	A,(MOUNTP)
+	OR	A
+	RET	Z
+LISTCH:	LD	E,A
+	LD	C,2
+	CALL	BDOS
+	JR	LISTNX
+
 REQUEST:
 	XOR	A
 	OUT	(MOUNTP),A
 	IN	A,(MOUNTP)
 	CP	1
-	JR	Z,USAGE
+	JP	Z,USAGE
 	OR	A
 	JR	NZ,FAILED
 
@@ -74,7 +106,8 @@ PRINT:	LD	C,9
 	CALL	BDOS
 	RET
 
-USEMSG:	DB	'Usage: MOUNT name (1-8 letters, digits, or underscores)',13,10,'$'
+USEMSG:	DB	'Usage: MOUNT /L or MOUNT name (1-8 letters, digits, or underscores)',13,10,'$'
+LISTERR:	DB	'Mount catalog unavailable. Update the cpmsim mount patch.',13,10,'$'
 FAILMSG:	DB	'Volume unavailable. J: unchanged.',13,10,'$'
 OKMSG:	DB	'Volume mounted read-only on J:.',13,10,'$'
 	END

@@ -129,18 +129,53 @@ Start the listener with the patched emulator:
 python3 serve_rcpm.py --cpmsim "$z80pack/cpmsim/cpmsim"
 ```
 
-1. Connect as in step 3. At the prompt, enter `MOUNT UTILS`, change to
-   `VOLUME:`, and inspect the files on J:.
+1. Connect as in step 3. Enter `MOUNT /L` to see the current J: volume
+   and the available names. Enter `MOUNT UTILS`, change to `VOLUME:`, and
+   inspect the files on J:.
 2. Enter `MOUNT GAMES` and inspect J: again. To verify that CP/M 3 relogs
    the drive, put a different `VOLUME.TXT` on each image and read it after
    each swap while staying at the J: prompt.
 3. Enter `MOUNT MISSING`. J: should retain the previously mounted volume.
-   `TYPE P:VOLUME.TXT` should still show the permanent archive marker.
+   `MOUNT /L` should still report that volume as current.
+   `TYPE P:VOLUME.TXT` should show the permanent archive marker.
 4. Reconnect and verify J: starts with the default `drivej.dsk` again.
 
 `MOUNT` replaces only J:. On success it resets J:'s BDOS login state and
 marks it read-only again before restoring the original selected drive.
 A failed request leaves the guest and emulator drive state intact.
+
+## 5. Verify binary downloads
+
+With the guest and listener stopped, extract M. Eberhard's XMODEM 2.7 from
+the z80pack IMSAI communications image. On the prototype Z3PLUS boot disk,
+remove the stock `HELP.COM` to free space for it and for startup scratch
+files. The Z3PLUS preparation already removed the stock `HELP.HLP`.
+
+```sh
+cpmcp -T raw -f ibm-3740 "$z80pack/imsaisim/disks/library/comms.dsk" 0:XMODEM.COM build/xmodem.com
+cpmrm -T raw -f ibm-3740 rcpm-cpm3/disks/drivea.dsk 0:HELP.COM
+cpmcp -T raw -f ibm-3740 rcpm-cpm3/disks/drivea.dsk build/xmodem.com 0:XMODEM.COM
+```
+
+Start the listener as in step 4. From a raw-TCP terminal with XMODEM/CRC
+receive support, enter `XMODEM P:PAYLOAD.BIN /S /Q /X0` and start
+XMODEM/CRC receive when the guest says `Sending via CON`. For J:, mount
+the desired volume first and substitute `J:PAYLOAD.BIN`.
+
+For a reproducible byte check, put a known, record-aligned payload on each
+archive and run these commands from the host. The checker connects, starts
+the transfer, checks each packet CRC, and compares every byte against the
+local fixture. XMODEM sends whole 128-byte records.
+
+```sh
+python3 check_rcpm_download.py P:PAYLOAD.BIN /path/to/p-reference.bin
+python3 check_rcpm_download.py J:PAYLOAD.BIN /path/to/j-reference.bin --volume GAMES
+```
+
+If the host image writer and CP/M 3 disagree on the contents of a 4 MB
+volume, populate a writable image of that geometry in the guest using
+`PIP`, then stop cpmsim and copy the image into the volume catalog. We
+used this procedure to prepare the verified J: binary fixture.
 
 ## Optional transport diagnostic
 
@@ -157,7 +192,7 @@ temporary port for the duration of this echo-only test.
 
 1. The loopback prototype starts a fresh guest per caller. Decide how to
    handle login, guest logoff, and persistent work before public access.
-2. Add binary downloads, upload staging, and NOTE submissions.
+2. Add upload staging and NOTE submissions.
 3. Verify command execution restrictions, work-area access, and session
    cleanup before opening access.
 
