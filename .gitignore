@@ -1,0 +1,6 @@
+__pycache__/
+*.pyc
+*.dsk
+*.DSK
+/rcpm-cpm3/
+/.rcpm-init-*/
