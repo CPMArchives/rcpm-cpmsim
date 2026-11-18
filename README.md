@@ -277,6 +277,78 @@ YMODEM batch support.
   midway through the second file. Check that only the completed file was
   added. Both directions have been tested with lrzsz 0.13.1.
 
+## 9. Install the persistent console and background listener
+
+With the prepared prototype, `./launch_rcpm.zsh` starts the caller listener
+in a detached tmux session named `rcpm-listener`, then opens or reconnects to
+`rcpm-console`. A process already listening on the configured loopback port
+is treated as the existing listener, including one started manually. The
+launcher checks the port by binding briefly, avoiding a connection that would
+boot a disposable caller. Listener output goes to `listener.log` in the caller
+instance. Run the launcher again to return to the console. Detach with Ctrl-B
+followed by D. Both services keep running after detachment.
+
+Concurrent local-console and caller operation requires isolated auxiliary
+I/O. cpmsim 1.39 normally uses fixed paths under `/tmp/.z80pack` for its
+AUX FIFOs, so separate emulator processes share those devices regardless of
+the terminal manager. tmux provides detachment and reattachment.
+
+Our console executable uses auxiliary files in its own working directory.
+The caller executable retains its existing AUX configuration. This console
+build is required for the dual-instance configuration provided by this
+launcher. A deployment running only one emulator does not require this
+additional build. Build it from the pinned z80pack checkout after applying
+the patches in steps 4, 6, 7, and 8. Install a C compiler, make, zsh, and tmux first.
+On macOS, the compiler and make are supplied by Xcode Command Line Tools,
+and tmux can be installed with `brew install tmux`.
+The builder copies sources into a temporary directory, disables `PIPES`, and
+updates the two obsolete `STOPPED` references in the file-backed AUX branch
+to `ST_STOPPED` for cpmsim 1.39.
+
+```sh
+mkdir -p build/runtime/srctools
+cp "$z80pack/cpmsim/cpmsim" build/runtime/cpmsim
+cp "$z80pack/cpmsim/srctools/cpmrecv" build/runtime/srctools/cpmrecv
+python3 build_console_runtime.py "$z80pack" build/runtime/cpmsim-console
+
+# Preserve the prepared installation as the persistent local console.
+export RCPM_INSTANCE="$PWD/rcpm-cpm3"
+export RCPM_CALLER_INSTANCE="$PWD/rcpm-cpm3-caller"
+export RCPM_CPMSIM="$PWD/build/runtime/cpmsim-console"
+export RCPM_CALLER_CPMSIM="$PWD/build/runtime/cpmsim"
+
+# Create the caller template once, copying writable disks and linking archives.
+python3 - <<'PYSETUP'
+import os
+from pathlib import Path
+from serve_rcpm import prepare_session
+
+console = Path(os.environ["RCPM_INSTANCE"])
+caller = Path(os.environ["RCPM_CALLER_INSTANCE"])
+if not caller.exists():
+    caller.mkdir()
+    prepare_session(console, caller)
+PYSETUP
+
+./launch_rcpm.zsh --check
+./launch_rcpm.zsh
+```
+
+Default paths are relative to this repository. The local console uses
+`../rcpm-cpm3` and `../rcpm-cpm3-trial/runtime/cpmsim-console`. The caller
+listener uses `../rcpm-cpm3-trial`, its `runtime/cpmsim`, and its `inbox`.
+Export `RCPM_INSTANCE`, `RCPM_CPMSIM`, `RCPM_CALLER_INSTANCE`,
+`RCPM_CALLER_CPMSIM`, or `RCPM_PORT` to override these settings. The default
+port is 4000. `--check` validates prerequisites without starting either service.
+The two installations have separate writable boot and work disks. Shared
+archives remain read-only. Full sysop privileges and concurrent writable
+archive maintenance remain pending.
+
+Repeat the four `export` commands in a new shell, or put them in a personal
+wrapper that runs `launch_rcpm.zsh`. The local development defaults described above
+refer to the original macOS trial layout. For another installation use the
+explicit paths above.
+
 ## Optional transport diagnostic
 
 ```sh
