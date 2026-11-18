@@ -1,0 +1,163 @@
+--- a/cpmsim/srcsim/simio.c
++++ b/cpmsim/srcsim/simio.c
+@@ -113,6 +113,8 @@
+  *	160 - hardware control
+  */
+ 
++#include <dirent.h>
++#include <stdio.h>
+ #include <unistd.h>
+ #include <stdlib.h>
+ #include <errno.h>
+@@ -136,7 +138,6 @@
+ #include "simbdos.h"
+ 
+ #ifdef NETWORKING
+-#include <stdio.h>
+ #include <sys/types.h>
+ #include <sys/socket.h>
+ #include <netinet/in.h>
+@@ -292,7 +293,127 @@
+ static void int_io(int sig);
+ #endif
+ #endif
++
++/* RCP/M mount port, scoped to the read-only J: archive slot. */
++static char volume_name[9];
++static char mounted_volume[9];
++static size_t volume_length;
++static BYTE mount_status = 1;
++static int invalid_volume_name;
++/* Catalog output is streamed one line at a time, with a NUL terminator. */
++static int listing;
++static DIR *catalog_dir;
++static char catalog_line[32];
++static size_t catalog_offset;
++
++static int volume_character(BYTE data)
++{
++	return (data >= 'A' && data <= 'Z') ||
++	       (data >= '0' && data <= '9') || data == '_';
++}
++
++static int open_volume(const char *name)
++{
++	char path[sizeof("volumes/XXXXXXXX.dsk")];
++	struct stat info;
++	int fd;
++
++	(void) snprintf(path, sizeof(path), "volumes/%s.dsk", name);
++	fd = open(path, O_RDONLY | O_NONBLOCK);
++	if (fd != -1 && (fstat(fd, &info) == -1 || !S_ISREG(info.st_mode) ||
++	    info.st_size != 255L * 128 * 128)) {
++		close(fd);
++		return -1;
++	}
++	return fd;
++}
+ 
++static void close_catalog(void)
++{
++	if (catalog_dir != NULL) {
++		closedir(catalog_dir);
++		catalog_dir = NULL;
++	}
++}
++
++static BYTE mount_in(void)
++{
++	struct dirent *entry;
++	char name[9];
++	size_t i, length;
++	int fd;
++
++	if (!listing)
++		return mount_status;
++	if (catalog_line[catalog_offset] != '\0')
++		return (BYTE) catalog_line[catalog_offset++];
++	while (catalog_dir != NULL && (entry = readdir(catalog_dir)) != NULL) {
++		length = strlen(entry->d_name);
++		if (length < 5 || length > 12 || strcmp(entry->d_name + length - 4, ".dsk"))
++			continue;
++		length -= 4;
++		for (i = 0; i < length && volume_character((BYTE) entry->d_name[i]); i++)
++			name[i] = entry->d_name[i];
++		if (i != length)
++			continue;
++		name[i] = '\0';
++		fd = open_volume(name);
++		if (fd == -1)
++			continue;
++		close(fd);
++		(void) snprintf(catalog_line, sizeof(catalog_line), "  %s\r\n", name);
++		catalog_offset = 1;
++		return (BYTE) catalog_line[0];
++	}
++	close_catalog();
++	return 0;
++}
++
++static void mount_out(BYTE data)
++{
++	int replacement;
++
++	if (data == 0xfe) {
++		close_catalog();
++		catalog_dir = opendir("volumes");
++		(void) snprintf(catalog_line, sizeof(catalog_line), "J: %s\r\nVolumes:\r\n",
++				mounted_volume[0] ? mounted_volume : "<default>");
++		catalog_offset = 0;
++		listing = 1;
++		return;
++	}
++	if (data == 0xff) {
++		close_catalog();
++		listing = 0;
++		volume_length = 0;
++		invalid_volume_name = 0;
++		mount_status = 1;
++		return;
++	}
++	if (data != 0) {
++		if (volume_length == sizeof(volume_name) - 1 || !volume_character(data))
++			invalid_volume_name = 1;
++		else
++			volume_name[volume_length++] = (char) data;
++		return;
++	}
++	if (invalid_volume_name || volume_length == 0) {
++		mount_status = 1;
++		return;
++	}
++	volume_name[volume_length] = '\0';
++	mount_status = 2;
++	if (disks[9].fd == NULL)
++		return;
++	replacement = open_volume(volume_name);
++	if (replacement == -1)
++		return;
++	close(drivej);
++	drivej = replacement;
++	strcpy(mounted_volume, volume_name);
++	mount_status = 0;
++}
++
+ /*
+  *	This array contains function pointers for every
+  *	input port.
+@@ -332,6 +453,7 @@
+ 	[ 47] = cond4_in,
+ 	[ 50] = nets1_in,
+ 	[ 51] = netd1_in,
++	[ 60] = mount_in,
+ 	[160] = hwctl_in	/* virtual hardware control */
+ };
+ 
+@@ -374,6 +496,7 @@
+ 	[ 47] = cond4_out,
+ 	[ 50] = nets1_out,
+ 	[ 51] = netd1_out,
++	[ 60] = mount_out,
+ 	[160] = hwctl_out,	/* virtual hardware control */
+ 	[161] = host_bdos_out	/* host file I/O hook */
+ };

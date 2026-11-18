@@ -1,0 +1,113 @@
+; MOUNT.COM for CP/M 3 and the RCP/M cpmsim mount port.
+BDOS	EQU	0005H
+TAIL	EQU	0080H
+MOUNTP	EQU	60
+JDRIVE	EQU	9
+
+	ORG	0100H
+START:	LD	HL,TAIL
+	LD	B,(HL)
+	INC	HL
+	LD	A,B
+	OR	A
+	JP	Z,USAGE
+SKIP:	LD	A,(HL)
+	CP	' '
+	JR	NZ,BEGIN
+	INC	HL
+	DJNZ	SKIP
+	JP	USAGE
+BEGIN:	CP	'/'
+	JR	Z,OPTION
+	LD	A,0FFH
+	OUT	(MOUNTP),A
+NAME:	LD	A,(HL)
+	CP	' '
+	JR	Z,TRAIL
+	CP	'a'
+	JR	C,CHECK
+	CP	'z'+1
+	JR	NC,CHECK
+	SUB	32
+CHECK:	CP	'0'		; Do not send protocol control bytes as name data.
+	JP	C,USAGE
+	CP	'_'+1
+	JP	NC,USAGE
+SEND:	OUT	(MOUNTP),A
+	INC	HL
+	DJNZ	NAME
+	JR	REQUEST
+TRAIL:	LD	A,(HL)
+	CP	' '
+	JP	NZ,USAGE
+	INC	HL
+	DJNZ	TRAIL
+	JR	REQUEST
+OPTION:	DEC	B
+	JP	Z,USAGE
+	INC	HL
+	LD	A,(HL)
+	AND	0DFH
+	CP	'L'
+	JP	NZ,USAGE
+	DEC	B
+	JR	Z,LIST
+LISTSP:	INC	HL
+	LD	A,(HL)
+	CP	' '
+	JP	NZ,USAGE
+	DJNZ	LISTSP
+LIST:	LD	A,0FEH
+	OUT	(MOUNTP),A
+	IN	A,(MOUNTP)
+	CP	'J'
+	JR	Z,LISTCH
+	LD	DE,LISTERR
+	JR	PRINT
+LISTNX:	IN	A,(MOUNTP)
+	OR	A
+	RET	Z
+LISTCH:	LD	E,A
+	LD	C,2
+	CALL	BDOS
+	JR	LISTNX
+
+REQUEST:
+	XOR	A
+	OUT	(MOUNTP),A
+	IN	A,(MOUNTP)
+	CP	1
+	JP	Z,USAGE
+	OR	A
+	JR	NZ,FAILED
+
+	; Invalidate only J:, then log it in and restore its BDOS R/O flag.
+	LD	C,25
+	CALL	BDOS
+	PUSH	AF
+	LD	DE,0200H
+	LD	C,37
+	CALL	BDOS
+	LD	E,JDRIVE
+	LD	C,14
+	CALL	BDOS
+	LD	C,28
+	CALL	BDOS
+	POP	AF
+	LD	E,A
+	LD	C,14
+	CALL	BDOS
+	LD	DE,OKMSG
+	JR	PRINT
+USAGE:	LD	DE,USEMSG
+	JR	PRINT
+FAILED:	LD	DE,FAILMSG
+PRINT:	LD	C,9
+	CALL	BDOS
+	RET
+
+USEMSG:	DB	'Usage: MOUNT /L or MOUNT name (1-8 letters, digits, or underscores)',13,10,'$'
+LISTERR:	DB	'Mount catalog unavailable. Update the cpmsim mount patch.',13,10,'$'
+FAILMSG:	DB	'Volume unavailable. J: unchanged.',13,10,'$'
+OKMSG:	DB	'Volume mounted read-only on J:.',13,10,'$'
+	END
