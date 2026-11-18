@@ -34,10 +34,11 @@ def initialize(root, simulator, cpmcp):
             with image.open("wb") as stream:
                 stream.write(b"\xe5" * (entries * 32))
                 stream.truncate(size)
-            marker = Path(temporary) / "volume.txt"
-            marker.write_bytes(message.encode("ascii") + b"\r\n")
-            subprocess.run([cpmcp, "-T", "raw", "-f", geometry, str(image.relative_to(instance)),
-                            "../volume.txt", "0:VOLUME.TXT"], cwd=instance, check=True)
+            if drive != "p":
+                marker = Path(temporary) / "volume.txt"
+                marker.write_bytes(message.encode("ascii") + b"\r\n")
+                subprocess.run([cpmcp, "-T", "raw", "-f", geometry, str(image.relative_to(instance)),
+                                "../volume.txt", "0:VOLUME.TXT"], cwd=instance, check=True)
             if drive != "i":
                 image.chmod(0o444)
         instance.rename(root)

@@ -23,9 +23,9 @@ python3 launch_rcpm_cpm3.py --cpmsim /path/to/z80pack/cpmsim/cpmsim
 
 The launcher copies the stock boot media, creates the three data drives, and
 opens the local console. It starts CP/M 3 with network listeners disabled.
-`TYPE I:VOLUME.TXT`, `TYPE J:VOLUME.TXT`, and `TYPE P:VOLUME.TXT` identify
-the three volumes. The archive image files are created without host write
-permission.
+`TYPE I:VOLUME.TXT` and `TYPE J:VOLUME.TXT` identify the work and rotating
+volumes. P: starts as an empty filesystem for the operator to populate.
+The archive image files are created without host write permission.
 
 ## 2. Add Z3PLUS
 
@@ -77,8 +77,8 @@ restores your terminal settings afterward:
 ```
 
 1. Wait for `A0:SYSTEM>`.
-2. Enter `ARCHIVE:` and wait for `P0:ARCHIVE>`. Enter `TYPE VOLUME.TXT`.
-   The guest should print `PERMANENT ARCHIVE P`.
+2. Enter `ARCHIVE:` and wait for `P0:ARCHIVE>`. Enter `DIR`.
+   A new installation should report no files on P:.
 3. Enter `VOLUME:` and wait for `J0:VOLUME>`. Enter `TYPE VOLUME.TXT`.
    The guest should print `ROTATING ARCHIVE J`.
 4. Disconnect the client, then reconnect. A new guest should boot to
@@ -137,7 +137,8 @@ python3 serve_rcpm.py --cpmsim "$z80pack/cpmsim/cpmsim"
    each swap while staying at the J: prompt.
 3. Enter `MOUNT MISSING`. J: should retain the previously mounted volume.
    `MOUNT /L` should still report that volume as current.
-   `TYPE P:VOLUME.TXT` should show the permanent archive marker.
+   `DIR P:` should show the permanent archive contents, or no files on a
+   fresh installation.
 4. Reconnect and verify J: starts with the default `drivej.dsk` again.
 
 `MOUNT` replaces only J:. On success it resets J:'s BDOS login state and
@@ -349,6 +350,67 @@ wrapper that runs `launch_rcpm.zsh`. The local development defaults described ab
 refer to the original macOS trial layout. For another installation use the
 explicit paths above.
 
+## 10. Populate a private permanent archive
+
+The project creates an empty 512 MiB P: image. Software collections and the
+operator's populated disk image are excluded from Git. The default named
+directory is `ARCHIVE:` at P0:. Operators choose their own contents and layout.
+
+The first private collection layout for this installation is as follows.
+
+| DU | Named directory | Contents |
+| --- | --- | --- |
+| P0: | SIGM: | SIGMV001.LBR through SIGMV310.LBR |
+| P1: | CPMUG: | CPMUG001.LBR through CPMUG093.LBR |
+
+`build_archive.py` accepts existing SIG/M volume LBRs and expanded CPMUG
+volume directories supplied by the operator. It preserves SIG/M LBR bytes
+and creates one LUDEF5 LBR per CPMUG volume, preserving member bytes and
+recording padding and CRCs. Existing ARK members stay inside their volume
+LBRs. The local ISO has CPMUG volumes 043, 044, and 046 in this form.
+The library format follows [LUDEF5](https://www.seasip.info/Cpm/ludef5.html).
+
+For example, extract operator-supplied collection ISOs and build a new image.
+Run these commands from the repository. Keep staging in the ignored build tree.
+
+```sh
+mkdir -p build/archive-source
+bsdtar -xf /path/to/sigm.iso -C build/archive-source 'LBR/*'
+bsdtar -xf /path/to/cpmug.iso -C build/archive-source 'CPMUG*'
+python3 build_archive.py \
+  --sigm build/archive-source/LBR \
+  --cpmug build/archive-source \
+  build/drivep-populated.dsk
+```
+
+The builder requires consecutive volume numbers starting at 001 and reports
+the number found. Compare that count with the source collection's catalog
+before claiming completeness. It verifies every installed LBR by reading it
+back from the image and emits a SHA-256 manifest alongside the new image.
+It requires an unused output filename and builds a separate disk image.
+
+To assign the names when initially preparing Z3PLUS, append
+`--archive-directory SIGM --archive-directory CPMUG` to the step 2 command.
+Each repeated option names the next P: user area, starting at P0:. The generic
+installation retains `ARCHIVE:` unless the operator supplies these options.
+The 128-byte DEFAULT.NDR member fits seven total names, including SYSTEM,
+WORK, and VOLUME.
+
+Publish a verified image by replacing the host file backing P: between
+sessions. Existing emulator processes retain their already-open image. A
+fresh connection or console restart opens the replacement. Apply matching
+named-directory updates to both the local and caller boot images between
+boots. Keep the previous disk and boot images for rollback. In the private
+prototype, caller P: links to the local P: image and follows its replacement
+on the next connection.
+
+Validation of the private archive covered all 403 LBR read-backs, independent
+member and CRC checks on all 93 generated CPMUG LBRs, CP/M named-directory
+selection, and an exact 324352-byte YMODEM download of CPMUG001.LBR from P1:.
+A separate PIP copy to I: differed when read back with host cpmtools. A copy
+to B: and the YMODEM transfer verified P: reads correctly. The I: discrepancy
+remains to investigate before relying on host extraction of caller work files.
+
 ## Optional transport diagnostic
 
 ```sh
@@ -368,6 +430,9 @@ temporary port for the duration of this echo-only test.
 3. Add ZMODEM and Kermit uploads and downloads.
 4. Verify command execution restrictions, work-area access, and session
    cleanup before opening access.
+5. Support Internet callers with a configurable listening address and port,
+   and document public deployment after caller isolation and access controls
+   are implemented. The current listener binds to IPv4 loopback.
 
 Terminal-based games and CP/NET archive mappings are future expansions.
 The repository contains setup code. Obtain CP/M 3 and Z3PLUS media from
