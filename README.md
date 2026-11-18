@@ -10,7 +10,7 @@ banked CP/M 3 on Udo Munk’s z80pack cpmsim and Z3PLUS for named directories.
 | J: | Read-only rotating archive. An in-session `MOUNT` command will select a volume from a host-configured catalog. | Nominal 4 MB |
 | P: | Permanent read-only software archive. | 512 MiB |
 
-## Run the local prototype
+## 1. Bring up CP/M 3
 
 Use Python 3, cpmtools with the `ibm-3740`, `z80pack-hd`, and `z80pack-hdb`
 disk definitions, and a built [z80pack](https://github.com/udo-munk/z80pack)
@@ -27,7 +27,7 @@ opens the local console. It starts CP/M 3 with network listeners disabled.
 the three volumes. The archive image files are created without host write
 permission.
 
-### Add Z3PLUS
+## 2. Add Z3PLUS
 
 Obtain [RomWBW](https://github.com/wwarthen/RomWBW). The input files were
 verified at commit `cb887a1a2191072dff952bfa836a8dca201b1450`. After exiting
@@ -49,7 +49,47 @@ The configured command search path is `A0:`. Explicitly qualified commands
 on other drives are still possible. This configuration is a local prototype
 and requires caller access controls before public operation.
 
-## Transport probe
+## 3. Try a remote session on loopback
+
+Exit the local cpmsim before starting this test. Some z80pack builds share
+auxiliary-device FIFOs between instances on the same host. Use the verified
+Z3PLUS instance as a template and leave it idle while the listener runs.
+If your cpmsim build uses those FIFOs, build `srctools/cpmrecv` alongside it.
+
+Start the listener in one terminal:
+
+```sh
+python3 serve_rcpm.py --cpmsim /path/to/z80pack/cpmsim/cpmsim
+```
+
+It accepts raw TCP on IPv4 loopback only, port 4000 by default. In another
+terminal, connect using a raw TCP terminal client that sends carriage returns.
+With macOS netcat, use a subshell that sends Return as a single CR and
+restores your terminal settings afterward:
+
+```sh
+(
+    saved_tty=$(stty -g)
+    trap 'stty "$saved_tty"' EXIT
+    stty -icanon -echo -icrnl
+    nc 127.0.0.1 4000
+)
+```
+
+1. Wait for `A0:SYSTEM>`.
+2. Enter `ARCHIVE:` and wait for `P0:ARCHIVE>`. Enter `TYPE VOLUME.TXT`.
+   The guest should print `PERMANENT ARCHIVE P`.
+3. Enter `VOLUME:` and wait for `J0:VOLUME>`. Enter `TYPE VOLUME.TXT`.
+   The guest should print `ROTATING ARCHIVE J`.
+4. Disconnect the client, then reconnect. A new guest should boot to
+   `A0:SYSTEM>`. Stop the listener with Ctrl-C when finished.
+
+Each call uses temporary copies of A:, B:, and I:. Writes to those copies
+are discarded when the caller disconnects. J: and P: use the read-only
+template images. Only one guest runs at a time. Persistent caller work,
+login, guest logoff, and public access are still open.
+
+## Optional transport diagnostic
 
 ```sh
 python3 check_rcpm_transport.py --cpmsim-dir /path/to/z80pack/cpmsim
@@ -62,8 +102,8 @@ temporary port for the duration of this echo-only test.
 
 ## Roadmap
 
-1. Establish remote sessions and choose whether to keep one guest running
-   or start a fresh guest for each caller.
+1. The loopback prototype starts a fresh guest per caller. Decide how to
+   handle login, guest logoff, and persistent work before public access.
 2. Implement catalog-based, read-only live mounting on J:.
 3. Add binary downloads, upload staging, and NOTE submissions.
 4. Verify command execution restrictions, work-area access, and session
