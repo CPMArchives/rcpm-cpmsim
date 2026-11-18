@@ -89,6 +89,59 @@ are discarded when the caller disconnects. J: and P: use the read-only
 template images. Only one guest runs at a time. Persistent caller work,
 login, guest logoff, and public access are still open.
 
+## 4. Enable live mounting on J:
+
+Use a separate checkout of [z80pack](https://github.com/udo-munk/z80pack)
+at commit `91fd28eb04e675c2127df88ed3f40675e15282e2`. From the RCP/M
+repository, set `z80pack` to the absolute path of that checkout, then build
+the patched emulator and assemble the guest command.
+
+```sh
+z80pack=/absolute/path/to/z80pack
+git -C "$z80pack" apply "$PWD/patches/cpmsim-live-mount.patch"
+make -C "$z80pack/cpmsim/srcsim"
+make -C "$z80pack/cpmsim/srctools" cpmrecv
+make -C "$z80pack/z80asm"
+mkdir -p build
+cp guest/mount.asm build/
+(cd build && "$z80pack/z80asm/z80asm" -fb -x mount.asm)
+```
+
+With the guest and listener stopped, install the command on the Z3PLUS
+template's boot disk and put approved archive images in its volume catalog.
+
+```sh
+cpmcp -T raw -f ibm-3740 rcpm-cpm3/disks/drivea.dsk build/mount.bin 0:MOUNT.COM
+mkdir -p rcpm-cpm3/volumes
+cp /path/to/utilities.dsk rcpm-cpm3/volumes/UTILS.dsk
+cp /path/to/games.dsk rcpm-cpm3/volumes/GAMES.dsk
+```
+
+Use raw `z80pack-hd` volumes, each exactly 4,177,920 bytes, and name them
+with one to eight uppercase letters, digits, or underscores followed by
+`.dsk`. The emulator checks the image type and size and opens the replacement
+read-only. Check each volume in CP/M 3 before adding it to the catalog.
+The byte-size check alone cannot validate the directory or allocation data.
+
+Start the listener with the patched emulator:
+
+```sh
+python3 serve_rcpm.py --cpmsim "$z80pack/cpmsim/cpmsim"
+```
+
+1. Connect as in step 3. At the prompt, enter `MOUNT UTILS`, change to
+   `VOLUME:`, and inspect the files on J:.
+2. Enter `MOUNT GAMES` and inspect J: again. To verify that CP/M 3 relogs
+   the drive, put a different `VOLUME.TXT` on each image and read it after
+   each swap while staying at the J: prompt.
+3. Enter `MOUNT MISSING`. J: should retain the previously mounted volume.
+   `TYPE P:VOLUME.TXT` should still show the permanent archive marker.
+4. Reconnect and verify J: starts with the default `drivej.dsk` again.
+
+`MOUNT` replaces only J:. On success it resets J:'s BDOS login state and
+marks it read-only again before restoring the original selected drive.
+A failed request leaves the guest and emulator drive state intact.
+
 ## Optional transport diagnostic
 
 ```sh
@@ -104,9 +157,8 @@ temporary port for the duration of this echo-only test.
 
 1. The loopback prototype starts a fresh guest per caller. Decide how to
    handle login, guest logoff, and persistent work before public access.
-2. Implement catalog-based, read-only live mounting on J:.
-3. Add binary downloads, upload staging, and NOTE submissions.
-4. Verify command execution restrictions, work-area access, and session
+2. Add binary downloads, upload staging, and NOTE submissions.
+3. Verify command execution restrictions, work-area access, and session
    cleanup before opening access.
 
 Terminal-based games and CP/NET archive mappings are future expansions.

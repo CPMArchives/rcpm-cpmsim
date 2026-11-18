@@ -21,6 +21,9 @@ def prepare_session(template, session):
     conf.mkdir()
     for kind in ("server", "client"):
         (conf / f"net_{kind}.conf").write_text("# TCP is handled by the host launcher.\n")
+    volumes = template / "volumes"
+    if volumes.is_dir():
+        (session / "volumes").symlink_to(volumes, target_is_directory=True)
     for drive in "abijp":
         name = f"drive{drive}.dsk"
         source = template / "disks" / name

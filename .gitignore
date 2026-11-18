@@ -4,3 +4,4 @@ __pycache__/
 *.DSK
 /rcpm-cpm3/
 /.rcpm-init-*/
+/build/

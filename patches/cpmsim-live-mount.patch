@@ -1,0 +1,93 @@
+--- a/cpmsim/srcsim/simio.c
++++ b/cpmsim/srcsim/simio.c
+@@ -113,6 +113,7 @@
+  *	160 - hardware control
+  */
+ 
++#include <stdio.h>
+ #include <unistd.h>
+ #include <stdlib.h>
+ #include <errno.h>
+@@ -136,7 +137,6 @@
+ #include "simbdos.h"
+ 
+ #ifdef NETWORKING
+-#include <stdio.h>
+ #include <sys/types.h>
+ #include <sys/socket.h>
+ #include <netinet/in.h>
+@@ -292,6 +292,58 @@
+ static void int_io(int sig);
+ #endif
+ #endif
++
++/* RCP/M mount port, scoped to the read-only J: archive slot. */
++static char volume_name[9];
++static size_t volume_length;
++static BYTE mount_status = 1;
++static int invalid_volume_name;
++
++static BYTE mount_in(void)
++{
++	return mount_status;
++}
++
++static void mount_out(BYTE data)
++{
++	char path[sizeof("volumes/XXXXXXXX.dsk")];
++	struct stat info;
++	int replacement;
++
++	if (data == 0xff) {
++		volume_length = 0;
++		invalid_volume_name = 0;
++		mount_status = 1;
++		return;
++	}
++	if (data != 0) {
++		if (volume_length == sizeof(volume_name) - 1 ||
++		    !((data >= 'A' && data <= 'Z') ||
++		      (data >= '0' && data <= '9') || data == '_'))
++			invalid_volume_name = 1;
++		else
++			volume_name[volume_length++] = (char) data;
++		return;
++	}
++	if (invalid_volume_name || volume_length == 0) {
++		mount_status = 1;
++		return;
++	}
++	volume_name[volume_length] = '\0';
++	(void) snprintf(path, sizeof(path), "volumes/%s.dsk", volume_name);
++	mount_status = 2;
++	replacement = open(path, O_RDONLY | O_NONBLOCK);
++	if (replacement == -1)
++		return;
++	if (fstat(replacement, &info) == -1 || !S_ISREG(info.st_mode) ||
++	    info.st_size != 255L * 128 * 128 || disks[9].fd == NULL) {
++		close(replacement);
++		return;
++	}
++	close(drivej);
++	drivej = replacement;
++	mount_status = 0;
++}
+ 
+ /*
+  *	This array contains function pointers for every
+@@ -332,6 +384,7 @@
+ 	[ 47] = cond4_in,
+ 	[ 50] = nets1_in,
+ 	[ 51] = netd1_in,
++	[ 60] = mount_in,
+ 	[160] = hwctl_in	/* virtual hardware control */
+ };
+ 
+@@ -374,6 +427,7 @@
+ 	[ 47] = cond4_out,
+ 	[ 50] = nets1_out,
+ 	[ 51] = netd1_out,
++	[ 60] = mount_out,
+ 	[160] = hwctl_out,	/* virtual hardware control */
+ 	[161] = host_bdos_out	/* host file I/O hook */
+ };

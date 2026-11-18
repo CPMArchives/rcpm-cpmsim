@@ -1,0 +1,80 @@
+; MOUNT.COM for CP/M 3 and the RCP/M cpmsim mount port.
+BDOS	EQU	0005H
+TAIL	EQU	0080H
+MOUNTP	EQU	60
+JDRIVE	EQU	9
+
+	ORG	0100H
+START:	LD	HL,TAIL
+	LD	B,(HL)
+	INC	HL
+	LD	A,B
+	OR	A
+	JR	Z,USAGE
+SKIP:	LD	A,(HL)
+	CP	' '
+	JR	NZ,BEGIN
+	INC	HL
+	DJNZ	SKIP
+	JR	USAGE
+BEGIN:	LD	A,0FFH
+	OUT	(MOUNTP),A
+NAME:	LD	A,(HL)
+	CP	' '
+	JR	Z,TRAIL
+	CP	'a'
+	JR	C,CHECK
+	CP	'z'+1
+	JR	NC,CHECK
+	SUB	32
+CHECK:	CP	'0'		; Do not send protocol control bytes as name data.
+	JR	C,USAGE
+	CP	'_'+1
+	JR	NC,USAGE
+SEND:	OUT	(MOUNTP),A
+	INC	HL
+	DJNZ	NAME
+	JR	REQUEST
+TRAIL:	LD	A,(HL)
+	CP	' '
+	JR	NZ,USAGE
+	INC	HL
+	DJNZ	TRAIL
+REQUEST:
+	XOR	A
+	OUT	(MOUNTP),A
+	IN	A,(MOUNTP)
+	CP	1
+	JR	Z,USAGE
+	OR	A
+	JR	NZ,FAILED
+
+	; Invalidate only J:, then log it in and restore its BDOS R/O flag.
+	LD	C,25
+	CALL	BDOS
+	PUSH	AF
+	LD	DE,0200H
+	LD	C,37
+	CALL	BDOS
+	LD	E,JDRIVE
+	LD	C,14
+	CALL	BDOS
+	LD	C,28
+	CALL	BDOS
+	POP	AF
+	LD	E,A
+	LD	C,14
+	CALL	BDOS
+	LD	DE,OKMSG
+	JR	PRINT
+USAGE:	LD	DE,USEMSG
+	JR	PRINT
+FAILED:	LD	DE,FAILMSG
+PRINT:	LD	C,9
+	CALL	BDOS
+	RET
+
+USEMSG:	DB	'Usage: MOUNT name (1-8 letters, digits, or underscores)',13,10,'$'
+FAILMSG:	DB	'Volume unavailable. J: unchanged.',13,10,'$'
+OKMSG:	DB	'Volume mounted read-only on J:.',13,10,'$'
+	END
