@@ -1,0 +1,59 @@
+; UPLOAD.COM requests a persistent XMODEM/CRC receive from cpmsim.
+BDOS	EQU	0005H
+TAIL	EQU	0080H
+UPLOADP	EQU	61
+
+	ORG	0100H
+	LD	HL,TAIL
+	LD	B,(HL)
+	INC	HL
+	LD	A,B
+	OR	A
+	JR	Z,USAGE
+SKIP:	LD	A,(HL)
+	CP	' '
+	JR	NZ,BEGIN
+	INC	HL
+	DJNZ	SKIP
+	JR	USAGE
+BEGIN:	LD	A,0FFH
+	OUT	(UPLOADP),A
+NAME:	LD	A,(HL)
+	CP	' '
+	JR	Z,TRAIL
+	CP	'.'
+	JR	C,USAGE
+	CP	'z'+1
+	JR	NC,USAGE
+	CP	'a'
+	JR	C,SEND
+	AND	0DFH
+SEND:	OUT	(UPLOADP),A
+	INC	HL
+	DJNZ	NAME
+	JR	RECV
+TRAIL:	LD	A,(HL)
+	CP	' '
+	JR	NZ,USAGE
+	INC	HL
+	DJNZ	TRAIL
+
+RECV:	XOR	A
+	OUT	(UPLOADP),A
+	IN	A,(UPLOADP)
+	OR	A
+	LD	DE,OKMSG
+	JR	Z,PRINT
+	CP	1
+	JR	Z,USAGE
+	LD	DE,FAILMSG
+	JR	PRINT
+USAGE:	LD	DE,USEMSG
+PRINT:	LD	C,9
+	CALL	BDOS
+	RET
+
+USEMSG:	DB	'Usage: UPLOAD filename.ext (CP/M 8.3 name)',13,10,'$'
+FAILMSG:	DB	13,10,'Upload failed. The inbox did not receive a file.',13,10,'$'
+OKMSG:	DB	13,10,'Upload saved to the operator inbox.',13,10,'$'
+	END

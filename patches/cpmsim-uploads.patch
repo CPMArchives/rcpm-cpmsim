@@ -1,0 +1,181 @@
+--- a/cpmsim/srcsim/simio.c
++++ b/cpmsim/srcsim/simio.c
+@@ -412,8 +412,162 @@
+ 	drivej = replacement;
+ 	strcpy(mounted_volume, volume_name);
+ 	mount_status = 0;
++}
++
++/* Persistent uploads on guest port 61, with XMODEM/CRC over the raw console. */
++enum { UPLOAD_INVALID = 1, UPLOAD_FAILED = 2, UPLOAD_RECORD = 128 };
++enum { X_SOH = 1, X_EOT = 4, X_ACK = 6, X_NAK = 21, X_CAN = 24 };
++static char upload_name[13];
++static size_t upload_length;
++static int upload_invalid;
++static BYTE upload_status = UPLOAD_INVALID;
++
++static int upload_read(BYTE *buffer, size_t size, int timeout)
++{
++	struct pollfd input = { STDIN_FILENO, POLLIN, 0 };
++	ssize_t count;
++
++	while (size != 0) {
++		if (poll(&input, 1, timeout) != 1 || !(input.revents & POLLIN))
++			return -1;
++		count = read(STDIN_FILENO, buffer, size);
++		if (count <= 0)
++			return -1;
++		buffer += count;
++		size -= (size_t) count;
++	}
++	return 0;
++}
++
++static int upload_signal(BYTE byte)
++{
++	return write(STDOUT_FILENO, &byte, 1) == 1 ? 0 : -1;
++}
++
++static unsigned int upload_crc(const BYTE *bytes)
++{
++	unsigned int crc = 0;
++	size_t i;
++	int bit;
++
++	for (i = 0; i < UPLOAD_RECORD; i++) {
++		crc ^= (unsigned int) bytes[i] << 8;
++		for (bit = 0; bit < 8; bit++)
++			crc = ((crc << 1) ^ ((crc & 0x8000) ? 0x1021 : 0)) & 0xffff;
++	}
++	return crc;
++}
++
++static int receive_upload(FILE *file)
++{
++	BYTE first, frame[2 + UPLOAD_RECORD + 2], block = 1;
++	unsigned int errors = 0;
++	size_t records = 0;
++	int started = 0;
++	const char ready[] = "\r\nReady for XMODEM/CRC upload (128-byte blocks).\r\n";
++
++	if (write(STDOUT_FILENO, ready, sizeof(ready) - 1) != sizeof(ready) - 1 ||
++	    upload_signal('C') != 0)
++		return -1;
++	for (;;) {
++		if (upload_read(&first, 1, started ? 10000 : 3000) != 0) {
++			if (started || ++errors == 10 || upload_signal('C') != 0)
++				return -1;
++			continue;
++		}
++		if (first == X_EOT)
++			return records != 0 ? 0 : -1;
++		if (first != X_SOH || upload_read(frame, sizeof(frame), 10000) != 0)
++			return -1;
++		started = 1;
++		if ((frame[0] ^ frame[1]) != 0xff ||
++		    upload_crc(frame + 2) != ((unsigned int) frame[130] << 8 | frame[131]) ||
++		    (frame[0] != block && !(records && frame[0] == (BYTE)(block - 1)))) {
++			if (++errors == 10 || upload_signal(X_NAK) != 0)
++				return -1;
++			continue;
++		}
++		if (frame[0] == block) {
++			if (records == (4U * 1024 * 1024) / UPLOAD_RECORD ||
++			    fwrite(frame + 2, 1, UPLOAD_RECORD, file) != UPLOAD_RECORD)
++				return -1;
++			records++;
++			block++;
++		}
++		errors = 0;
++		if (upload_signal(X_ACK) != 0)
++			return -1;
++	}
+ }
+ 
++static int save_upload(void)
++{
++	char pending[sizeof("upload-staging/XXXXXXXX.XXX.XXXXXX")];
++	char saved[sizeof("upload-inbox/XXXXXXXX.XXX.XXXXXX")];
++	int fd, ready, committed = 0;
++	FILE *file;
++
++	(void) snprintf(pending, sizeof(pending), "upload-staging/%s.XXXXXX", upload_name);
++	fd = mkstemp(pending);
++	if (fd == -1)
++		return -1;
++	file = fdopen(fd, "wb");
++	if (file == NULL) {
++		close(fd);
++		unlink(pending);
++		return -1;
++	}
++	ready = receive_upload(file) == 0 && fflush(file) == 0 && fsync(fd) == 0;
++	if (fclose(file) == 0 && ready) {
++		(void) snprintf(saved, sizeof(saved), "upload-inbox/%s", strrchr(pending, '/') + 1);
++		/* Hard-link publication is atomic and cannot replace an earlier upload. */
++		committed = link(pending, saved) == 0;
++	}
++	unlink(pending);
++	if (committed) {
++		(void) upload_signal(X_ACK);
++		return 0;
++	}
++	(void) upload_signal(X_CAN);
++	(void) upload_signal(X_CAN);
++	return -1;
++}
++
++static BYTE upload_in(void)
++{
++	return upload_status;
++}
++
++static void upload_out(BYTE data)
++{
++	const char *extension;
++	size_t stem_length;
++
++	if (data == 0xff) {
++		upload_length = 0;
++		upload_invalid = 0;
++		upload_status = UPLOAD_INVALID;
++		return;
++	}
++	if (data != 0) {
++		if (upload_length == sizeof(upload_name) - 1 ||
++		    (!volume_character(data) && data != '.'))
++			upload_invalid = 1;
++		else
++			upload_name[upload_length++] = (char) data;
++		return;
++	}
++	upload_status = UPLOAD_INVALID;
++	upload_name[upload_length] = '\0';
++	extension = strchr(upload_name, '.');
++	stem_length = extension ? (size_t)(extension - upload_name) : upload_length;
++	if (upload_invalid || stem_length == 0 || stem_length > 8 ||
++	    (extension && (strlen(extension + 1) == 0 || strlen(extension + 1) > 3 ||
++			   strchr(extension + 1, '.'))))
++		return;
++	upload_status = save_upload() == 0 ? 0 : UPLOAD_FAILED;
++}
++
+ /*
+  *	This array contains function pointers for every
+  *	input port.
+@@ -454,6 +608,7 @@
+ 	[ 50] = nets1_in,
+ 	[ 51] = netd1_in,
+ 	[ 60] = mount_in,
++	[ 61] = upload_in,
+ 	[160] = hwctl_in	/* virtual hardware control */
+ };
+ 
+@@ -497,6 +652,7 @@
+ 	[ 50] = nets1_out,
+ 	[ 51] = netd1_out,
+ 	[ 60] = mount_out,
++	[ 61] = upload_out,
+ 	[160] = hwctl_out,	/* virtual hardware control */
+ 	[161] = host_bdos_out	/* host file I/O hook */
+ };

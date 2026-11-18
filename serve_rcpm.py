@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Serve a disposable CP/M 3 console over raw TCP on IPv4 loopback."""
 import argparse
+from contextlib import nullcontext
 import errno
 import os
 from pathlib import Path
@@ -71,10 +72,15 @@ def relay(client, terminal):
             to_client = to_client[client.send(to_client):]
 
 
-def serve_call(client, simulator, template):
-    with tempfile.TemporaryDirectory(prefix="rcpm-session-") as temporary:
+def serve_call(client, simulator, template, inbox=None):
+    staging = (tempfile.TemporaryDirectory(prefix=".incoming-", dir=inbox)
+               if inbox is not None else nullcontext())
+    with staging as pending, tempfile.TemporaryDirectory(prefix="rcpm-session-") as temporary:
         session = Path(temporary)
         prepare_session(template, session)
+        if pending is not None:
+            (session / "upload-staging").symlink_to(pending, target_is_directory=True)
+            (session / "upload-inbox").symlink_to(inbox, target_is_directory=True)
         receiver = simulator.parent / "srctools/cpmrecv"
         if os.access(receiver, os.X_OK):
             (session / "srctools").mkdir()
@@ -115,6 +121,7 @@ def main():
                         default=Path(__file__).resolve().parent / "rcpm-cpm3")
     parser.add_argument("--cpmsim", type=Path,
                         default=Path.home() / "Downloads/z80pack-master/cpmsim/cpmsim")
+    parser.add_argument("--inbox", type=Path, help="Enable persistent uploads to this directory")
     parser.add_argument("--port", type=int, default=4000)
     args = parser.parse_args()
     template = args.instance.expanduser().resolve()
@@ -127,6 +134,9 @@ def main():
             parser.error(f"disk image unavailable at {image}")
         if drive in "jp" and os.access(image, os.W_OK):
             parser.error(f"archive image must be read-only: {image}")
+    inbox = args.inbox.expanduser().resolve() if args.inbox is not None else None
+    if inbox is not None:
+        inbox.mkdir(mode=0o700, parents=True, exist_ok=True)
     try:
         with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as listener:
             listener.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
@@ -137,7 +147,7 @@ def main():
             while True:
                 client, _ = listener.accept()
                 with client:
-                    serve_call(client, simulator, template)
+                    serve_call(client, simulator, template, inbox)
     except KeyboardInterrupt:
         pass
 
