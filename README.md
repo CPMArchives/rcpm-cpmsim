@@ -6,7 +6,7 @@ banked CP/M 3 on Udo Munk’s z80pack cpmsim and Z3PLUS for named directories.
 
 | Drive | Role | Capacity |
 | --- | --- | --- |
-| I: | Writable work disk. One caller-writable user area is planned, with uploads and notes submitted through dedicated utilities. | Nominal 4 MB |
+| I: | Writable work disk. One caller-writable user area is planned, with uploads and messages submitted through dedicated utilities. | Nominal 4 MB |
 | J: | Read-only rotating archive. An in-session `MOUNT` command will select a volume from a host-configured catalog. | Nominal 4 MB |
 | P: | Permanent read-only software archive. | 512 MiB |
 
@@ -215,6 +215,26 @@ starts from the operator's I: template on each connect.
 The inbox is for operator review. Keep it outside the rotating-volume
 catalog and inspect submissions there before adding any to the archives.
 
+## 7. Enable private messages to the operator
+
+Apply the messages patch after the uploads patch from step 6. With the
+listener and guest stopped, rebuild cpmsim and install the guest command.
+
+```sh
+git -C "$z80pack" apply "$PWD/patches/cpmsim-messages.patch"
+make -C "$z80pack/cpmsim/srcsim"
+cp guest/message.asm build/
+(cd build && "$z80pack/z80asm/z80asm" -fb -x message.asm)
+cpmcp -T raw -f ibm-3740 rcpm-cpm3/disks/drivea.dsk build/message.bin 0:MESSAGE.COM
+```
+
+Start the loopback listener with `--inbox` as in step 6. From the guest,
+enter `MESSAGE` to write up to 20 lines of 72 columns. Enter `/S` on its
+own line to save or `/C` to discard the draft. The operator receives each
+saved message as a separate `MESSAGE.TXT.<unique suffix>` file in the
+inbox alongside completed uploads. Disconnecting before saving discards
+the draft. Z-System's `NOTE` remains available for script comments.
+
 ## Optional transport diagnostic
 
 ```sh
@@ -230,7 +250,7 @@ temporary port for the duration of this echo-only test.
 
 1. The loopback prototype starts a fresh guest per caller. Decide how to
    handle login, guest logoff, and persistent work before public access.
-2. Add NOTE submissions.
+2. Add a caller logoff command and short HELP/MAP.
 3. Verify command execution restrictions, work-area access, and session
    cleanup before opening access.
 

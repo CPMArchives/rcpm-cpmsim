@@ -1,0 +1,117 @@
+--- a/cpmsim/srcsim/simio.c
++++ b/cpmsim/srcsim/simio.c
+@@ -500,37 +500,44 @@
+ 	}
+ }
+ 
+-static int save_upload(void)
++static int save_inbox(const char *name, int (*write_body)(FILE *))
+ {
+ 	char pending[sizeof("upload-staging/XXXXXXXX.XXX.XXXXXX")];
+ 	char saved[sizeof("upload-inbox/XXXXXXXX.XXX.XXXXXX")];
+ 	int fd, ready, committed = 0;
+ 	FILE *file;
+ 
+-	(void) snprintf(pending, sizeof(pending), "upload-staging/%s.XXXXXX", upload_name);
++	(void) snprintf(pending, sizeof(pending), "upload-staging/%s.XXXXXX", name);
+ 	fd = mkstemp(pending);
+ 	if (fd == -1)
+-		return -1;
++		return -2;
+ 	file = fdopen(fd, "wb");
+ 	if (file == NULL) {
+ 		close(fd);
+ 		unlink(pending);
+-		return -1;
++		return -2;
+ 	}
+-	ready = receive_upload(file) == 0 && fflush(file) == 0 && fsync(fd) == 0;
++	ready = write_body(file) == 0 && fflush(file) == 0 && fsync(fd) == 0;
+ 	if (fclose(file) == 0 && ready) {
+ 		(void) snprintf(saved, sizeof(saved), "upload-inbox/%s", strrchr(pending, '/') + 1);
+ 		/* Hard-link publication is atomic and cannot replace an earlier upload. */
+ 		committed = link(pending, saved) == 0;
+ 	}
+ 	unlink(pending);
+-	if (committed) {
+-		(void) upload_signal(X_ACK);
+-		return 0;
++	return committed ? 0 : -1;
++}
++
++static int save_upload(void)
++{
++	int result = save_inbox(upload_name, receive_upload);
++
++	if (result == 0)
++		(void) upload_signal(X_ACK);
++	if (result == -1) {
++		(void) upload_signal(X_CAN);
++		(void) upload_signal(X_CAN);
+ 	}
+-	(void) upload_signal(X_CAN);
+-	(void) upload_signal(X_CAN);
+-	return -1;
++	return result;
+ }
+ 
+ static BYTE upload_in(void)
+@@ -568,6 +575,42 @@
+ 	upload_status = save_upload() == 0 ? 0 : UPLOAD_FAILED;
+ }
+ 
++/* MESSAGE holds the draft in guest-session memory until the caller saves it. */
++static BYTE message_text[20 * 74];
++static size_t message_length;
++static BYTE message_status;
++
++static int write_message(FILE *file)
++{
++	return fwrite(message_text, 1, message_length, file) == message_length ? 0 : -1;
++}
++
++static BYTE message_in(void)
++{
++	return message_status;
++}
++
++static void message_out(BYTE data)
++{
++	if (data == 0xff) {
++		message_length = 0;
++		message_status = 0;
++		return;
++	}
++	if (data == 0) {
++		if (message_status == 0 && message_length != 0 &&
++		    save_inbox("MESSAGE.TXT", write_message) != 0)
++			message_status = 2;
++		message_length = 0;
++		return;
++	}
++	if (message_length == sizeof(message_text) ||
++	    ((data < 32 || data > 126) && data != '\r' && data != '\n'))
++		message_status = 1;
++	else
++		message_text[message_length++] = data;
++}
++
+ /*
+  *	This array contains function pointers for every
+  *	input port.
+@@ -609,6 +652,7 @@
+ 	[ 51] = netd1_in,
+ 	[ 60] = mount_in,
+ 	[ 61] = upload_in,
++	[ 62] = message_in,
+ 	[160] = hwctl_in	/* virtual hardware control */
+ };
+ 
+@@ -653,6 +697,7 @@
+ 	[ 51] = netd1_out,
+ 	[ 60] = mount_out,
+ 	[ 61] = upload_out,
++	[ 62] = message_out,
+ 	[160] = hwctl_out,	/* virtual hardware control */
+ 	[161] = host_bdos_out	/* host file I/O hook */
+ };
