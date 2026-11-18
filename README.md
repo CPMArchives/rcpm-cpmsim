@@ -177,6 +177,44 @@ volume, populate a writable image of that geometry in the guest using
 `PIP`, then stop cpmsim and copy the image into the volume catalog. We
 used this procedure to prepare the verified J: binary fixture.
 
+## 6. Enable persistent uploads
+
+Apply the uploads patch **after the current live-mount patch** from step 4.
+Rebuild cpmsim, assemble the guest command, and install it while the
+listener and guest are stopped.
+
+```sh
+git -C "$z80pack" apply "$PWD/patches/cpmsim-uploads.patch"
+make -C "$z80pack/cpmsim/srcsim"
+cp guest/upload.asm build/
+(cd build && "$z80pack/z80asm/z80asm" -fb -x upload.asm)
+cpmcp -T raw -f ibm-3740 rcpm-cpm3/disks/drivea.dsk build/upload.bin 0:UPLOAD.COM
+```
+
+Start the loopback listener with the rebuilt emulator and an operator-owned
+inbox on a filesystem that supports hard links.
+
+```sh
+python3 serve_rcpm.py --cpmsim "$z80pack/cpmsim/cpmsim" --inbox rcpm-cpm3/inbox
+```
+
+In a raw-TCP terminal client, enter `UPLOAD SAMPLE.BIN` and start
+XMODEM/CRC send with 128-byte blocks when the guest says it is ready.
+The upload goes directly to the host inbox. The receiver makes the file
+visible in the inbox before acknowledging the end of the transfer. The
+operator can find it under `SAMPLE.BIN.<unique suffix>`; repeat uploads
+receive separate filenames. The receiver accepts up to 4 MiB. XMODEM
+stores complete records, including any padding the sender adds.
+
+Disconnect after a successful upload and verify that the inbox file
+remains. Disconnect partway through a second transfer and verify that no
+file for the interrupted transfer appears. Open a new session and check
+that changes made to `WORK:` by the previous caller are gone. The session
+starts from the operator's I: template on each connect.
+
+The inbox is for operator review. Keep it outside the rotating-volume
+catalog and inspect submissions there before adding any to the archives.
+
 ## Optional transport diagnostic
 
 ```sh
@@ -192,7 +230,7 @@ temporary port for the duration of this echo-only test.
 
 1. The loopback prototype starts a fresh guest per caller. Decide how to
    handle login, guest logoff, and persistent work before public access.
-2. Add upload staging and NOTE submissions.
+2. Add NOTE submissions.
 3. Verify command execution restrictions, work-area access, and session
    cleanup before opening access.
 
