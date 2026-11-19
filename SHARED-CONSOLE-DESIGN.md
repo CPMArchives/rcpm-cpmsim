@@ -45,8 +45,9 @@ independently executing CP/M applications.
 
 Caller BYE ends the call and normally resets BYE to wait for another caller.
 A separate operator control requests local CP/M after the call. Caller BYE
-must not halt the emulator. Local detach also leaves the guest running. Explicit
-operator shutdown flushes guest writes before stopping the machine.
+must not halt the emulator. Local detach also leaves the guest running.
+The native shutdown program is renamed BYEBYE.COM; BYE.COM is remote service.
+Explicit operator shutdown must flush guest writes before stopping the machine.
 
 Carrier loss must revoke caller input, recover guest execution, clear only
 the disposable WORK area, and preserve completed uploads and messages.

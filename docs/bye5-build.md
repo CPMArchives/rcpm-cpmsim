@@ -35,6 +35,11 @@ BYE.COM is the common CP/M 3 entry program. BYEDRIV.COM is a loader with the
 configuration-specific BYE5 RSX attached by GENCOM. Each pair is installed
 on A: in its test system; install only the chosen pair in a running system.
 The original loader's filename reference is configured to A:BYEDRIV.COM.
+The stock cpmsim shutdown program is supplied unchanged as BYEBYE.COM in
+both build directories. BYE.COM starts or resets remote service and logs a
+caller off; BYEBYE.COM terminates the machine. The disk-set installer must
+replace the original BYE.COM only after preserving its shutdown function
+under BYEBYE.COM. Caller access to shutdown remains a security-policy item.
 
 Project-authored `guest/bye5/cpmsim.ins` supplies the hardware routines.
 The configured sources enable CP/M 3, select a nominal 2400-bps maximum,
@@ -138,7 +143,8 @@ python3 check_bye5.py --source /absolute/path/to/z80pack \
 The checker creates disposable boot disks, installs the selected pair, and
 starts BYE from an interactive CCP prompt. The stock editor is removed from
 these test copies to make room for the drivers and test files. Original
-media and the operator's installation remain untouched.
+media and the operator's installation remain untouched. The checker also exits
+remote service locally and verifies that BYEBYE shuts down the emulator.
 
 The earlier transport-only builds passed the following on stock CP/M 3.
 The current builds require Z3PLUS, and the stock-only checker now verifies

@@ -11,6 +11,9 @@ and tested in isolation, including actual CP/M 3 guest I/O. Both [BYE5 builds](d
 now pass shared-console checks with Z3PLUS. Z3PLUS wheel transitions
 are verified; boot startup, emulator security enforcement and migration remain pending; the current launcher is unchanged.
 
+In the new disk set, `BYE.COM` is BYE5 remote service/logoff; the native
+cpmsim shutdown program is preserved as `BYEBYE.COM`.
+
 
 A Remote CP/M system in development for the CPMArchives software collection.
 Callers will land directly at the CP/M prompt. The local prototype uses

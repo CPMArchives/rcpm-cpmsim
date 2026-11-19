@@ -40,7 +40,7 @@ def run(source, runtime, tools, builds, output, tcpser, romwbw=None):
             shutil.copyfile(base, disk)
         subprocess.run([str(tools / 'cpmrm'), '-T', 'raw', '-f', 'ibm-3740',
                         str(disk), '0:BYE.COM', '0:ED.COM'], check=True)
-        for name in ('BYE.COM', 'BYEDRIV.COM'):
+        for name in ('BYE.COM', 'BYEDRIV.COM', 'BYEBYE.COM'):
             subprocess.run([str(tools / 'cpmcp'), '-T', 'raw', '-f', 'ibm-3740',
                             str(disk), str(builds / mode / name), '0:' + name], check=True)
         for name, content in (('PROBE.TXT', b'SHARED-CONSOLE-OK\r\n\x1a'),
@@ -95,7 +95,7 @@ def run(source, runtime, tools, builds, output, tcpser, romwbw=None):
             try:
                 local(prompt)
                 os.write(master, b'BYE\r')
-                local(b'BYE5')
+                local(b'BYE510 -')
                 if not romwbw:
                     result = local(b'A>', timeout=30)
                     if b'requires a valid Z3PLUS environment' not in result:
@@ -178,8 +178,25 @@ def run(source, runtime, tools, builds, output, tcpser, romwbw=None):
                         '-f', 'ibm-3740', str(disk), '0:*']).lower()
                     if b'userchk.txt' not in listing or b'syschk.txt' in listing:
                         raise RuntimeError('Wheel transition file checks failed')
+                # Leave the resident remote service, then verify the preserved
+                # renamed stock BYEBYE.COM still shuts down the single emulator.
+                os.write(master, b'\x03')
+                local(b'normal unpatched')
+                os.write(master, b'\r')
+                local(prompt)
+                time.sleep(.1)
+                os.write(master, b'BYEBYE\r')
+                deadline = time.monotonic() + 10
+                while guest.poll() is None and time.monotonic() < deadline:
+                    if select.select([master], [], [], .05)[0]:
+                        try:
+                            log.write(os.read(master, 8192)); log.flush()
+                        except OSError:
+                            break
+                if guest.poll() is None:
+                    raise RuntimeError('Native BYEBYE did not shut down; see console.log')
                 print(f'PASS {mode}: {"Z3PLUS" if romwbw else "CP/M 3"}, three calls in one guest, '
-                      'transient commands, local typing, private blanking, BYE/carrier-loss/forced logoff', flush=True)
+                      'transient commands, local typing, private blanking, BYE/carrier-loss/forced logoff; BYEBYE shutdown', flush=True)
             finally:
                 stop(guest)
                 if modem:

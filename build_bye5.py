@@ -85,8 +85,11 @@ def run(source, runtime, cpmtools, sources, output):
     for mode, driver in (('direct', 'DIRDRIV.COM'), ('ip232', 'MDMDRIV.COM')):
         target = output / mode
         target.mkdir(exist_ok=True)
+        # Remove only the obsolete generated entry from this build output.
+        (target / 'BYE5.COM').unlink(missing_ok=True)
         for name, filename in (('B5ENTRY.COM', 'BYE.COM'), (driver, 'BYEDRIV.COM')):
             tool('cpmcp', '-T', 'raw', '-f', 'z80pack-hd', i, '0:' + name, target / filename)
+        tool('cpmcp', '-T', 'raw', '-f', 'ibm-3740', a, '0:BYE.COM', target / 'BYEBYE.COM')
     hashes = []
     for path in sorted(sources.glob('*.ASM')) + sorted(output.glob('*/*.COM')):
         hashes.append(dict(path=str(path.relative_to(sources if path.parent == sources else output)),
