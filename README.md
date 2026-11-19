@@ -7,8 +7,8 @@ banked CP/M 3 on Udo Munk’s z80pack cpmsim and Z3PLUS for named directories.
 | Drive | Role | Capacity |
 | --- | --- | --- |
 | I: | Writable work disk. One caller-writable user area is planned, with uploads and messages submitted through dedicated utilities. | Nominal 4 MB |
-| J: | Read-only rotating archive. An in-session `MOUNT` command will select a volume from a host-configured catalog. | Nominal 4 MB |
-| P: | Permanent read-only software archive. | 512 MiB |
+| J: | Rotating archive. Callers mount read-only published volumes. The sysop maintains writable masters after setup. | Nominal 4 MB |
+| P: | Permanent software archive. Published read-only for callers, with a separate writable sysop master after setup. | 512 MiB |
 
 ## 1. Bring up CP/M 3
 
@@ -334,7 +334,10 @@ On macOS, the compiler and make are supplied by Xcode Command Line Tools,
 and tmux can be installed with `brew install tmux`.
 The builder copies sources into a temporary directory, disables `PIPES`, and
 updates the two obsolete `STOPPED` references in the file-backed AUX branch
-to `ST_STOPPED` for cpmsim 1.39.
+to `ST_STOPPED` for cpmsim 1.39. In this console executable, catalog volumes
+open read/write. It also assembles `mount-sysop.com` and `bye-sysop.com`
+beside the executable. Setup in step 12 installs these on the local boot disk.
+The caller executable and caller MOUNT retain read-only archive access.
 
 ```sh
 mkdir -p build/runtime/srctools
@@ -371,9 +374,10 @@ listener uses `../rcpm-cpm3-trial`, its `runtime/cpmsim`, and its `inbox`.
 Export `RCPM_INSTANCE`, `RCPM_CPMSIM`, `RCPM_CALLER_INSTANCE`,
 `RCPM_CALLER_CPMSIM`, `RCPM_BIND_ADDRESS`, or `RCPM_PORT` to override these settings. The default
 port is 4000 and the default bind address is `0.0.0.0`. `--check` validates prerequisites without starting either service.
-The two installations have separate writable boot and work disks. Shared
-archives remain read-only. Full sysop privileges and concurrent writable
-archive maintenance remain pending.
+The two installations have separate writable boot and work disks. Before
+step 12, shared archives remain read-only. Step 12 gives the sysop independent
+writable masters and publishes immutable caller snapshots. Wheel policies
+and caller execution restrictions remain unfinished.
 
 Repeat the four `export` commands in a new shell, or put them in a personal
 wrapper that runs `launch_rcpm.zsh`. The local development defaults described above
@@ -430,9 +434,9 @@ Publish a verified image by replacing the host file backing P: between
 sessions. Existing emulator processes retain their already-open image. A
 fresh connection or console restart opens the replacement. Apply matching
 named-directory updates to both the local and caller boot images between
-boots. Keep the previous disk and boot images for rollback. In the private
-prototype, caller P: links to the local P: image and follows its replacement
-on the next connection.
+boots. Keep the previous disk and boot images for rollback. Before sysop publication is enabled, caller P: links to the local P: image
+and follows its replacement on the next connection. After step 12, update
+the local master and publish it to make changes available to new callers.
 
 Validation of the private archive covered all 403 LBR read-backs, independent
 member and CRC checks on all 93 generated CPMUG LBRs, CP/M named-directory
@@ -460,6 +464,90 @@ Restart an existing listener to apply an address or port change. The launcher
 reuses an occupied endpoint and cannot change an existing process's socket.
 The server still handles one caller at a time. Caller isolation and access
 controls remain unfinished.
+
+## 12. Enable sysop archive writes and publication
+
+Complete the runtime build and two-instance preparation in step 9 first.
+Then exit the local CP/M console with `A0:` followed by `BYE`. Disconnect
+callers and stop an older listener once so its next start loads the session
+publication changes. Detaching from tmux leaves the console running and
+keeps its archive lease active.
+
+Run the setup command from the repository, using the same RCPM environment
+variables as the launcher.
+
+```sh
+./launch_rcpm.zsh --setup-sysop
+./launch_rcpm.zsh
+```
+
+Setup installs the sysop MOUNT.COM and BYE.COM on the local A: image,
+creates the first read-only publication, redirects the caller J:/P: slots
+and catalog to it, and creates independent writable local J:/P: masters.
+If the local catalog is absent, it copies the existing caller catalog into
+local `volumes/`. Existing local catalogs supply the masters. Setup keeps
+the original caller catalog as `volumes-before-publication` when present.
+It checks for an older process holding the boot disk on macOS through lsof.
+Repeating setup with the same installation preserves the master's contents.
+
+The local console can now use normal CP/M commands to write to P: and J:.
+Its MOUNT opens catalog masters read/write. The sysop MOUNT flushes BDOS
+buffers before changing media, resets J:, and leaves it writable. The sysop
+BYE flushes pending writes with CP/M 3 BDOS function 48 before halting.
+On a reported flush failure it returns to CP/M. Function 48 is documented in
+Digital Research's [CP/M 3 Programmer's Guide](https://bitsavers.org/pdf/digitalResearch/cpm_plus/CPM_Plus_Programmers_Guide_Apr83.pdf).
+
+After editing, return to A0: and exit with BYE, then publish from the host.
+
+```sh
+./launch_rcpm.zsh --publish
+./launch_rcpm.zsh
+```
+
+The local launcher holds an exclusive console lease across exec into cpmsim.
+Publication takes the same lease and refuses to copy while the managed
+console is running. Run local instances through this launcher. Exit unmanaged
+emulators and host image editors before changing the masters or publishing.
+Forced termination does not provide the flush guarantee of the sysop BYE.
+
+Each publication contains both default archive images and every valid catalog
+image in a unique generation under the caller installation's `published/`.
+An atomic `published/current` symlink update makes the completed generation
+available. Each caller resolves that pointer once when its session is created,
+pinning both archive images and the catalog. Existing callers retain their
+previous generation, including during later MOUNT commands. New callers
+receive the latest generation. The listener can remain running during
+subsequent sysop edits and publication.
+
+Publication validates image sizes and prepares the entire generation before
+switching the current pointer. A failed preparation leaves the previous
+publication selected and can be retried. Old generations remain available
+for rollback and existing sessions. Their storage use depends on filesystem
+copy-on-write support. macOS uses `cp -c` clones when supported, with ordinary
+copying as a fallback. Filesystems without cloning keep full image copies.
+
+To inspect the selected generation, run the status command.
+
+```sh
+./launch_rcpm.zsh --archive-status
+```
+
+A personal `rcpm` wrapper must forward arguments with `"$@"` to expose these
+options. Calling the repository script directly always supports them.
+
+Validation included actual CP/M writes to P:, default J:, and a mounted J:
+master, refusal to publish while the console lease was held, an exact archive
+read after publication, and rejection of a caller P: write. The host regression
+checks also cover session/catalog pinning, idempotent setup, and retry after
+failed publication.
+
+```sh
+python3 -m unittest -v test_archive_publication.py
+```
+
+This provides archive write access and publication. Z3PLUS wheel policy,
+caller command restrictions, authentication, and broader host isolation remain
+separate work items.
 
 ## Optional transport diagnostic
 

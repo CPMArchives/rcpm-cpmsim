@@ -16,13 +16,15 @@ import tty
 
 
 def prepare_session(template, session):
+    current = template / "published/current"
+    archives = current.resolve(strict=True) if current.is_symlink() or current.exists() else template
     disks = session / "disks"
     disks.mkdir()
     conf = session / "conf"
     conf.mkdir()
     for kind in ("server", "client"):
         (conf / f"net_{kind}.conf").write_text("# TCP is handled by the host launcher.\n")
-    volumes = template / "volumes"
+    volumes = archives / "volumes"
     if volumes.is_dir():
         (session / "volumes").symlink_to(volumes, target_is_directory=True)
     for drive in "abijp":
@@ -30,7 +32,7 @@ def prepare_session(template, session):
         source = template / "disks" / name
         target = disks / name
         if drive in "jp":
-            target.symlink_to(source)
+            target.symlink_to((archives / "disks" / name).resolve(strict=True))
         else:
             shutil.copyfile(source, target)
 

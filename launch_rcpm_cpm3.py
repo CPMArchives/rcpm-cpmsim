@@ -6,6 +6,7 @@ from pathlib import Path
 import shutil
 import subprocess
 import tempfile
+from archive_admin import console_lock
 
 
 def initialize(root, simulator, cpmcp):
@@ -60,8 +61,14 @@ def main():
         cpmcp = shutil.which("cpmcp") or "/opt/homebrew/bin/cpmcp"
         initialize(root, simulator, cpmcp)
     if not args.init_only:
-        os.chdir(root)
-        os.execv(simulator, [str(simulator)])
+        try:
+            with console_lock(root) as lock:
+                # Publication uses the same lock and must wait for CP/M to exit.
+                os.set_inheritable(lock.fileno(), True)
+                os.chdir(root)
+                os.execv(simulator, [str(simulator)])
+        except RuntimeError as error:
+            parser.error(str(error))
 
 
 if __name__ == "__main__":

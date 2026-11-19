@@ -56,6 +56,20 @@ done
     fail "Missing local network configuration in $RCPM_INSTANCE/conf"
 
 case ${1:-} in
+    --setup-sysop)
+        [[ $# == 1 ]] || fail 'Usage: launch_rcpm.zsh [--check|--setup-sysop|--publish|--archive-status]'
+        exec python3 "$repository/archive_admin.py" setup \
+            --console "$RCPM_INSTANCE" --callers "$RCPM_CALLER_INSTANCE" \
+            --mount-command "${RCPM_CPMSIM:h}/mount-sysop.com"
+        ;;
+    --publish)
+        [[ $# == 1 ]] || fail 'Usage: launch_rcpm.zsh [--check|--setup-sysop|--publish|--archive-status]'
+        exec python3 "$repository/archive_admin.py" publish --console "$RCPM_INSTANCE"
+        ;;
+    --archive-status)
+        [[ $# == 1 ]] || fail 'Usage: launch_rcpm.zsh [--check|--setup-sysop|--publish|--archive-status]'
+        exec python3 "$repository/archive_admin.py" status --console "$RCPM_INSTANCE"
+        ;;
     --check)
         [[ $# == 1 ]] || fail 'Usage: launch_rcpm.zsh [--check]'
         print -r -- 'Console and listener prerequisites verified.'
@@ -75,7 +89,7 @@ case ${1:-} in
         ;;
 esac
 
-[[ $# == 0 ]] || fail 'Usage: launch_rcpm.zsh [--check]'
+[[ $# == 0 ]] || fail 'Usage: launch_rcpm.zsh [--check|--setup-sysop|--publish|--archive-status]'
 [[ -t 0 && -t 1 ]] || fail 'Run this launcher in an interactive Terminal window.'
 if [[ -n ${TMUX:-} ]]; then
     tmux display-message -p '#{session_name}' >/dev/null 2>&1 ||
