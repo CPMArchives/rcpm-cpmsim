@@ -48,6 +48,18 @@ def configure(reference, mode):
         text, count = re.subn(r'(?m)^\t' + opcode + r'\tWHEEL\b', '\tCALL\t' + target, text)
         if count != 4:
             raise ValueError('Unexpected BYE5 wheel reference count')
+    # Clear queued Z-System commands before call recovery or authority changes.
+    # The legacy DOZ3 assumes fixed addresses and also clears unrelated state.
+    for old, new in (
+        ('LOGOFF:\tLXI\tSP,STACK\t; Ensure valid stack',
+         'LOGOFF:\tLXI\tSP,STACK\t; Ensure valid stack\n\tCALL\tWXCLR'),
+        ('EXCPM:\t IF\tB5IM', 'EXCPM:\tCALL\tWXCLR\n\t IF\tB5IM'),
+        ('BLNKTOG:LDA\tMDMOFF', 'BLNKTOG:CALL\tWXCLR\n\tLDA\tMDMOFF'),
+        ('NULLP:\tCALL\tMDOUTST', 'NULLP:\tCALL\tCHECK\n\tCALL\tMDOUTST'),
+    ):
+        if text.count(old) != 1:
+            raise ValueError('Unexpected BYE5 lifecycle hook: ' + old.split(':')[0])
+        text = text.replace(old, new)
     insert = (Path(__file__).parent / 'guest/bye5/cpmsim.ins').read_text()
     insert += '\n' + (Path(__file__).parent / 'guest/bye5/z3wheel.ins').read_text()
     text = text.replace(marker, marker + insert + '\n')

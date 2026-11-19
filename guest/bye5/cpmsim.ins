@@ -17,6 +17,7 @@ MDCARCK: IN 46H
         ANI 4
         RET
 MDINIT: CALL WXINIT
+        CALL WXCLR
         PUSH H
         LHLD WXADDR
         MOV A,H

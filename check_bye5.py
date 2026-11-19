@@ -5,6 +5,7 @@ import os
 from pathlib import Path
 import pty
 import select
+import signal
 import shutil
 import socket
 import subprocess
@@ -45,10 +46,16 @@ def run(source, runtime, tools, builds, output, tcpser, romwbw=None, autostart=F
         for name in ('BYE.COM', 'BYEDRIV.COM', 'BYEBYE.COM'):
             subprocess.run([str(tools / 'cpmcp'), '-T', 'raw', '-f', 'ibm-3740',
                             str(disk), str(builds / mode / name), '0:' + name], check=True)
+        shutil.copyfile(Path(__file__).parent / 'guest/queueprobe.asm', work / 'queueprobe.asm')
+        subprocess.run([str(source / 'z80asm/z80asm'), '-fb', '-x', 'queueprobe.asm'],
+                       cwd=work, check=True, stdout=subprocess.DEVNULL)
+        subprocess.run([str(tools / 'cpmcp'), '-T', 'raw', '-f', 'ibm-3740', str(disk),
+                        str(work / 'queueprobe.bin'), '0:QUEUEPRB.COM'], check=True)
         for name, content in (('PROBE.TXT', b'SHARED-CONSOLE-OK\r\n\x1a'),
                               ('PRIVATE.TXT', b'PRIVATE-OUTPUT-CHECK\r\n\x1a'),
                               ('USERCHK.TXT', b'CALLER-FILE-REMAINS\r\n\x1a'),
-                              ('SYSCHK.TXT', b'SYSOP-FILE-TO-DELETE\r\n\x1a')):
+                              ('SYSCHK.TXT', b'SYSOP-FILE-TO-DELETE\r\n\x1a'),
+                              ('QUEUED.TXT', b'STALE-COMMAND-EXECUTED\r\n\x1a')):
             path = work / name
             path.write_bytes(content)
             subprocess.run([str(tools / 'cpmcp'), '-T', 'raw', '-f', 'ibm-3740',
@@ -66,8 +73,9 @@ def run(source, runtime, tools, builds, output, tcpser, romwbw=None, autostart=F
             if mode == 'ip232':
                 modem = subprocess.Popen([str(tcpser), '-v', f'127.0.0.1:{port}',
                     '-p', f'127.0.0.1:{call_port}', '-s', '2400', '-S', '2400',
-                    '-i', '&c1&d2', '-l', '4'], stdout=mlog, stderr=mlog)
-            guest = subprocess.Popen([str(runtime), '-f', '4'], cwd=work, env=env,
+                    '-i', '&c1&d2', '-l', '4'], stdout=mlog, stderr=mlog,
+                    restore_signals=False)
+            guest = subprocess.Popen([str(runtime), '-s', '-f', '4'], cwd=work, env=env,
                                      stdin=slave, stdout=slave, stderr=slave)
             def local(marker, timeout=30):
                 return wait_prompt(master, marker, log, timeout)
@@ -116,7 +124,8 @@ def run(source, runtime, tools, builds, output, tcpser, romwbw=None, autostart=F
                         marker = b'ATE0Q0V0S0=0M0S10=25X1H0'
                         while (work / 'console.log').read_bytes().count(marker) < attempt + 1:
                             if time.monotonic() > deadline:
-                                raise RuntimeError('Hayes initialization command not observed')
+                                raise RuntimeError('Hayes initialization command not observed; '
+                                                   f'tcpser exit status: {modem.poll()}')
                             if select.select([master], [], [], .05)[0]:
                                 log.write(os.read(master, 8192)); log.flush()
                         quiet = time.monotonic()
@@ -134,6 +143,13 @@ def run(source, runtime, tools, builds, output, tcpser, romwbw=None, autostart=F
                             # A wheel-off caller must not be able to stop the machine.
                             caller.sendall(b'BYEBYE\r')
                             remote(caller, prompt, timeout=10)
+                        if attempt == 0:
+                            # Positive control: the seeded command really executes
+                            # if the program returns without a lifecycle transition.
+                            caller.sendall(b'QUEUEPRB\r')
+                            remote(caller, b'PENDING COMMAND ARMED')
+                            caller.sendall(b'x')
+                            remote(caller, b'STALE-COMMAND-EXECUTED', after=prompt)
                         if romwbw:
                             caller.sendall(b'ERA USERCHK.TXT\r')
                             remote(caller, prompt)
@@ -146,6 +162,8 @@ def run(source, runtime, tools, builds, output, tcpser, romwbw=None, autostart=F
                             # Type a complete command from the local keyboard while connected.
                             os.write(master, b'TYPE PROBE.TXT\r')
                             remote(caller, b'SHARED-CONSOLE-OK', after=prompt)
+                            caller.sendall(b'QUEUEPRB\r')
+                            remote(caller, b'PENDING COMMAND ARMED')
                             os.write(master, b'\x02')
                             local(prompt)
                             if romwbw:
@@ -153,6 +171,8 @@ def run(source, runtime, tools, builds, output, tcpser, romwbw=None, autostart=F
                                 local(prompt)
                             os.write(master, b'TYPE PRIVATE.TXT\r')
                             local(prompt)
+                            os.write(master, b'QUEUEPRB\r')
+                            local(b'PENDING COMMAND ARMED')
                             os.write(master, b'\x02')
                             local(prompt)
                             # Unblanking can emit a prompt; private file contents must stay local.
@@ -164,13 +184,17 @@ def run(source, runtime, tools, builds, output, tcpser, romwbw=None, autostart=F
                             if b'PRIVATE-OUTPUT-CHECK' in captured:
                                 raise RuntimeError('Private sysop output reached the caller')
                         if attempt == 1:
+                            caller.sendall(b'QUEUEPRB\r')
+                            remote(caller, b'PENDING COMMAND ARMED')
                             caller.close()
                             local(b'[Carrier lost]', timeout=20)
                         else:
                             if attempt == 2:
+                                caller.sendall(b'QUEUEPRB\r')
+                                remote(caller, b'PENDING COMMAND ARMED')
                                 os.write(master, b'\x0e')  # BYE's local forced-disconnect key.
                             else:
-                                caller.sendall(b'BYE\r')
+                                caller.sendall(b'BYE;TYPE QUEUED.TXT\r')
                             end = time.monotonic() + 20
                             while time.monotonic() < end:
                                 ready = select.select([caller, master], [], [], .05)[0]
@@ -205,8 +229,21 @@ def run(source, runtime, tools, builds, output, tcpser, romwbw=None, autostart=F
                             break
                 if guest.poll() is None:
                     raise RuntimeError('Native BYEBYE did not shut down; see console.log')
+                queued_count = (work / 'console.log').read_bytes().count(b'STALE-COMMAND-EXECUTED')
+                if queued_count != 1:
+                    raise RuntimeError(f'Expected only the queued-command positive control; got {queued_count}')
                 print(f'PASS {mode}: {"Z3PLUS" if romwbw else "CP/M 3"}, three calls in one guest, '
-                      'transient commands, local typing, private blanking, BYE/carrier-loss/forced logoff; BYEBYE shutdown', flush=True)
+                      'transient commands, local typing, private blanking, BYE/carrier-loss/forced logoff; '
+                      'pending-command cleanup; BYEBYE shutdown', flush=True)
+            except Exception:
+                # Keep guest registers and RAM for diagnosing failed lifecycle tests.
+                if guest.poll() is None:
+                    guest.send_signal(signal.SIGINT)
+                    try:
+                        guest.wait(timeout=2)
+                    except subprocess.TimeoutExpired:
+                        pass
+                raise
             finally:
                 stop(guest)
                 if modem:

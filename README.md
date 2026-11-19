@@ -6,6 +6,10 @@ mid-1980s BYE behavior. See the [BYE510 source review and implementation
 recommendation](docs/bye510-review.md) and [shared-console requirements](SHARED-CONSOLE-DESIGN.md).
 The replacement has not yet been activated.
 
+The [architecture completion gates](docs/architecture-status.md) track the
+remaining lifecycle, storage, transfer and launcher work. Caller permission
+and directory configuration follow in the security configuration phase.
+
 The [direct TCP and tcpser modem interface](docs/modem-interface.md) is built
 and tested in isolation, including actual CP/M 3 guest I/O. Both [BYE5 builds](docs/bye5-build.md)
 now pass shared-console checks with Z3PLUS. Z3PLUS wheel transitions

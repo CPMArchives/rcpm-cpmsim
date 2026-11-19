@@ -120,7 +120,7 @@ transcript is build/bye5/build.log. Commands, configured source hashes,
 artifact hashes and the runtime hash are recorded in build-result.json.
 The builder has not been pointed at live installation disks.
 
-The direct driver is 4096 bytes; the Hayes driver is 4480 bytes; each entry
+The direct driver is 4224 bytes; the Hayes driver is 4608 bytes; each entry
 program is 512 bytes. These are file sizes, not measured resident-memory
 requirements. Distribution of the configured upstream binaries still requires
 resolving the notice discussed in the reference review. The binaries remain
@@ -180,6 +180,19 @@ also the default prefix; pressing Ctrl-B twice sends one literal Ctrl-B to
 the guest for remote blanking. Final key configuration can use BYE's
 optional lead-in to avoid application and tmux conflicts.
 
+The checker also installs a disposable QUEUEPRB test program. A positive
+control first proves that its queued TYPE command executes on an ordinary
+return. It then seeds the same pending command before private blanking,
+unblanking, carrier loss and forced disconnect, and queues it after a normal
+BYE command. Only the positive-control execution may appear in the complete
+console log. This program belongs to test media only, not the caller program
+set. Failed tests retain guest registers/RAM in core.z80 for diagnosis.
+
+The tcpser test process inherits Python's ignored SIGPIPE disposition
+(`restore_signals=False`). The eventual launcher must likewise prevent a
+closed caller socket from terminating the modem process with SIGPIPE. This
+is process launch behavior, not a Hayes setting or guest wheel policy.
+
 Logs are retained under each checker output directory. These tests do not
 establish protection against arbitrary caller programs, correct WORK cleanup,
 file-transfer compatibility, or emulator-enforced archive-write privileges.
@@ -215,6 +228,30 @@ from running. Shell compatibility has not been tested here. Its suggested
 binary patch targets a specific older CCP version and has not been applied
 to this build. Ending GET redirection is not evidence that this separate
 shell issue is resolved.
+
+## Command-queue and carrier-loss recovery
+
+The project adapter retains the discovered Z3PLUS environment address and
+finds the command buffer through ENV+18h, with capacity at ENV+1Ah. These
+fields are specified by the upstream
+[Z3LIB GETCL1](https://dflund.se/~pi/cpm/files/ftp.mayn.de/pub/cpm/archive/zcpr33/z3libsrc/z3gcl1.z80.txt).
+The buffer header retains its capacity, resets its next-character pointer
+to the text start and marks the text empty. Register/flag state is preserved.
+The adapter checks for an absent environment, zero capacity, a low buffer
+address and address wrap before writing. It has no fixed runtime MCL address.
+
+Cleanup runs at modem initialization, LOGOFF, local BYE exit and before each
+blank/unblank transition. This is lifecycle machinery, independent of the
+later choice of permitted caller commands. It does not implement shell-stack,
+ZEX, SUBMIT or all possible application-state cleanup; those remain separate
+integration checks.
+
+The stronger disconnect fixture exposed an upstream NULLP loop that waited
+for modem transmit readiness without checking carrier. Closing the caller
+while the final line's padding was being sent could leave BYE waiting
+forever. The configured source now calls BYE's existing CHECK routine in
+that loop, so it follows normal carrier-loss recovery. This preserves the
+existing padding settings; choosing those settings remains configuration.
 
 ## Remaining before the disk-set installation is ready
 

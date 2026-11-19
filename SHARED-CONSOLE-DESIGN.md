@@ -70,6 +70,11 @@ must revoke caller access before write privileges are enabled.
 
 ## Incremental implementation and acceptance
 
+The [architecture completion gates](docs/architecture-status.md) distinguish
+the remaining mechanisms from security policy configuration deferred until
+the next phase. Finish lifecycle, privilege, transfer/storage and launcher
+integration before declaring this phase complete.
+
 Follow the detailed gates in the BYE510 review.
 
 1. Extend the existing serial device with explicit carrier and modem controls,

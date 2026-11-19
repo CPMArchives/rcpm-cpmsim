@@ -8,6 +8,7 @@ WXINIT: PUSH PSW
         PUSH H
         LXI H,0
         SHLD WXADDR
+        SHLD WXENV
         LXI H,8000H
 WXLOOP: MOV A,M
         CPI 0C3H
@@ -66,6 +67,7 @@ WXLOOP: MOV A,M
         MOV A,M
         STA WXLOCAL
         POP H
+        SHLD WXENV
         JMP WXDONE
 WXNEXT: POP H
 WXSKIP: INX H
@@ -107,3 +109,57 @@ WXLOCAL: DB 0
 WXDRIVE: DB 15
 WXUSER: DB 16
 WXSPD:  DB 0
+WXENV:  DW 0
+; Discard the complete pending command line at lifecycle boundaries.
+; GETCL1 in Z3LIB specifies ENV+18h = buffer address, +1Ah = capacity.
+; Preserve the capacity byte, reset next-character to buffer+4, clear
+; dummy count and first character. No fixed runtime buffer address.
+WXCLR:  PUSH PSW
+        PUSH B
+        PUSH D
+        PUSH H
+        LHLD WXENV
+        MOV A,H
+        ORA L
+        JZ WXCDONE
+        LXI D,18H
+        DAD D
+        MOV E,M
+        INX H
+        MOV D,M
+        INX H
+        MOV A,M
+        ORA A
+        JZ WXCDONE
+        MOV C,A
+        MVI B,0
+        MOV A,D
+        CPI 80H
+        JC WXCDONE
+        XCHG
+        PUSH H
+        DAD B
+        JC WXCOFLOW
+        LXI B,4
+        DAD B
+        POP H
+        JC WXCDONE
+        PUSH H
+        DAD B
+        XCHG
+        POP H
+        MOV M,E
+        INX H
+        MOV M,D
+        INX H
+        INX H
+        MVI M,0
+        INX H
+        MVI M,0
+        JMP WXCDONE
+WXCOFLOW: POP H
+WXCDONE: POP H
+        POP D
+        POP B
+        POP PSW
+        RET
