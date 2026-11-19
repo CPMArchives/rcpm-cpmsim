@@ -5,6 +5,10 @@ the live launcher and private disk set have not been migrated.
 
 ## Approved caller execution policy
 
+See the [period configuration evidence](historical-rcpm-security.md) for
+operator accounts supporting a selected-utility configuration, and for
+historical command-buffer cleanup requirements.
+
 The operator has specified: "Callers should never have the ability to run
 arbitrary code on the rcpm."
 
