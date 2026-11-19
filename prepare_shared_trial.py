@@ -11,11 +11,19 @@ import subprocess
 import tempfile
 
 from prepare_z3plus import prepare
+from prepare_sysutils import prepare_sysutils
 
 
 def create(source, romwbw, runtime, builds, tools, output):
     if output.exists() or output.is_symlink():
         raise FileExistsError(f'Refusing to replace an existing trial: {output}')
+    result = json.loads((builds / 'build-result.json').read_text())
+    if not result.get('private_b'):
+        raise ValueError('Rebuild BYE5 with the private B: adapter before preparing SYSUTILS')
+    for name in ('BYE.COM', 'BYEDRIV.COM', 'BYEBYE.COM'):
+        item = next(entry for entry in result['files'] if entry['path'] == 'direct/' + name)
+        if hashlib.sha256((builds / 'direct' / name).read_bytes()).hexdigest() != item['sha256']:
+            raise ValueError('BYE5 build hash mismatch: ' + name)
     output.parent.mkdir(parents=True, exist_ok=True)
     repository = Path(__file__).resolve().parent
     with tempfile.TemporaryDirectory(prefix='.shared-trial-', dir=output.parent) as temporary:
@@ -47,7 +55,7 @@ def create(source, romwbw, runtime, builds, tools, output):
             subprocess.run([str(source / 'z80asm/z80asm'), '-fb', '-x', f'{name}.asm'],
                            cwd=work, check=True, stdout=subprocess.DEVNULL)
             tool('cpmcp', '-T', 'raw', '-f', 'ibm-3740', a, work / f'{name}.bin', f'0:{name.upper()}.COM')
-        shutil.copyfile(source / 'cpmsim/disks/library/cpm3-2.dsk', trial / 'disks/driveb.dsk')
+        prepare_sysutils(source, tools, trial, work)
         (trial / 'disks/driveb.dsk').chmod(0o444)
         for drive in ('i', 'j'):
             image = trial / f'disks/drive{drive}.dsk'
@@ -89,7 +97,9 @@ def create(source, romwbw, runtime, builds, tools, output):
             'Completed uploads/messages stay in upload-inbox on the host.\n'
             'For YMODEM download: YSEND J:HELLO.TXT; upload: UPLOAD /Y.\n'
             'BYE logs a caller off. Locally, Ctrl-C between calls opens the BYE menu;\n'
-            'press Return for local CP/M, then BYEBYE to stop the trial.\n'
+            'press Return for local CP/M, then B:BYEBYE to stop the trial.\n'
+            'B: SYSUTILS is private to local/operator mode; use B:tool explicitly.\n'
+            'offline/BUILD.dsk is not in the caller mount collection.\n'
             'In tmux, Ctrl-B Ctrl-B sends BYE one literal Ctrl-B for blank/unblank.\n'
             'Caller security settings and privileged J:/P: maintenance are unfinished.\n'
             'J:/P: are read-only in this trial; do not expose it to the Internet.\n')

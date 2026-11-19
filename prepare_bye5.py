@@ -63,6 +63,10 @@ def configure(reference, mode):
     insert = (Path(__file__).parent / 'guest/bye5/cpmsim.ins').read_text()
     insert += '\n' + (Path(__file__).parent / 'guest/bye5/z3wheel.ins').read_text()
     insert += '\n' + (Path(__file__).parent / 'guest/bye5/work.ins').read_text()
+    insert += '\n' + (Path(__file__).parent / 'guest/bye5/privateb.ins').read_text()
+    if text.count('BYERSX:\n') != 1:
+        raise ValueError('Unexpected BYE BDOS interceptor')
+    text = text.replace('BYERSX:\n', 'BYERSX: JMP WXBCHK\nWXBGO:\n')
     text = text.replace(marker, marker + insert + '\n')
     return text
 

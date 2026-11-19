@@ -3,6 +3,14 @@
 Reviewed November 19, 2026. The replacement still runs on disposable media;
 the live launcher and private disk set have not been migrated.
 
+The newer [SYSUTILS disk layout](system-disk-layout.md) moves BYEBYE and
+maintenance programs to B:, with a BYE BDOS gate denying caller B: access.
+`check_sysutils.py` verifies that boundary on both modem backends. The
+shutdown probe below deliberately retains BYEBYE on public A: to demonstrate
+the older unrestricted layout's failure; it does not build the SYSUTILS layout.
+The wider caller execution policy and retained A: support tools still need
+configuration and review.
+
 ## Approved caller execution policy
 
 See the [period configuration evidence](historical-rcpm-security.md) for

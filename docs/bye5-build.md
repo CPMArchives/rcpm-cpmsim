@@ -120,7 +120,7 @@ transcript is build/bye5/build.log. Commands, configured source hashes,
 artifact hashes and the runtime hash are recorded in build-result.json.
 The builder has not been pointed at live installation disks.
 
-The direct driver is 4864 bytes; the Hayes driver is 5248 bytes; each entry
+The direct driver is 5120 bytes; the Hayes driver is 5504 bytes; each entry
 program is 512 bytes. These are file sizes, not measured resident-memory
 requirements. Distribution of the configured upstream binaries still requires
 resolving the notice discussed in the reference review. The binaries remain

@@ -21,6 +21,11 @@ It builds a fresh Z3PLUS/BYE boot disk from stock media and installs UPLOAD,
 MESSAGE, YSEND and MOUNT. Automated regression programs are not installed.
 It copies the runtime and creates independent I:, J:, P: and DEMO images.
 P0: and P1: are named SIGM and CPMUG but are empty. J:/P: are read-only.
+B: is SYSUTILS, with routine maintenance tools; callers are denied ordinary
+BDOS access to it. Boot support (including SUBMIT and Z3PLUS.LBR) remains
+on A:. Development/build materials are in `offline/BUILD.dsk`, outside the
+mount collection. Store that image offsite until required for maintenance.
+See [the disk layout and boundary](system-disk-layout.md).
 
 ## Start and connect
 
@@ -69,9 +74,10 @@ a saved message, run `MESSAGE`, enter a line, then enter `/S` on its own line.
 Completed files appear in the trial's host `upload-inbox/` directory and
 remain after disconnect. I0: WORK is cleared before calls and after them.
 
-To exercise WORK cleanup, enter `PIP I:TEMP.TXT=J:HELLO.TXT`, check `DIR I:`,
-log off with `BYE`, reconnect, and check `DIR I:` again. Store no work that
-must survive in I0:.
+To exercise WORK cleanup, use local private mode (below), then enter
+`B:PIP I:TEMP.TXT=J:HELLO.TXT`. Restore caller mode, check `DIR I:`, log off
+with `BYE`, reconnect, and check `DIR I:` again. PIP is now private on B:.
+Store no work that must survive in I0:.
 
 Local Ctrl-B toggles BYE's private blanking at the command prompt. In tmux,
 press Ctrl-B twice to pass one literal Ctrl-B to CP/M. This is not a second
@@ -83,7 +89,11 @@ in this trial.
 At the caller prompt, `BYE` ends that call and leaves the machine waiting.
 To stop the trial, use the local Terminal after the caller disconnects:
 press Ctrl-C to open BYE's menu, press Return for local CP/M, then enter
-`BYEBYE`. The original Terminal shell returns. Uploads remain on disk.
+`B:BYEBYE`. The original Terminal shell returns. Uploads remain on disk.
+
+Older prepared trials retain their old disks and commands. Rebuilding does
+not update an active installation. Stop the old console before switching
+to a newly prepared trial on the same port; preserve its inbox separately.
 
 The trial launcher holds an instance lock to prevent opening its disks in
 two emulator processes. It also checks its TCP port before booting. Running

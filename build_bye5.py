@@ -96,6 +96,8 @@ def run(source, runtime, cpmtools, sources, output):
                            bytes=path.stat().st_size, sha256=hashlib.sha256(path.read_bytes()).hexdigest()))
     (output / 'build-result.json').write_text(json.dumps(dict(
         commands=commands, runtime_sha256=hashlib.sha256(runtime.read_bytes()).hexdigest(),
+        private_b=all('WXBFNS:' in (sources / name).read_text()
+                      for name in ('BYEDIR.ASM', 'BYEMDM.ASM')),
         files=hashes), indent=2) + '\n')
     print(f'Built both BYE5 configurations in {output}')
 

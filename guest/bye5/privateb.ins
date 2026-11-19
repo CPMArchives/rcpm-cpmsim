@@ -1,0 +1,99 @@
+; B: is a private maintenance disk. Gate ordinary BDOS file access using
+; BYE's local/remote state, NOT the command search path. Internal BYE calls
+; through REALBD bypass this public entry. This is not protection against
+; arbitrary machine code calling the BIOS or changing resident memory.
+WXBCHK: PUSH B
+        PUSH D
+        PUSH H
+        MOV A,C
+        CPI 17
+        JNZ WXBWHL
+        MVI A,1
+        STA WXBSRC
+WXBWHL:
+        CALL WXGET
+        ORA A
+        JNZ WXBSYS
+        MOV A,C
+        CPI 14
+        JZ WXBCUR
+        CPI 46
+        JZ WXBSEL
+        CPI 101
+        JZ WXBSEL
+        CPI 18
+        JZ WXBNXT
+        CPI 17
+        JNZ WXBFC
+        XRA A
+        STA WXBSRC
+WXBFC:  LXI H,WXBFNS
+WXBFNL: MOV A,M
+        ORA A
+        JZ WXBOK
+        CMP C
+        JZ WXBGET
+        INX H
+        JMP WXBFNL
+WXBGET: LDAX D
+        ANI 7FH
+        CPI 2
+        JZ WXBDEN
+        ORA A
+        JZ WXBDEF
+        CPI 17
+        JC WXBOK
+        ; Search First permits '?' as a full-directory request on the
+        ; current disk. Never let special/invalid drive bytes bypass B:.
+WXBDEF:
+        LDA WXBDRV
+        ORA A
+        JNZ WXBDEN
+        PUSH B
+        PUSH D
+        MVI C,25
+        CALL REALBD
+        POP D
+        POP B
+        CPI 1
+        JZ WXBDEN
+        JMP WXBOK
+WXBSEL: MOV A,E
+        CPI 1
+        JZ WXBDEN
+        JMP WXBOK
+WXBCUR: MOV A,E
+        CPI 1
+        JNZ WXBCLR
+        MVI A,1
+        STA WXBDRV
+        JMP WXBDEN
+WXBSYS:
+WXBCLR: XRA A
+        STA WXBDRV
+        JMP WXBOK
+WXBNXT: LDA WXBSRC
+        ORA A
+        JNZ WXBDEN
+        JMP WXBOK
+WXBDEN: MOV A,C
+        CPI 17
+        JNZ WXBDN1
+        MVI A,1
+        STA WXBSRC
+WXBDN1: POP H
+        POP D
+        POP B
+        LXI H,0FFFFH
+        MVI A,0FFH
+        RET
+WXBOK:  POP H
+        POP D
+        POP B
+        JMP WXBGO
+; FCB file functions, including CP/M Plus extensions. Rename source on B:
+; is rejected; a cross-drive rename is not supported by CP/M.
+WXBFNS: DB 15,16,17,19,20,21,22,23,30,33,34,35,36,40
+        DB 41,42,43,59,99,100,102,103,0
+WXBSRC: DB 0
+WXBDRV: DB 0

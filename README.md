@@ -26,8 +26,10 @@ For a separate interactive instance of that build, follow
 launcher uses loopback port 4001 and leaves the older installation untouched.
 
 In the new disk set, `BYE.COM` is BYE5 remote service/logoff; the native
-cpmsim shutdown program is preserved as `BYEBYE.COM`. Restricting shutdown
-to the local sysop is required but has not yet been enforced.
+cpmsim shutdown program is preserved as `B:BYEBYE.COM`. The new builder
+creates a [private SYSUTILS B: disk](docs/system-disk-layout.md) and a separate
+offline BUILD image. BYE denies caller BDOS access to B:; local private mode
+can use its tools. The full approved-program policy remains unfinished.
 
 The [security review](docs/security-boundary.md) records the confirmed remote
 shutdown failure and the approved restriction to operator-approved caller
