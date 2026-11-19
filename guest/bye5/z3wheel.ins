@@ -110,6 +110,13 @@ WXDRIVE: DB 15
 WXUSER: DB 16
 WXSPD:  DB 0
 WXENV:  DW 0
+; Reset host service drafts/staging handles at call boundaries, not on
+; private blank/unblank. The host reset does not touch committed files.
+WXRESET: PUSH PSW
+        XRA A
+        OUT 49H
+        POP PSW
+        JMP WXCLR
 ; Discard the complete pending command line at lifecycle boundaries.
 ; GETCL1 in Z3LIB specifies ENV+18h = buffer address, +1Ah = capacity.
 ; Preserve the capacity byte, reset next-character to buffer+4, clear

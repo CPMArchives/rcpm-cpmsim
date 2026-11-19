@@ -16,10 +16,11 @@ import tty
 from check_modem_runtime import free_port, stop
 from build_bye5 import wait_prompt
 from prepare_z3plus import prepare
+import shared_service_checks as service_checks
 
 
 def run(source, runtime, tools, builds, output, tcpser, romwbw=None, autostart=False,
-        probe_remote_shutdown=False):
+        probe_remote_shutdown=False, services=False, work_readonly=False):
     output.mkdir(parents=True, exist_ok=True)
     for mode in ('direct', 'ip232'):
         work = output / mode
@@ -60,6 +61,12 @@ def run(source, runtime, tools, builds, output, tcpser, romwbw=None, autostart=F
             path.write_bytes(content)
             subprocess.run([str(tools / 'cpmcp'), '-T', 'raw', '-f', 'ibm-3740',
                             str(disk), str(path), '0:' + name], check=True)
+        if romwbw:
+            service_checks.prepare_work(source, tools, work, disk)
+            if work_readonly:
+                (work / 'disks/drivei.dsk').chmod(0o444)
+        if services:
+            service_checks.prepare_services(source, tools, work, disk)
         port, call_port = free_port(), free_port()
         while port == call_port:
             call_port = free_port()
@@ -98,6 +105,10 @@ def run(source, runtime, tools, builds, output, tcpser, romwbw=None, autostart=F
                             raise RuntimeError(f'Unexpected caller disconnect: {bytes(data)!r}')
                         data.extend(part)
                         if marker in data and (after is None or after in data[data.index(marker) + len(marker):]):
+                            if marker == prompt or after == prompt:
+                                # Pace scripted commands through CP/M's warm-boot
+                                # and line-input setup, as a terminal user would.
+                                time.sleep(.1)
                             return bytes(data)
                     if guest.poll() is not None:
                         raise RuntimeError('cpmsim exited during BYE test')
@@ -116,18 +127,35 @@ def run(source, runtime, tools, builds, output, tcpser, romwbw=None, autostart=F
                     print(f'PASS {mode}: missing Z3PLUS is refused before answering', flush=True)
                     continue
                 caller_port = port if mode == 'direct' else call_port
-                for attempt in range(3):
+                if work_readonly:
+                    result = startup
+                    if prompt not in result:
+                        result += local(prompt)
+                    if b'WORK cleanup failed' not in result or b'answering disabled' not in result:
+                        raise RuntimeError('Read-only WORK did not stop answering')
+                    with socket.create_connection(('127.0.0.1', caller_port), timeout=3) as caller:
+                        caller.settimeout(.3)
+                        caller.sendall(b'\r')
+                        try:
+                            reply = caller.recv(1024)
+                        except socket.timeout:
+                            reply = b''
+                        if reply:
+                            raise RuntimeError(f'Guest answered with failed WORK cleanup: {reply!r}')
+                    if guest.poll() is not None:
+                        raise RuntimeError('WORK cleanup failure terminated the machine')
+                    print(f'PASS {mode}: read-only WORK disables answering and returns to local CP/M', flush=True)
+                    continue
+                def answer_ready(count):
+                    marker = b'RCP/M modem ready.' if mode == 'direct' else b'ATE0Q0V0S0=0M0S10=25X1H0'
+                    deadline = time.monotonic() + 30
+                    while (work / 'console.log').read_bytes().count(marker) < count:
+                        if time.monotonic() > deadline:
+                            status = modem.poll() if modem else None
+                            raise RuntimeError(f'BYE did not finish recovery; tcpser exit status: {status}')
+                        if select.select([master], [], [], .05)[0]:
+                            log.write(os.read(master, 8192)); log.flush()
                     if mode == 'ip232':
-                        # Wait for Hayes initialization, including a potentially silent
-                        # environment scan, before measuring the final quiet interval.
-                        deadline = time.monotonic() + 30
-                        marker = b'ATE0Q0V0S0=0M0S10=25X1H0'
-                        while (work / 'console.log').read_bytes().count(marker) < attempt + 1:
-                            if time.monotonic() > deadline:
-                                raise RuntimeError('Hayes initialization command not observed; '
-                                                   f'tcpser exit status: {modem.poll()}')
-                            if select.select([master], [], [], .05)[0]:
-                                log.write(os.read(master, 8192)); log.flush()
                         quiet = time.monotonic()
                         deadline = quiet + 30
                         while time.monotonic() - quiet < 2:
@@ -136,8 +164,21 @@ def run(source, runtime, tools, builds, output, tcpser, romwbw=None, autostart=F
                             if select.select([master], [], [], .05)[0]:
                                 log.write(os.read(master, 8192)); log.flush()
                                 quiet = time.monotonic()
+                calls = 4 if services else 3
+                for attempt in range(calls):
+                    answer_ready(attempt + 1)
                     with socket.create_connection(('127.0.0.1', caller_port), timeout=3) as caller:
+                        if services:
+                            caller.settimeout(15)
                         remote(caller, prompt, kick=mode == 'direct', timeout=45)
+                        service_checks.verify_work_clean(tools, work)
+                        caller.sendall(b'WORKPRB\r')
+                        remote(caller, b'READONLY WORK FILE CREATED', after=prompt)
+                        if services:
+                            caller.sendall(b'SERVPRB\r')
+                            remote(caller, b'SERVICE STATE RESET', after=prompt)
+                            if attempt:
+                                service_checks.verify_inbox(work)
                         if probe_remote_shutdown and attempt == 0:
                             # Deliberately destructive to this disposable guest only.
                             # A wheel-off caller must not be able to stop the machine.
@@ -158,6 +199,20 @@ def run(source, runtime, tools, builds, output, tcpser, romwbw=None, autostart=F
                         # A real transient command verifies warm boot and console routing.
                         caller.sendall(b'TYPE PROBE.TXT\r')
                         remote(caller, b'SHARED-CONSOLE-OK', after=prompt)
+                        if services and attempt == 0:
+                            service_checks.upload_x(caller)
+                            remote(caller, b'Upload saved to the operator inbox.', after=prompt)
+                            service_checks.upload_y(caller)
+                            remote(caller, b'Upload saved to the operator inbox.', after=prompt)
+                            service_checks.download_y(caller)
+                            remote(caller, b'YMODEM download complete.', after=prompt)
+                            caller.sendall(b'MESSAGE\r')
+                            remote(caller, b'> ')
+                            caller.sendall(service_checks.MESSAGE.rstrip(b'\r\n') + b'\r')
+                            remote(caller, b'> ')
+                            caller.sendall(b'/S\r')
+                            remote(caller, b'Message saved to the operator inbox.', after=prompt)
+                            service_checks.verify_inbox(work)
                         if attempt == 0:
                             # Type a complete command from the local keyboard while connected.
                             os.write(master, b'TYPE PROBE.TXT\r')
@@ -183,13 +238,21 @@ def run(source, runtime, tools, builds, output, tcpser, romwbw=None, autostart=F
                                     captured.extend(caller.recv(8192))
                             if b'PRIVATE-OUTPUT-CHECK' in captured:
                                 raise RuntimeError('Private sysop output reached the caller')
-                        if attempt == 1:
-                            caller.sendall(b'QUEUEPRB\r')
-                            remote(caller, b'PENDING COMMAND ARMED')
+                        if attempt == 1 or (services and attempt == 2):
+                            if services and attempt == 1:
+                                service_checks.partial_upload(caller)
+                            elif services:
+                                caller.sendall(b'MESSAGE\r')
+                                remote(caller, b'> ')
+                                caller.sendall(b'THIS DRAFT MUST BE DISCARDED\r')
+                                remote(caller, b'> ')
+                            else:
+                                caller.sendall(b'QUEUEPRB\r')
+                                remote(caller, b'PENDING COMMAND ARMED')
                             caller.close()
                             local(b'[Carrier lost]', timeout=20)
                         else:
-                            if attempt == 2:
+                            if attempt == calls - 1:
                                 caller.sendall(b'QUEUEPRB\r')
                                 remote(caller, b'PENDING COMMAND ARMED')
                                 os.write(master, b'\x0e')  # BYE's local forced-disconnect key.
@@ -206,7 +269,10 @@ def run(source, runtime, tools, builds, output, tcpser, romwbw=None, autostart=F
                                 raise RuntimeError('BYE/forced disconnect did not hang up')
                         if guest.poll() is not None:
                             raise RuntimeError('Caller BYE terminated cpmsim')
-                        time.sleep(.4)
+                answer_ready(calls + 1)
+                if services:
+                    service_checks.verify_inbox(work)
+                service_checks.verify_work_clean(tools, work)
                 if romwbw:
                     listing = subprocess.check_output([str(tools / 'cpmls'), '-T', 'raw',
                         '-f', 'ibm-3740', str(disk), '0:*']).lower()
@@ -232,9 +298,13 @@ def run(source, runtime, tools, builds, output, tcpser, romwbw=None, autostart=F
                 queued_count = (work / 'console.log').read_bytes().count(b'STALE-COMMAND-EXECUTED')
                 if queued_count != 1:
                     raise RuntimeError(f'Expected only the queued-command positive control; got {queued_count}')
-                print(f'PASS {mode}: {"Z3PLUS" if romwbw else "CP/M 3"}, three calls in one guest, '
+                print(f'PASS {mode}: {"Z3PLUS" if romwbw else "CP/M 3"}, {calls} calls in one guest, '
                       'transient commands, local typing, private blanking, BYE/carrier-loss/forced logoff; '
-                      'pending-command cleanup; BYEBYE shutdown', flush=True)
+                      'pending-command/WORK cleanup; I1 preserved; BYEBYE shutdown', flush=True)
+                if services:
+                    print(f'PASS {mode}: XMODEM upload with CRC retry/duplicate; YMODEM batch '
+                          'upload and J: download; saved MESSAGE; persistent inbox; '
+                          'discarded partial upload/draft; service state reset', flush=True)
             except Exception:
                 # Keep guest registers and RAM for diagnosing failed lifecycle tests.
                 if guest.poll() is None:
@@ -265,12 +335,20 @@ if __name__ == '__main__':
     parser.add_argument('--probe-remote-shutdown', action='store_true',
                         help='Security probe on disposable media: a caller tries BYEBYE; '
                              'failure or disconnect means local-only shutdown is not established')
+    parser.add_argument('--services', action='store_true',
+                        help='Check modem-path transfers, messages and persistence across four calls')
+    parser.add_argument('--work-readonly', action='store_true',
+                        help='Verify failed WORK cleanup disables answering and returns to local CP/M')
     args = parser.parse_args()
     if args.autostart and not args.romwbw:
         parser.error('--autostart requires --romwbw')
     if args.probe_remote_shutdown and not args.romwbw:
         parser.error('--probe-remote-shutdown requires --romwbw')
+    if args.services and not args.romwbw:
+        parser.error('--services requires --romwbw')
+    if args.work_readonly and (not args.romwbw or args.services or args.probe_remote_shutdown):
+        parser.error('--work-readonly requires --romwbw and cannot be combined with other service probes')
     run(args.source.resolve(), args.runtime.resolve(), args.cpmtools.resolve(),
         args.builds.resolve(), args.output.resolve(), args.tcpser.resolve(),
         args.romwbw.resolve() if args.romwbw else None, args.autostart,
-        args.probe_remote_shutdown)
+        args.probe_remote_shutdown, args.services, args.work_readonly)

@@ -120,7 +120,7 @@ transcript is build/bye5/build.log. Commands, configured source hashes,
 artifact hashes and the runtime hash are recorded in build-result.json.
 The builder has not been pointed at live installation disks.
 
-The direct driver is 4224 bytes; the Hayes driver is 4608 bytes; each entry
+The direct driver is 4864 bytes; the Hayes driver is 5248 bytes; each entry
 program is 512 bytes. These are file sizes, not measured resident-memory
 requirements. Distribution of the configured upstream binaries still requires
 resolving the notice discussed in the reference review. The binaries remain
@@ -193,9 +193,11 @@ The tcpser test process inherits Python's ignored SIGPIPE disposition
 closed caller socket from terminating the modem process with SIGPIPE. This
 is process launch behavior, not a Hayes setting or guest wheel policy.
 
-Logs are retained under each checker output directory. These tests do not
-establish protection against arbitrary caller programs, correct WORK cleanup,
-file-transfer compatibility, or emulator-enforced archive-write privileges.
+Logs are retained under each checker output directory. The
+[shared-service checks](shared-services.md) extend these tests to uploads,
+YMODEM downloads, persistent messages and WORK cleanup. These checks do not
+establish protection against arbitrary caller programs, compatibility with
+every transfer program, or emulator-enforced archive-write privileges.
 
 ## Automatic boot startup
 
@@ -258,8 +260,9 @@ existing padding settings; choosing those settings remains configuration.
 1. Add emulator enforcement of sysop/caller archive-write transitions, using
    trusted local operator authority. The guest wheel integration is now
    working but is not an independent security boundary.
-2. Integrate chat, modem-path transfers, persistent upload/message storage,
-   WORK cleanup, and recovery policy. Preserve the agreed drive layout.
+2. Integrate chat, remaining transfer protocols and transfer-time operator
+   controls. X/YMODEM uploads, YMODEM downloads, persistent messages and native
+   BDOS WORK cleanup now pass on both backends; include these in installation.
 3. Check Z-System shell compatibility with BYE's SCB changes, as described
    above, before claiming general shell support.
 4. Provide the single-machine launcher, selecting direct TCP or tcpser, with

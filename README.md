@@ -16,6 +16,11 @@ now pass shared-console checks with Z3PLUS. Z3PLUS wheel transitions
 and automatic boot startup are verified. Emulator security enforcement and
 migration remain pending; the current launcher is unchanged.
 
+The [shared-machine service checks](docs/shared-services.md) now cover
+X/YMODEM uploads, YMODEM downloads, persistent messages and guest-safe WORK
+cleanup with both connection options. Remaining protocols and operator
+controls during transfers still require integration.
+
 In the new disk set, `BYE.COM` is BYE5 remote service/logoff; the native
 cpmsim shutdown program is preserved as `BYEBYE.COM`. Restricting shutdown
 to the local sysop is required but has not yet been enforced.

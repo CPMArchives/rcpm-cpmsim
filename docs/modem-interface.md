@@ -12,9 +12,11 @@ the unresolved privileged-takeover boundary.
 
 ## Device selection
 
-The device is additive. Existing console, serial, archive, upload and message
-ports retain their handlers. Decimal ports 70-72 are reserved for the new
-modem device. The build rejects conflicts with these ports.
+The device is additive. Existing console, serial and archive ports retain
+their handlers. Upload/message/YMODEM service ports retain their command
+contract; their binary transfer I/O now follows the selected modem transport.
+Decimal ports 70-72 are the modem device; 73 resets session-only service state.
+The build rejects conflicts with these ports.
 
 The environment selects one backend before emulator startup:
 
@@ -48,6 +50,7 @@ All port numbers below are decimal. Bits not listed read zero.
 | 71 (`47h`) | OUT | Send one eight-bit data byte. Test TX-ready first. |
 | 72 (`48h`) | IN | Last persistent control value, bits 0/1 only. |
 | 72 (`48h`) | OUT | Set DTR/answer flags; optional direct hangup pulse. |
+| 73 (`49h`) | OUT | Discard unsaved service state and prepared transfer handles; committed inbox files remain. |
 
 | Status bit | Meaning |
 | --- | --- |
@@ -102,8 +105,9 @@ From the repository root, use the pinned z80pack source described in README.
 The builder copies sources to a temporary build directory, disables shared
 AUX FIFOs there, integrates the device, and atomically installs only the
 requested executable. It leaves the source checkout and live executables
-untouched. Both stock and project-patched source layouts are supported when
-the expected integration points and free ports are present.
+untouched. Missing mount/upload/message/YMODEM patches are applied in dependency
+order to that copy. Both stock and project-patched source layouts are supported
+when the expected integration points and free ports are present.
 
 ```sh
 python3 build_modem_runtime.py /path/to/z80pack build/modem/cpmsim
@@ -152,10 +156,11 @@ This acceptance program is not a BYE replacement and has no caller security.
 ## Remaining architecture and security work
 
 The interface now supports the project machine insert and two BYE5 RSX
-builds. Initial Z3PLUS, shared-keyboard and blanking checks pass. Chat,
-privilege enforcement, call cleanup and the transfer/archive extensions
-remain to be integrated. Current
-host-console transfer helpers have not yet been moved to this modem channel.
+builds. Z3PLUS, shared-keyboard and blanking checks pass. The
+[shared-service checks](shared-services.md) now verify X/YMODEM uploads,
+YMODEM downloads, message persistence and WORK cleanup over both backends.
+Chat, remaining protocols and transfer-time operator controls, archive-write
+authority, broader recovery and launcher migration remain to be integrated.
 
 Guest code can issue modem I/O directly. These registers do not grant sysop
 archive write access, and DTR must not be treated as proof of sysop identity.
