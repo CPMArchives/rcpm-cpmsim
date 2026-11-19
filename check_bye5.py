@@ -44,7 +44,9 @@ def run(source, runtime, tools, builds, output, tcpser, romwbw=None):
             subprocess.run([str(tools / 'cpmcp'), '-T', 'raw', '-f', 'ibm-3740',
                             str(disk), str(builds / mode / name), '0:' + name], check=True)
         for name, content in (('PROBE.TXT', b'SHARED-CONSOLE-OK\r\n\x1a'),
-                              ('PRIVATE.TXT', b'PRIVATE-OUTPUT-CHECK\r\n\x1a')):
+                              ('PRIVATE.TXT', b'PRIVATE-OUTPUT-CHECK\r\n\x1a'),
+                              ('USERCHK.TXT', b'CALLER-FILE-REMAINS\r\n\x1a'),
+                              ('SYSCHK.TXT', b'SYSOP-FILE-TO-DELETE\r\n\x1a')):
             path = work / name
             path.write_bytes(content)
             subprocess.run([str(tools / 'cpmcp'), '-T', 'raw', '-f', 'ibm-3740',
@@ -94,10 +96,24 @@ def run(source, runtime, tools, builds, output, tcpser, romwbw=None):
                 local(prompt)
                 os.write(master, b'BYE\r')
                 local(b'BYE5')
+                if not romwbw:
+                    result = local(b'A>', timeout=30)
+                    if b'requires a valid Z3PLUS environment' not in result:
+                        raise RuntimeError('Expected refusal without Z3PLUS')
+                    print(f'PASS {mode}: missing Z3PLUS is refused before answering', flush=True)
+                    continue
                 caller_port = port if mode == 'direct' else call_port
                 for attempt in range(3):
                     if mode == 'ip232':
-                        # Let the period modem initialization finish before dialing.
+                        # Wait for Hayes initialization, including a potentially silent
+                        # environment scan, before measuring the final quiet interval.
+                        deadline = time.monotonic() + 30
+                        marker = b'ATE0Q0V0S0=0M0S10=25X1H0'
+                        while (work / 'console.log').read_bytes().count(marker) < attempt + 1:
+                            if time.monotonic() > deadline:
+                                raise RuntimeError('Hayes initialization command not observed')
+                            if select.select([master], [], [], .05)[0]:
+                                log.write(os.read(master, 8192)); log.flush()
                         quiet = time.monotonic()
                         deadline = quiet + 30
                         while time.monotonic() - quiet < 2:
@@ -108,6 +124,11 @@ def run(source, runtime, tools, builds, output, tcpser, romwbw=None):
                                 quiet = time.monotonic()
                     with socket.create_connection(('127.0.0.1', caller_port), timeout=3) as caller:
                         remote(caller, prompt, kick=mode == 'direct', timeout=45)
+                        if romwbw:
+                            caller.sendall(b'ERA USERCHK.TXT\r')
+                            remote(caller, prompt)
+                            caller.sendall(b'TYPE USERCHK.TXT\r')
+                            remote(caller, b'CALLER-FILE-REMAINS', after=prompt)
                         # A real transient command verifies warm boot and console routing.
                         caller.sendall(b'TYPE PROBE.TXT\r')
                         remote(caller, b'SHARED-CONSOLE-OK', after=prompt)
@@ -117,6 +138,9 @@ def run(source, runtime, tools, builds, output, tcpser, romwbw=None):
                             remote(caller, b'SHARED-CONSOLE-OK', after=prompt)
                             os.write(master, b'\x02')
                             local(prompt)
+                            if romwbw:
+                                os.write(master, b'ERA SYSCHK.TXT\r')
+                                local(prompt)
                             os.write(master, b'TYPE PRIVATE.TXT\r')
                             local(prompt)
                             os.write(master, b'\x02')
@@ -149,6 +173,11 @@ def run(source, runtime, tools, builds, output, tcpser, romwbw=None):
                         if guest.poll() is not None:
                             raise RuntimeError('Caller BYE terminated cpmsim')
                         time.sleep(.4)
+                if romwbw:
+                    listing = subprocess.check_output([str(tools / 'cpmls'), '-T', 'raw',
+                        '-f', 'ibm-3740', str(disk), '0:*']).lower()
+                    if b'userchk.txt' not in listing or b'syschk.txt' in listing:
+                        raise RuntimeError('Wheel transition file checks failed')
                 print(f'PASS {mode}: {"Z3PLUS" if romwbw else "CP/M 3"}, three calls in one guest, '
                       'transient commands, local typing, private blanking, BYE/carrier-loss/forced logoff', flush=True)
             finally:

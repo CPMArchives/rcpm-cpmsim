@@ -1,7 +1,8 @@
 # cpmsim modem interface for BYE5
 
 Status: implemented and tested as an isolated hardware device. Both [BYE5 builds](bye5-build.md) now pass initial Z3PLUS shared-console
-checks. Privilege integration, startup and production migration remain pending. This is not a replacement remote-access program.
+checks. Wheel command-policy transitions now pass; emulator privilege enforcement,
+startup and production migration remain pending. This is not a replacement remote-access program.
 
 ## Device selection
 

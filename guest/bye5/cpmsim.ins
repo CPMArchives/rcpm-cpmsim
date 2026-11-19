@@ -16,7 +16,17 @@ MDOUTP: OUT 47H
 MDCARCK: IN 46H
         ANI 4
         RET
-MDINIT: MVI A,3
+MDINIT: CALL WXINIT
+        PUSH H
+        LHLD WXADDR
+        MOV A,H
+        ORA L
+        POP H
+        JNZ MDRDY
+        LXI H,WXERROR
+        CALL PRINTL
+        JMP EXCPM
+MDRDY:  MVI A,3
         OUT 48H
         IF B5IM
         JMP IMINIT
@@ -38,3 +48,5 @@ SET9600:
 SET19200:
         XRA A
         RET
+
+WXERROR: DB 13,10,'RCP/M requires a valid Z3PLUS environment.',13,10,0

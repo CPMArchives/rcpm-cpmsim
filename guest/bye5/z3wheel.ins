@@ -1,0 +1,109 @@
+; Project-authored Z3PLUS wheel adapter. No fixed runtime addresses.
+; Z3LIB GETWHL uses ENV+29h for the wheel pointer. Validate signature,
+; environment type and ENV's self pointer before adopting a candidate.
+; This is guest command policy, not a host security boundary.
+WXINIT: PUSH PSW
+        PUSH B
+        PUSH D
+        PUSH H
+        LXI H,0
+        SHLD WXADDR
+        LXI H,8000H
+WXLOOP: MOV A,M
+        CPI 0C3H
+        JNZ WXSKIP
+        PUSH H
+        LXI B,3
+        DAD B
+        MOV A,M
+        CPI 'Z'
+        JNZ WXNEXT
+        INX H
+        MOV A,M
+        CPI '3'
+        JNZ WXNEXT
+        INX H
+        MOV A,M
+        CPI 'E'
+        JNZ WXNEXT
+        INX H
+        MOV A,M
+        CPI 'N'
+        JNZ WXNEXT
+        INX H
+        MOV A,M
+        CPI 'V'
+        JNZ WXNEXT
+        INX H
+        MOV A,M
+        CPI 80H
+        JNZ WXNEXT
+        POP H
+        PUSH H
+        LXI B,1BH
+        DAD B
+        MOV E,M
+        INX H
+        MOV D,M
+        POP H
+        PUSH H
+        MOV A,L
+        CMP E
+        JNZ WXNEXT
+        MOV A,H
+        CMP D
+        JNZ WXNEXT
+        LXI B,29H
+        DAD B
+        MOV E,M
+        INX H
+        MOV D,M
+        MOV A,D
+        CPI 80H
+        JC WXNEXT
+        XCHG
+        SHLD WXADDR
+        MOV A,M
+        STA WXLOCAL
+        POP H
+        JMP WXDONE
+WXNEXT: POP H
+WXSKIP: INX H
+        MOV A,H
+        CPI 0FFH
+        JNZ WXLOOP
+WXDONE: POP H
+        POP D
+        POP B
+        POP PSW
+        RET
+; Getter returns A; all upstream uses immediately test A with ORA.
+WXGET:  PUSH H
+        LHLD WXADDR
+        MOV A,H
+        ORA L
+        JZ WXFALL
+        MOV A,M
+        POP H
+        RET
+WXFALL: LDA WXLOCAL
+        POP H
+        RET
+; Setter preserves registers and flags, like the original STA instruction.
+WXSET:  STA WXLOCAL
+        PUSH PSW
+        PUSH H
+        LHLD WXADDR
+        MOV A,H
+        ORA L
+        JZ WXSDONE
+        LDA WXLOCAL
+        MOV M,A
+WXSDONE: POP H
+        POP PSW
+        RET
+WXADDR: DW 0
+WXLOCAL: DB 0
+WXDRIVE: DB 15
+WXUSER: DB 16
+WXSPD:  DB 0

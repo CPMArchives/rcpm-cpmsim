@@ -161,4 +161,6 @@ compatibility checks. Both configured builds have now been produced and tested l
 The isolated [modem-control interface](modem-interface.md) and transport
 checks are now implemented, including CP/M 3 guest checks for direct TCP and
 real tcpser. Both BYE5 configurations now pass initial shared-console tests with Z3PLUS.
-Privilege integration, boot startup and production migration remain pending.
+Z3PLUS wheel linkage and command-policy transitions now pass functional
+checks. Emulator-enforced archive privileges, boot startup and production
+migration remain pending.

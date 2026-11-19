@@ -13,7 +13,9 @@ def configure(reference, mode):
     text = (reference / 'bye510.asm').read_text()
     options = dict(CPM3='YES', HS2400='YES', IMODEM='YES' if mode == 'ip232' else 'NO',
                    B5IM='YES' if mode == 'ip232' else 'NO', SKTERM='YES', MHZ='4',
-                   TOVALUE='255')
+                   TOVALUE='255', ZCPR2='YES', WHEEL='WXLOCAL',
+                   MAXDRIV='WXDRIVE', MAXUSER='WXUSER', MSPEED='WXSPD',
+                   MAXDRV="'P'-'@'", MAXUSR='15', SYSDRV="'P'-'@'", SYSUSR='15')
     for name, value in options.items():
         pattern = rf'(?m)^({name}\s+EQU\s+)\S+'
         text, count = re.subn(pattern, lambda match: match[1] + value, text)
@@ -41,7 +43,13 @@ def configure(reference, mode):
     marker = ';\t   ++++ Install your I/O port insert here ++++\n'
     if text.count(marker) != 1:
         raise ValueError('Machine insert point missing')
+    # Replace only the four direct loads/stores of the old fixed wheel byte.
+    for opcode, target in (('LDA', 'WXGET'), ('STA', 'WXSET')):
+        text, count = re.subn(r'(?m)^\t' + opcode + r'\tWHEEL\b', '\tCALL\t' + target, text)
+        if count != 4:
+            raise ValueError('Unexpected BYE5 wheel reference count')
     insert = (Path(__file__).parent / 'guest/bye5/cpmsim.ins').read_text()
+    insert += '\n' + (Path(__file__).parent / 'guest/bye5/z3wheel.ins').read_text()
     text = text.replace(marker, marker + insert + '\n')
     return text
 

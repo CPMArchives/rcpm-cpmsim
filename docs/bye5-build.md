@@ -1,7 +1,8 @@
 # BYE5 builds and shared-console checks
 
 Status on November 19, 2026: both configured CP/M 3 BYE510 builds work with
-stock CP/M 3 and with Z3PLUS in isolated tests. This is an integration
+Z3PLUS in isolated tests and now control its actual wheel byte. A missing
+valid Z3PLUS environment is refused before answering. This is an integration
 milestone, not the final installable disk set. The current live launcher
 still uses the earlier architecture.
 
@@ -46,12 +47,48 @@ success. Tests run cpmsim at 4 MHz to match BYE's configured delay loops.
 The direct configuration still follows BYE's period carriage-return speed
 recognition procedure. Nominal modem speed is not a TCP bandwidth limit.
 
-These initial integration builds leave ZCPR wheel support, drive/user policing,
-clock/time-on accounting, BBS entry programs, welcome files, and exit hooks
-disabled. Inactivity timeout is configured to 255 as documented for private
-systems. Shared input, remote blanking, messages and disconnect controls are
-already provided by the core. Enabling a blanked local console is not yet
-verified to change actual Z3PLUS or host archive-write privileges.
+The builds enable BYE's ZCPR2-compatible wheel logic, with a project adapter
+for Z3PLUS. The old four fixed wheel loads and four fixed wheel stores are
+replaced by calls to the adapter. BYE's ordinary state transitions still
+choose the values: zero for a new caller, nonzero for private sysop blanking
+or local exit, and zero again on unblanking.
+
+`guest/bye5/z3wheel.ins` discovers an environment at initialization rather
+than compiling in a wheel address. It searches the supported upper-memory
+range 8000h-FEFFh, requiring a JP header, Z3ENV signature, type 80h, and a
+matching environment self pointer at offset 1Bh. It obtains the wheel
+pointer from offset 29h, as specified by Z3LIB's GETWHL routine. This is
+metadata discovery inside the guest, not authentication of the guest.
+No match returns to local CP/M without enabling answering. Do not reload
+or remove Z3PLUS during a live BYE session; stop BYE first so its next
+initialization discovers the current environment.
+
+The runtime ZSHOW observation on the default test system was ENV=F380h and
+WHL=F58Bh. Those values are evidence for that configuration, not constants
+in the adapter. BYE's legacy speed/max-drive/max-user bytes now live inside
+the RSX, avoiding blind writes to historical low-memory locations.
+Caller and sysop drive/user maxima are presently P15; per-drive access policy
+has not been implemented by this change.
+
+Drive/user policing, clock/time-on accounting, BBS entry programs, welcome
+files, and exit hooks remain disabled. Inactivity timeout is configured to
+255 as documented for private systems. Shared input, remote blanking,
+messages and disconnect controls are provided by the core.
+
+### Security boundary
+
+Verified command-policy behavior is that the Z-System resident ERA command
+is denied with the wheel off and works during private sysop blanking.
+This does not imply that external ERASE.COM, PIP, arbitrary Z80 programs,
+BDOS/BIOS calls, or direct emulator I/O are restricted by that same check.
+The adapter does not change host disk permissions or FDC write protection.
+
+A caller program can modify guest memory, including the wheel byte. A
+future emulator write-permission gate must not grant authority merely
+because the guest wheel byte is nonzero or a guest program requests it.
+Local operator authority, pending disk writes at transitions, and leftover
+caller code in the shared machine must be considered in the security
+workstream before claiming public-operation isolation.
 
 ## Reproduce the build
 
@@ -77,7 +114,7 @@ transcript is build/bye5/build.log. Commands, configured source hashes,
 artifact hashes and the runtime hash are recorded in build-result.json.
 The builder has not been pointed at live installation disks.
 
-The direct driver is 3712 bytes; the Hayes driver is 4096 bytes; each entry
+The direct driver is 4096 bytes; the Hayes driver is 4480 bytes; each entry
 program is 512 bytes. These are file sizes, not measured resident-memory
 requirements. Distribution of the configured upstream binaries still requires
 resolving the notice discussed in the reference review. The binaries remain
@@ -103,7 +140,9 @@ starts BYE from an interactive CCP prompt. The stock editor is removed from
 these test copies to make room for the drivers and test files. Original
 media and the operator's installation remain untouched.
 
-Verified with both configurations on stock CP/M 3:
+The earlier transport-only builds passed the following on stock CP/M 3.
+The current builds require Z3PLUS, and the stock-only checker now verifies
+that both configurations refuse to answer without a valid environment:
 
 - Two sequential calls use one emulator process.
 - A caller executes a transient TYPE command and returns to the CCP.
@@ -118,6 +157,10 @@ Verified again with Z3PLUS loaded, for both configurations, using three calls:
 - The first call ends with BYE, the second with unexpected carrier loss,
   and the third with the local forced-disconnect key.
 - A subsequent call works after carrier-loss recovery in the same emulator.
+- Every caller fails to erase USERCHK.TXT with the resident ERA command.
+  A private sysop can erase SYSCHK.TXT, and USERCHK.TXT still exists afterward.
+  These checks verify the wheel-off/on/off transitions against actual file
+  operations, including reset to caller restrictions on later calls.
 
 The tests use the default BYE control keys directly. In tmux, Ctrl-B is
 also the default prefix; pressing Ctrl-B twice sends one literal Ctrl-B to
@@ -126,13 +169,13 @@ optional lead-in to avoid application and tmux conflicts.
 
 Logs are retained under each checker output directory. These tests do not
 establish protection against arbitrary caller programs, correct WORK cleanup,
-file-transfer compatibility, or privilege transitions.
+file-transfer compatibility, or emulator-enforced archive-write privileges.
 
 ## Remaining before the disk-set installation is ready
 
-1. Connect BYE to the actual Z3PLUS wheel/environment locations and enforce
-   sysop/caller archive-write transitions. Do not assume historical fixed
-   low-memory addresses match this Z3PLUS installation.
+1. Add emulator enforcement of sysop/caller archive-write transitions, using
+   trusted local operator authority. The guest wheel integration is now
+   working but is not an independent security boundary.
 2. Integrate chat, modem-path transfers, persistent upload/message storage,
    WORK cleanup, and recovery policy. Preserve the agreed drive layout.
 3. Implement boot startup after CP/M's startup SUBMIT activity has finished.
@@ -146,3 +189,12 @@ file-transfer compatibility, or privilege transitions.
 5. Package the configured boot disk and empty data disks with the complete
    installation guide and the required cpmsim build. Verify security before
    public operation.
+
+
+## Reference for wheel discovery
+
+The upstream [Z3LIB GETWHL implementation](https://dflund.se/~pi/cpm/files/ftp.mayn.de/pub/cpm/archive/zcpr33/z3libsrc/z3gwhl.z80.txt)
+locates the wheel pointer at ENV+29h. The Z3PLUS distribution's DEFAULT.Z3P
+records MAXDRV as 1-16 and MAXUSR as 0-15; those are not interchangeable
+with every historical BYE limit byte. The adapter therefore changes the
+wheel linkage without pretending to enforce a new directory policy.
