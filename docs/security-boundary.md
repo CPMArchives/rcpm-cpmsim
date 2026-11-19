@@ -3,6 +3,43 @@
 Reviewed November 19, 2026. The replacement still runs on disposable media;
 the live launcher and private disk set have not been migrated.
 
+## Approved caller execution policy
+
+The operator has specified: "Callers should never have the ability to run
+arbitrary code on the rcpm."
+
+Callers may run only operator-approved programs and commands. Uploaded files
+are confined to UPLOADS and are unavailable for caller execution, copying
+or retrieval until reviewed and explicitly released by the sysop. WORK is
+for caller data; writing a file there must not make it executable. Archive
+downloads do not imply permission to execute archive contents on the system.
+
+This preserves the single shared CP/M machine and live local takeover.
+It does not authorize a new guest per call or a restart before every takeover.
+The earlier choice between period-style controls and isolating arbitrary
+hostile guest programs did not account for this execution policy.
+
+Enforcement remains to be implemented and verified. In particular:
+
+- Restrict execution to approved program contents in locations callers cannot
+  modify. An approved filename or extension alone is insufficient.
+- Cover explicit drive/user filenames, named directories, command search,
+  aliases, scripts and application launchers. PATH configuration alone is
+  not an execution boundary.
+- Prevent callers from replacing an approved program or making a modified
+  copy eligible for execution under the same name.
+- Review debuggers, memory editors, program loaders, interpreters and
+  applications that execute other programs or caller-supplied machine code.
+  Approval of the outer program must not silently approve arbitrary code
+  supplied to it.
+- Keep BYEBYE and other sysop-only tools unavailable to caller execution.
+  Keep host-side protections independent of guest command policy.
+
+The approved program set and application compatibility need review before
+choosing the enforcement mechanism. This policy reduces the intended attack
+surface; it is not evidence that the current build enforces it or that an
+approved program cannot contain a vulnerability.
+
 ## Findings and evidence
 
 | Boundary | Verified implementation | Consequence |
@@ -58,33 +95,19 @@ Currently this intentionally fails on the first direct-TCP call after
 BYEBYE stops the guest. Inspect `direct/console.log` for `System halted`.
 The ordinary shared-console checks do not send this hostile request.
 
-## Decision needed before privileged takeover
+## Residual risk at privileged takeover
 
 A separate local control channel can authenticate operator intent. It can
 also prevent remote input/output before an archive-write gate is enabled.
 Those steps alone do not establish that the executing guest is trustworthy:
-caller code may have changed a resident routine, a return address or a
+if execution policy is bypassed, caller code may change a resident routine, a return address or a
 buffer earlier. Such code could use newly enabled access after the real
 operator requests takeover. Carrier loss must not automatically elevate the
 same memory image for this reason.
 
-Two different guarantees must not be conflated:
-
-1. **Period-style access controls.** Retain BYE's shared machine and live
-   takeover, apply wheel and directory restrictions to normal applications,
-   and require host-authenticated local action for host privilege changes.
-   This preserves the agreed experience, but does not promise isolation from
-   deliberately hostile guest programs surviving a takeover.
-2. **Isolation from hostile guest programs.** Keep archive masters and host
-   operations inaccessible to an exposed guest, including after a call.
-   Privileged maintenance needs a trusted execution state, obtained through
-   a separately designed clean restart or protected execution mechanism.
-   A simple local switch or ordinary warm boot is insufficient. This changes
-   the live-maintenance experience or requires substantial additional emulator
-   architecture, and needs approval before implementation.
-
-The recommended next discussion is to choose the required guarantee
-explicitly. Historical authenticity does not itself imply protection from
-arbitrary Z80 programs, and public TCP connectivity does not supply that
-protection. Until that decision, this increment deliberately adds no privilege
-grant keyed to wheel, carrier, a guest OUT instruction, or a local keystroke.
+The next design task is enforcement of the approved caller execution policy
+alongside local authority and disk protection. Do not treat a caller's ability
+to launch arbitrary programs as an intended feature. Equally, do not claim
+that wheel settings or upload placement alone enforce the policy. No privilege
+grant keyed to wheel, carrier, a guest OUT instruction, or a local keystroke
+has been implemented by this review.

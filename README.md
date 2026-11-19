@@ -17,7 +17,8 @@ cpmsim shutdown program is preserved as `BYEBYE.COM`. Restricting shutdown
 to the local sysop is required but has not yet been enforced.
 
 The [security review](docs/security-boundary.md) records the confirmed remote
-shutdown failure and the decision required for privileged takeover. The new
+shutdown failure and the approved restriction to operator-approved caller
+programs, whose enforcement remains pending. The new
 runtime now disables native host-file I/O whenever RCP/M transport is selected.
 
 

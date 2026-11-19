@@ -38,6 +38,14 @@ must be verified against the selected transfer software.
 
 ## Guest integration and disks
 
+Callers may execute only operator-approved programs and commands, never
+arbitrary caller-supplied code. UPLOADS is inaccessible to callers pending
+sysop review; WORK holds data and is not an unrestricted program-launch
+location. Archive download access does not imply execution permission.
+Enforcement must cover alternate launch paths and prevent replacement of
+approved programs; see the [security policy](docs/security-boundary.md).
+This requirement has been approved but is not yet enforced in the prototype.
+
 Both interfaces use the same mounted P: and J:. There is no publication step
 and no reconnect requirement to see completed changes made within this guest.
 CP/M remains single-user: monitoring, chat, and takeover do not provide two
