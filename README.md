@@ -21,6 +21,10 @@ X/YMODEM uploads, YMODEM downloads, persistent messages and guest-safe WORK
 cleanup with both connection options. Remaining protocols and operator
 controls during transfers still require integration.
 
+For a separate interactive instance of that build, follow
+[Try the shared-machine prototype](docs/try-shared-trial.md). Its generated
+launcher uses loopback port 4001 and leaves the older installation untouched.
+
 In the new disk set, `BYE.COM` is BYE5 remote service/logoff; the native
 cpmsim shutdown program is preserved as `BYEBYE.COM`. Restricting shutdown
 to the local sysop is required but has not yet been enforced.
