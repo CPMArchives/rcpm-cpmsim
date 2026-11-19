@@ -1,8 +1,7 @@
 # cpmsim modem interface for BYE5
 
-Status: implemented and tested as an isolated hardware device. BYE5 builds,
-Z3PLUS integration, shared-console controls and production migration remain
-pending. This is not a replacement remote-access program.
+Status: implemented and tested as an isolated hardware device. Both [BYE5 builds](bye5-build.md) now pass initial Z3PLUS shared-console
+checks. Privilege integration, startup and production migration remain pending. This is not a replacement remote-access program.
 
 ## Device selection
 
@@ -145,9 +144,10 @@ This acceptance program is not a BYE replacement and has no caller security.
 
 ## Remaining architecture and security work
 
-The interface is ready for the two BYE5 machine inserts and minimal RSX
-builds. Next verify BYE5 with Z3PLUS, then shared keyboard/blanking/chat,
-call cleanup and the existing transfer and archive extensions. Current
+The interface now supports the project machine insert and two BYE5 RSX
+builds. Initial Z3PLUS, shared-keyboard and blanking checks pass. Chat,
+privilege enforcement, call cleanup and the transfer/archive extensions
+remain to be integrated. Current
 host-console transfer helpers have not yet been moved to this modem channel.
 
 Guest code can issue modem I/O directly. These registers do not grant sysop

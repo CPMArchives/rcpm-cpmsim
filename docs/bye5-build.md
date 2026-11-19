@@ -1,0 +1,148 @@
+# BYE5 builds and shared-console checks
+
+Status on November 19, 2026: both configured CP/M 3 BYE510 builds work with
+stock CP/M 3 and with Z3PLUS in isolated tests. This is an integration
+milestone, not the final installable disk set. The current live launcher
+still uses the earlier architecture.
+
+## Distribution experience and workstreams
+
+The intended release lets an operator put the boot disk, P: archive disk,
+J: volume collection and I: work disk in an installation directory, start
+the selected connection service, and boot cpmsim. BYE5 belongs on the system
+boot disk. Users should not need a compiler, per-caller emulator instances,
+or archive-publication commands to run it. Direct TCP uses cpmsim's own
+listener; the modem option uses tcpser. A convenience launcher can start
+these dependencies and attach the local terminal without changing that model.
+
+The distribution's P: image remains empty. Archive contents, directory
+names, welcome/help text and service policies are operator configuration.
+
+The implementation is divided into architecture, security, caller services
+and configuration, and sysop management tools. Architecture must expose the
+interfaces those later services need. Security is developed alongside it;
+configuration of those services can follow once the foundation works.
+
+## What has been built
+
+| Configuration | Files | Behavior |
+| --- | --- | --- |
+| Direct TCP | `build/bye5/direct/BYE.COM`, `BYEDRIV.COM` | Uses the cpmsim connection device as a dumb auto-answer connection. |
+| tcpser | `build/bye5/ip232/BYE.COM`, `BYEDRIV.COM` | Uses the same device through IP232 and BYE5's Hayes initialization/answer logic. |
+
+BYE.COM is the common CP/M 3 entry program. BYEDRIV.COM is a loader with the
+configuration-specific BYE5 RSX attached by GENCOM. Each pair is installed
+on A: in its test system; install only the chosen pair in a running system.
+The original loader's filename reference is configured to A:BYEDRIV.COM.
+
+Project-authored `guest/bye5/cpmsim.ins` supplies the hardware routines.
+The configured sources enable CP/M 3, select a nominal 2400-bps maximum,
+select Hayes support for tcpser only, and apply Irv Hoff's published
+August 4, 1986 keyboard correction. The core remote-console routines remain
+upstream BYE5 code. No host console relay implements the shared-console test.
+
+The emulated serial device has no baud clock; baud-selection routines report
+success. Tests run cpmsim at 4 MHz to match BYE's configured delay loops.
+The direct configuration still follows BYE's period carriage-return speed
+recognition procedure. Nominal modem speed is not a TCP bandwidth limit.
+
+These initial integration builds leave ZCPR wheel support, drive/user policing,
+clock/time-on accounting, BBS entry programs, welcome files, and exit hooks
+disabled. Inactivity timeout is configured to 255 as documented for private
+systems. Shared input, remote blanking, messages and disconnect controls are
+already provided by the core. Enabling a blanked local console is not yet
+verified to change actual Z3PLUS or host archive-write privileges.
+
+## Reproduce the build
+
+First build the modem runtime and reliable raw cpmtools as documented in
+README and `modem-interface.md`. Obtain the pinned z80pack checkout. Then:
+
+```sh
+python3 prepare_bye5.py --fetch
+python3 build_bye5.py --source /absolute/path/to/z80pack
+```
+
+Alternatively, pass `--reference /path/to/reference` to the preparer. That
+folder must contain pristine bye510.asm, b5-cpm3.asm and b5-driv3.asm. The
+preparer verifies source hashes against `bye510-reference-sources.json`.
+With --fetch, missing sources are downloaded to the ignored build cache and
+verified before use. Source configuration is written under build/bye5/sources.
+Upstream files are never edited or vendored into this repository.
+
+The builder creates its own machine under build/bye5/machine from stock CP/M 3
+media and a fresh 4-MB I: image. It removes PROFILE.SUB only from its own boot
+copy and runs RMAC 1.1, LINK 1.31 and GENCOM inside CP/M. The full console
+transcript is build/bye5/build.log. Commands, configured source hashes,
+artifact hashes and the runtime hash are recorded in build-result.json.
+The builder has not been pointed at live installation disks.
+
+The direct driver is 3712 bytes; the Hayes driver is 4096 bytes; each entry
+program is 512 bytes. These are file sizes, not measured resident-memory
+requirements. Distribution of the configured upstream binaries still requires
+resolving the notice discussed in the reference review. The binaries remain
+local build artifacts for now.
+
+## Repeat the runtime checks
+
+Use the referenced tcpser build and the RomWBW checkout used by the existing
+Z3PLUS preparation process. Set PATH to prefer the verified raw tools:
+
+```sh
+export PATH="$PWD/build/cpmtools/bin:$PATH"
+python3 check_bye5.py --source /absolute/path/to/z80pack \
+  --tcpser /absolute/path/to/tcpser
+python3 check_bye5.py --source /absolute/path/to/z80pack \
+  --tcpser /absolute/path/to/tcpser \
+  --romwbw /absolute/path/to/RomWBW \
+  --output build/bye5/z3checks
+```
+
+The checker creates disposable boot disks, installs the selected pair, and
+starts BYE from an interactive CCP prompt. The stock editor is removed from
+these test copies to make room for the drivers and test files. Original
+media and the operator's installation remain untouched.
+
+Verified with both configurations on stock CP/M 3:
+
+- Two sequential calls use one emulator process.
+- A caller executes a transient TYPE command and returns to the CCP.
+- Local keyboard input operates that same session and is visible remotely.
+- Remote blanking keeps the private test-file output local, and unblanking
+  restores remote operation.
+- Caller BYE hangs up while cpmsim continues waiting for calls.
+
+Verified again with Z3PLUS loaded, for both configurations, using three calls:
+
+- The same shared-console, transient-command and blanking checks pass.
+- The first call ends with BYE, the second with unexpected carrier loss,
+  and the third with the local forced-disconnect key.
+- A subsequent call works after carrier-loss recovery in the same emulator.
+
+The tests use the default BYE control keys directly. In tmux, Ctrl-B is
+also the default prefix; pressing Ctrl-B twice sends one literal Ctrl-B to
+the guest for remote blanking. Final key configuration can use BYE's
+optional lead-in to avoid application and tmux conflicts.
+
+Logs are retained under each checker output directory. These tests do not
+establish protection against arbitrary caller programs, correct WORK cleanup,
+file-transfer compatibility, or privilege transitions.
+
+## Remaining before the disk-set installation is ready
+
+1. Connect BYE to the actual Z3PLUS wheel/environment locations and enforce
+   sysop/caller archive-write transitions. Do not assume historical fixed
+   low-memory addresses match this Z3PLUS installation.
+2. Integrate chat, modem-path transfers, persistent upload/message storage,
+   WORK cleanup, and recovery policy. Preserve the agreed drive layout.
+3. Implement boot startup after CP/M's startup SUBMIT activity has finished.
+   B5-DRIV3's source warns that running it within SUBMIT can allow GET's later
+   removal to restore console vectors. Merely adding BYE to PROFILE.SUB is
+   not a verified solution. BYE should start once Z3PLUS and its environment
+   are ready, with no startup redirection left to undo BYE's hooks.
+4. Provide the single-machine launcher, selecting direct TCP or tcpser, with
+   local tmux detach/reattach and explicit shutdown. Retire the per-caller
+   VM and snapshot-publication path from the normal installation.
+5. Package the configured boot disk and empty data disks with the complete
+   installation guide and the required cpmsim build. Verify security before
+   public operation.

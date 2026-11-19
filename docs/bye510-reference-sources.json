@@ -25,6 +25,16 @@
       "url": "https://dflund.se/~pi/cpm/files/ftp.mayn.de/pub/cpm/archive/rcpm/chat46/chat46.asm.txt",
       "bytes": 21551,
       "sha256": "a24acfd30bd2ad67d050b8bf22a1e7c410cc451db03fa1b8aa053db5a2e827a2"
+    },
+    {
+      "url": "https://dflund.se/~pi/cpm/files/ftp.mayn.de/pub/cpm/archive/bye5/bye510/b5-cpm3.asm.txt",
+      "bytes": 3964,
+      "sha256": "47c6ad73684ee141701f3fbf99a21c4e70304cb35336a7bc45ce36ad32f85000"
+    },
+    {
+      "url": "https://dflund.se/~pi/cpm/files/ftp.mayn.de/pub/cpm/archive/bye5/bye510/b5-driv3.asm.txt",
+      "bytes": 3035,
+      "sha256": "910e560f2ade16f1fd4fa8d2e02d4990ec05b2feb2172280b0a405ca52c4fb25"
     }
   ]
 }

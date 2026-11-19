@@ -1,7 +1,7 @@
 # BYE510 reference review and implementation recommendation
 
-Review date: November 19, 2026. Status: source review completed; no BYE5
-binary has yet been built or tested against our CP/M 3 and Z3PLUS images.
+Review date: November 19, 2026. Status: source review and initial [BYE5 build/runtime checks](bye5-build.md) completed
+for both connection configurations under CP/M 3 and Z3PLUS.
 The running installation has not been migrated.
 
 ## Reference and evidence
@@ -155,9 +155,10 @@ transports. Artifact names will be settled during the build experiment.
 
 This is the packaging target. Bundling configured BYE5 binaries remains
 subject to resolving the distribution constraint above and passing the
-compatibility checks. Neither configured build has been produced yet.
+compatibility checks. Both configured builds have now been produced and tested locally; see the
+[build report](bye5-build.md) for configuration limits and remaining work.
 
 The isolated [modem-control interface](modem-interface.md) and transport
 checks are now implemented, including CP/M 3 guest checks for direct TCP and
-real tcpser. The next deliverable is the two machine inserts and minimal
-BYE5 builds. BYE5/Z3PLUS compatibility and migration remain unverified.
+real tcpser. Both BYE5 configurations now pass initial shared-console tests with Z3PLUS.
+Privilege integration, boot startup and production migration remain pending.

@@ -1,0 +1,40 @@
+; Project-authored BYE5 machine insert for the cpmsim modem device.
+; The BYE5 core selects direct or Hayes behavior through IMODEM/B5IM.
+MDINST: IN 46H
+        ANI 1
+        RET
+MDOUTST: IN 46H
+        ANI 2
+        RET
+MDINP:  IN 46H
+        ANI 1
+        RZ
+        IN 47H
+        RET
+MDOUTP: OUT 47H
+        RET
+MDCARCK: IN 46H
+        ANI 4
+        RET
+MDINIT: MVI A,3
+        OUT 48H
+        IF B5IM
+        JMP IMINIT
+        ENDIF
+        RET
+MDQUIT:
+MDSTOP: XRA A
+        OUT 48H
+        RET
+; The emulated serial link has no baud clock. Report successful selection.
+SET300:
+SET450:
+SET600:
+SET710:
+SET1200:
+SET2400:
+SET4800:
+SET9600:
+SET19200:
+        XRA A
+        RET

@@ -7,8 +7,9 @@ recommendation](docs/bye510-review.md) and [shared-console requirements](SHARED-
 The replacement has not yet been activated.
 
 The [direct TCP and tcpser modem interface](docs/modem-interface.md) is built
-and tested in isolation, including actual CP/M 3 guest I/O. BYE5 integration
-is the next stage; the current launcher is unchanged.
+and tested in isolation, including actual CP/M 3 guest I/O. Both [BYE5 builds](docs/bye5-build.md)
+now pass shared-console checks with Z3PLUS. Boot startup, security integration
+and migration remain pending; the current launcher is unchanged.
 
 
 A Remote CP/M system in development for the CPMArchives software collection.
