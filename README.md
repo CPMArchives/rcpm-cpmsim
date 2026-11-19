@@ -1,5 +1,12 @@
 # RCP/M on cpmsim
 
+**Architecture transition:** The current scripts below still run separate local
+and caller instances. The agreed target is one shared CP/M machine following
+mid-1980s BYE behavior. See the [BYE510 source review and implementation
+recommendation](docs/bye510-review.md) and [shared-console requirements](SHARED-CONSOLE-DESIGN.md).
+The replacement has not yet been activated.
+
+
 A Remote CP/M system in development for the CPMArchives software collection.
 Callers will land directly at the CP/M prompt. The local prototype uses
 banked CP/M 3 on Udo Munk’s z80pack cpmsim and Z3PLUS for named directories.

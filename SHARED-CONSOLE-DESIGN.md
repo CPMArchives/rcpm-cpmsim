@@ -12,31 +12,29 @@ archive publication workflow. The current code still implements that older
 architecture. This document records the replacement requirements, not a
 completed migration.
 
-## Console ownership
+## Historical reference and console ownership
 
-A background service owns the emulator PTY, the network listener, and a
-local-only operator endpoint. A local terminal client attaches through that
-endpoint. tmux hosts the terminal client if desired; it does not determine
-the guest lifetime. Operator access must be restricted to the host owner.
+The [BYE510 review](docs/bye510-review.md) records the source findings and
+recommended experiment. It supersedes the earlier proposal for a host
+console broker, exclusive shared-input modes and host-managed chat.
 
-The service duplicates guest output to the local observer and the connected
-caller. File-transfer bytes must reach the caller unchanged. Local display
-of binary transfer traffic can be suppressed without consuming or modifying
-the caller's stream. Slow or detached observers must not stall transfers.
+First evaluate BYE510's supplied CP/M 3 RSX with a cpmsim machine insert.
+The local BIOS console remains the operator terminal; the separate TCP
+serial device supplies modem I/O. BYE manages their relationship in the
+same guest. tmux can retain this console while the local terminal detaches.
+The running installation still uses the previous separate-instance design.
 
-Explicit modes govern input and output:
+| Operation | Intended behavior |
+| --- | --- |
+| Shared session | Caller and local sysop may type; console output is visible locally and remotely. Local assistance does not elevate privileges. |
+| Private sysop work | Explicit remote blanking suppresses modem input/output and enables local sysop privileges. Unblanking restores caller restrictions. |
+| Operator message | BYE's local message function writes to the caller and local console. |
+| Two-way chat | A configured guest CHAT utility provides paging and conversation. |
+| Local offline work | The operator disables answering; one CP/M instance remains in use. |
 
-| Mode | Guest input | Caller receives |
-| --- | --- | --- |
-| Local operation | Sysop keyboard | No caller admitted to privileged session |
-| Caller operation | Caller keyboard | Guest console output |
-| Chat | Guest input paused; both keyboards go to chat | Chat text |
-| Sysop takeover | Sysop keyboard; caller input suspended | Status or an explicit supervised view |
-
-Chat must suspend guest input while retaining and safely handling guest
-output. Entering chat or takeover during a transfer requires a defined
-transfer-completion or cancellation path; arbitrary byte injection is unsafe.
-Returning control requires restoring caller privilege and disk policy first.
+Control keys must be interpreted only on the local keyboard path. File
+transfers use raw modem I/O; the control and chat behavior during transfers
+must be verified against the selected transfer software.
 
 ## Guest integration and disks
 
@@ -45,8 +43,9 @@ and no reconnect requirement to see completed changes made within this guest.
 CP/M remains single-user: monitoring, chat, and takeover do not provide two
 independently executing CP/M applications.
 
-Caller BYE ends the call and returns control to the operator service. It must
-not halt the emulator. Local detach also leaves the guest running. Explicit
+Caller BYE ends the call and normally resets BYE to wait for another caller.
+A separate operator control requests local CP/M after the call. Caller BYE
+must not halt the emulator. Local detach also leaves the guest running. Explicit
 operator shutdown flushes guest writes before stopping the machine.
 
 Carrier loss must revoke caller input, recover guest execution, clear only
@@ -62,14 +61,13 @@ must revoke caller access before write privileges are enabled.
 
 ## Incremental implementation and acceptance
 
-1. Add the persistent service and owner-only local client. Verify a single
-   emulator PID, shared output, byte-exact transfers, local detach/reattach,
-   and rejection of a second remote caller. Keep the old installation intact.
-2. Add exclusive input ownership, chat and takeover, including transfer
-   handling and local controls that cannot be invoked by remote bytes.
-3. Integrate guest logoff, carrier-loss recovery, WORK cleanup, and privilege
-   transitions. Verify uploads/messages survive and archive protections return
-   before another caller receives control.
+Follow the detailed gates in the BYE510 review.
+
+1. Extend the existing serial device with explicit carrier and modem controls,
+   preserving existing byte I/O. Verify disconnect, hangup and reconnect.
+2. Build the CP/M 3 BYE5 RSX with a project-authored machine insert on disposable
+   media. Verify Z3PLUS coexistence, one guest, shared typing and remote blanking.
+3. Verify CHAT and transfers, then integrate cleanup and archive write policy.
 4. Migrate the launcher and installation guide only after these checks pass.
    Retire snapshots and the separate-console build assumptions from the normal
    installation path. Preserve rollback copies of the existing disk images.
