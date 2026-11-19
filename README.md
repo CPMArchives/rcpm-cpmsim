@@ -59,10 +59,10 @@ If your cpmsim build uses those FIFOs, build `srctools/cpmrecv` alongside it.
 Start the listener in one terminal:
 
 ```sh
-python3 serve_rcpm.py --cpmsim /path/to/z80pack/cpmsim/cpmsim
+python3 serve_rcpm.py --cpmsim /path/to/z80pack/cpmsim/cpmsim --bind-address 127.0.0.1
 ```
 
-It accepts raw TCP on IPv4 loopback only, port 4000 by default. In another
+This command accepts raw TCP on IPv4 loopback, port 4000 by default. In another
 terminal, connect using a raw TCP terminal client that sends carriage returns.
 With macOS netcat, use a subshell that sends Return as a single CR and
 restores your terminal settings afterward:
@@ -282,7 +282,7 @@ YMODEM batch support.
 
 With the prepared prototype, `./launch_rcpm.zsh` starts the caller listener
 in a detached tmux session named `rcpm-listener`, then opens or reconnects to
-`rcpm-console`. A process already listening on the configured loopback port
+`rcpm-console`. A process already listening on the configured address and port
 is treated as the existing listener, including one started manually. The
 launcher checks the port by binding briefly, avoiding a connection that would
 boot a disposable caller. Listener output goes to `listener.log` in the caller
@@ -339,8 +339,8 @@ Default paths are relative to this repository. The local console uses
 `../rcpm-cpm3` and `../rcpm-cpm3-trial/runtime/cpmsim-console`. The caller
 listener uses `../rcpm-cpm3-trial`, its `runtime/cpmsim`, and its `inbox`.
 Export `RCPM_INSTANCE`, `RCPM_CPMSIM`, `RCPM_CALLER_INSTANCE`,
-`RCPM_CALLER_CPMSIM`, or `RCPM_PORT` to override these settings. The default
-port is 4000. `--check` validates prerequisites without starting either service.
+`RCPM_CALLER_CPMSIM`, `RCPM_BIND_ADDRESS`, or `RCPM_PORT` to override these settings. The default
+port is 4000 and the default bind address is `0.0.0.0`. `--check` validates prerequisites without starting either service.
 The two installations have separate writable boot and work disks. Shared
 archives remain read-only. Full sysop privileges and concurrent writable
 archive maintenance remain pending.
@@ -411,6 +411,26 @@ A separate PIP copy to I: differed when read back with host cpmtools. A copy
 to B: and the YMODEM transfer verified P: reads correctly. The I: discrepancy
 remains to investigate before relying on host extraction of caller work files.
 
+## 11. Local and remote network connections
+
+The listener defaults to `0.0.0.0:4000`, accepting connections on all local
+IPv4 interfaces. Local SyncTERM clients can continue using `127.0.0.1:4000`.
+Other machines use the host's LAN address. Internet callers use the router's
+public address and an external TCP port forwarded to the host's LAN address
+and listening port. Router forwarding and firewall configuration are managed
+by the operator.
+
+For a specific interface, pass `--bind-address IPv4_ADDRESS` to `serve_rcpm.py`
+or export `RCPM_BIND_ADDRESS` before running `launch_rcpm.zsh`. For example,
+`RCPM_BIND_ADDRESS=127.0.0.1 ./launch_rcpm.zsh` selects loopback access.
+The default `0.0.0.0` accepts both local and remote connections. Clients
+connect to a concrete host address.
+
+Restart an existing listener to apply an address or port change. The launcher
+reuses an occupied endpoint and cannot change an existing process's socket.
+The server still handles one caller at a time. Caller isolation and access
+controls remain unfinished.
+
 ## Optional transport diagnostic
 
 ```sh
@@ -430,9 +450,8 @@ temporary port for the duration of this echo-only test.
 3. Add ZMODEM and Kermit uploads and downloads.
 4. Verify command execution restrictions, work-area access, and session
    cleanup before opening access.
-5. Support Internet callers with a configurable listening address and port,
-   and document public deployment after caller isolation and access controls
-   are implemented. The current listener binds to IPv4 loopback.
+5. Complete public deployment documentation alongside caller isolation and
+   access controls. Configurable IPv4 listening addresses and ports are supported.
 
 Terminal-based games and CP/NET archive mappings are future expansions.
 The repository contains setup code. Obtain CP/M 3 and Z3PLUS media from
