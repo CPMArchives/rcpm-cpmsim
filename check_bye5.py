@@ -17,7 +17,7 @@ from build_bye5 import wait_prompt
 from prepare_z3plus import prepare
 
 
-def run(source, runtime, tools, builds, output, tcpser, romwbw=None):
+def run(source, runtime, tools, builds, output, tcpser, romwbw=None, autostart=False):
     output.mkdir(parents=True, exist_ok=True)
     for mode in ('direct', 'ip232'):
         work = output / mode
@@ -35,7 +35,8 @@ def run(source, runtime, tools, builds, output, tcpser, romwbw=None):
         subprocess.run([str(tools / 'cpmrm'), '-T', 'raw', '-f', 'ibm-3740',
                         str(base), '0:PROFILE.SUB'], check=True)
         if romwbw:
-            prepare(romwbw / 'Source/Images', base, disk)
+            prepare(romwbw / 'Source/Images', base, disk, startup_command=
+                    'A0:PATH /C A0;A:GET CONSOLE;A:BYE' if autostart else 'A0:PATH /C A0')
         else:
             shutil.copyfile(base, disk)
         subprocess.run([str(tools / 'cpmrm'), '-T', 'raw', '-f', 'ibm-3740',
@@ -93,9 +94,12 @@ def run(source, runtime, tools, builds, output, tcpser, romwbw=None):
                         raise RuntimeError('cpmsim exited during BYE test')
                 raise RuntimeError(f'Remote timeout for {marker!r}: {bytes(data)!r}')
             try:
-                local(prompt)
-                os.write(master, b'BYE\r')
-                local(b'BYE510 -')
+                if not autostart:
+                    local(prompt)
+                    os.write(master, b'BYE\r')
+                startup = local(b'BYE510 -')
+                if autostart and b'Getting console input from console' not in startup:
+                    raise RuntimeError('BYE started without confirmation that GET redirection ended')
                 if not romwbw:
                     result = local(b'A>', timeout=30)
                     if b'requires a valid Z3PLUS environment' not in result:
@@ -214,7 +218,10 @@ if __name__ == '__main__':
     parser.add_argument('--output', type=Path, default=Path('build/bye5/checks'))
     parser.add_argument('--tcpser', type=Path, required=True)
     parser.add_argument('--romwbw', type=Path)
+    parser.add_argument('--autostart', action='store_true')
     args = parser.parse_args()
+    if args.autostart and not args.romwbw:
+        parser.error('--autostart requires --romwbw')
     run(args.source.resolve(), args.runtime.resolve(), args.cpmtools.resolve(),
         args.builds.resolve(), args.output.resolve(), args.tcpser.resolve(),
-        args.romwbw.resolve() if args.romwbw else None)
+        args.romwbw.resolve() if args.romwbw else None, args.autostart)

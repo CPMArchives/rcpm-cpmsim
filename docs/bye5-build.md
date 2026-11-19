@@ -39,7 +39,8 @@ The stock cpmsim shutdown program is supplied unchanged as BYEBYE.COM in
 both build directories. BYE.COM starts or resets remote service and logs a
 caller off; BYEBYE.COM terminates the machine. The disk-set installer must
 replace the original BYE.COM only after preserving its shutdown function
-under BYEBYE.COM. Caller access to shutdown remains a security-policy item.
+under BYEBYE.COM. BYEBYE must be restricted to the local sysop. That
+restriction has not yet been enforced; renaming the file is not protection.
 
 Project-authored `guest/bye5/cpmsim.ins` supplies the hardware routines.
 The configured sources enable CP/M 3, select a nominal 2400-bps maximum,
@@ -138,6 +139,10 @@ python3 check_bye5.py --source /absolute/path/to/z80pack \
   --tcpser /absolute/path/to/tcpser \
   --romwbw /absolute/path/to/RomWBW \
   --output build/bye5/z3checks
+python3 check_bye5.py --source /absolute/path/to/z80pack \
+  --tcpser /absolute/path/to/tcpser \
+  --romwbw /absolute/path/to/RomWBW --autostart \
+  --output build/bye5/autostart-checks
 ```
 
 The checker creates disposable boot disks, installs the selected pair, and
@@ -145,6 +150,8 @@ starts BYE from an interactive CCP prompt. The stock editor is removed from
 these test copies to make room for the drivers and test files. Original
 media and the operator's installation remain untouched. The checker also exits
 remote service locally and verifies that BYEBYE shuts down the emulator.
+With `--autostart`, it sends no startup keystrokes and also checks that GET
+has announced the return to console input before BYE's sign-on.
 
 The earlier transport-only builds passed the following on stock CP/M 3.
 The current builds require Z3PLUS, and the stock-only checker now verifies
@@ -177,6 +184,38 @@ Logs are retained under each checker output directory. These tests do not
 establish protection against arbitrary caller programs, correct WORK cleanup,
 file-transfer compatibility, or emulator-enforced archive-write privileges.
 
+## Automatic boot startup
+
+`prepare_z3plus.py --rcpm-startup` configures the existing STARTZ3P alias
+command slot to run:
+
+```text
+A0:PATH /C A0;A:GET CONSOLE;A:BYE
+```
+
+PROFILE.SUB starts Z3PLUS as before. Its startup alias sets the path, ends
+CP/M 3 GET console-input redirection, and then starts BYE from Z3PLUS's
+remaining command queue. This ordering addresses B5-DRIV3's warning that
+loading its RSX within a SUBMIT job lets GET's later removal restore the
+console vectors. The alias preparer validates the supplied binary's command
+slot and code boundary before editing it; it does not grow the file or
+patch executable instructions. BYE.COM and the selected BYEDRIV.COM must
+already be installed on A:; this option only configures startup.
+
+Both direct TCP and real tcpser passed automatic startup, three calls in
+one emulator, wheel transitions, private output, carrier-loss recovery,
+forced disconnect and eventual local BYEBYE shutdown. Existing preparation
+without this option retains its PATH-only startup. These checks use
+disposable media and do not activate the replacement on the live system.
+
+The supplied Z3PLUS `u10/RELEASE.NOT`, section 9, also describes a distinct
+historical BYE compatibility issue: changed SCB bytes can make Z3PLUS think
+a SUBMIT job is active and prevent Z-System shells such as ZFILER or LSH
+from running. Shell compatibility has not been tested here. Its suggested
+binary patch targets a specific older CCP version and has not been applied
+to this build. Ending GET redirection is not evidence that this separate
+shell issue is resolved.
+
 ## Remaining before the disk-set installation is ready
 
 1. Add emulator enforcement of sysop/caller archive-write transitions, using
@@ -184,11 +223,8 @@ file-transfer compatibility, or emulator-enforced archive-write privileges.
    working but is not an independent security boundary.
 2. Integrate chat, modem-path transfers, persistent upload/message storage,
    WORK cleanup, and recovery policy. Preserve the agreed drive layout.
-3. Implement boot startup after CP/M's startup SUBMIT activity has finished.
-   B5-DRIV3's source warns that running it within SUBMIT can allow GET's later
-   removal to restore console vectors. Merely adding BYE to PROFILE.SUB is
-   not a verified solution. BYE should start once Z3PLUS and its environment
-   are ready, with no startup redirection left to undo BYE's hooks.
+3. Check Z-System shell compatibility with BYE's SCB changes, as described
+   above, before claiming general shell support.
 4. Provide the single-machine launcher, selecting direct TCP or tcpser, with
    local tmux detach/reattach and explicit shutdown. Retire the per-caller
    VM and snapshot-publication path from the normal installation.
