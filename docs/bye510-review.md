@@ -157,5 +157,7 @@ This is the packaging target. Bundling configured BYE5 binaries remains
 subject to resolving the distribution constraint above and passing the
 compatibility checks. Neither configured build has been produced yet.
 
-The next engineering deliverable is the isolated modem-control interface
-and its transport tests, followed by the minimal BYE5 build.
+The isolated [modem-control interface](modem-interface.md) and transport
+checks are now implemented, including CP/M 3 guest checks for direct TCP and
+real tcpser. The next deliverable is the two machine inserts and minimal
+BYE5 builds. BYE5/Z3PLUS compatibility and migration remain unverified.

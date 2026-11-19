@@ -6,6 +6,10 @@ mid-1980s BYE behavior. See the [BYE510 source review and implementation
 recommendation](docs/bye510-review.md) and [shared-console requirements](SHARED-CONSOLE-DESIGN.md).
 The replacement has not yet been activated.
 
+The [direct TCP and tcpser modem interface](docs/modem-interface.md) is built
+and tested in isolation, including actual CP/M 3 guest I/O. BYE5 integration
+is the next stage; the current launcher is unchanged.
+
 
 A Remote CP/M system in development for the CPMArchives software collection.
 Callers will land directly at the CP/M prompt. The local prototype uses
