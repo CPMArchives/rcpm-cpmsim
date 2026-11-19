@@ -6,11 +6,12 @@ setopt PIPE_FAIL
 script_path=${0:A}
 repository=${script_path:h}
 project=${repository:h}
-export PATH="/opt/homebrew/bin:/usr/local/bin:$PATH"
+export PATH="$repository/build/cpmtools/bin:/opt/homebrew/bin:/usr/local/bin:$PATH"
 export RCPM_INSTANCE=${RCPM_INSTANCE:-$project/rcpm-cpm3}
 export RCPM_CPMSIM=${RCPM_CPMSIM:-$project/rcpm-cpm3-trial/runtime/cpmsim-console}
 export RCPM_CALLER_INSTANCE=${RCPM_CALLER_INSTANCE:-$project/rcpm-cpm3-trial}
 export RCPM_CALLER_CPMSIM=${RCPM_CALLER_CPMSIM:-$project/rcpm-cpm3-trial/runtime/cpmsim}
+export RCPM_BIND_ADDRESS=${RCPM_BIND_ADDRESS:-0.0.0.0}
 export RCPM_PORT=${RCPM_PORT:-4000}
 console_session=rcpm-console
 listener_session=rcpm-listener
@@ -23,14 +24,14 @@ fail() {
 
 port_in_use() {
     # A bind probe avoids connecting to the listener and booting a guest.
-    python3 - "$RCPM_PORT" <<'PY'
+    python3 - "$RCPM_BIND_ADDRESS" "$RCPM_PORT" <<'PY'
 import errno
 import socket
 import sys
 with socket.socket() as probe:
     probe.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
     try:
-        probe.bind(("127.0.0.1", int(sys.argv[1])))
+        probe.bind((sys.argv[1], int(sys.argv[2])))
     except OSError as error:
         if error.errno == errno.EADDRINUSE:
             sys.exit(0)
@@ -55,6 +56,20 @@ done
     fail "Missing local network configuration in $RCPM_INSTANCE/conf"
 
 case ${1:-} in
+    --setup-sysop)
+        [[ $# == 1 ]] || fail 'Usage: launch_rcpm.zsh [--check|--setup-sysop|--publish|--archive-status]'
+        exec python3 "$repository/archive_admin.py" setup \
+            --console "$RCPM_INSTANCE" --callers "$RCPM_CALLER_INSTANCE" \
+            --mount-command "${RCPM_CPMSIM:h}/mount-sysop.com"
+        ;;
+    --publish)
+        [[ $# == 1 ]] || fail 'Usage: launch_rcpm.zsh [--check|--setup-sysop|--publish|--archive-status]'
+        exec python3 "$repository/archive_admin.py" publish --console "$RCPM_INSTANCE"
+        ;;
+    --archive-status)
+        [[ $# == 1 ]] || fail 'Usage: launch_rcpm.zsh [--check|--setup-sysop|--publish|--archive-status]'
+        exec python3 "$repository/archive_admin.py" status --console "$RCPM_INSTANCE"
+        ;;
     --check)
         [[ $# == 1 ]] || fail 'Usage: launch_rcpm.zsh [--check]'
         print -r -- 'Console and listener prerequisites verified.'
@@ -63,7 +78,8 @@ case ${1:-} in
     --listener)
         exec python3 "$repository/serve_rcpm.py" \
             --instance "$RCPM_CALLER_INSTANCE" --cpmsim "$RCPM_CALLER_CPMSIM" \
-            --inbox "$RCPM_CALLER_INSTANCE/inbox" --port "$RCPM_PORT" \
+            --inbox "$RCPM_CALLER_INSTANCE/inbox" \
+            --bind-address "$RCPM_BIND_ADDRESS" --port "$RCPM_PORT" \
             >> "$listener_log" 2>&1
         ;;
     --console)
@@ -73,7 +89,7 @@ case ${1:-} in
         ;;
 esac
 
-[[ $# == 0 ]] || fail 'Usage: launch_rcpm.zsh [--check]'
+[[ $# == 0 ]] || fail 'Usage: launch_rcpm.zsh [--check|--setup-sysop|--publish|--archive-status]'
 [[ -t 0 && -t 1 ]] || fail 'Run this launcher in an interactive Terminal window.'
 if [[ -n ${TMUX:-} ]]; then
     tmux display-message -p '#{session_name}' >/dev/null 2>&1 ||
@@ -86,6 +102,7 @@ launch_environment=(
     -e "RCPM_INSTANCE=$RCPM_INSTANCE" -e "RCPM_CPMSIM=$RCPM_CPMSIM"
     -e "RCPM_CALLER_INSTANCE=$RCPM_CALLER_INSTANCE"
     -e "RCPM_CALLER_CPMSIM=$RCPM_CALLER_CPMSIM" -e "RCPM_PORT=$RCPM_PORT"
+    -e "RCPM_BIND_ADDRESS=$RCPM_BIND_ADDRESS"
 )
 
 if ! port_in_use; then

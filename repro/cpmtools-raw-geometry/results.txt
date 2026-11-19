@@ -1,0 +1,10 @@
+posix   four-mb-failing.dsk     matches=True bytes=16384
+posix   four-mb-control.dsk     matches=True bytes=16384
+posix   large-failing.dsk       matches=True bytes=16384
+libdsk  four-mb-failing.dsk     matches=False bytes=16384
+libdsk  four-mb-control.dsk     matches=True bytes=16384
+libdsk  large-failing.dsk       matches=False bytes=16384
+patched four-mb-failing.dsk     matches=True bytes=16384
+patched four-mb-control.dsk     matches=True bytes=16384
+patched large-failing.dsk       matches=True bytes=16384
+PASS expected failures reproduced and proposed patch passes all cases

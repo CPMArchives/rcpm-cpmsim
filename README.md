@@ -7,8 +7,8 @@ banked CP/M 3 on Udo Munk’s z80pack cpmsim and Z3PLUS for named directories.
 | Drive | Role | Capacity |
 | --- | --- | --- |
 | I: | Writable work disk. One caller-writable user area is planned, with uploads and messages submitted through dedicated utilities. | Nominal 4 MB |
-| J: | Read-only rotating archive. An in-session `MOUNT` command will select a volume from a host-configured catalog. | Nominal 4 MB |
-| P: | Permanent read-only software archive. | 512 MiB |
+| J: | Rotating archive. Callers mount read-only published volumes. The sysop maintains writable masters after setup. | Nominal 4 MB |
+| P: | Permanent software archive. Published read-only for callers, with a separate writable sysop master after setup. | 512 MiB |
 
 ## 1. Bring up CP/M 3
 
@@ -17,15 +17,45 @@ disk definitions, and a built [z80pack](https://github.com/udo-munk/z80pack)
 cpmsim with its bundled CP/M 3 disk images. The prototype was verified on
 macOS with cpmsim 1.39.
 
+For raw cpmsim image maintenance, use the project's POSIX cpmtools build.
+A same-source cpmtools 2.23 comparison showed that the libdsk-backed build
+misread a guest-created 4 MB I: file, while the POSIX build returned all
+324352 bytes correctly with the same disk definition. The guest-written
+allocation blocks also matched the source bytes. Keep using `z80pack-hd`
+for I:/J: and `z80pack-hdb` for P:.
+
+Download and extract the official source, then build the local tools.
+The source tarball used for this check has SHA-256
+`7839b19ac15ba554e1a1fc1dbe898f62cf2fd4db3dcdc126515facc6b929746f`.
+
+```sh
+mkdir -p build
+curl -L --fail https://www.moria.de/~michael/cpmtools/files/cpmtools-2.23.tar.gz \
+  -o build/cpmtools-2.23.tar.gz
+printf '%s  %s\n' \
+  7839b19ac15ba554e1a1fc1dbe898f62cf2fd4db3dcdc126515facc6b929746f \
+  build/cpmtools-2.23.tar.gz | shasum -a 256 -c -
+tar -xzf build/cpmtools-2.23.tar.gz -C build
+python3 build_raw_cpmtools.py build/cpmtools-2.23
+export PATH="$PWD/build/cpmtools/bin:$PATH"
+```
+
+The builder copies the source into a temporary directory and selects its
+default POSIX backend. It adds support for the explicit `-T raw` spelling
+used by this guide. It installs the four maintenance commands and the
+upstream disk definitions under `build/cpmtools`. It includes the upstream
+license there. The tmux launcher adds this local tools directory to PATH.
+For manual image commands, repeat the PATH export in new shells.
+
 ```sh
 python3 launch_rcpm_cpm3.py --cpmsim /path/to/z80pack/cpmsim/cpmsim
 ```
 
 The launcher copies the stock boot media, creates the three data drives, and
 opens the local console. It starts CP/M 3 with network listeners disabled.
-`TYPE I:VOLUME.TXT`, `TYPE J:VOLUME.TXT`, and `TYPE P:VOLUME.TXT` identify
-the three volumes. The archive image files are created without host write
-permission.
+`TYPE I:VOLUME.TXT` and `TYPE J:VOLUME.TXT` identify the work and rotating
+volumes. P: starts as an empty filesystem for the operator to populate.
+The archive image files are created without host write permission.
 
 ## 2. Add Z3PLUS
 
@@ -59,10 +89,10 @@ If your cpmsim build uses those FIFOs, build `srctools/cpmrecv` alongside it.
 Start the listener in one terminal:
 
 ```sh
-python3 serve_rcpm.py --cpmsim /path/to/z80pack/cpmsim/cpmsim
+python3 serve_rcpm.py --cpmsim /path/to/z80pack/cpmsim/cpmsim --bind-address 127.0.0.1
 ```
 
-It accepts raw TCP on IPv4 loopback only, port 4000 by default. In another
+This command accepts raw TCP on IPv4 loopback, port 4000 by default. In another
 terminal, connect using a raw TCP terminal client that sends carriage returns.
 With macOS netcat, use a subshell that sends Return as a single CR and
 restores your terminal settings afterward:
@@ -77,8 +107,8 @@ restores your terminal settings afterward:
 ```
 
 1. Wait for `A0:SYSTEM>`.
-2. Enter `ARCHIVE:` and wait for `P0:ARCHIVE>`. Enter `TYPE VOLUME.TXT`.
-   The guest should print `PERMANENT ARCHIVE P`.
+2. Enter `ARCHIVE:` and wait for `P0:ARCHIVE>`. Enter `DIR`.
+   A new installation should report no files on P:.
 3. Enter `VOLUME:` and wait for `J0:VOLUME>`. Enter `TYPE VOLUME.TXT`.
    The guest should print `ROTATING ARCHIVE J`.
 4. Disconnect the client, then reconnect. A new guest should boot to
@@ -137,7 +167,8 @@ python3 serve_rcpm.py --cpmsim "$z80pack/cpmsim/cpmsim"
    each swap while staying at the J: prompt.
 3. Enter `MOUNT MISSING`. J: should retain the previously mounted volume.
    `MOUNT /L` should still report that volume as current.
-   `TYPE P:VOLUME.TXT` should show the permanent archive marker.
+   `DIR P:` should show the permanent archive contents, or no files on a
+   fresh installation.
 4. Reconnect and verify J: starts with the default `drivej.dsk` again.
 
 `MOUNT` replaces only J:. On success it resets J:'s BDOS login state and
@@ -281,7 +312,7 @@ YMODEM batch support.
 
 With the prepared prototype, `./launch_rcpm.zsh` starts the caller listener
 in a detached tmux session named `rcpm-listener`, then opens or reconnects to
-`rcpm-console`. A process already listening on the configured loopback port
+`rcpm-console`. A process already listening on the configured address and port
 is treated as the existing listener, including one started manually. The
 launcher checks the port by binding briefly, avoiding a connection that would
 boot a disposable caller. Listener output goes to `listener.log` in the caller
@@ -303,7 +334,10 @@ On macOS, the compiler and make are supplied by Xcode Command Line Tools,
 and tmux can be installed with `brew install tmux`.
 The builder copies sources into a temporary directory, disables `PIPES`, and
 updates the two obsolete `STOPPED` references in the file-backed AUX branch
-to `ST_STOPPED` for cpmsim 1.39.
+to `ST_STOPPED` for cpmsim 1.39. In this console executable, catalog volumes
+open read/write. It also assembles `mount-sysop.com` and `bye-sysop.com`
+beside the executable. Setup in step 12 installs these on the local boot disk.
+The caller executable and caller MOUNT retain read-only archive access.
 
 ```sh
 mkdir -p build/runtime/srctools
@@ -338,16 +372,182 @@ Default paths are relative to this repository. The local console uses
 `../rcpm-cpm3` and `../rcpm-cpm3-trial/runtime/cpmsim-console`. The caller
 listener uses `../rcpm-cpm3-trial`, its `runtime/cpmsim`, and its `inbox`.
 Export `RCPM_INSTANCE`, `RCPM_CPMSIM`, `RCPM_CALLER_INSTANCE`,
-`RCPM_CALLER_CPMSIM`, or `RCPM_PORT` to override these settings. The default
-port is 4000. `--check` validates prerequisites without starting either service.
-The two installations have separate writable boot and work disks. Shared
-archives remain read-only. Full sysop privileges and concurrent writable
-archive maintenance remain pending.
+`RCPM_CALLER_CPMSIM`, `RCPM_BIND_ADDRESS`, or `RCPM_PORT` to override these settings. The default
+port is 4000 and the default bind address is `0.0.0.0`. `--check` validates prerequisites without starting either service.
+The two installations have separate writable boot and work disks. Before
+step 12, shared archives remain read-only. Step 12 gives the sysop independent
+writable masters and publishes immutable caller snapshots. Wheel policies
+and caller execution restrictions remain unfinished.
 
 Repeat the four `export` commands in a new shell, or put them in a personal
 wrapper that runs `launch_rcpm.zsh`. The local development defaults described above
 refer to the original macOS trial layout. For another installation use the
 explicit paths above.
+
+## 10. Populate a private permanent archive
+
+The project creates an empty 512 MiB P: image. Software collections and the
+operator's populated disk image are excluded from Git. The default named
+directory is `ARCHIVE:` at P0:. Operators choose their own contents and layout.
+
+The first private collection layout for this installation is as follows.
+
+| DU | Named directory | Contents |
+| --- | --- | --- |
+| P0: | SIGM: | SIGMV001.LBR through SIGMV310.LBR |
+| P1: | CPMUG: | CPMUG001.LBR through CPMUG093.LBR |
+
+`build_archive.py` accepts existing SIG/M volume LBRs and expanded CPMUG
+volume directories supplied by the operator. It preserves SIG/M LBR bytes
+and creates one LUDEF5 LBR per CPMUG volume, preserving member bytes and
+recording padding and CRCs. Existing ARK members stay inside their volume
+LBRs. The local ISO has CPMUG volumes 043, 044, and 046 in this form.
+The library format follows [LUDEF5](https://www.seasip.info/Cpm/ludef5.html).
+
+For example, extract operator-supplied collection ISOs and build a new image.
+Run these commands from the repository. Keep staging in the ignored build tree.
+
+```sh
+mkdir -p build/archive-source
+bsdtar -xf /path/to/sigm.iso -C build/archive-source 'LBR/*'
+bsdtar -xf /path/to/cpmug.iso -C build/archive-source 'CPMUG*'
+python3 build_archive.py \
+  --sigm build/archive-source/LBR \
+  --cpmug build/archive-source \
+  build/drivep-populated.dsk
+```
+
+The builder requires consecutive volume numbers starting at 001 and reports
+the number found. Compare that count with the source collection's catalog
+before claiming completeness. It verifies every installed LBR by reading it
+back from the image and emits a SHA-256 manifest alongside the new image.
+It requires an unused output filename and builds a separate disk image.
+
+To assign the names when initially preparing Z3PLUS, append
+`--archive-directory SIGM --archive-directory CPMUG` to the step 2 command.
+Each repeated option names the next P: user area, starting at P0:. The generic
+installation retains `ARCHIVE:` unless the operator supplies these options.
+The 128-byte DEFAULT.NDR member fits seven total names, including SYSTEM,
+WORK, and VOLUME.
+
+Publish a verified image by replacing the host file backing P: between
+sessions. Existing emulator processes retain their already-open image. A
+fresh connection or console restart opens the replacement. Apply matching
+named-directory updates to both the local and caller boot images between
+boots. Keep the previous disk and boot images for rollback. Before sysop publication is enabled, caller P: links to the local P: image
+and follows its replacement on the next connection. After step 12, update
+the local master and publish it to make changes available to new callers.
+
+Validation of the private archive covered all 403 LBR read-backs, independent
+member and CRC checks on all 93 generated CPMUG LBRs, CP/M named-directory
+selection, and an exact 324352-byte YMODEM download of CPMUG001.LBR from P1:.
+The I: host-read discrepancy was traced to the libdsk-backed cpmtools build.
+The POSIX cpmtools build in step 1 extracted the entire guest-created
+324352-byte I: file correctly. The existing disk definitions are retained.
+
+## 11. Local and remote network connections
+
+The listener defaults to `0.0.0.0:4000`, accepting connections on all local
+IPv4 interfaces. Local SyncTERM clients can continue using `127.0.0.1:4000`.
+Other machines use the host's LAN address. Internet callers use the router's
+public address and an external TCP port forwarded to the host's LAN address
+and listening port. Router forwarding and firewall configuration are managed
+by the operator.
+
+For a specific interface, pass `--bind-address IPv4_ADDRESS` to `serve_rcpm.py`
+or export `RCPM_BIND_ADDRESS` before running `launch_rcpm.zsh`. For example,
+`RCPM_BIND_ADDRESS=127.0.0.1 ./launch_rcpm.zsh` selects loopback access.
+The default `0.0.0.0` accepts both local and remote connections. Clients
+connect to a concrete host address.
+
+Restart an existing listener to apply an address or port change. The launcher
+reuses an occupied endpoint and cannot change an existing process's socket.
+The server still handles one caller at a time. Caller isolation and access
+controls remain unfinished.
+
+## 12. Enable sysop archive writes and publication
+
+Complete the runtime build and two-instance preparation in step 9 first.
+Then exit the local CP/M console with `A0:` followed by `BYE`. Disconnect
+callers and stop an older listener once so its next start loads the session
+publication changes. Detaching from tmux leaves the console running and
+keeps its archive lease active.
+
+Run the setup command from the repository, using the same RCPM environment
+variables as the launcher.
+
+```sh
+./launch_rcpm.zsh --setup-sysop
+./launch_rcpm.zsh
+```
+
+Setup installs the sysop MOUNT.COM and BYE.COM on the local A: image,
+creates the first read-only publication, redirects the caller J:/P: slots
+and catalog to it, and creates independent writable local J:/P: masters.
+If the local catalog is absent, it copies the existing caller catalog into
+local `volumes/`. Existing local catalogs supply the masters. Setup keeps
+the original caller catalog as `volumes-before-publication` when present.
+It checks for an older process holding the boot disk on macOS through lsof.
+Repeating setup with the same installation preserves the master's contents.
+
+The local console can now use normal CP/M commands to write to P: and J:.
+Its MOUNT opens catalog masters read/write. The sysop MOUNT flushes BDOS
+buffers before changing media, resets J:, and leaves it writable. The sysop
+BYE flushes pending writes with CP/M 3 BDOS function 48 before halting.
+On a reported flush failure it returns to CP/M. Function 48 is documented in
+Digital Research's [CP/M 3 Programmer's Guide](https://bitsavers.org/pdf/digitalResearch/cpm_plus/CPM_Plus_Programmers_Guide_Apr83.pdf).
+
+After editing, return to A0: and exit with BYE, then publish from the host.
+
+```sh
+./launch_rcpm.zsh --publish
+./launch_rcpm.zsh
+```
+
+The local launcher holds an exclusive console lease across exec into cpmsim.
+Publication takes the same lease and refuses to copy while the managed
+console is running. Run local instances through this launcher. Exit unmanaged
+emulators and host image editors before changing the masters or publishing.
+Forced termination does not provide the flush guarantee of the sysop BYE.
+
+Each publication contains both default archive images and every valid catalog
+image in a unique generation under the caller installation's `published/`.
+An atomic `published/current` symlink update makes the completed generation
+available. Each caller resolves that pointer once when its session is created,
+pinning both archive images and the catalog. Existing callers retain their
+previous generation, including during later MOUNT commands. New callers
+receive the latest generation. The listener can remain running during
+subsequent sysop edits and publication.
+
+Publication validates image sizes and prepares the entire generation before
+switching the current pointer. A failed preparation leaves the previous
+publication selected and can be retried. Old generations remain available
+for rollback and existing sessions. Their storage use depends on filesystem
+copy-on-write support. macOS uses `cp -c` clones when supported, with ordinary
+copying as a fallback. Filesystems without cloning keep full image copies.
+
+To inspect the selected generation, run the status command.
+
+```sh
+./launch_rcpm.zsh --archive-status
+```
+
+A personal `rcpm` wrapper must forward arguments with `"$@"` to expose these
+options. Calling the repository script directly always supports them.
+
+Validation included actual CP/M writes to P:, default J:, and a mounted J:
+master, refusal to publish while the console lease was held, an exact archive
+read after publication, and rejection of a caller P: write. The host regression
+checks also cover session/catalog pinning, idempotent setup, and retry after
+failed publication.
+
+```sh
+python3 -m unittest -v test_archive_publication.py
+```
+
+This provides archive write access and publication. Z3PLUS wheel policy,
+caller command restrictions, authentication, and broader host isolation remain
+separate work items.
 
 ## Optional transport diagnostic
 
@@ -368,6 +568,8 @@ temporary port for the duration of this echo-only test.
 3. Add ZMODEM and Kermit uploads and downloads.
 4. Verify command execution restrictions, work-area access, and session
    cleanup before opening access.
+5. Complete public deployment documentation alongside caller isolation and
+   access controls. Configurable IPv4 listening addresses and ports are supported.
 
 Terminal-based games and CP/NET archive mappings are future expansions.
 The repository contains setup code. Obtain CP/M 3 and Z3PLUS media from

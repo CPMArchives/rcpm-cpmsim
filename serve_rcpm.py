@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Serve a disposable CP/M 3 console over raw TCP on IPv4 loopback."""
+"""Serve disposable CP/M 3 consoles over raw IPv4 TCP."""
 import argparse
 from contextlib import nullcontext
 import errno
@@ -16,13 +16,15 @@ import tty
 
 
 def prepare_session(template, session):
+    current = template / "published/current"
+    archives = current.resolve(strict=True) if current.is_symlink() or current.exists() else template
     disks = session / "disks"
     disks.mkdir()
     conf = session / "conf"
     conf.mkdir()
     for kind in ("server", "client"):
         (conf / f"net_{kind}.conf").write_text("# TCP is handled by the host launcher.\n")
-    volumes = template / "volumes"
+    volumes = archives / "volumes"
     if volumes.is_dir():
         (session / "volumes").symlink_to(volumes, target_is_directory=True)
     for drive in "abijp":
@@ -30,7 +32,7 @@ def prepare_session(template, session):
         source = template / "disks" / name
         target = disks / name
         if drive in "jp":
-            target.symlink_to(source)
+            target.symlink_to((archives / "disks" / name).resolve(strict=True))
         else:
             shutil.copyfile(source, target)
 
@@ -122,8 +124,16 @@ def main():
     parser.add_argument("--cpmsim", type=Path,
                         default=Path.home() / "Downloads/z80pack-master/cpmsim/cpmsim")
     parser.add_argument("--inbox", type=Path, help="Enable persistent uploads to this directory")
+    parser.add_argument("--bind-address", default="0.0.0.0",
+                        help="Local IPv4 address, default 0.0.0.0 accepts all interfaces")
     parser.add_argument("--port", type=int, default=4000)
     args = parser.parse_args()
+    try:
+        socket.inet_pton(socket.AF_INET, args.bind_address)
+    except OSError:
+        parser.error("--bind-address must be an IPv4 address")
+    if not 0 <= args.port <= 65535:
+        parser.error("--port must be between 0 and 65535")
     template = args.instance.expanduser().resolve()
     simulator = args.cpmsim.expanduser().resolve()
     if not os.access(simulator, os.X_OK):
@@ -140,9 +150,9 @@ def main():
     try:
         with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as listener:
             listener.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-            listener.bind(("127.0.0.1", args.port))
+            listener.bind((args.bind_address, args.port))
             listener.listen(1)
-            print(f"RCP/M listening on 127.0.0.1:{listener.getsockname()[1]}",
+            print(f"RCP/M listening on {args.bind_address}:{listener.getsockname()[1]}",
                   flush=True)
             while True:
                 client, _ = listener.accept()
