@@ -6,7 +6,7 @@ setopt PIPE_FAIL
 script_path=${0:A}
 repository=${script_path:h}
 project=${repository:h}
-export PATH="/opt/homebrew/bin:/usr/local/bin:$PATH"
+export PATH="$repository/build/cpmtools/bin:/opt/homebrew/bin:/usr/local/bin:$PATH"
 export RCPM_INSTANCE=${RCPM_INSTANCE:-$project/rcpm-cpm3}
 export RCPM_CPMSIM=${RCPM_CPMSIM:-$project/rcpm-cpm3-trial/runtime/cpmsim-console}
 export RCPM_CALLER_INSTANCE=${RCPM_CALLER_INSTANCE:-$project/rcpm-cpm3-trial}

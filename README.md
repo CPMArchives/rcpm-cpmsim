@@ -17,6 +17,36 @@ disk definitions, and a built [z80pack](https://github.com/udo-munk/z80pack)
 cpmsim with its bundled CP/M 3 disk images. The prototype was verified on
 macOS with cpmsim 1.39.
 
+For raw cpmsim image maintenance, use the project's POSIX cpmtools build.
+A same-source cpmtools 2.23 comparison showed that the libdsk-backed build
+misread a guest-created 4 MB I: file, while the POSIX build returned all
+324352 bytes correctly with the same disk definition. The guest-written
+allocation blocks also matched the source bytes. Keep using `z80pack-hd`
+for I:/J: and `z80pack-hdb` for P:.
+
+Download and extract the official source, then build the local tools.
+The source tarball used for this check has SHA-256
+`7839b19ac15ba554e1a1fc1dbe898f62cf2fd4db3dcdc126515facc6b929746f`.
+
+```sh
+mkdir -p build
+curl -L --fail https://www.moria.de/~michael/cpmtools/files/cpmtools-2.23.tar.gz \
+  -o build/cpmtools-2.23.tar.gz
+printf '%s  %s\n' \
+  7839b19ac15ba554e1a1fc1dbe898f62cf2fd4db3dcdc126515facc6b929746f \
+  build/cpmtools-2.23.tar.gz | shasum -a 256 -c -
+tar -xzf build/cpmtools-2.23.tar.gz -C build
+python3 build_raw_cpmtools.py build/cpmtools-2.23
+export PATH="$PWD/build/cpmtools/bin:$PATH"
+```
+
+The builder copies the source into a temporary directory and selects its
+default POSIX backend. It adds support for the explicit `-T raw` spelling
+used by this guide. It installs the four maintenance commands and the
+upstream disk definitions under `build/cpmtools`. It includes the upstream
+license there. The tmux launcher adds this local tools directory to PATH.
+For manual image commands, repeat the PATH export in new shells.
+
 ```sh
 python3 launch_rcpm_cpm3.py --cpmsim /path/to/z80pack/cpmsim/cpmsim
 ```
@@ -407,9 +437,9 @@ on the next connection.
 Validation of the private archive covered all 403 LBR read-backs, independent
 member and CRC checks on all 93 generated CPMUG LBRs, CP/M named-directory
 selection, and an exact 324352-byte YMODEM download of CPMUG001.LBR from P1:.
-A separate PIP copy to I: differed when read back with host cpmtools. A copy
-to B: and the YMODEM transfer verified P: reads correctly. The I: discrepancy
-remains to investigate before relying on host extraction of caller work files.
+The I: host-read discrepancy was traced to the libdsk-backed cpmtools build.
+The POSIX cpmtools build in step 1 extracted the entire guest-created
+324352-byte I: file correctly. The existing disk definitions are retained.
 
 ## 11. Local and remote network connections
 
