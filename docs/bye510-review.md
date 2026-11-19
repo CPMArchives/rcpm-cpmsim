@@ -137,6 +137,25 @@ as project-owned open-source code.
 ## Decision recorded
 
 Prefer a genuine guest BYE5 compatibility experiment over immediately writing
-a new host broker. No final migration or distribution decision is implied.
+a new host broker.
+
+The operator has approved two compiled configurations in the final package:
+
+| Build | Configuration |
+| --- | --- |
+| Direct TCP | Serial data and connection controls provided by cpmsim, without Hayes modem commands. |
+| tcpser virtual modem | Serial data and modem signals connected to tcpser, with BYE5's existing Hayes support enabled. |
+
+Both builds derive from the same BYE5 core, with configuration-specific
+equates and machine inserts. They are alternatives for the same single CP/M
+machine. The package must document how to select and install each build,
+including the CP/M 3 entry program and RSX driver, and retain reproducible
+build instructions. One unchanged binary is not expected to autodetect both
+transports. Artifact names will be settled during the build experiment.
+
+This is the packaging target. Bundling configured BYE5 binaries remains
+subject to resolving the distribution constraint above and passing the
+compatibility checks. Neither configured build has been produced yet.
+
 The next engineering deliverable is the isolated modem-control interface
 and its transport tests, followed by the minimal BYE5 build.
