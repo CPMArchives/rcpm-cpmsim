@@ -5,6 +5,11 @@ checks. Wheel command-policy transitions and automatic startup now pass;
 emulator privilege enforcement and production migration remain pending.
 This is not a replacement remote-access program.
 
+Native host-file I/O on port 161 is disabled whenever either RCP/M backend
+is selected, including local operation without a connected caller. See the
+[security review](security-boundary.md) for the guest acceptance check and
+the unresolved privileged-takeover boundary.
+
 ## Device selection
 
 The device is additive. Existing console, serial, archive, upload and message

@@ -14,7 +14,12 @@ def integrate(io_text):
         if re.search(r'\[\s*' + str(port) + r'\s*\]\s*=', io_text):
             raise ValueError(f'I/O port {port} is already assigned')
     replacements = {
-        'in_func_t *const port_in[256] = {': '#include "rcpm_modem.c"\n\nin_func_t *const port_in[256] = {\n'
+        'in_func_t *const port_in[256] = {': '#include "rcpm_modem.c"\n\n'
+            '/* The host filesystem is never a guest disk in RCP/M mode. */\n'
+            'static void rcpm_host_bdos_out(BYTE data)\n{\n'
+            '\tif (rm_mode) { A = 0xff; return; }\n'
+            '\thost_bdos_out(data);\n}\n\n'
+            'in_func_t *const port_in[256] = {\n'
             '\t[70] = rcpm_modem_status,\n\t[71] = rcpm_modem_read,\n\t[72] = rcpm_modem_control_read,',
         'out_func_t *const port_out[256] = {': 'out_func_t *const port_out[256] = {\n'
             '\t[71] = rcpm_modem_write,\n\t[72] = rcpm_modem_control,',
@@ -23,6 +28,9 @@ def integrate(io_text):
             '\n#ifdef PIPES\n\t/* check if /tmp/.z80pack exists */',
         'void exit_io(void)\n{\n\tregister int i;':
             'void exit_io(void)\n{\n\tregister int i;\n\n\trcpm_modem_close();',
+        '[161] = host_bdos_out': '[161] = rcpm_host_bdos_out',
+        'if (disks[drive].fd == NULL) {':
+            'if (drive >= sizeof(disks) / sizeof(disks[0]) || disks[drive].fd == NULL) {',
     }
     for old, new in replacements.items():
         if io_text.count(old) != 1:

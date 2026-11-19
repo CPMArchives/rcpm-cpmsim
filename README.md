@@ -16,6 +16,10 @@ In the new disk set, `BYE.COM` is BYE5 remote service/logoff; the native
 cpmsim shutdown program is preserved as `BYEBYE.COM`. Restricting shutdown
 to the local sysop is required but has not yet been enforced.
 
+The [security review](docs/security-boundary.md) records the confirmed remote
+shutdown failure and the decision required for privileged takeover. The new
+runtime now disables native host-file I/O whenever RCP/M transport is selected.
+
 
 A Remote CP/M system in development for the CPMArchives software collection.
 Callers will land directly at the CP/M prompt. The local prototype uses

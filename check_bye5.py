@@ -17,7 +17,8 @@ from build_bye5 import wait_prompt
 from prepare_z3plus import prepare
 
 
-def run(source, runtime, tools, builds, output, tcpser, romwbw=None, autostart=False):
+def run(source, runtime, tools, builds, output, tcpser, romwbw=None, autostart=False,
+        probe_remote_shutdown=False):
     output.mkdir(parents=True, exist_ok=True)
     for mode in ('direct', 'ip232'):
         work = output / mode
@@ -128,6 +129,11 @@ def run(source, runtime, tools, builds, output, tcpser, romwbw=None, autostart=F
                                 quiet = time.monotonic()
                     with socket.create_connection(('127.0.0.1', caller_port), timeout=3) as caller:
                         remote(caller, prompt, kick=mode == 'direct', timeout=45)
+                        if probe_remote_shutdown and attempt == 0:
+                            # Deliberately destructive to this disposable guest only.
+                            # A wheel-off caller must not be able to stop the machine.
+                            caller.sendall(b'BYEBYE\r')
+                            remote(caller, prompt, timeout=10)
                         if romwbw:
                             caller.sendall(b'ERA USERCHK.TXT\r')
                             remote(caller, prompt)
@@ -219,9 +225,15 @@ if __name__ == '__main__':
     parser.add_argument('--tcpser', type=Path, required=True)
     parser.add_argument('--romwbw', type=Path)
     parser.add_argument('--autostart', action='store_true')
+    parser.add_argument('--probe-remote-shutdown', action='store_true',
+                        help='Security probe on disposable media: a caller tries BYEBYE; '
+                             'failure or disconnect means local-only shutdown is not established')
     args = parser.parse_args()
     if args.autostart and not args.romwbw:
         parser.error('--autostart requires --romwbw')
+    if args.probe_remote_shutdown and not args.romwbw:
+        parser.error('--probe-remote-shutdown requires --romwbw')
     run(args.source.resolve(), args.runtime.resolve(), args.cpmtools.resolve(),
         args.builds.resolve(), args.output.resolve(), args.tcpser.resolve(),
-        args.romwbw.resolve() if args.romwbw else None, args.autostart)
+        args.romwbw.resolve() if args.romwbw else None, args.autostart,
+        args.probe_remote_shutdown)
