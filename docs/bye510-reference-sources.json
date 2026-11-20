@@ -1,0 +1,40 @@
+{
+  "review_date": "2026-11-19",
+  "sources": [
+    {
+      "url": "https://dflund.se/~pi/cpm/files/ftp.mayn.de/pub/cpm/archive/bye5/bye510/bye5.doc.txt",
+      "bytes": 42459,
+      "sha256": "92f4d388f5adaa5065c617cbbd3be1669177748b5f4aa250429618ceb0433645"
+    },
+    {
+      "url": "https://dflund.se/~pi/cpm/files/ftp.mayn.de/pub/cpm/archive/bye5/bye510/bye510.asm.txt",
+      "bytes": 142772,
+      "sha256": "a81d23a77124b0eac428d6adae7384e2d54eb11519ed4a5d3784f7f10c979f80"
+    },
+    {
+      "url": "https://dflund.se/~pi/cpm/files/ftp.mayn.de/pub/cpm/archive/bye5/bye510/b5-cpm3.doc.txt",
+      "bytes": 7508,
+      "sha256": "1730403c06447849bb2dcb7f1611efcc94da7339d549d681e146c6a356cae23e"
+    },
+    {
+      "url": "https://dflund.se/~pi/cpm/files/ftp.mayn.de/pub/cpm/archive/bye5/bye510.fix",
+      "bytes": 2381,
+      "sha256": "b5926eb3088c02498f8275896d9b9bbc6787d45551d3974c84f1eb4a87992aae"
+    },
+    {
+      "url": "https://dflund.se/~pi/cpm/files/ftp.mayn.de/pub/cpm/archive/rcpm/chat46/chat46.asm.txt",
+      "bytes": 21551,
+      "sha256": "a24acfd30bd2ad67d050b8bf22a1e7c410cc451db03fa1b8aa053db5a2e827a2"
+    },
+    {
+      "url": "https://dflund.se/~pi/cpm/files/ftp.mayn.de/pub/cpm/archive/bye5/bye510/b5-cpm3.asm.txt",
+      "bytes": 3964,
+      "sha256": "47c6ad73684ee141701f3fbf99a21c4e70304cb35336a7bc45ce36ad32f85000"
+    },
+    {
+      "url": "https://dflund.se/~pi/cpm/files/ftp.mayn.de/pub/cpm/archive/bye5/bye510/b5-driv3.asm.txt",
+      "bytes": 3035,
+      "sha256": "910e560f2ade16f1fd4fa8d2e02d4990ec05b2feb2172280b0a405ca52c4fb25"
+    }
+  ]
+}

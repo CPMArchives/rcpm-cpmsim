@@ -36,7 +36,27 @@ def configure_library(source, archive_names=("ARCHIVE",)):
     return library
 
 
-def prepare(images, boot_disk, output, archive_names=("ARCHIVE",)):
+def configure_startup(source, command):
+    startup = bytearray(source.read_bytes())
+    original = b"A15:PATH /C $$$$ A15 A0\0"
+    if startup.count(original) != 1:
+        raise ValueError("Unexpected STARTZ3P command line")
+    offset = startup.index(original)
+    # This supplied Z-System alias has a 256-byte command slot followed by
+    # executable code. Validate that boundary rather than growing the file.
+    if (offset != 30 or len(startup) <= offset + 256 or startup[19] != 0xC3
+            or int.from_bytes(startup[20:22], 'little') != 0x21E):
+        raise ValueError("Unexpected STARTZ3P alias layout")
+    if any(startup[offset + len(original):offset + 256]):
+        raise ValueError("STARTZ3P command slot contains unexpected data")
+    encoded = command.encode('ascii')
+    if not encoded or len(encoded) > 255 or b'\0' in encoded or b'\r' in encoded or b'\n' in encoded:
+        raise ValueError("Startup command must be 1-255 ASCII characters on one line")
+    startup[offset:offset + 256] = (encoded + b'\0').ljust(256, b'\0')
+    return startup
+
+
+def prepare(images, boot_disk, output, archive_names=("ARCHIVE",), startup_command="A0:PATH /C A0"):
     base = images / "d_z3plus/u0"
     cpmcp = shutil.which("cpmcp") or "/opt/homebrew/bin/cpmcp"
     cpmrm = str(Path(cpmcp).with_name("cpmrm"))
@@ -45,12 +65,7 @@ def prepare(images, boot_disk, output, archive_names=("ARCHIVE",)):
         work = Path(temporary)
         shutil.copyfile(boot_disk, work / "drivea.dsk")
         (work / "Z3PLUS.LBR").write_bytes(configure_library(base / "Z3PLUS.LBR", archive_names))
-        startup = (base / "STARTZ3P.COM").read_bytes()
-        old = b"A15:PATH /C $$$$ A15 A0\0"
-        if startup.count(old) != 1:
-            raise ValueError("Unexpected STARTZ3P command line")
-        new = b"A0:PATH /C A0"
-        (work / "STARTZ3P.COM").write_bytes(startup.replace(old, new.ljust(len(old), b"\0")))
+        (work / "STARTZ3P.COM").write_bytes(configure_startup(base / "STARTZ3P.COM", startup_command))
         (work / "PROFILE.SUB").write_bytes(b"Z3PLUS\r\n\x1a")
         for name in ("Z3PLUS.COM", "!(C)1988"):
             shutil.copyfile(base / name, work / name)
@@ -71,9 +86,11 @@ def main():
     parser.add_argument("output", type=Path, help="New Z3PLUS disk image")
     parser.add_argument("--archive-directory", action="append", dest="archive_names",
                         help="Name successive P: user areas, starting at P0 (repeatable)")
+    parser.add_argument("--rcpm-startup", action="store_true", help="Stop GET redirection, then start BYE after Z3PLUS initialization")
     args = parser.parse_args()
     prepare(args.romwbw / "Source/Images", args.boot_disk, args.output,
-            args.archive_names or ("ARCHIVE",))
+            args.archive_names or ("ARCHIVE",),
+            "A0:PATH /C A0;A:GET CONSOLE;A:BYE" if args.rcpm_startup else "A0:PATH /C A0")
 
 
 if __name__ == "__main__":

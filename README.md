@@ -1,5 +1,40 @@
 # RCP/M on cpmsim
 
+**Architecture transition:** The current scripts below still run separate local
+and caller instances. The agreed target is one shared CP/M machine following
+mid-1980s BYE behavior. See the [BYE510 source review and implementation
+recommendation](docs/bye510-review.md) and [shared-console requirements](SHARED-CONSOLE-DESIGN.md).
+The replacement has not yet been activated.
+
+The [architecture completion gates](docs/architecture-status.md) track the
+remaining lifecycle, storage, transfer and launcher work. Caller permission
+and directory configuration follow in the security configuration phase.
+
+The [direct TCP and tcpser modem interface](docs/modem-interface.md) is built
+and tested in isolation, including actual CP/M 3 guest I/O. Both [BYE5 builds](docs/bye5-build.md)
+now pass shared-console checks with Z3PLUS. Z3PLUS wheel transitions
+and automatic boot startup are verified. Emulator security enforcement and
+migration remain pending; the current launcher is unchanged.
+
+The [shared-machine service checks](docs/shared-services.md) now cover
+X/YMODEM uploads, YMODEM downloads, persistent messages and guest-safe WORK
+cleanup with both connection options. Remaining protocols and operator
+controls during transfers still require integration.
+
+For a separate interactive instance of that build, follow
+[Try the shared-machine prototype](docs/try-shared-trial.md). Its generated
+launcher uses loopback port 4001 and leaves the older installation untouched.
+
+In the new disk set, `BYE.COM` is BYE5 remote service/logoff; the native
+cpmsim shutdown program is preserved as `BYEBYE.COM`. Restricting shutdown
+to the local sysop is required but has not yet been enforced.
+
+The [security review](docs/security-boundary.md) records the confirmed remote
+shutdown failure and the approved restriction to operator-approved caller
+programs, whose enforcement remains pending. The new
+runtime now disables native host-file I/O whenever RCP/M transport is selected.
+
+
 A Remote CP/M system in development for the CPMArchives software collection.
 Callers will land directly at the CP/M prompt. The local prototype uses
 banked CP/M 3 on Udo Munk’s z80pack cpmsim and Z3PLUS for named directories.
