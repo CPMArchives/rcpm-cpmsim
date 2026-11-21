@@ -115,4 +115,8 @@ for the aggregate. Nothing has been published.
 The [component review](distribution-review.md) records a later public-domain
 release claim in RomWBW's Z3PLUS catalog, which still needs its originating grant
 traced, and the configured ZDE circulation question. The [host requirements](host-release-requirements.md)
-distinguish existing macOS packaging from remaining Windows/Linux work.
+distinguish qualified macOS packaging from remaining Windows/Linux qualification.
+The [native Windows host build](windows-host-build.md) now produces a complete
+x64 candidate ZIP with the unchanged common payload, seven native runtime
+executables and separate qualification tools. It is cross-compiled and
+statically audited; no Windows runtime pass has been recorded.

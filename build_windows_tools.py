@@ -6,7 +6,10 @@ import json
 import os
 from pathlib import Path
 import shutil
+import shlex
 import subprocess
+
+from windows.build_support import resource, audit
 
 PROGRAMS = ('cpmcp', 'cpmls', 'cpmrm', 'cpmchattr', 'mkfs.cpm')
 
@@ -40,10 +43,11 @@ def build(source, toolchain, output):
     text = text.replace('fopen(DISKDEFS,"r")',
                         'fopen(getenv("DISKDEFS") ? getenv("DISKDEFS") : DISKDEFS,"r")')
     filesystem.write_text(text)
-    env = dict(os.environ, CC=str(compiler),
-               AR=str(toolchain / 'bin/x86_64-w64-mingw32-ar'),
-               RANLIB=str(toolchain / 'bin/x86_64-w64-mingw32-ranlib'),
-               CFLAGS='-O2 -D_FILE_OFFSET_BITS=64', LDFLAGS='-static')
+    res = resource(toolchain, output)
+    env = dict(os.environ, CC=shlex.quote(str(compiler)),
+               AR=shlex.quote(str(toolchain / 'bin/x86_64-w64-mingw32-ar')),
+               RANLIB=shlex.quote(str(toolchain / 'bin/x86_64-w64-mingw32-ranlib')),
+               CFLAGS='-O2 -D_FILE_OFFSET_BITS=64', LDFLAGS='-static ' + shlex.quote(str(res)))
     with (output / 'build.log').open('w') as log:
         for command in (
             ['/bin/sh', './configure', '--host=x86_64-pc-mingw32',
@@ -58,17 +62,7 @@ def build(source, toolchain, output):
     for name in PROGRAMS:
         path = runtime / (name + '.exe')
         shutil.copy2(work / path.name, path)
-        headers = subprocess.check_output(
-            [str(inspector), '--file-headers', '--coff-imports', str(path)], text=True)
-        if 'IMAGE_FILE_MACHINE_AMD64' not in headers:
-            raise ValueError('Expected Windows x64 PE: ' + name)
-        imports = [line.split(':', 1)[1].strip() for line in headers.splitlines()
-                   if line.strip().startswith('Name:')]
-        if any(not (dll.lower() in ('kernel32.dll', 'msvcrt.dll')
-                    or dll.lower().startswith('api-ms-win-crt-')) for dll in imports):
-            raise ValueError('Unexpected tool DLL dependency: ' + repr(imports))
-        audits[path.name] = dict(sha256=hashlib.sha256(path.read_bytes()).hexdigest(),
-                                imports=imports)
+        audits[path.name] = audit(toolchain, path, {'kernel32.dll', 'msvcrt.dll'})
     shutil.copy2(work / 'diskdefs', runtime / 'diskdefs')
     shutil.copy2(work / 'COPYING', output / 'COPYING')
     receipt = dict(platform='windows-x64', status='cross-compiled-not-runtime-qualified',
