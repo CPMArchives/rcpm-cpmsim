@@ -14,7 +14,7 @@
   },
   "manual_sessions_at_4mhz": true,
   "direct_tcp": true,
-  "guide_only_changed_after_legacy_regression": true,
+  "guide_only_changed_after_legacy_regression": false,
   "byte_identical_rebuild": true,
   "opening_session_tests_only": true,
   "excluded": {
@@ -23,5 +23,19 @@
   "limitations": {
     "WUMPUS": "N at instructions; no cave3; cave0 gameplay only",
     "SOKOBAN": "movement and undo qualified; persistent saves not claimed"
-  }
+  },
+  "retained_game_data_and_launcher_hashes_unchanged": true,
+  "archive_only_files_removed": 46,
+  "empty_users": [
+    4,
+    5,
+    6,
+    7,
+    11,
+    12,
+    13,
+    14,
+    15
+  ],
+  "free_blocks_zeroed": true
 }

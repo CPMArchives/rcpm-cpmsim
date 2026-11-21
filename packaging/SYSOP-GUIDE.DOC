@@ -533,16 +533,14 @@ MOUNT /L lists public images; MOUNT GAMES or MOUNT GUIDES replaces J:.
 DIR J: lists files; LT J:README.TXT reads a volume guide. LDIR lists LBR members
 and LT reads text members. YSEND downloads through guest BDOS using YMODEM.
 
-GAMES contains unpacked compiled games and supporting/source material:
-  J0: guide and preparation launchers; J1: expanded Adventure; J8: Animals; J3: Maze Chase;
-  J4: Adventure revision sources; J5: BASIC games; J6: Pascal Othello;
-  J7: Osborne-specific games and dependencies, including unpacked nested LBRs.
-SIGMV001 is omitted. SIGMV152's LADDER was network analysis, not a game.
-Read the J0: guide before use. Source-only and terminal-specific sets require
-preparation. After MOUNT GAMES, type J0:ADVENT, J0:ANIMALS or J0:MCHASE. Launchers
-copy needed data into WORK and run the approved game on J:. Maze Chase uses
-ANSI/VT100; MCHORIG.COM preserves the original ADM-3A executable. WORK saves
-and high scores last only until logoff.
+GAMES contains playable games, required data and playing instructions:
+  J0: guide and preparation launchers; J1: expanded Adventure;
+  J8: Animals; J3: Maze Chase. The optional expanded edition adds eleven games.
+Source-only and unqualified sets formerly on J4-J7, source files, old catalogs
+and MCHORIG.COM are excluded. Original archives remain separately on P:.
+After MOUNT GAMES, type J0:ADVENT, J0:ANIMALS or J0:MCHASE. Launchers copy
+needed data into WORK and run the approved game on J:. Maze Chase uses
+ANSI/VT100. WORK saves and high scores last only until logoff.
 J0:ADVENT, ANIMALS and MCHASE are our preparation launchers, rather than the
 original game executables. No game-specific wrappers occupy A0:.
 ADVENT starts the unchanged Adventure program at

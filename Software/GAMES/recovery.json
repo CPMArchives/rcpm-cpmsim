@@ -8,8 +8,6 @@
   "work_cleaned": true,
   "private_tools_denied": true,
   "master_unchanged_after_calls": true,
-  "verified_added_or_replaced_approved_files": 25,
-  "launchers": 14,
-  "new_native_games": 11,
-  "existing_native_games": 3
+  "tested_image_sha256": "4bab79a30c2c89397b1828ff18f7a18eec2fb4d54785ab1ce579e6ab70d70b6e",
+  "verified_added_or_replaced_approved_files": 25
 }

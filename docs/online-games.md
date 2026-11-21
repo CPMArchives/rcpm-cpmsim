@@ -39,7 +39,7 @@ individual recovery assessment.
 
 The normal CPU clock remains 4 MHz. Maze Chase is adapted through its documented
 cursor hook to ANSI/VT100, with its 4 MHz timing value unchanged. The original
-ADM-3A executable is retained as MCHORIG.COM without caller approval. Its original
+ADM-3A executable remains in the separate archive, not on GAMES. Its original
 MCHASE.DOC and MCHASE.HLP are preserved unchanged. The terminal adaptation source
 is guest/mchansi.asm; the manifest records original and installed hashes.
 
@@ -47,8 +47,8 @@ is guest/mchansi.asm; the manifest records original and installed hashes.
 
 J0: is the launcher/index area. Group new games by category or shared runtime
 when their filenames permit; do not allocate a user area automatically for
-each game. Isolate conflicting data filenames only when needed. The current
-legacy collection locations are retained until a separate migration is tested.
+each game. Isolate conflicting data filenames only when needed. Qualified games retain their current locations. Source-only and unqualified
+sets are excluded from GAMES.
 
 ## Current image
 
@@ -57,20 +57,12 @@ legacy collection locations are retained until a separate migration is tested.
 | J0: | README, GAMES marker and ADVENT/ANIMALS/MCHASE launchers | Volume guide and WORK-data preparation |
 | J1: | Expanded Adventure, SIG/M 11 | ADV.COM plus four runtime data files |
 | J8: | Revised Animals, SIG/M 134 | ANIMALS.COM plus writable BEASTS data |
-| J3: | Maze Chase, SIG/M 228 | MCHASE.COM adapted for ANSI/VT100; original retained |
-| J4: | Adventure revision, SIG/M 2 | Source and initializer; no compiled game |
-| J5: | BASIC games, SIG/M 10 | Interpreter required; H19 variants are terminal-specific |
-| J6: | Othello, SIG/M 24 | Pascal source; compilation required |
-| J7: | Osborne games, SIG/M 256 | Nested libraries unpacked; machine/runtime dependencies |
+| J3: | Maze Chase, SIG/M 228 | MCHASE.COM adapted for ANSI/VT100; original in separate archive |
 
-Original catalogs, notices and source members are preserved; the Maze Chase
-terminal adaptation is explicitly identified alongside its original executable. SIGMV001 is excluded
-from GAMES; the complete permanent P: collection is unchanged. SIGMV152 is also
-excluded: its LADDER is network analysis software, not the arcade game. Original
-SIG/M.LIB member names are normalized to SIGM.LIB in the unpacked image; the
-manifest retains their full source paths. Unrelated utilities from mixed volumes
-are omitted. Source/interpreter-dependent sets are explicitly labeled separately
-from the compiled games. No LBR containers remain on GAMES.
+GAMES contains playable games, required runtime data and playing instructions.
+The source-only sets formerly on J4-J7, source files, old catalogs and the
+unapproved MCHORIG.COM have been removed. Original archives remain on P:.
+SIGMV001 and the non-game SIGMV152 remain excluded.
 
 ## Optional expanded GAMES
 

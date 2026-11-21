@@ -1,7 +1,7 @@
 # Expanded GAMES disk
 
 An optional expanded edition of the v1.0 GAMES disk. It adds 11 tested CP/M
-games and retains the original games and supporting material. Download it
+games and keeps only playable games, required data and playing instructions. Download it
 separately; game binaries are not added to Git history or the base release.
 
 [Download GAMES-expanded.zip](https://github.com/CPMArchives/rcpm-cpmsim/releases/download/software-games-2026-11-22/GAMES-expanded.zip) ·
@@ -15,16 +15,17 @@ separately; game binaries are not added to Git history or the base release.
 | J9: | Rogue, Wanderer, Star Trek, Sokoban, Hunt the Wumpus |
 | J10: | Sargon, Othello, Backgammon, Battleships |
 
-The existing Adventure J1:, Maze Chase J3:, Animals J8:, and supporting sets
-J4:–J7: are retained. Five user areas J11:–J15: remain unused. The image has
-**2,866 KiB free**, with 834 of its 1,024 directory slots free.
+Adventure J1:, Maze Chase J3: and Animals J8: remain playable. Source-only
+sets, unqualified programs and old catalogs have been removed. J4:–J7: and
+J11:–J15: are empty. The image has **3,324 KiB free**, with 891 of its 1,024
+directory slots free.
 
 ## Install and play
 
 Stop RCP/M cleanly and back up your existing `volumes/GAMES.dsk` before replacing
-it with the supplied image. This expansion preserves the released disk's original
-files except its updated guide. If your installed disk contains further local
-additions, merge the supplied `payload/` into a stopped copy of that disk instead
+it with the supplied image. This edition intentionally removes 46 archive/source/unqualified files;
+all retained game binaries and required data are unchanged. If your installed disk contains further local
+additions, apply the recorded removals and supplied `payload/` to a stopped copy of that disk instead
 of overwriting those additions. The supplied reproduction script deliberately
 accepts only the recorded released base image.
 
@@ -65,7 +66,8 @@ the downloadable report.
 
 The ZIP includes the per-file manifest, checked payload, generated launcher
 assembly, available game sources, notices, test records and `build_image.py`.
-The script rebuilds a byte-identical image from the released base using RCP/M's
+The script applies the recorded removals and payload, clears free blocks and
+rebuilds a byte-identical image from the released base using RCP/M's
 packaged cpmtools. Individual games retain their original rights and notices.
 
 ANSI editions come from [acn's VT100 CP/M collection](https://git.imzadi.de/acn/vt100-games).
