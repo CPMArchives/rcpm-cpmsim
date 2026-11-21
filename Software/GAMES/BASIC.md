@@ -1,7 +1,7 @@
 # Standalone BASIC games
 
 BASCOM's `/O` option and static runtime linking can turn many historical CP/M
-BASIC games into standalone COM files. GAMES includes Hammurabi and 31 more tested
+BASIC games into standalone COM files. GAMES includes Hammurabi and 55 more tested
 standalone BASIC titles made this way. It does not contain MBASIC, BASCOM or BRUN.COM.
 
 The [runtime terms](MICROSOFT-RUNTIME-TERMS.txt) distinguish distribution of
@@ -54,7 +54,7 @@ recovery. These are opening/session tests, not complete playthroughs.
 The finished image also passed Hangman data preparation, BAGELS disconnect,
 WORK cleanup, private-tool denial and unchanged master-image checks.
 
-The 31 native COM files share J4:; every launcher is in J0:. Start with
+The 55 native COM files share J4:; every launcher is in J0:. Start with
 `MOUNT GAMES`, then e.g. `J0:BAGELS`. `LT J0:BASIC.TXT` lists controls.
 The collection includes per-game results and caller test events outside the
 disk image. No compiler, interpreter, BRUN or raw runtime library is included.
@@ -100,3 +100,16 @@ Q quit at Your orders. Use a titled name such as Mr. Smith; skill is 1–6.
 At headquarters Y stays for another hour, A gets help, F gets intelligence.
 `J4:MISSION.DOC` is the original author notice/documentation; its MBASIC
 startup instructions describe the historical source edition.
+
+## Further Walnut Creek titles
+
+The [Walnut Creek batch](WALNUT.md) adds 24 more qualified standalone titles
+from MBGAMES1.LBR through MBGAMES6.LBR. The selected original MBASIC files
+were saved as ASCII using a private interpreter, then compiled with the same
+standalone pipeline. Those development tools are not included. Each addition
+passed gameplay input, exit and its own caller-disconnect check.
+
+Hi-Q, Roulette and Yahtzee use --console-printer. Hi-Q's introduction now
+describes terminal output. Hockey fixes the assist lookup J(J-1) to H(J-1)
+at line 630. The original members, ASCII/prepared listings, patches and
+build hashes are retained outside the image. LT J0:WALNUT.TXT lists controls.

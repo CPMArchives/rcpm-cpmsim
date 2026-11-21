@@ -1,7 +1,7 @@
 # Expanded GAMES disk
 
-An optional expanded edition of the v1.0 GAMES disk. It adds 49 tested CP/M
-titles, including 31 standalone BASIC additions, and keeps ready-to-run
+An optional expanded edition of the v1.0 GAMES disk. It adds 73 tested CP/M
+titles, including 55 standalone BASIC additions, and keeps ready-to-run
 software, required data, playing instructions and notices. Download it
 separately; game binaries are not added to Git history or the base release.
 
@@ -11,15 +11,15 @@ separately; game binaries are not added to Git history or the base release.
 
 | Area | Games |
 | --- | --- |
-| J0: | All 52 launchers and the guide |
+| J0: | All 76 launchers and the guide |
 | J2: | Ladder, CatChum, CPMtris, Robots, Snake |
-| J4: | 31 standalone BASIC titles; see [BASIC collection](BASIC.md) |
+| J4: | 55 standalone BASIC titles; see [BASIC collection](BASIC.md) |
 | J9: | Rogue, Wanderer, Star Trek, Sokoban, Hunt the Wumpus, Hangman, Minesweeper |
 | J10: | Sargon, Othello, Backgammon, Battleships, Mastermind, Hammurabi |
 
 Adventure J1:, Maze Chase J3: and Animals J8: remain playable. Source-only
 sets, unqualified programs and old catalogs have been removed. J5:–J7: and
-J11:–J15: are empty. The image has **2,638 KiB free**, with 800 of its 1,024
+J11:–J15: are empty. The image has **2,196 KiB free**, with 743 of its 1,024
 directory slots free.
 
 ## Install and play
@@ -44,7 +44,7 @@ builds place those launchers on GAMES.
 
 ## Qualification and limits
 
-All 49 additions received actual caller-session tests on RCP/M v1.0, CP/M 3,
+All 73 additions received actual caller-session tests on RCP/M v1.0, CP/M 3,
 Z3PLUS/BYE, ANSI terminal and the normal 4 MHz setting over direct TCP. Tests
 covered meaningful moves or turns and exit. Rogue and Sargon also passed disk
 save/reload checks. These are opening/session tests, not complete playthroughs.
@@ -121,3 +121,16 @@ status, map, scouting, movement, quit and disconnect recovery passed. A
 complete mission win, all random encounters and higher skill levels were
 not tested. Original author credits and free-distribution/shareware terms
 are retained in `J4:MISSION.DOC` and in the host ZIP. No MBASIC is needed.
+
+## Walnut Creek additions
+
+24 further titles from the CD-ROM's six MBGAMES libraries share J4: with
+J0: launchers: 23 Matches, Baccarat, Bug, Chemist, Crazy Eights, Flip Flop,
+Golf, Hi-Q peg solitaire, Hockey, Horse Race, King, Lunar Lander, Nicoma, One
+Check, Orbit, Queen, Reverse, Roulette, Slalom, Stock Market, Trap, War, Word,
+Yahtzee. Each passed meaningful
+input, exit and separate carrier recovery under RCP/M, CP/M 3, 4 MHz and
+direct TCP. Hockey also completed a one-minute match and final statistics.
+Hi-Q, Roulette and Yahtzee send printer output to the terminal. Original
+author/editor credits, source hashes and test events are retained in the ZIP.
+See [Walnut Creek sources, controls and limits](WALNUT.md).

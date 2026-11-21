@@ -535,7 +535,7 @@ and LT reads text members. YSEND downloads through guest BDOS using YMODEM.
 
 GAMES contains playable games, required data and playing instructions:
   J0: guide and preparation launchers; J1: expanded Adventure;
-  J8: Animals; J3: Maze Chase. The optional expanded edition adds 49 titles.
+  J8: Animals; J3: Maze Chase. The optional expanded edition adds 73 titles.
 Source-only and unqualified sets formerly on J4-J7, source files, old catalogs
 and MCHORIG.COM are excluded. Original archives remain separately on P:.
 After MOUNT GAMES, type J0:ADVENT, J0:ANIMALS or J0:MCHASE. Launchers copy
