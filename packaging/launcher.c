@@ -24,7 +24,8 @@ static void io_fail(const char *message) { fprintf(stderr, "RCP/M: %s: %s\n", me
 static void write_all(int fd, const void *data, size_t size) {
     const unsigned char *bytes = data;
     while (size) { ssize_t n = write(fd, bytes, size); if (n < 0 && errno == EINTR) continue;
-        if (n <= 0) io_fail("write"); bytes += n; size -= (size_t)n; }
+        if (n <= 0) io_fail("write");
+        bytes += n; size -= (size_t)n; }
 }
 static void copy(const char *source, const char *target) {
     unsigned char buffer[16384]; ssize_t n;
@@ -56,7 +57,9 @@ static void password(char result[25], char prefix) {
     unsigned char bytes[12]; size_t got = 0; const char *hex = "0123456789ABCDEF";
     int fd = open("/dev/urandom", O_RDONLY); if (fd < 0) io_fail("random source");
     while (got < sizeof(bytes)) { ssize_t n = read(fd, bytes + got, sizeof(bytes) - got);
-        if (n < 0 && errno == EINTR) continue; if (n <= 0) io_fail("random source"); got += (size_t)n; }
+        if (n < 0 && errno == EINTR) continue;
+        if (n <= 0) io_fail("random source");
+        got += (size_t)n; }
     close(fd);
     for (size_t k = 0; k < sizeof(bytes); k++) { result[k*2] = hex[bytes[k]>>4]; result[k*2+1] = hex[bytes[k]&15]; }
     result[0] = prefix; result[24] = 0;
@@ -222,7 +225,8 @@ int main(int argc, char **argv) {
         else if (!strcmp(key, "PORT") && strlen(value) < sizeof(port)) strcpy(port, value);
         else fail("Unknown or invalid RCPM.CONF setting");
     }
-    if (ferror(config)) io_fail("Read RCPM.CONF"); fclose(config);
+    if (ferror(config)) io_fail("Read RCPM.CONF");
+    fclose(config);
     for (int k = 1; k < argc; k++) {
         if (!strcmp(argv[k], "--check")) { check = 1; continue; }
         if (!strcmp(argv[k], "--help")) {
@@ -234,7 +238,8 @@ int main(int argc, char **argv) {
         if (!strcmp(argv[k], "--mode") && strlen(argv[k+1]) < sizeof(mode)) strcpy(mode, argv[k+1]);
         else if (!strcmp(argv[k], "--address") && strlen(argv[k+1]) < sizeof(address)) strcpy(address, argv[k+1]);
         else if (!strcmp(argv[k], "--port") && strlen(argv[k+1]) < sizeof(port)) strcpy(port, argv[k+1]);
-        else fail("Unknown option; use --help"); k++;
+        else fail("Unknown option; use --help");
+        k++;
     }
     errno = 0; number = strtol(port, &end, 10);
     if (errno || !*port || *end || number < 1 || number > 65535 || inet_pton(AF_INET, address, &ip) != 1) fail("Invalid IPv4 address or port");

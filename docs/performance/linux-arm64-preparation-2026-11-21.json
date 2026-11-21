@@ -1,6 +1,6 @@
 {
   "date": "2026-11-21",
-  "status": "arm64-build-runner-prepared-and-media-attached-guest-execution-pending",
+  "status": "v2-media-attached-after-native-launcher-compile-failure",
   "target": "linux-arm64",
   "utm_guest": "Debian 13 KDE ARM64",
   "observed_architecture": "aarch64",
@@ -11,7 +11,7 @@
   "iso_label": "RCPMBUILD",
   "iso_attached": true,
   "source_bootstrap": "packaging/Build-Linux-from-media.sh",
-  "guest_step": "Open RCPMBUILD CD in a guest terminal and run bash ./Build-RCPM.sh",
+  "guest_step": "bash /media/cdrom/go.sh",
   "native_build_completed": false,
   "linux_live_qualification_completed": false,
   "blockers": [
@@ -20,5 +20,11 @@
     "Guest console not reliably observable/controllable through available UI"
   ],
   "vm_restarted": false,
-  "security_settings_changed": false
+  "security_settings_changed": false,
+  "native_build_failure": "User screenshot: GCC -Werror=misleading-indentation in packaging/launcher.c; four statement groups reformatted without behavioral changes.",
+  "v2_kit_sha256": "033309f662abd5b50e82caed400c3a3f8e90081556eae18a6a190017073ad4cf",
+  "v2_iso_sha256": "3b12e5aef70a0fe9578494c4cdf243e44d003994f14781ac011f905e76964549",
+  "v2_iso_label": "RCPMBUILD2",
+  "v2_iso_attached": true,
+  "validation": "7 packaging/bootstrap tests passed; launcher compiles with macOS Clang using release warning flags. Native GCC and live qualification remain pending."
 }
