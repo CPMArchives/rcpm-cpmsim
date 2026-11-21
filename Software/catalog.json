@@ -42,9 +42,9 @@
       "archive": "GAMES-expanded.zip",
       "download": "https://github.com/CPMArchives/rcpm-cpmsim/releases/download/software-games-2026-11-22/GAMES-expanded.zip",
       "report": "https://github.com/CPMArchives/rcpm-cpmsim/releases/download/software-games-2026-11-22/GAMES-REPORT.txt",
-      "archive_sha256": "f094bf54d026584addc0a4a0627ddd8065300e219911cd6b77b7dd67541391b1",
+      "archive_sha256": "30531d46e92f852c47ca5975dbd78df4afd00b54e56062a26841c49f5d2b75d3",
       "image": "GAMES.dsk",
-      "image_sha256": "53973264c1c04db003bd7a4260034ea7a63184131254d2a5713391ff10f540a7",
+      "image_sha256": "4bab79a30c2c89397b1828ff18f7a18eec2fb4d54785ab1ce579e6ab70d70b6e",
       "image_bytes": 4177920,
       "format": "z80pack-hd",
       "minimum_rcpm": "1.0",
@@ -56,8 +56,21 @@
         9,
         10
       ],
-      "free_kib": 2866,
-      "qualification": "All 11 additions: opening/turn/exit; Rogue and Sargon save/reload; original three regression; caller recovery and WORK cleanup; Wumpus text-mode limits documented"
+      "free_kib": 3324,
+      "qualification": "All 11 additions: opening/turn/exit; Rogue and Sargon save/reload; original three regression; caller recovery and WORK cleanup; Wumpus text-mode limits documented",
+      "empty_users": [
+        4,
+        5,
+        6,
+        7,
+        11,
+        12,
+        13,
+        14,
+        15
+      ],
+      "removed_archive_files": 46,
+      "playable_only": true
     }
   ]
 }

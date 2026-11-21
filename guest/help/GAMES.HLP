@@ -13,5 +13,5 @@ WORK must be readable and writable for preparation.
 Use the game's own quit command to return to the CP/M prompt.
 WORK files, including any temporary game data, are cleared at logoff.
 
-Other material on GAMES may need compilation or a different machine.
-Games requiring writes to protected J: are for download and local play.
+GAMES contains playable games, required data and playing instructions.
+Source-only and unqualified material stays in the separate archives.

@@ -11,20 +11,12 @@ import tempfile
 # Future games should share category/runtime areas when filenames permit;
 # a new game does not require a new user area. SIGMV001 remains excluded.
 GAME_SETS = (
-    (1, 11, None, 'Expanded Adventure: compiled game and runtime data'),
-    (8, 134, ('ANIMALS.COM', 'ANIMALS.PAS', 'BEASTS.QQQ', 'BEASTS.QQX',
-              'ABSTRACT.134', '-CATALOG.134'), 'Animals: revised compiled game, source and seed data'),
-    (3, 228, ('MCHASE.COM', 'MCHASE.DOC', 'MCHASE.HLP', '-CATALOG.228',
-              'SIG-M.LIB'), 'Maze Chase: compiled game and instructions; terminal setup required'),
-    (4, 2, None, 'Original Adventure revision: source and initializer, not a compiled game'),
-    (5, 10, ('BLACKBOX.BAS', 'BOGGLE.BAS', 'GAMMONB.BAS', 'LANES.BAS',
-             'GAMMON.H19', 'NIM1.H19', 'OTHELLO.H19', 'STARWAR2.H19',
-             '-CATALOG.010', 'SIG/M.LIB'), 'BASIC games: interpreter required; H19 variants are terminal-specific'),
-    (6, 24, ('OTHELLO.PAS', 'OTHELL1.PAS', 'OTHELL2.PAS', 'OTHELLIN.PAS',
-             'ABSTRACT.024', '-CATALOG.024', '-CATALOG.ACK', 'SIG/M.LIB'),
-     'Othello: Pascal source only; compilation required'),
-    (7, 256, ('OSGAMES1.LBR', '-CATALOG.256', 'SIG-M.LIB'),
-     'Osborne games: nested libraries unpacked; machine-specific dependencies'),
+    (1, 11, ('ADV.COM', 'ADVI.DAT', 'ADVI.PTR', 'ADVT.DAT', 'ADVT.PTR'),
+     'Expanded Adventure: compiled game and runtime data'),
+    (8, 134, ('ANIMALS.COM', 'BEASTS.QQQ', 'BEASTS.QQX'),
+     'Animals: compiled game and seed data'),
+    (3, 228, ('MCHASE.COM', 'MCHASE.DOC', 'MCHASE.HLP'),
+     'Maze Chase: compiled game and playing instructions'),
 )
 
 
@@ -91,22 +83,21 @@ def build(sigm, tools, output, terminal_patch=None, launcher_dir=None):
     subprocess.run([str(tools / 'mkfs.cpm'), '-f', 'z80pack-hd', str(image)], check=True, capture_output=True)
     with image.open('r+b') as stream:
         stream.truncate(255 * 128 * 128)
-    text = ['RCP/M GAMES - unpacked games and supporting material', '',
+    text = ['RCP/M GAMES - playable games', '',
             'J0: contains the guide and launchers; game files use J1: and above.',
-            'No LBR extraction is required, including nested Osborne libraries.',
+            'Only compiled games, required data and playing instructions are included.',
             'SIGMV001 is omitted. SIGMV152 was not a game and is omitted.', '',
             'Compiled games:',
             'J1:ADV.COM     Expanded Adventure, with its four runtime data files.',
             'J8:ANIMALS.COM Animals, with BEASTS seed files; requires writable data.',
             'J3:MCHASE.COM  Maze Chase; read MCHASE.DOC for terminal installation.', '',
-            'Inspect a set: DIR J1:       Read its notes: LT J1:ABSTRACT.011',
+            'Inspect a game area: DIR J1:',
             'Download a file: YSEND J1:ADV.COM', '',
             'After MOUNT GAMES, use J0:ADVENT, J0:ANIMALS or J0:MCHASE.',
             'The fixed launchers copy seed data to WORK and run approved J: code.',
             'Saves/high scores in WORK last for this call only.',
             'WORK remains non-executable. Other programs require sysop approval.',
-            'Do not run setup or save games on this read-only master.', '',
-            'Additional material (not ready-to-run games):']
+            'Do not run setup or save games on this read-only master.']
     with tempfile.TemporaryDirectory(prefix='j-volumes-') as temporary:
         work = Path(temporary)
         for user, number, selected, description in GAME_SETS:
@@ -129,10 +120,6 @@ def build(sigm, tools, output, terminal_patch=None, launcher_dir=None):
                     seen.add(target)
                     original_digest = hashlib.sha256(payload).hexdigest()
                     if user == 3 and target == 'MCHASE.COM' and terminal_patch is not None:
-                        install_member(tools, image, work, user, 'MCHORIG.COM', payload)
-                        rows.append(dict(volume='GAMES', user=user, file='MCHORIG.COM',
-                                         sha256=original_digest, source=origin,
-                                         description='Unmodified ADM-3A original, not caller-approved'))
                         patched = bytearray(payload)
                         if patched[0x7f:0x82] != bytes([4, 27, 61]) or len(patched) > 0x62a0:
                             raise ValueError('Unexpected Maze Chase terminal patch layout')
@@ -149,11 +136,9 @@ def build(sigm, tools, output, terminal_patch=None, launcher_dir=None):
                                      original_sha256=original_digest,
                                      source=origin, library_sha256=hashlib.sha256(data).hexdigest(),
                                      description=description))
-            if user in (4, 5, 6, 7):
-                text.append(f'J{user}: {description}')
         if terminal_patch is not None:
             note = (b'MCHASE.COM has the documented cursor hook adapted to ANSI/VT100.\r\n'
-                    b'MCHORIG.COM retains the original ADM-3A build.\r\n'
+                    b'Original source/archive material is kept in the separate archives.\r\n'
                     b'MCHASE.DOC and MCHASE.HLP are unchanged. CPU setting remains 4 MHz.\r\n\x1a')
             data = install_member(tools, image, work, 3, 'ANSI.TXT', note)
             rows.append(dict(volume='GAMES', user=3, file='ANSI.TXT',

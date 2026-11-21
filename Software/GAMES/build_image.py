@@ -30,6 +30,14 @@ with tempfile.TemporaryDirectory(dir=output.parent) as tmp:
     shutil.copyfile(base, image)
     tool('cpmchattr', image, 'mr', '0:README.TXT')
     tool('cpmrm', image, '0:README.TXT')
+    for row in manifest.get('remove_files', []):
+        name = f"{row['user']}:{row['file']}"
+        tool('cpmchattr', image, 'mr', name)
+        tool('cpmrm', image, name)
+    # Terminal adaptation notes are intentionally replaced with the guide.
+    if any(row['user'] == 3 and row['file'] == 'ANSI.TXT' for row in manifest['payload']):
+        tool('cpmchattr', image, 'mr', '3:ANSI.TXT')
+        tool('cpmrm', image, '3:ANSI.TXT')
     for row in manifest['payload']:
         source = (collection / row['payload']).resolve()
         assert source.is_relative_to(collection / 'payload'), 'Unsafe payload path'
@@ -38,6 +46,18 @@ with tempfile.TemporaryDirectory(dir=output.parent) as tmp:
         tool('cpmcp', image, source, name)
         if row['approved']:
             tool('cpmchattr', image, 'r4', name)
+    # Erase deleted content from free blocks, keeping all allocated blocks intact.
+    data = bytearray(image.read_bytes())
+    used = set(range(16))
+    for offset in range(0, 32768, 32):
+        entry = data[offset:offset + 32]
+        if entry[0] < 16:
+            used.update(int.from_bytes(entry[n:n + 2], 'little')
+                        for n in range(16, 32, 2) if entry[n:n + 2] != b'\0\0')
+    for block in range(2040):
+        if block not in used:
+            data[block * 2048:(block + 1) * 2048] = bytes(2048)
+    image.write_bytes(data)
     assert sha(image) == manifest['image_sha256'], 'Rebuilt image differs'
     shutil.copyfile(image, output)
 print('Verified image:', output)

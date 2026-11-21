@@ -19,11 +19,10 @@ qualified. Download quarantine/signing/notarization needs host release validatio
 - No J: image is shipped under disks/. The native launcher creates an empty J:
   on first start. `MOUNT GAMES` / `MOUNT GUIDES` select public read-only volumes.
 - GAMES user 0 holds its game-data preparation launchers; A0 has no game-specific wrappers.
-- GAMES holds unpacked compiled games and supporting/source sets in separate
-  user areas; nested game libraries are unpacked too. Original catalogs/notices
-  are retained. SIGMV001 and the non-game SIGMV152 are omitted from GAMES.
-  See [the contents and caller-game policy](online-games.md). Three fixed A0
-  launchers prepare WORK data and run the selected approved game on J:.
+- GAMES contains compiled games, required runtime data and playing instructions.
+  Source-only and unqualified sets, old catalogs and MCHORIG.COM are excluded;
+  the original archives remain on P:. The optional expanded GAMES download
+  adds eleven qualified games and does not enlarge the base packaging inputs.
 - GUIDES contains documentation only. A public development toolbox was rejected;
   compilers/interpreters/loaders remain private sysop tools or offline media.
 - Both BYEDRIV variants ship under drivers/. Direct raw TCP is default on
