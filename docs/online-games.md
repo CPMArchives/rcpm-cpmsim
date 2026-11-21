@@ -66,7 +66,7 @@ SIGMV001 and the non-game SIGMV152 remain excluded.
 
 ## Optional expanded GAMES
 
-The [Software/GAMES collection](../Software/GAMES/README.md) adds 45 qualified
+The [Software/GAMES collection](../Software/GAMES/README.md) adds 49 qualified
 games in three shared areas, with every launcher on J0:. It is an optional
 replacement image and is not a new base-system packaging input. The catalog
 records tested editions, caller-session coverage and remaining limitations.

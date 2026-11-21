@@ -1,10 +1,11 @@
 {
-  "tested_image_sha256": "0237b66ae0d9e1a139eaccc24e13142af3331ba5c621d7ce10d40f84251f90a9",
+  "tested_image_sha256": "1da826a888bba3af57ca9daf20646613d49a3e64a2e20994c011f37e94aa4e5a",
   "cpu_mhz": 4,
   "transport": "direct",
-  "approved_native_and_launchers": 93,
+  "approved_native_and_launchers": 101,
   "no_system_game_launchers": true,
   "hangman_prepared_english_words_and_exited": true,
+  "mission_installed_launcher_gameplay_and_quit": true,
   "carrier_loss_during_bagels": true,
   "fresh_caller_recovered": true,
   "work_cleaned": true,

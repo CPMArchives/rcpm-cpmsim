@@ -11,3 +11,8 @@ interpreter and raw libraries are not included in this download.
 The compiled BASIC applications use BASCOM /O and OBSLIB.REL, statically
 linked into each COM file; they need no BRUN.COM. The notice appears at
 startup and in COPYING.TXT. Original game credits and rights still apply.
+
+Mission: Impossible is separately copyrighted by Richard S. Altman (1989),
+with free distribution allowed and a shareware registration notice retained
+in the original MISSION.DOC. The ANSI/standalone adaptation is identified
+separately. The Microsoft linked-runtime notice applies to its COM too.

@@ -44,7 +44,11 @@
     "HURKLE": true,
     "MUGWUMP": true,
     "NIM": true,
-    "ROCKSP": true
+    "ROCKSP": true,
+    "AWARI": true,
+    "DIGITS": true,
+    "HEXAPAWN": true,
+    "MISSION": true
   },
   "manual_sessions_at_4mhz": true,
   "direct_tcp": true,
@@ -71,12 +75,13 @@
     15
   ],
   "free_blocks_zeroed": true,
-  "basic_candidates_compiled": 27,
-  "basic_candidates_on_GAMES": 27,
-  "total_ready_to_run_titles": 48,
+  "basic_candidates_compiled": 30,
+  "basic_candidates_on_GAMES": 31,
+  "total_ready_to_run_titles": 52,
   "basic_carrier_recovery_each": true,
   "noncompetitive_activities": [
     "DIAMOND",
     "DICE"
-  ]
+  ],
+  "mission_ansi_qualified": true
 }
