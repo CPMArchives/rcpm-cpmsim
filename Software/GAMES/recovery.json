@@ -1,13 +1,15 @@
 {
+  "tested_image_sha256": "0e7aab43d1d77aaf400dccb16b263ea943e9a9cda3bf41ab43077012c54037f2",
   "cpu_mhz": 4,
   "transport": "direct",
   "no_system_game_launchers": true,
-  "final_ladder_menu_exit_seed_prepared": true,
-  "carrier_loss_during_rogue": true,
+  "hangman_prepared_english_words_and_exited": true,
+  "carrier_loss_during_snake": true,
   "fresh_caller_recovered": true,
   "work_cleaned": true,
   "private_tools_denied": true,
   "master_unchanged_after_calls": true,
-  "tested_image_sha256": "4bab79a30c2c89397b1828ff18f7a18eec2fb4d54785ab1ce579e6ab70d70b6e",
-  "verified_added_or_replaced_approved_files": 25
+  "verified_added_or_replaced_approved_files": 39,
+  "total_launchers": 21,
+  "total_approved_games": 21
 }

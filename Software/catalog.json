@@ -42,22 +42,22 @@
       "archive": "GAMES-expanded.zip",
       "download": "https://github.com/CPMArchives/rcpm-cpmsim/releases/download/software-games-2026-11-22/GAMES-expanded.zip",
       "report": "https://github.com/CPMArchives/rcpm-cpmsim/releases/download/software-games-2026-11-22/GAMES-REPORT.txt",
-      "archive_sha256": "30531d46e92f852c47ca5975dbd78df4afd00b54e56062a26841c49f5d2b75d3",
+      "archive_sha256": "e3b095ea271eea6cd5e3866e62023032c2fe9c4445f45712d50a016ebece6cd5",
       "image": "GAMES.dsk",
-      "image_sha256": "4bab79a30c2c89397b1828ff18f7a18eec2fb4d54785ab1ce579e6ab70d70b6e",
+      "image_sha256": "0e7aab43d1d77aaf400dccb16b263ea943e9a9cda3bf41ab43077012c54037f2",
       "image_bytes": 4177920,
       "format": "z80pack-hd",
       "minimum_rcpm": "1.0",
-      "new_games": 11,
-      "total_approved_games": 14,
+      "new_games": 18,
+      "total_approved_games": 21,
       "launcher_user": 0,
       "new_shared_users": [
         2,
         9,
         10
       ],
-      "free_kib": 3324,
-      "qualification": "All 11 additions: opening/turn/exit; Rogue and Sargon save/reload; original three regression; caller recovery and WORK cleanup; Wumpus text-mode limits documented",
+      "free_kib": 3228,
+      "qualification": "All 18 additions: opening/turn/exit; original three regression; latest seven individually exercised; Snake disconnect recovery and Hangman WORK cleanup; byte-identical image rebuild; runtime notices retained",
       "empty_users": [
         4,
         5,
@@ -70,7 +70,9 @@
         15
       ],
       "removed_archive_files": 46,
-      "playable_only": true
+      "playable_only": true,
+      "basic_compiled_candidates": 27,
+      "basic_candidates_on_image": 0
     }
   ]
 }

@@ -1,6 +1,6 @@
 # Expanded GAMES disk
 
-An optional expanded edition of the v1.0 GAMES disk. It adds 11 tested CP/M
+An optional expanded edition of the v1.0 GAMES disk. It adds 18 tested CP/M
 games and keeps only playable games, required data and playing instructions. Download it
 separately; game binaries are not added to Git history or the base release.
 
@@ -10,14 +10,14 @@ separately; game binaries are not added to Git history or the base release.
 
 | Area | Games |
 | --- | --- |
-| J0: | All 14 launchers and the guide |
-| J2: | Ladder, CatChum |
-| J9: | Rogue, Wanderer, Star Trek, Sokoban, Hunt the Wumpus |
-| J10: | Sargon, Othello, Backgammon, Battleships |
+| J0: | All 21 launchers and the guide |
+| J2: | Ladder, CatChum, CPMtris, Robots, Snake |
+| J9: | Rogue, Wanderer, Star Trek, Sokoban, Hunt the Wumpus, Hangman, Minesweeper |
+| J10: | Sargon, Othello, Backgammon, Battleships, Mastermind, Hammurabi |
 
 Adventure J1:, Maze Chase J3: and Animals J8: remain playable. Source-only
 sets, unqualified programs and old catalogs have been removed. J4:–J7: and
-J11:–J15: are empty. The image has **3,324 KiB free**, with 891 of its 1,024
+J11:–J15: are empty. The image has **3,228 KiB free**, with 874 of its 1,024
 directory slots free.
 
 ## Install and play
@@ -42,7 +42,7 @@ builds place those launchers on GAMES.
 
 ## Qualification and limits
 
-All 11 additions received actual caller-session tests on RCP/M v1.0, CP/M 3,
+All 18 additions received actual caller-session tests on RCP/M v1.0, CP/M 3,
 Z3PLUS/BYE, ANSI terminal and the normal 4 MHz setting over direct TCP. Tests
 covered meaningful moves or turns and exit. Rogue and Sargon also passed disk
 save/reload checks. These are opening/session tests, not complete playthroughs.
@@ -73,3 +73,27 @@ packaged cpmtools. Individual games retain their original rights and notices.
 ANSI editions come from [acn's VT100 CP/M collection](https://git.imzadi.de/acn/vt100-games).
 Sargon and Star Trek come from the [Retroarchive games mirror](https://www.mrynet.com/FTP/os/CPM/retroarchive-CPM/games/).
 Othello and Wumpus use the project's preserved CPMUG048 and CPMUG073 members.
+
+## Latest additions and BASIC compilation
+
+The seven additions are CPMtris (`J0:CPMTRIS`), Hammurabi (`J0:HAMURABI`),
+Hangman (`J0:HANGMAN`), Mastermind (`J0:MASTERM`), Minesweeper (`J0:MINES`),
+Robots (`J0:ROBOTS`) and Snake (`J0:SNAKE`). Ladder was already present.
+
+CPMtris uses its VT100/4 MHz arguments automatically. Hangman uses a supplied
+154-word English list. Minesweeper is rebuilt with ASCII borders. Snake is
+rebuilt for 24 rows and a lower memory ceiling to fit the resident system.
+All seven passed actual gameplay input and exit checks. Disconnect recovery
+during Snake and temporary Hangman word-list cleanup were verified.
+
+Hammurabi is a standalone BASCOM `/O` build with statically linked runtime
+routines. It requires neither an interpreter nor `BRUN.COM`. The original
+Microsoft manual permits distributing linked applications royalty-free with
+the prescribed notice; the compiler and separate runtime module have different
+terms. [Distribution terms](MICROSOFT-RUNTIME-TERMS.txt) and the image's
+`COPYRIGHT.TXT` retain the distinction and required notice.
+
+A [reusable private build pipeline](compile_basic.py) compiled 27 of 30 more
+BASIC games. AWARI, DIGITS and HEXAPAWN need source/compiler compatibility
+fixes. These are **compiled candidates, not extra games on the disk**: gameplay
+qualification remains necessary. See [BASIC compilation](BASIC.md).

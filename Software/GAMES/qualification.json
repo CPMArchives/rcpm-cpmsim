@@ -10,7 +10,14 @@
     "GAMMON": true,
     "BSHIP": true,
     "SOKOBAN": true,
-    "WUMPUS": true
+    "WUMPUS": true,
+    "CPMTRIS": true,
+    "HAMURABI": true,
+    "HANGMAN": true,
+    "MASTERM": true,
+    "MINES": true,
+    "ROBOTS": true,
+    "SNAKE": true
   },
   "manual_sessions_at_4mhz": true,
   "direct_tcp": true,
@@ -37,5 +44,8 @@
     14,
     15
   ],
-  "free_blocks_zeroed": true
+  "free_blocks_zeroed": true,
+  "total_playable_games": 21,
+  "basic_candidates_compiled": 27,
+  "basic_candidates_on_GAMES": 0
 }
