@@ -8,6 +8,7 @@ are build-time conveniences, not package runtime requirements.
 | --- | --- | --- |
 | macOS ARM64 | Native candidate passes extracted-package checks; runtime identity preserved through development-tool separation; deployment target 11.0 | Downloaded/quarantined archive startup and final write-interruption qualification |
 | Linux x64 | [Native packager and transferable build kit](linux-host-build.md) prepared; common-payload integrity and portable extraction checks pass | Run native compilation, ELF/dependency audit and extracted-package live checks on a Linux x64 host; establish the supported distribution baseline |
+| Linux ARM64 | Maintainer approved the existing Debian 13 KDE ARM64 guest; architecture support and read-only build media prepared/attached | Run the guest build/check runner; collect native ELF/dependency and direct/IP232 qualification evidence |
 | Windows x64 | No native release launcher/backend has been established | Resolve POSIX socket, terminal, process, file locking and randomness dependencies; select and document a native Windows runtime approach, then build/package/qualify it |
 | macOS Intel | No qualified package | Inclusion in 1.0 remains a scope decision; build and test if included |
 

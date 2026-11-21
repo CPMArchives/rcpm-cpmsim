@@ -1,0 +1,24 @@
+{
+  "date": "2026-11-21",
+  "status": "arm64-build-runner-prepared-and-media-attached-guest-execution-pending",
+  "target": "linux-arm64",
+  "utm_guest": "Debian 13 KDE ARM64",
+  "observed_architecture": "aarch64",
+  "observed_status": "Started",
+  "tests_passed": 6,
+  "kit_sha256": "4ad29186d7250f2152fe59938fe47e4c94bc95220f667840b5aa4bd7eddc54e7",
+  "iso_sha256": "ba08e0c5ede92a437b6cdb685a655b5ec7606d3c29084c1011271d5f19d808a5",
+  "iso_label": "RCPMBUILD",
+  "iso_attached": true,
+  "source_bootstrap": "packaging/Build-Linux-from-media.sh",
+  "guest_step": "Open RCPMBUILD CD in a guest terminal and run bash ./Build-RCPM.sh",
+  "native_build_completed": false,
+  "linux_live_qualification_completed": false,
+  "blockers": [
+    "SSH to existing guest denied by current execution environment",
+    "utmctl aborts",
+    "Guest console not reliably observable/controllable through available UI"
+  ],
+  "vm_restarted": false,
+  "security_settings_changed": false
+}

@@ -6,8 +6,9 @@ import tarfile
 import tempfile
 import unittest
 import zipfile
+from unittest.mock import patch
 
-from build_linux_release import unpack_common, verify_common
+from build_linux_release import unpack_common, verify_common, host_architecture, audit_native
 from check_release import extract_package
 
 
@@ -69,6 +70,27 @@ class LinuxPackagingChecks(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, 'Unexpected common archive member'):
             unpack_common(archive, self.root / 'unpacked')
         self.assertFalse((self.root / 'outside').exists())
+
+    def test_native_host_architecture_is_selected_explicitly(self):
+        with patch('build_linux_release.platform.system', return_value='Linux'):
+            for machine, expected in [('aarch64', 'arm64'), ('arm64', 'arm64'), ('x86_64', 'x64')]:
+                with patch('build_linux_release.platform.machine', return_value=machine):
+                    self.assertEqual(host_architecture(), expected)
+            with patch('build_linux_release.platform.machine', return_value='riscv64'):
+                with self.assertRaisesRegex(ValueError, 'Linux x64 or ARM64'):
+                    host_architecture()
+
+    def test_arm64_audit_rejects_x64_binary_and_accepts_aarch64(self):
+        with patch('build_linux_release.subprocess.check_output',
+                   return_value='Class: ELF64\nMachine: Advanced Micro Devices X86-64\n'):
+            with self.assertRaisesRegex(ValueError, 'arm64 ELF'):
+                audit_native(self.root / 'program', 'arm64')
+        with patch('build_linux_release.subprocess.check_output', side_effect=[
+                'Class: ELF64\nMachine: AArch64\n',
+                'libc.so.6 => /lib/aarch64-linux-gnu/libc.so.6 (0x1000)\n',
+                'Name: GLIBC_2.17\nName: GLIBC_2.34\n']):
+            self.assertEqual(audit_native(self.root / 'program', 'arm64')
+                             ['required_glibc_symbols_through'], '2.34')
 
 
 if __name__ == '__main__':

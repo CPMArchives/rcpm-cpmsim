@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Build Linux x64 host files around an unchanged, verified common payload."""
+"""Build Linux x64/ARM64 host files around an unchanged, verified common payload."""
 import argparse
 import hashlib
 import json
@@ -20,6 +20,16 @@ from release_media import verify_public_development_media
 
 REPO = Path(__file__).resolve().parent
 NATIVE = ('rcpm', 'cpmsim', 'cpmcp', 'cpmls', 'cpmrm', 'cpmchattr', 'mkfs.cpm')
+
+
+def host_architecture():
+    if platform.system() == 'Linux':
+        machine = platform.machine().lower()
+        if machine in ('x86_64', 'amd64'):
+            return 'x64'
+        if machine in ('aarch64', 'arm64'):
+            return 'arm64'
+    raise ValueError('Build this package on a Linux x64 or ARM64 host')
 
 
 def sha(path):
@@ -61,11 +71,12 @@ def verify_common(common):
     return expected
 
 
-def audit_native(path):
+def audit_native(path, architecture):
     env = dict(os.environ, LC_ALL='C')
     header = subprocess.check_output(['readelf', '-h', str(path)], text=True, env=env)
-    if 'ELF64' not in header or not re.search(r'Machine:.*X86-64', header, re.I):
-        raise ValueError('Expected Linux x64 ELF executable: ' + str(path))
+    machine = r'X86-64' if architecture == 'x64' else r'AArch64'
+    if 'ELF64' not in header or not re.search(r'Machine:.*' + machine, header, re.I):
+        raise ValueError('Expected Linux ' + architecture + ' ELF executable: ' + str(path))
     dependencies = subprocess.check_output(['ldd', str(path)], text=True, env=env)
     if 'not found' in dependencies:
         raise ValueError('Missing native dependency: ' + dependencies)
@@ -82,8 +93,8 @@ def audit_native(path):
 
 
 def build(common_archive, output):
-    if platform.system() != 'Linux' or platform.machine().lower() not in ('x86_64', 'amd64'):
-        raise ValueError('Build this package on a Linux x64 host; no cross-host qualification is implied')
+    architecture = host_architecture()
+    target = 'linux-' + architecture
     output.mkdir(parents=True, exist_ok=False)
     with tempfile.TemporaryDirectory(prefix='native-build-', dir=output) as temporary:
         work = Path(temporary)
@@ -102,7 +113,7 @@ def build(common_archive, output):
         emulator = work / 'cpmsim'
         run(sys.executable, REPO / 'build_raw_cpmtools.py', upstream / 'cpmtools-2.23', '--output', tools)
         run(sys.executable, REPO / 'build_modem_runtime.py', upstream / 'z80pack', emulator)
-        payload = output / 'RCPM-linux-x64'
+        payload = output / ('RCPM-' + target)
         shutil.copytree(common, payload, copy_function=lambda source, target:
                         copy_file(Path(source), Path(target), Path(source).stat().st_mode & 0o777) and target)
         (payload / 'COMMON-MANIFEST.json').unlink()
@@ -118,7 +129,7 @@ def build(common_archive, output):
         launcher.chmod(0o755)
         readme = payload / 'LINUX-README.txt'
         readme.write_text(
-            'RCP/M Linux x64 engineering candidate\n\n'
+            'RCP/M Linux ' + architecture + ' engineering candidate\n\n'
             'In a terminal, run ./Start-RCPM.sh from this unpacked writable folder.\n'
             'The terminal remains the sysop console. Connect a raw TCP terminal\n'
             'client to 127.0.0.1 port 4000 after RCP/M modem ready appears.\n'
@@ -140,8 +151,8 @@ def build(common_archive, output):
             shutil.copy2(REPO / source, target)
         for folder in ('emulator', 'patches'):
             shutil.copytree(REPO / folder, host_source / folder)
-        audit = {name: audit_native(runtime / name) for name in NATIVE}
-        metadata = dict(platform='linux-x64', common_archive_sha256=sha(common_archive),
+        audit = {name: audit_native(runtime / name, architecture) for name in NATIVE}
+        metadata = dict(platform=target, common_archive_sha256=sha(common_archive),
                         built_on=platform.platform(), libc=platform.libc_ver(),
                         compiler=subprocess.check_output(['cc', '--version'], text=True).splitlines()[0],
                         launcher_flags=['-D_XOPEN_SOURCE=700', '-std=c99', '-O2', '-Wall', '-Wextra', '-Werror'],
@@ -153,24 +164,24 @@ def build(common_archive, output):
                 raise ValueError('Host build changed common payload: ' + name)
         host_files = {str(path.relative_to(payload)): sha(path) for path in payload.rglob('*')
                       if path.is_file() and str(path.relative_to(payload)) not in common_files}
-        manifest = dict(format='rcpm-release-candidate-1', platform='linux-x64',
+        manifest = dict(format='rcpm-release-candidate-1', platform=target,
                         status='local-engineering-candidate-redistribution-not-cleared',
                         launcher='Start-RCPM.sh', common=common_files, host=host_files,
                         common_archive_sha256=metadata['common_archive_sha256'])
         (payload / 'MANIFEST.json').write_text(json.dumps(manifest, indent=2) + '\n')
-        destination = output / 'rcpm-linux-x64-candidate.tar.gz'
+        destination = output / ('rcpm-' + target + '-candidate.tar.gz')
         with tarfile.open(destination, 'w:gz') as archive:
             archive.add(payload, arcname=payload.name)
         (output / 'SHA256SUMS').write_text(f'{sha(destination)}  {destination.name}\n')
         print('Built Linux candidate (live qualification pending): ' + str(destination), flush=True)
 
 
-def prepare_kit(common_archive, output):
+def prepare_kit(common_archive, output, architecture='x64'):
     """Prepare a transferable native-build kit without claiming a Linux binary."""
     output.mkdir(parents=True, exist_ok=False)
     with tempfile.TemporaryDirectory(prefix='verify-common-', dir=output) as temporary:
         verify_common(unpack_common(common_archive, Path(temporary)))
-    kit = output / 'RCPM-linux-x64-build-kit'
+    kit = output / ('RCPM-linux-' + architecture + '-build-kit')
     kit.mkdir()
     shutil.copy2(common_archive, kit / 'rcpm-common-candidate.zip')
     for source in ('build_linux_release.py', 'build_raw_cpmtools.py', 'build_modem_runtime.py',
@@ -181,15 +192,42 @@ def prepare_kit(common_archive, output):
         shutil.copy2(REPO / source, target)
     for folder in ('emulator', 'patches'):
         shutil.copytree(REPO / folder, kit / folder)
+    runner = kit / 'Build-and-Check.sh'
+    runner.write_text('''#!/bin/bash
+set -euo pipefail
+cd -P "$(dirname "$0")"
+case "$(uname -m)" in
+  aarch64|arm64) target=arm64 ;;
+  x86_64|amd64) target=x64 ;;
+  *) echo "Unsupported Linux architecture" >&2; exit 1 ;;
+esac
+mkdir -p "$HOME/rcpm-release-builds"
+run_root="$(mktemp -d "$HOME/rcpm-release-builds/run.XXXXXX")"
+echo "Build and qualification results: $run_root"
+python3 build_linux_release.py --common rcpm-common-candidate.zip --output "$run_root/package" 2>&1 | tee "$run_root/build.log"
+set -- python3 check_release.py "$run_root/package/rcpm-linux-$target-candidate.tar.gz" --output "$run_root/check"
+if [ -n "${RCPM_TCPSER:-}" ]; then
+  set -- "$@" --tcpser "$RCPM_TCPSER"
+fi
+"$@" 2>&1 | tee "$run_root/check.log"
+echo "PASS: $run_root/check/result.json"
+echo "Native package: $run_root/package/rcpm-linux-$target-candidate.tar.gz"
+''')
+    runner.chmod(0o755)
     (kit / 'README.txt').write_text(
-        'RCP/M Linux x64 native build kit\n\n'
-        'Run on Linux x64 with Python 3.9+, cc, make, binutils/readelf and ldd.\n'
+        'RCP/M Linux ' + architecture + ' native build kit\n\n'
+        'Run on Linux ' + architecture + ' with Python 3.9+, cc, make, binutils/readelf and ldd.\n'
         'All source inputs for the host build are included; no downloads occur.\n'
         'Microsoft/MicroPro guest development tools are not needed for this build.\n\n'
+        'For one build and direct-TCP qualification pass, run:\n'
+        '  bash ./Build-and-Check.sh\n'
+        'It creates a fresh directory under ~/rcpm-release-builds and prints\n'
+        'the native package and report paths. To include optional modem checks,\n'
+        'set RCPM_TCPSER to an existing compatible tcpser executable path.\n\n'
         'Build native host files around the supplied common payload:\n'
         '  python3 build_linux_release.py --common rcpm-common-candidate.zip --output build/linux\n'
         'Qualify the extracted Linux package:\n'
-        '  python3 check_release.py build/linux/rcpm-linux-x64-candidate.tar.gz --output build/check\n'
+        '  python3 check_release.py build/linux/rcpm-linux-' + architecture + '-candidate.tar.gz --output build/check\n'
         'For optional real-modem checks, append --tcpser /path/to/tcpser.\n'
         'Both commands require fresh output directories.\n\n'
         'The built runtime archive needs no Python, compiler, tmux or installed\n'
@@ -198,11 +236,11 @@ def prepare_kit(common_archive, output):
         'run on the target host. Public redistribution remains unresolved.\n')
     hashes = {str(path.relative_to(kit)): sha(path) for path in kit.rglob('*') if path.is_file()}
     (kit / 'KIT-MANIFEST.json').write_text(json.dumps(hashes, indent=2) + '\n')
-    destination = output / 'rcpm-linux-x64-build-kit.tar.gz'
+    destination = output / ('rcpm-linux-' + architecture + '-build-kit.tar.gz')
     with tarfile.open(destination, 'w:gz') as archive:
         archive.add(kit, arcname=kit.name)
     (output / 'SHA256SUMS').write_text(f'{sha(destination)}  {destination.name}\n')
-    print('Prepared Linux x64 build kit: ' + str(destination), flush=True)
+    print('Prepared Linux ' + architecture + ' build kit: ' + str(destination), flush=True)
 
 
 def main():
@@ -211,10 +249,13 @@ def main():
     parser.add_argument('--output', type=Path, required=True, help='New output directory')
     parser.add_argument('--prepare-kit', action='store_true',
                         help='Prepare a transferable build kit on the current host')
+    parser.add_argument('--kit-architecture', choices=('x64', 'arm64'), default='x64')
     args = parser.parse_args()
     try:
-        action = prepare_kit if args.prepare_kit else build
-        action(args.common.expanduser().resolve(), args.output.expanduser().resolve())
+        if args.prepare_kit:
+            prepare_kit(args.common.expanduser().resolve(), args.output.expanduser().resolve(), args.kit_architecture)
+        else:
+            build(args.common.expanduser().resolve(), args.output.expanduser().resolve())
     except (OSError, ValueError, subprocess.CalledProcessError) as error:
         parser.exit(1, str(error) + '\n')
 
