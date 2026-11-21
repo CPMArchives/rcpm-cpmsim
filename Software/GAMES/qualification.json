@@ -48,7 +48,31 @@
     "AWARI": true,
     "DIGITS": true,
     "HEXAPAWN": true,
-    "MISSION": true
+    "MISSION": true,
+    "MATCH23": true,
+    "BACCARAT": true,
+    "BUG": true,
+    "CHEMIST": true,
+    "CRAZY8": true,
+    "FLIPFLOP": true,
+    "GOLF": true,
+    "HIQ": true,
+    "HOCKEY": true,
+    "HORSES": true,
+    "KING": true,
+    "LUNAR": true,
+    "NICOMA": true,
+    "ONECHECK": true,
+    "ORBIT": true,
+    "QUEEN": true,
+    "REVERSE": true,
+    "ROULETTE": true,
+    "SLALOM": true,
+    "STOCK": true,
+    "TRAP": true,
+    "WAR": true,
+    "WORD": true,
+    "YAHTZEE": true
   },
   "manual_sessions_at_4mhz": true,
   "direct_tcp": true,
@@ -75,13 +99,14 @@
     15
   ],
   "free_blocks_zeroed": true,
-  "basic_candidates_compiled": 30,
-  "basic_candidates_on_GAMES": 31,
-  "total_ready_to_run_titles": 52,
+  "basic_candidates_compiled": 54,
+  "basic_candidates_on_GAMES": 55,
+  "total_ready_to_run_titles": 76,
   "basic_carrier_recovery_each": true,
   "noncompetitive_activities": [
     "DIAMOND",
     "DICE"
   ],
-  "mission_ansi_qualified": true
+  "mission_ansi_qualified": true,
+  "walnut_games_added": 24
 }

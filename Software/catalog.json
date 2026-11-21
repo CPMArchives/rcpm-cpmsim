@@ -42,14 +42,14 @@
       "archive": "GAMES-expanded.zip",
       "download": "https://github.com/CPMArchives/rcpm-cpmsim/releases/download/software-games-2026-11-22/GAMES-expanded.zip",
       "report": "https://github.com/CPMArchives/rcpm-cpmsim/releases/download/software-games-2026-11-22/GAMES-REPORT.txt",
-      "archive_sha256": "5a43e056dd6e65b93fa4dd2afb6c5ba8f08c5bfc6d2d8dde777ad82ef5080ae5",
+      "archive_sha256": "9587c46dfe9b8a24539320c10a1f88bea0072338cc58fde40115639fdefb400a",
       "image": "GAMES.dsk",
-      "image_sha256": "1da826a888bba3af57ca9daf20646613d49a3e64a2e20994c011f37e94aa4e5a",
+      "image_sha256": "7086b3ac1e943fe982b93c81eb3b48ca77d52104aae26ad35ae28f84fc31a37e",
       "image_bytes": 4177920,
       "format": "z80pack-hd",
       "minimum_rcpm": "1.0",
-      "new_games": 49,
-      "total_approved_games": 52,
+      "new_games": 73,
+      "total_approved_games": 76,
       "launcher_user": 0,
       "new_shared_users": [
         2,
@@ -57,8 +57,8 @@
         9,
         10
       ],
-      "free_kib": 2638,
-      "qualification": "All 49 additions: input/exit; all 31 standalone BASIC additions separately tested for carrier recovery; repaired games completed rounds/replay; MISSION ANSI commands; byte-identical rebuild",
+      "free_kib": 2196,
+      "qualification": "All 73 additions: input/exit; 55 standalone BASIC additions individually tested for caller recovery; finished-image cleanup/protection/master preservation; byte-identical rebuild",
       "empty_users": [
         5,
         6,
@@ -70,14 +70,15 @@
         15
       ],
       "removed_archive_files": 46,
-      "basic_compiled_candidates": 30,
-      "basic_candidates_on_image": 31,
-      "basic_games_tested": 31,
+      "basic_compiled_candidates": 54,
+      "basic_candidates_on_image": 55,
+      "basic_games_tested": 55,
       "noncompetitive_activities": [
         "DIAMOND",
         "DICE"
       ],
-      "mission_ansi_qualified": true
+      "mission_ansi_qualified": true,
+      "walnut_games_added": 24
     }
   ]
 }
