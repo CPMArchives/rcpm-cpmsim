@@ -6,11 +6,13 @@ import json
 import os
 from pathlib import Path
 import pty
+import re
 import select
 import shutil
 import subprocess
 import time
 import tty
+from caller_policy import assembly, digest
 
 
 def wait_prompt(fd, prompt, log, timeout=45):
@@ -28,6 +30,13 @@ def wait_prompt(fd, prompt, log, timeout=45):
 
 
 def run(source, runtime, cpmtools, sources, output):
+    caller_policy = None
+    configured = [(sources / name).read_text() for name in ('BYEDIR.ASM', 'BYEMDM.ASM')]
+    if any('WXENAMES:' in text for text in configured):
+        expected = 'WXENAMES:\n' + assembly()
+        if not all(expected in text and 'CALL WXELOAD' in text for text in configured):
+            raise ValueError('Regenerate both BYE sources for the current caller policy')
+        caller_policy = digest()
     output.mkdir(parents=True, exist_ok=True)
     work = output / 'machine'
     work.mkdir(exist_ok=True)
@@ -95,7 +104,28 @@ def run(source, runtime, cpmtools, sources, output):
         hashes.append(dict(path=str(path.relative_to(sources if path.parent == sources else output)),
                            bytes=path.stat().st_size, sha256=hashlib.sha256(path.read_bytes()).hexdigest()))
     (output / 'build-result.json').write_text(json.dumps(dict(
+        du_authorization=all('WXAAPI:' in text for text in configured),
+        caller_file_approval=all('WXEATTR:' in text for text in configured),
+        idle_timer_port=74 if all('WXIDPOLL:' in text for text in configured) else None,
+        console_fast_path=all('CPI 13\n        JC WXBGO' in text for text in configured),
+        welcome_exact=all("WELFILN:DB\t0,'WELCOME TXT'" in (sources / name).read_text()
+                          for name in ('BYEDIR.ASM', 'BYEMDM.ASM')),
+        private_console_keys=all('WXFNORM:' in (sources / name).read_text()
+                                 for name in ('BYEDIR.ASM', 'BYEMDM.ASM')),
         commands=commands, runtime_sha256=hashlib.sha256(runtime.read_bytes()).hexdigest(),
+        private_b=all('WXBFNS:' in (sources / name).read_text()
+                      for name in ('BYEDIR.ASM', 'BYEMDM.ASM')),
+        caller_policy_sha256=caller_policy,
+        adapter_relocation_fixed=all(
+            not re.search(r'(?m)^\t(?:LDA|STA)\t(?:MAXDRIV|MAXUSER|MSPEED)\b', text)
+            and all(label in text for label in ('STA\tWXDRIVE', 'STA\tWXUSER', 'STA\tWXSPD'))
+            for text in configured),
+        private_i2=all('WXRBCAND:' in text and 'MBOOT: CALL WXRBCLEAR' in text
+                       and 'WXALOOK:' in text for text in configured),
+        upper_areas=all('WXALOOK:' in text and 'WXRBUSR:DB 0' in text
+                        for text in configured),
+        public_rbbs=all('WXRBPUB:' in text and 'WXERBOK:' in text
+                        and 'STA WXRBENTRY' in text for text in configured),
         files=hashes), indent=2) + '\n')
     print(f'Built both BYE5 configurations in {output}')
 

@@ -1,0 +1,73 @@
+{
+  "date": "2026-11-21",
+  "status": "distribution-review-incomplete-public-clearance-not-established",
+  "sources": {
+    "cp_m_permission_2022": {
+      "url": "https://www.cpm.z80.de/license.html",
+      "finding": "Published correspondence updated 9 July 2022 records a nonexclusive grant for CP/M and derivatives, including use, distribution, modification and enhancement.",
+      "retrieval": "indexed primary-site text; direct open timed out"
+    },
+    "z3plus_free_download": {
+      "url": "https://www.gaby.de/edownf.htm",
+      "finding": "Page attributes free-download authorization to Jay Sage and describes notification/download-link workflow; no explicit modified-bundle rehosting grant in retrieved text.",
+      "retrieval": "indexed distributor-site text; direct open timed out"
+    },
+    "romwbw_catalog": {
+      "url": "https://wwarthen.github.io/RomWBW/Catalog/",
+      "finding": "Calls the original Z3PLUS copyright notice superseded by public-domain release; does not reproduce the originating grant."
+    }
+  },
+  "local_evidence": {
+    "offline/BUILD.dsk/0:M80.COM": {
+      "sha256": "8729b411cb76a0d3bddf84926a2d4245838d39de0bf85e7ca48c4a2d8ba8c663",
+      "bytes": 20096
+    },
+    "offline/BUILD.dsk/0:L80.COM": {
+      "sha256": "7407f61e7788660550ea0a12ba44794f9786235c0a58aafb6d6c4bc3329d2831",
+      "bytes": 10752
+    },
+    "offline/BUILD.dsk/0:WM.COM": {
+      "sha256": "95759509a36007dd27dedd637893ea73c0a5651e2fe8167d3c0bf3e7a729e972",
+      "bytes": 10496
+    },
+    "zde16.new.txt": {
+      "sha256": "c34896bf34bda717f5d2019203c6dd61597a6a8662d5679c1860189d90aed174"
+    },
+    "ppip.doc.txt": {
+      "sha256": "62325fe82dbceaa18794642e8c4cf6745b4e88b1d2d603a3935e84bd0d6528f7"
+    },
+    "ldirb15.z80.txt": {
+      "sha256": "57a88f2839cacf43570c19e1f9387b31705fbf5d9ea118351c48891777f84113"
+    },
+    "bye5.doc": {
+      "sha256": "92f4d388f5adaa5065c617cbbd3be1669177748b5f4aa250429618ceb0433645"
+    },
+    "SIGMV228.LBR/MCHASE.DOC": {
+      "sha256": "eb00e15e7a6ab489e9dfd0cfbc1e21ff17e0185e268f6ba371871a5d9a40376d",
+      "unmodified_copy_verified_on_GAMES": true
+    },
+    "SIGMV228.LBR/MCHASE.HLP": {
+      "sha256": "a07e29c2c914d171164e6cf8ee597d319d5f90e2351766af56452ecd74f67012",
+      "unmodified_copy_verified_on_GAMES": true
+    }
+  },
+  "archive_discovery": {
+    "sigm": {
+      "status": "notice-discovery-only-not-component-clearance",
+      "libraries_scanned": 310,
+      "members_seen": 6703,
+      "compressed_members_not_read": 617,
+      "parse_errors": []
+    },
+    "cpmug": {
+      "status": "notice-discovery-only-not-component-clearance",
+      "libraries_scanned": 93,
+      "members_seen": 2552,
+      "compressed_members_not_read": 16,
+      "parse_errors": []
+    },
+    "limits": "Top-level plaintext source/document candidates only; no nested library expansion or decompression. Term matches are navigation aids, not permission determinations."
+  },
+  "rights_holders_contacted": false,
+  "candidate_contents_changed": false
+}

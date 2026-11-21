@@ -25,8 +25,10 @@ def prepare_work(source, tools, work, disk):
     shutil.copyfile(Path(__file__).parent / 'guest/workprobe.asm', work / 'workprobe.asm')
     subprocess.run([str(source / 'z80asm/z80asm'), '-fb', '-x', 'workprobe.asm'],
                    cwd=work, check=True, stdout=subprocess.DEVNULL)
+    # Test-only replacement of an approved transient, not a release program.
+    subprocess.run([str(tools / 'cpmrm'), '-f', 'ibm-3740', str(disk), '0:HELP.COM'], check=True)
     subprocess.run([str(tools / 'cpmcp'), '-T', 'raw', '-f', 'ibm-3740', str(disk),
-                    str(work / 'workprobe.bin'), '0:WORKPRB.COM'], check=True)
+                    str(work / 'workprobe.bin'), '0:HELP.COM'], check=True)
 
 
 def verify_work_clean(tools, work):
@@ -51,7 +53,9 @@ def prepare_services(source, tools, work, disk):
         shutil.copyfile(Path(__file__).parent / f'guest/{name}.asm', work / f'{name}.asm')
         subprocess.run([str(source / 'z80asm/z80asm'), '-fb', '-x', f'{name}.asm'],
                        cwd=work, check=True, stdout=subprocess.DEVNULL)
-        target = 'SERVPRB' if name == 'serviceprobe' else name.upper()
+        target = 'DIR' if name == 'serviceprobe' else name.upper()
+        if name == 'serviceprobe':
+            subprocess.run([str(tools / 'cpmrm'), '-f', 'ibm-3740', str(disk), '0:DIR.COM'], check=True)
         subprocess.run([str(tools / 'cpmcp'), '-T', 'raw', '-f', 'ibm-3740', str(disk),
                         str(work / f'{name}.bin'), f'0:{target}.COM'], check=True)
     for name in ('upload-staging', 'upload-inbox'):

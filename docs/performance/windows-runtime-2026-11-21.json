@@ -1,0 +1,39 @@
+{
+  "evidence_type": "Transcribed from maintainer-provided complete PASS screenshot; original guest result.json not retrieved",
+  "guest_report_path": "C:\\Users\\cpmarchive\\Desktop\\RCPM-check-32685-7569\\result.json",
+  "date": "2026-11-21",
+  "candidate_sha256": "7a08b52d65d5fe4e82491f7829a255f9590bb073d8ec1b45de4880133f8aaee1",
+  "candidate_application_architecture": "x64",
+  "execution_environment": "Windows 11 ARM64 in UTM, x64 application through Windows emulation",
+  "runner": "RCPMManualTests-v4 / check_windows_release.py",
+  "report": {
+    "platform": "win32",
+    "windows_version": 26300,
+    "runtime_qualified": true,
+    "tests": {
+      "native_host_probes": true,
+      "disk_tool_roundtrip_and_relocation": true,
+      "retained_development_files": 21,
+      "duplicate_refused": true,
+      "direct_boot_and_caller": true,
+      "shipped_help_topics": 9,
+      "archives_mounts_rbbs": true,
+      "private_credentials_match": true,
+      "orderly_shutdown": true,
+      "restart_boot_ready": true,
+      "restart_caller_login": true,
+      "restart_preserves_credentials": true,
+      "restart_orderly_shutdown": true
+    },
+    "process_machine": "0x0",
+    "native_machine": "0xaa64",
+    "stage": "All required checks passed",
+    "tested_port": 4000,
+    "optional_ip232": "not-tested"
+  },
+  "limits": [
+    "Native x64 Windows machine not tested",
+    "Optional real tcpser/IP232 not tested on Windows",
+    "Write-interruption recovery not covered by this suite"
+  ]
+}

@@ -11,11 +11,24 @@ import subprocess
 import tempfile
 
 from prepare_z3plus import prepare
+from prepare_sysutils import prepare_sysutils
+from caller_policy import digest
+from runtime_features import require as require_runtime
 
 
 def create(source, romwbw, runtime, builds, tools, output):
     if output.exists() or output.is_symlink():
         raise FileExistsError(f'Refusing to replace an existing trial: {output}')
+    result = json.loads((builds / 'build-result.json').read_text())
+    require_runtime(runtime, result)
+    if not result.get('private_b'):
+        raise ValueError('Rebuild BYE5 with the private B: adapter before preparing SYSUTILS')
+    if result.get('caller_policy_sha256') != digest():
+        raise ValueError('Rebuild BYE5 for the current caller-program execution policy')
+    for name in ('BYE.COM', 'BYEDRIV.COM', 'BYEBYE.COM'):
+        item = next(entry for entry in result['files'] if entry['path'] == 'direct/' + name)
+        if hashlib.sha256((builds / 'direct' / name).read_bytes()).hexdigest() != item['sha256']:
+            raise ValueError('BYE5 build hash mismatch: ' + name)
     output.parent.mkdir(parents=True, exist_ok=True)
     repository = Path(__file__).resolve().parent
     with tempfile.TemporaryDirectory(prefix='.shared-trial-', dir=output.parent) as temporary:
@@ -47,7 +60,7 @@ def create(source, romwbw, runtime, builds, tools, output):
             subprocess.run([str(source / 'z80asm/z80asm'), '-fb', '-x', f'{name}.asm'],
                            cwd=work, check=True, stdout=subprocess.DEVNULL)
             tool('cpmcp', '-T', 'raw', '-f', 'ibm-3740', a, work / f'{name}.bin', f'0:{name.upper()}.COM')
-        shutil.copyfile(source / 'cpmsim/disks/library/cpm3-2.dsk', trial / 'disks/driveb.dsk')
+        prepare_sysutils(source, tools, trial, work)
         (trial / 'disks/driveb.dsk').chmod(0o444)
         for drive in ('i', 'j'):
             image = trial / f'disks/drive{drive}.dsk'
@@ -74,6 +87,9 @@ def create(source, romwbw, runtime, builds, tools, output):
             disk.truncate(512 * 1024**2)
         (trial / 'disks/drivep.dsk').chmod(0o444)
         shutil.copy2(runtime, trial / 'runtime/cpmsim')
+        features = runtime.with_name(runtime.name + '.features.json')
+        if features.exists():
+            shutil.copy2(features, trial / 'runtime/cpmsim.features.json')
         command = ('#!/bin/zsh\nset -eu\nexec python3 '
                    + shlex.quote(str(repository / 'run_shared_trial.py'))
                    + ' --instance ' + shlex.quote(str(output)) + '\n')
@@ -89,16 +105,24 @@ def create(source, romwbw, runtime, builds, tools, output):
             'Completed uploads/messages stay in upload-inbox on the host.\n'
             'For YMODEM download: YSEND J:HELLO.TXT; upload: UPLOAD /Y.\n'
             'BYE logs a caller off. Locally, Ctrl-C between calls opens the BYE menu;\n'
-            'press Return for local CP/M, then BYEBYE to stop the trial.\n'
+            'press Return for local CP/M, then B:BYEBYE to stop the trial.\n'
+            'B: SYSUTILS is private to local/operator mode; use B:tool explicitly.\n'
+            'Caller file access uses AUTH drive/DU permissions; COM loads require R, no W and F4.\n'
+            'Boot tools are not caller commands. Local Ctrl-B grants private sysop mode.\n'
+            'offline/BUILD.dsk is not in the caller mount collection.\n'
             'In tmux, Ctrl-B Ctrl-B sends BYE one literal Ctrl-B for blank/unblank.\n'
-            'Caller security settings and privileged J:/P: maintenance are unfinished.\n'
-            'J:/P: are read-only in this trial; do not expose it to the Internet.\n')
+            'AUTH in I13: changes live policy in private mode; /SAVE persists it.\n'
+            'J:/P: are caller-read-only; private sysop mode can maintain them.\n')
+        if result.get('du_authorization'):
+            from auth_policy import install as install_auth
+            install_auth(trial, tools, source / 'z80asm/z80asm')
         files = {}
         for path in (a, trial / 'runtime/cpmsim'):
             files[str(path.relative_to(trial))] = hashlib.sha256(path.read_bytes()).hexdigest()
         (trial / 'trial-build.json').write_text(json.dumps(dict(
             source=str(source), romwbw=str(romwbw), builds=str(builds), hashes=files,
-            mode='direct', host='127.0.0.1', port=4001), indent=2) + '\n')
+            mode='direct', host='127.0.0.1', port=4001,
+            caller_policy_sha256=digest()), indent=2) + '\n')
         trial.rename(output)
     print(f'Prepared {output}')
 

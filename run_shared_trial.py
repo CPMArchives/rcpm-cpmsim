@@ -2,6 +2,7 @@
 """Run the private shared-machine trial on loopback TCP with a local console."""
 import argparse
 import fcntl
+import json
 import os
 from pathlib import Path
 import socket
@@ -20,7 +21,8 @@ def main():
     runtime = root / 'runtime/cpmsim'
     if not os.access(runtime, os.X_OK):
         parser.error(f'Trial runtime unavailable: {runtime}')
-    for drive in 'abijp':
+    upper = json.loads((root / 'trial-build.json').read_text()).get('upper_areas', False)
+    for drive in ('aijp' if upper else 'abijp'):
         if not (root / f'disks/drive{drive}.dsk').is_file():
             parser.error(f'Trial drive {drive.upper()}: is missing')
     with (root / '.console.lock').open('a+b') as lock:

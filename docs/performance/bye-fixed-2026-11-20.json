@@ -1,0 +1,178 @@
+{
+  "cpu_default_mhz": 4,
+  "performance": {
+    "welcome_samples": [
+      {
+        "bytes": 684,
+        "seconds": 1.1573,
+        "bytes_per_second": 591
+      },
+      {
+        "bytes": 684,
+        "seconds": 1.1434,
+        "bytes_per_second": 598
+      },
+      {
+        "bytes": 684,
+        "seconds": 1.1442,
+        "bytes_per_second": 598
+      }
+    ],
+    "archive_listing": {
+      "bytes": 6556,
+      "seconds": 37.8787,
+      "bytes_per_second": 173
+    },
+    "cpu_mhz": 4,
+    "completed": true
+  },
+  "real_idle_timeouts": [
+    {
+      "cpu_mhz": 4,
+      "activity_reset": true,
+      "seconds_after_last_activity": 59.854,
+      "passed": true
+    },
+    {
+      "cpu_mhz": 20,
+      "activity_reset": false,
+      "seconds_after_last_activity": 59.952,
+      "passed": true
+    }
+  ],
+  "upgrade": {
+    "passed": true,
+    "locked_instance_refused": true,
+    "old_runtime_refused": true,
+    "matching_pair_installed": true,
+    "data_disks_unchanged": true,
+    "welcome_unchanged": true,
+    "rollback_copies_verified": true
+  },
+  "editor": {
+    "direct": {
+      "local_edit_save": true,
+      "ansi": true,
+      "caller_denied": true,
+      "quick_keys_reach_editor": true,
+      "boot_disk_save": true,
+      "private_output_hidden": true,
+      "blank_toggle_preserved": true,
+      "shared_message_key_preserved": true,
+      "mode": "direct",
+      "welcome_txt_preferred_over_backup": true
+    },
+    "ip232": {
+      "local_edit_save": true,
+      "ansi": true,
+      "caller_denied": true,
+      "quick_keys_reach_editor": true,
+      "boot_disk_save": true,
+      "private_output_hidden": true,
+      "blank_toggle_preserved": true,
+      "shared_message_key_preserved": true,
+      "mode": "ip232",
+      "welcome_txt_preferred_over_backup": true
+    }
+  },
+  "rbbs": {
+    "direct": {
+      "mode": "direct",
+      "bbs_user": 15,
+      "upper_areas": true,
+      "tools": null,
+      "registration": true,
+      "post": true,
+      "retrieve": true,
+      "caller_entry": true,
+      "jump_to_cpm": true,
+      "private_reentry": true,
+      "persistent_data": true,
+      "private_B_denied": true,
+      "unapproved_board_load_denied": true,
+      "rbbs_G_hangup": true,
+      "private_data_denied": true,
+      "denied_selection_prompt_correct": true,
+      "private_data_after_carrier_loss": true,
+      "rbbs_sha256": "60164511a0365583e94b3e88e859375f0e6499d9a93a82728a475772b8666526"
+    },
+    "ip232": {
+      "mode": "ip232",
+      "bbs_user": 15,
+      "upper_areas": true,
+      "tools": null,
+      "registration": true,
+      "post": true,
+      "retrieve": true,
+      "caller_entry": true,
+      "jump_to_cpm": true,
+      "private_reentry": true,
+      "persistent_data": true,
+      "private_B_denied": true,
+      "unapproved_board_load_denied": true,
+      "rbbs_G_hangup": true,
+      "private_data_denied": true,
+      "denied_selection_prompt_correct": true,
+      "private_data_after_carrier_loss": true,
+      "rbbs_sha256": "60164511a0365583e94b3e88e859375f0e6499d9a93a82728a475772b8666526"
+    }
+  },
+  "unit_tests": {
+    "run": 9,
+    "passed": 8,
+    "optional_tcpser_device_fixture_skipped": 1
+  },
+  "security_transports": [
+    "direct",
+    "ip232"
+  ],
+  "console_flow": {
+    "caller_xoff": true,
+    "caller_xon": true,
+    "shared_message_entry_exit": true
+  },
+  "release": {
+    "archive": "/Users/nathanael/.codex/.chatgpt-projects/g-p-6a682f002be881918281554d644daf48/rcpm-cpmsim/build/release-bye-fixed/rcpm-macos-arm64-candidate.zip",
+    "relocated_with_spaces": true,
+    "minimal_system_path": true,
+    "common_and_host_hashes": true,
+    "shipped_disks": [
+      "A",
+      "I",
+      "P"
+    ],
+    "default_port": 4000,
+    "tested_port": 63437,
+    "direct_boot": true,
+    "caller_login": true,
+    "archive_named_directories": true,
+    "both_public_volumes": true,
+    "documentation_read": true,
+    "rbbs_entry": true,
+    "first_start_private_credentials": true,
+    "duplicate_guest_refused": true,
+    "orderly_shutdown": true,
+    "no_python_tmux_or_homebrew_required": true,
+    "generated_passwords_match_guest_record": true,
+    "ip232_driver_switch": true,
+    "real_tcpser_caller_login": true,
+    "credentials_preserved_on_restart": true,
+    "switch_back_to_direct": true,
+    "public_redistribution": "not cleared; retained notices identify unresolved restrictions"
+  },
+  "original_idle_test_correction": "Both original timeout samples ran at 4 MHz: port 31 must commit the CPU-speed latch. Superseded by the read-back-verified test.",
+  "clock_comparison": [
+    {
+      "mhz": 4,
+      "bytes": 684,
+      "seconds": 1.1434,
+      "bytes_per_second": 598
+    },
+    {
+      "mhz": 20,
+      "bytes": 684,
+      "seconds": 0.3253,
+      "bytes_per_second": 2102
+    }
+  ]
+}

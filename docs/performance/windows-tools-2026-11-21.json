@@ -1,0 +1,99 @@
+{
+  "platform": "windows-x64",
+  "status": "cross-compiled-not-runtime-qualified",
+  "compiler": "clang version 23.1.5 (https://github.com/llvm/llvm-project.git 392dfff97d29b59d77e5cac6d4b6ef2585fe7117)\nTarget: x86_64-w64-windows-gnu\nThread model: posix\nInstalledDir: /Users/nathanael/.codex/.chatgpt-projects/g-p-6a682f002be881918281554d644daf48/cpmimage-feasibility/windows-runtime/llvm-mingw-20261104-ucrt-macos-universal/bin\nConfiguration file: /Users/nathanael/.codex/.chatgpt-projects/g-p-6a682f002be881918281554d644daf48/cpmimage-feasibility/windows-runtime/llvm-mingw-20261104-ucrt-macos-universal/bin/x86_64-w64-windows-gnu.cfg\n",
+  "changes": [
+    "accept explicit raw driver",
+    "open disk images in binary mode",
+    "honor launcher DISKDEFS environment for relocation"
+  ],
+  "binaries": {
+    "cpmcp.exe": {
+      "sha256": "2a244d1aa64b6a7e4d84deb5a5d09901c3c5907ed51a0ce25b17b452e08cd92b",
+      "imports": [
+        "api-ms-win-crt-stdio-l1-1-0.dll",
+        "api-ms-win-crt-environment-l1-1-0.dll",
+        "api-ms-win-crt-runtime-l1-1-0.dll",
+        "api-ms-win-crt-string-l1-1-0.dll",
+        "api-ms-win-crt-locale-l1-1-0.dll",
+        "api-ms-win-crt-time-l1-1-0.dll",
+        "api-ms-win-crt-heap-l1-1-0.dll",
+        "api-ms-win-crt-private-l1-1-0.dll",
+        "api-ms-win-crt-convert-l1-1-0.dll",
+        "KERNEL32.dll",
+        "api-ms-win-crt-math-l1-1-0.dll",
+        "api-ms-win-crt-filesystem-l1-1-0.dll"
+      ]
+    },
+    "cpmls.exe": {
+      "sha256": "5baad10045911f13afb6e3299ccef484dc1332d9eb1a2b6cbf0beddf10a1cd42",
+      "imports": [
+        "api-ms-win-crt-stdio-l1-1-0.dll",
+        "api-ms-win-crt-environment-l1-1-0.dll",
+        "api-ms-win-crt-runtime-l1-1-0.dll",
+        "api-ms-win-crt-string-l1-1-0.dll",
+        "api-ms-win-crt-locale-l1-1-0.dll",
+        "api-ms-win-crt-time-l1-1-0.dll",
+        "api-ms-win-crt-heap-l1-1-0.dll",
+        "api-ms-win-crt-private-l1-1-0.dll",
+        "api-ms-win-crt-utility-l1-1-0.dll",
+        "api-ms-win-crt-convert-l1-1-0.dll",
+        "KERNEL32.dll",
+        "api-ms-win-crt-math-l1-1-0.dll"
+      ]
+    },
+    "cpmrm.exe": {
+      "sha256": "a9ec057b267201890fc248b5c74f6a35c8d8776c334e105a0857eb62464c3f6f",
+      "imports": [
+        "api-ms-win-crt-stdio-l1-1-0.dll",
+        "api-ms-win-crt-environment-l1-1-0.dll",
+        "api-ms-win-crt-runtime-l1-1-0.dll",
+        "api-ms-win-crt-string-l1-1-0.dll",
+        "api-ms-win-crt-locale-l1-1-0.dll",
+        "api-ms-win-crt-time-l1-1-0.dll",
+        "api-ms-win-crt-heap-l1-1-0.dll",
+        "api-ms-win-crt-private-l1-1-0.dll",
+        "api-ms-win-crt-convert-l1-1-0.dll",
+        "KERNEL32.dll",
+        "api-ms-win-crt-math-l1-1-0.dll"
+      ]
+    },
+    "cpmchattr.exe": {
+      "sha256": "daabd9cfc2ff6d506841ef3a8183a10e73715e8ad292a7bf8c9a24c763793d34",
+      "imports": [
+        "api-ms-win-crt-stdio-l1-1-0.dll",
+        "api-ms-win-crt-environment-l1-1-0.dll",
+        "api-ms-win-crt-runtime-l1-1-0.dll",
+        "api-ms-win-crt-string-l1-1-0.dll",
+        "api-ms-win-crt-locale-l1-1-0.dll",
+        "api-ms-win-crt-time-l1-1-0.dll",
+        "api-ms-win-crt-heap-l1-1-0.dll",
+        "api-ms-win-crt-private-l1-1-0.dll",
+        "api-ms-win-crt-convert-l1-1-0.dll",
+        "KERNEL32.dll",
+        "api-ms-win-crt-math-l1-1-0.dll"
+      ]
+    },
+    "mkfs.cpm.exe": {
+      "sha256": "8ef09bf3d32959fc6a31ea44cfe46c796959039994371b40a54d69b8fa186b85",
+      "imports": [
+        "api-ms-win-crt-stdio-l1-1-0.dll",
+        "api-ms-win-crt-environment-l1-1-0.dll",
+        "api-ms-win-crt-runtime-l1-1-0.dll",
+        "api-ms-win-crt-string-l1-1-0.dll",
+        "api-ms-win-crt-locale-l1-1-0.dll",
+        "api-ms-win-crt-time-l1-1-0.dll",
+        "api-ms-win-crt-heap-l1-1-0.dll",
+        "api-ms-win-crt-private-l1-1-0.dll",
+        "api-ms-win-crt-convert-l1-1-0.dll",
+        "KERNEL32.dll",
+        "api-ms-win-crt-math-l1-1-0.dll"
+      ]
+    }
+  },
+  "date": "2026-11-21",
+  "runtime_tested": false,
+  "complete_rcpm_package": false,
+  "host_port_decision": "native-Windows-host-layer-proposed-awaiting-approval",
+  "vm_access": "Existing Windows x64 QEMU monitor connection denied: Operation not permitted"
+}

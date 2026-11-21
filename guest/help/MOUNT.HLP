@@ -1,0 +1,13 @@
+;
+SWAPPABLE VOLUMES
+
+MOUNT /L lists the available volumes.
+MOUNT GAMES selects the GAMES volume on J:.
+MOUNT GUIDES selects the documentation volume on J:.
+DIR J: lists files in user area 0 of the selected volume.
+DIR J1: lists user area 1. Other sets can occupy other user areas.
+
+Mount a volume at the CP/M prompt before reading or running its files.
+Selecting another volume changes J: for this shared CP/M session.
+The permanent SIG/M and CPMUG collections remain available on P:.
+Use HELP LIBRARY for archive browsing or HELP GAMES for online play.

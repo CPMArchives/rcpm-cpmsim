@@ -1,0 +1,221 @@
+; AUTH resident API, BDOS 200, DE -> operation + 272-byte table.
+; 0: read table, 1: replace validated table, 2: reload I13:AUTH.DAT.
+; Success HL=A117h, A=0. Denial/error HL=FFFFh, A=FFh.
+; No resident pointers are exposed. Caller programs cannot invoke this API.
+WXAAPI: PUSH B
+        PUSH D
+        PUSH H
+        CALL WXGET
+        ORA A
+        JZ WXBDEN
+        LDA MDMOFF
+        ORA A
+        JNZ WXAPRV
+        CALL MDCARCK
+        ORA A
+        JNZ WXBDEN
+WXAPRV: LDAX D
+        ORA A
+        JZ WXAGET
+        CPI 1
+        JZ WXAPUT
+        CPI 2
+        JNZ WXBDEN
+        CALL WXALOAD
+        ORA A
+        JNZ WXBDEN
+        JMP WXAOK
+WXAGET: INX D
+        LXI H,WXADRVS
+        CALL WXACOPY
+        JMP WXAOK
+WXAPUT: INX D
+        XCHG
+        CALL WXAVAL
+        ORA A
+        JNZ WXBDEN
+        LXI D,WXADRVS
+        CALL WXACOPY
+        MVI A,1
+        STA WXBSRC
+WXAOK:  POP H
+        POP D
+        POP B
+        LXI H,0A117H
+        XRA A
+        RET
+; Copy 272 bytes HL -> DE. Preserve source for validation/caller use.
+WXACOPY:PUSH H
+        LXI B,272
+WXACLOOP:MOV A,M
+        STAX D
+        INX H
+        INX D
+        DCX B
+        MOV A,B
+        ORA C
+        JNZ WXACLOOP
+        POP H
+        RET
+WXAVAL: PUSH H
+        MVI B,16
+WXAVDRV:MOV A,M
+        CPI 4
+        JNC WXAVBAD
+        INX H
+        DCR B
+        JNZ WXAVDRV
+        MVI B,0
+WXAVDU: MOV A,M
+        CPI 0FFH
+        JZ WXAVNEXT
+        CPI 4
+        JNC WXAVBAD
+WXAVNEXT:INX H
+        DCR B
+        JNZ WXAVDU
+        POP H
+        XRA A
+        RET
+WXAVBAD:POP H
+        MVI A,1
+        RET
+; Called once per RSX installation, before accepting a caller. Invalid/missing
+; policy leaves every DU denied; AUTH /LOAD can recover in private mode.
+WXASTART:LDA WXASTARTED
+        ORA A
+        RNZ
+        INR A
+        STA WXASTARTED
+        CALL WXALOAD
+        ORA A
+        RZ
+        LXI H,WXALOADERR
+        JMP PRINTL
+WXALOAD:PUSH B
+        PUSH D
+        PUSH H
+        LXI D,WXALSCB
+        MVI C,49
+        CALL REALBD
+        SHLD WXALDMA
+        LXI D,WXALMULTPB
+        MVI C,49
+        CALL REALBD
+        STA WXALMULT
+        MVI C,44
+        MVI E,1
+        CALL REALBD
+        MVI C,32
+        MVI E,0FFH
+        CALL REALBD
+        STA WXALUSER
+        MVI C,32
+        MVI E,13
+        CALL REALBD
+        LXI H,WXALFCB+12
+        MVI B,24
+        XRA A
+WXALZERO:MOV M,A
+        INX H
+        DCR B
+        JNZ WXALZERO
+        LXI D,WXALFCB
+        MVI C,15
+        CALL REALBD
+        CPI 0FFH
+        JZ WXALFAIL
+        LXI H,WXALBUF
+        MVI B,3
+WXALREAD:PUSH B
+        PUSH H
+        XCHG
+        MVI C,26
+        CALL REALBD
+        LXI D,WXALFCB
+        MVI C,20
+        CALL REALBD
+        POP H
+        POP B
+        ORA A
+        JNZ WXALCFAIL
+        LXI D,128
+        DAD D
+        DCR B
+        JNZ WXALREAD
+        LXI D,WXALFCB
+        MVI C,16
+        CALL REALBD
+        CPI 0FFH
+        JZ WXALFAIL
+        LXI H,WXALBUF
+        LXI D,WXALMAGIC
+        MVI B,8
+WXALMAG:LDAX D
+        CMP M
+        JNZ WXALFAIL
+        INX H
+        INX D
+        DCR B
+        JNZ WXALMAG
+        CALL WXAVAL
+        ORA A
+        JNZ WXALFAIL
+        LXI D,WXADRVS
+        CALL WXACOPY
+        MVI A,1
+        STA WXBSRC
+        XRA A
+        JMP WXALEND
+WXALCFAIL:LXI D,WXALFCB
+        MVI C,16
+        CALL REALBD
+WXALFAIL:MVI A,1
+WXALEND:PUSH PSW
+        LHLD WXALDMA
+        XCHG
+        MVI C,26
+        CALL REALBD
+        LDA WXALMULT
+        MOV E,A
+        MVI C,44
+        CALL REALBD
+        LDA WXALUSER
+        MOV E,A
+        MVI C,32
+        CALL REALBD
+        POP PSW
+        POP H
+        POP D
+        POP B
+        RET
+WXASTARTED:DB 0
+WXALMULT:DB 1
+WXALMULTPB:DB 74,0,0,0
+WXALUSER:DB 0
+WXALDMA:DW 0
+WXALSCB:DB 3CH,0,0,0
+WXALFCB:DB 9,'AUTH    DAT'
+        DS 24
+WXALMAGIC:DB 'RCPMAU01'
+WXALOADERR:DB 13,10,'AUTH policy unavailable; caller file access denied.',13,10,0
+; Default deny. Disk policy is loaded once; live changes survive logoff.
+WXADRVS:DB 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+WXADUS:
+        DB 0FFH,0FFH,0FFH,0FFH,0FFH,0FFH,0FFH,0FFH,0FFH,0FFH,0FFH,0FFH,0FFH,0FFH,0FFH,0FFH
+        DB 0FFH,0FFH,0FFH,0FFH,0FFH,0FFH,0FFH,0FFH,0FFH,0FFH,0FFH,0FFH,0FFH,0FFH,0FFH,0FFH
+        DB 0FFH,0FFH,0FFH,0FFH,0FFH,0FFH,0FFH,0FFH,0FFH,0FFH,0FFH,0FFH,0FFH,0FFH,0FFH,0FFH
+        DB 0FFH,0FFH,0FFH,0FFH,0FFH,0FFH,0FFH,0FFH,0FFH,0FFH,0FFH,0FFH,0FFH,0FFH,0FFH,0FFH
+        DB 0FFH,0FFH,0FFH,0FFH,0FFH,0FFH,0FFH,0FFH,0FFH,0FFH,0FFH,0FFH,0FFH,0FFH,0FFH,0FFH
+        DB 0FFH,0FFH,0FFH,0FFH,0FFH,0FFH,0FFH,0FFH,0FFH,0FFH,0FFH,0FFH,0FFH,0FFH,0FFH,0FFH
+        DB 0FFH,0FFH,0FFH,0FFH,0FFH,0FFH,0FFH,0FFH,0FFH,0FFH,0FFH,0FFH,0FFH,0FFH,0FFH,0FFH
+        DB 0FFH,0FFH,0FFH,0FFH,0FFH,0FFH,0FFH,0FFH,0FFH,0FFH,0FFH,0FFH,0FFH,0FFH,0FFH,0FFH
+        DB 0FFH,0FFH,0FFH,0FFH,0FFH,0FFH,0FFH,0FFH,0FFH,0FFH,0FFH,0FFH,0FFH,0FFH,0FFH,0FFH
+        DB 0FFH,0FFH,0FFH,0FFH,0FFH,0FFH,0FFH,0FFH,0FFH,0FFH,0FFH,0FFH,0FFH,0FFH,0FFH,0FFH
+        DB 0FFH,0FFH,0FFH,0FFH,0FFH,0FFH,0FFH,0FFH,0FFH,0FFH,0FFH,0FFH,0FFH,0FFH,0FFH,0FFH
+        DB 0FFH,0FFH,0FFH,0FFH,0FFH,0FFH,0FFH,0FFH,0FFH,0FFH,0FFH,0FFH,0FFH,0FFH,0FFH,0FFH
+        DB 0FFH,0FFH,0FFH,0FFH,0FFH,0FFH,0FFH,0FFH,0FFH,0FFH,0FFH,0FFH,0FFH,0FFH,0FFH,0FFH
+        DB 0FFH,0FFH,0FFH,0FFH,0FFH,0FFH,0FFH,0FFH,0FFH,0FFH,0FFH,0FFH,0FFH,0FFH,0FFH,0FFH
+        DB 0FFH,0FFH,0FFH,0FFH,0FFH,0FFH,0FFH,0FFH,0FFH,0FFH,0FFH,0FFH,0FFH,0FFH,0FFH,0FFH
+        DB 0FFH,0FFH,0FFH,0FFH,0FFH,0FFH,0FFH,0FFH,0FFH,0FFH,0FFH,0FFH,0FFH,0FFH,0FFH,0FFH
+WXALBUF:DS 384

@@ -1,0 +1,22 @@
+[
+  {
+    "path": "sd.doc.txt",
+    "url": "https://dflund.se/~pi/cpm/files/ftp.mayn.de/pub/cpm/archive/dirutl/sd137/sd.doc.txt",
+    "sha256": "4cbfa726c129033ee2799549fa6dca063453a89746bf8c2d80ffe2704c0a91df"
+  },
+  {
+    "path": "sd-rcpm.inf",
+    "url": "https://dflund.se/~pi/cpm/files/ftp.mayn.de/pub/cpm/archive/dirutl/sd137/sd-rcpm.inf",
+    "sha256": "5757064d5b23f703a5162b345403d93ed9ac02d1e8a1beb7be2202be29b8e877"
+  },
+  {
+    "path": "sd137.asm.txt",
+    "url": "https://dflund.se/~pi/cpm/files/ftp.mayn.de/pub/cpm/archive/dirutl/sd137/sd137.asm.txt",
+    "sha256": "394075190ab5483447924312d9e2180bae697eaee8d49a2e14e3595a25c165b3"
+  },
+  {
+    "path": "sdz34.com",
+    "url": "https://dflund.se/~pi/cpm/files/ftp.mayn.de/pub/cpm/archive/dirutl/sd137/sdz34.com",
+    "sha256": "0cb13252a43a41c539081f255c25add0037af968bb6634785c02446577cafab5"
+  }
+]

@@ -1,0 +1,85 @@
+{
+  "caller_approval": {
+    "passed": true,
+    "approve_revoke_list": true,
+    "live_change_refused": true,
+    "exact_existing_com_required": true,
+    "binary_bytes_preserved": true,
+    "f4_and_readonly_required": true,
+    "sys_file_supported": true,
+    "mutable_I_rejected": true,
+    "A_and_J_approved_loads": true,
+    "dma_preserved": true
+  },
+  "games": {
+    "direct": {
+      "mode": "direct",
+      "cpu_mhz": 4,
+      "adventure_play_quit": true,
+      "animals_round_exit": true,
+      "maze_ansi_play_exit": true,
+      "ansi_coordinates_valid": true,
+      "local_blank_controls": true,
+      "game_carrier_loss_recovery": true,
+      "work_cleaned_between_calls": true,
+      "private_tools_remain_denied": true,
+      "protected_game_image_unchanged": true
+    },
+    "ip232": {
+      "mode": "ip232",
+      "cpu_mhz": 4,
+      "adventure_play_quit": true,
+      "animals_round_exit": true,
+      "maze_ansi_play_exit": true,
+      "ansi_coordinates_valid": true,
+      "local_blank_controls": true,
+      "game_carrier_loss_recovery": true,
+      "work_cleaned_between_calls": true,
+      "private_tools_remain_denied": true,
+      "protected_game_image_unchanged": true
+    }
+  },
+  "security": {
+    "direct": true,
+    "ip232": true,
+    "log": "/tmp/rcpm-caller-approval-security.log"
+  },
+  "full_playthrough_claimed": false,
+  "release": {
+    "archive": "/Users/nathanael/.codex/.chatgpt-projects/g-p-6a682f002be881918281554d644daf48/rcpm-cpmsim/build/release-games-final/rcpm-macos-arm64-candidate.zip",
+    "relocated_with_spaces": true,
+    "minimal_system_path": true,
+    "common_and_host_hashes": true,
+    "shipped_disks": [
+      "A",
+      "I",
+      "P"
+    ],
+    "default_port": 4000,
+    "tested_port": 64187,
+    "direct_boot": true,
+    "caller_login": true,
+    "archive_named_directories": true,
+    "both_public_volumes": true,
+    "documentation_read": true,
+    "rbbs_entry": true,
+    "first_start_private_credentials": true,
+    "duplicate_guest_refused": true,
+    "orderly_shutdown": true,
+    "no_python_tmux_or_homebrew_required": true,
+    "generated_passwords_match_guest_record": true,
+    "ip232_driver_switch": true,
+    "real_tcpser_caller_login": true,
+    "credentials_preserved_on_restart": true,
+    "switch_back_to_direct": true,
+    "public_redistribution": "not cleared; retained notices identify unresolved restrictions"
+  },
+  "game_carrier_loss_scenario": "Adventure waiting for input; play and normal exit tested for all three games",
+  "sigm_p0": {
+    "libraries": 310,
+    "bytes": 68814080,
+    "allocated_bytes": 71188480
+  },
+  "final_member_readbacks": 60,
+  "final_game_payloads_match_play_tested_payloads": true
+}

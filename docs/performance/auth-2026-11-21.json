@@ -1,0 +1,98 @@
+{
+  "live_AUTH_direct": {
+    "caller_writes_denied_A_J_P": true,
+    "caller_WORK_writes_allowed": true,
+    "F4_only_approval_all_drives": true,
+    "private_J_P_writes_allowed": true,
+    "live_grant_revoke": true,
+    "DU_overrides_drive": true,
+    "inheritance": true,
+    "writable_DU_non_executable": true,
+    "save_reload": true,
+    "RBBS_scoped_private_data": true,
+    "restart_persistence": true
+  },
+  "invalid_policy_recovery": {
+    "invalid_startup_policy_denies_callers": true,
+    "local_private_recovery_without_restart": true
+  },
+  "games_direct": {
+    "mode": "direct",
+    "cpu_mhz": 4,
+    "adventure_play_quit": true,
+    "animals_round_exit": true,
+    "maze_ansi_play_exit": true,
+    "ansi_coordinates_valid": true,
+    "local_blank_controls": true,
+    "game_carrier_loss_recovery": true,
+    "work_cleaned_between_calls": true,
+    "private_tools_remain_denied": true
+  },
+  "games_ip232": {
+    "mode": "ip232",
+    "cpu_mhz": 4,
+    "adventure_play_quit": true,
+    "animals_round_exit": true,
+    "maze_ansi_play_exit": true,
+    "ansi_coordinates_valid": true,
+    "local_blank_controls": true,
+    "game_carrier_loss_recovery": true,
+    "work_cleaned_between_calls": true,
+    "private_tools_remain_denied": true
+  },
+  "final_release": {
+    "archive": "/Users/nathanael/.codex/.chatgpt-projects/g-p-6a682f002be881918281554d644daf48/rcpm-cpmsim/build/release-auth-final/rcpm-macos-arm64-candidate.zip",
+    "relocated_with_spaces": true,
+    "minimal_system_path": true,
+    "common_and_host_hashes": true,
+    "shipped_disks": [
+      "A",
+      "I",
+      "P"
+    ],
+    "default_port": 4000,
+    "tested_port": 4000,
+    "direct_boot": true,
+    "caller_login": true,
+    "archive_named_directories": true,
+    "both_public_volumes": true,
+    "documentation_read": true,
+    "rbbs_entry": true,
+    "first_start_private_credentials": true,
+    "duplicate_guest_refused": true,
+    "orderly_shutdown": true,
+    "no_python_tmux_or_homebrew_required": true,
+    "generated_passwords_match_guest_record": true,
+    "ip232_driver_switch": true,
+    "real_tcpser_caller_login": true,
+    "credentials_preserved_on_restart": true,
+    "switch_back_to_direct": true,
+    "public_redistribution": "not cleared; retained notices identify unresolved restrictions"
+  },
+  "report_paths": {
+    "live_AUTH_direct": "build/auth-validation-final/result.json",
+    "invalid_policy_recovery": "build/auth-recovery-final/result.json",
+    "games_direct": "build/auth-games-final/direct/result.json",
+    "games_ip232": "build/auth-games-final/ip232/result.json",
+    "final_release": "build/auth-final-release-check/result.json",
+    "live_AUTH_ip232": "build/auth-ip232-confirmed/result.json"
+  },
+  "game_recovery_scope": "Normal play and exit for all three games on both transports; carrier loss during Adventure input; next-call WORK cleanup.",
+  "deployment": "Only isolated test packages and build defaults changed. Existing operator installation not modified.",
+  "archive_path": "build/release-auth-final/rcpm-macos-arm64-candidate.zip",
+  "archive_sha256": "6613c7f36a1038ac8f4f2d922c6dc1be5ecaf9000e95c1568828c1ccf64406f9",
+  "archive_bytes": 44775866,
+  "live_AUTH_ip232": {
+    "real_tcpser": true,
+    "private_AUTH": true,
+    "baseline_F4_revoke_and_restore": true,
+    "live_drive_permission_update": true,
+    "policy_save": true
+  },
+  "map_layout": {
+    "marker_prefix": true,
+    "all_16_headings_aligned": true,
+    "verified_in_guest": true,
+    "package": "build/release-auth-map/rcpm-macos-arm64-candidate.zip"
+  }
+}

@@ -1,0 +1,15 @@
+;
+READING ARCHIVES
+
+DIR P0: lists SIG/M libraries; DIR P1: lists CPMUG libraries.
+LDIR lists the members of an LBR without extracting it.
+Example: LDIR P0:SIGMV011
+
+LT reads plain text and supported compressed text, including LBR members.
+Example: LT P0:SIGMV011 ABSTRACT.011
+Use the names shown by LDIR when selecting a member.
+
+A library may contain programs, source, documentation and supporting data.
+Archive availability does not imply caller execution approval.
+Download files with YSEND for use on your own CP/M system.
+Use HELP TRANSFER for transfer instructions.

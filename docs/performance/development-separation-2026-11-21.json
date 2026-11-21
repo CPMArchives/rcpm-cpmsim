@@ -1,0 +1,67 @@
+{
+  "date": "2026-11-21",
+  "status": "separation-and-runtime-identity-checks-passed",
+  "excluded_files": {
+    "L80.COM": "7407f61e7788660550ea0a12ba44794f9786235c0a58aafb6d6c4bc3329d2831",
+    "M80.COM": "8729b411cb76a0d3bddf84926a2d4245838d39de0bf85e7ca48c4a2d8ba8c663",
+    "WM.COM": "95759509a36007dd27dedd637893ea73c0a5651e2fe8167d3c0bf3e7a729e972",
+    "WM.HLP": "a052b6c18ea0dea4a83e6e64f7adade93dfa55adcf0ed3f9c12257ee50223c72"
+  },
+  "retained_development_files": {
+    "BDOS3.SPR": "e0fdbdc10a7941809767cdad3f4d22d7e97b83bfaa14a0a589a9cd0589b94181",
+    "BIOS3.MAC": "a0fb8a0052e18c58c971f61b0e786b0dec001b535683b46c1dc637ab560896f7",
+    "BNKBDOS3.SPR": "4d2b3f8e5f212fdb9577f2470b695352c76655d2f13f78ba6c4f66abb5f02fb9",
+    "BNKBIOS3.SPR": "57e3e98851c2ef7b0469e2fec744d08cc89872ed242ea46f176ef0eb7fa6a1ba",
+    "BOOT.Z80": "054033e26ba55a9b44ca27617f8ce60fdb6505e1f23811868e0425b9ec70e080",
+    "COPYSYS.COM": "6fe907135bef726607ac313d443a919f1affd2f9a121919c3221ac1337377194",
+    "CPM3.SYS": "213ca461bcc4f7246178a008aae54b602563b0cbafa08603031cf4a2fd52a475",
+    "CPMLDR.COM": "f8b6ba869841a625eea1d8be057850891efac07268a1fb023d2e9679434085fa",
+    "CPMLDR.REL": "535f8dc31a5737d9dc82045e4eccd1dca0fd10485102b9605e9a5a72ce30401a",
+    "GENCPM.COM": "a35a5d7ca72ef3477272ab2566294589d42a1f6dbf9011d0d5363f52de588da5",
+    "GENCPM.DAT": "3f7fe01e41febf7fa3ecfcca577ff6c2b0a169530e8830df7a82012c6564f8c4",
+    "INITDIR.COM": "fb89616b31b953a4d2ceb6dbf8deb1d5ffda9a0bf520e5c41e25a4e0203f44bd",
+    "LDR.SUB": "41865c4033fea23cce5578eb83cf9c6d914b90da8993d4f7b8091ede6608139a",
+    "LDRBIOS3.MAC": "61d694ecc5f9db8a112be9ea20f4310a0a1a2e8d180fa134af0becab84eb0dab",
+    "LINK.COM": "714115910168df0900a41698551d518c921fe8329dae78378756f2445a4dc175",
+    "MAC.COM": "0b2ba3001b6b5ce33fce0c1c3dd0e0ed86119a565128d501360b52dd838d19d2",
+    "PATCH.COM": "0e5be09e8a1f0a47b4e68ad676d2f6c54d84eec5d0cc14ed5914c30a1f0ec95e",
+    "RESBDOS3.SPR": "dce5bc986fd668d86efdd643bbccce8b7347961899bab19382bec25707965844",
+    "RMAC.COM": "c83f1cac01c5c1ca1af6c61a3fd156c8a49a46f290bd1a9f176c36946bb0435a",
+    "SCB.MAC": "52c3f0b6a5a0f1860adfd83a5945c6e424eacd4edb5a50650b1f9a95513192b5",
+    "SYSGEN.SUB": "c027c5401ddbae8b112f7c7051c2f99d7db705e4f9bd0a69a7187947fc496108"
+  },
+  "fresh_BUILD_image": "ed1685147ef5ff632e731b1548c5c2e7a54eef5303ad78ef1ba3f14d4603a80c",
+  "unfiltered_source_disk_absent": true,
+  "unfiltered_source_disk_hash_not_elsewhere_in_manifest": true,
+  "archive_member_checks": true,
+  "zip_integrity": true,
+  "manifest_hashes_verified": true,
+  "runtime_media_unchanged": {
+    "disks/drivea.dsk": "bc83c72dd18fc3dd935f3895589465a6df006d0df1dca8f2b6f4068cb9541363",
+    "disks/drivei.dsk": "a3ba08cd45e786512c8029f4d1e1ee105e1a91b78e5be4027c88eb65b19d2ce5",
+    "disks/drivep.dsk": "fcb16e1e957aaebba8484bef8755bbd4346901c2f9f1f77255bb3081806c2365",
+    "volumes/GAMES.dsk": "4dd0f17c9cac97d96dbfb77c10789052c8c6e9c9b9727b399ad81faa3643db99",
+    "volumes/GUIDES.dsk": "c766d32f4d36552153ed86c745076c6e7128e9f4e690f5a5656fd77fb7ebf70e"
+  },
+  "native_host_files_unchanged": {
+    "runtime/rcpm": true,
+    "runtime/cpmsim": true,
+    "runtime/cpmcp": true,
+    "runtime/cpmls": true,
+    "runtime/cpmrm": true,
+    "runtime/cpmchattr": true,
+    "runtime/mkfs.cpm": true,
+    "Start-RCPM.command": true,
+    "runtime/cpmsim.features.json": true
+  },
+  "both_BYE_variants_unchanged": true,
+  "negative_and_data_removal_tests_passed": 2,
+  "prior_live_qualification": "docs/performance/release-package-2026-11-21.json",
+  "new_live_test_required_for_this_packaging_change": false,
+  "archive_sha256": {
+    "rcpm-macos-arm64-candidate.zip": "f61c5f64e02791723c31217c2e3831a4ff9437608267ee0f171f0e299692a999",
+    "rcpm-common-candidate.zip": "697ee17645aeb5a8e77a42022b655c0c6bb5c69cc0b435dc7f1306830ebdd498"
+  },
+  "collections": "P: archive bytes preserved unchanged; no collection-wide rights clearance claimed",
+  "public_redistribution": "remaining component questions unresolved"
+}

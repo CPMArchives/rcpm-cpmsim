@@ -47,11 +47,14 @@ def run(source, runtime, tools, builds, output, tcpser, romwbw=None, autostart=F
         for name in ('BYE.COM', 'BYEDRIV.COM', 'BYEBYE.COM'):
             subprocess.run([str(tools / 'cpmcp'), '-T', 'raw', '-f', 'ibm-3740',
                             str(disk), str(builds / mode / name), '0:' + name], check=True)
+        # Test-only stand-in under an approved name; never installed in release media.
+        subprocess.run([str(tools / 'cpmrm'), '-T', 'raw', '-f', 'ibm-3740',
+                        str(disk), '0:CLS.COM'], check=True)
         shutil.copyfile(Path(__file__).parent / 'guest/queueprobe.asm', work / 'queueprobe.asm')
         subprocess.run([str(source / 'z80asm/z80asm'), '-fb', '-x', 'queueprobe.asm'],
                        cwd=work, check=True, stdout=subprocess.DEVNULL)
         subprocess.run([str(tools / 'cpmcp'), '-T', 'raw', '-f', 'ibm-3740', str(disk),
-                        str(work / 'queueprobe.bin'), '0:QUEUEPRB.COM'], check=True)
+                        str(work / 'queueprobe.bin'), '0:CLS.COM'], check=True)
         for name, content in (('PROBE.TXT', b'SHARED-CONSOLE-OK\r\n\x1a'),
                               ('PRIVATE.TXT', b'PRIVATE-OUTPUT-CHECK\r\n\x1a'),
                               ('USERCHK.TXT', b'CALLER-FILE-REMAINS\r\n\x1a'),
@@ -172,10 +175,10 @@ def run(source, runtime, tools, builds, output, tcpser, romwbw=None, autostart=F
                             caller.settimeout(15)
                         remote(caller, prompt, kick=mode == 'direct', timeout=45)
                         service_checks.verify_work_clean(tools, work)
-                        caller.sendall(b'WORKPRB\r')
+                        caller.sendall(b'A0:HELP\r')
                         remote(caller, b'READONLY WORK FILE CREATED', after=prompt)
                         if services:
-                            caller.sendall(b'SERVPRB\r')
+                            caller.sendall(b'A0:DIR\r')
                             remote(caller, b'SERVICE STATE RESET', after=prompt)
                             if attempt:
                                 service_checks.verify_inbox(work)
@@ -187,7 +190,7 @@ def run(source, runtime, tools, builds, output, tcpser, romwbw=None, autostart=F
                         if attempt == 0:
                             # Positive control: the seeded command really executes
                             # if the program returns without a lifecycle transition.
-                            caller.sendall(b'QUEUEPRB\r')
+                            caller.sendall(b'A0:CLS\r')
                             remote(caller, b'PENDING COMMAND ARMED')
                             caller.sendall(b'x')
                             remote(caller, b'STALE-COMMAND-EXECUTED', after=prompt)
@@ -217,7 +220,7 @@ def run(source, runtime, tools, builds, output, tcpser, romwbw=None, autostart=F
                             # Type a complete command from the local keyboard while connected.
                             os.write(master, b'TYPE PROBE.TXT\r')
                             remote(caller, b'SHARED-CONSOLE-OK', after=prompt)
-                            caller.sendall(b'QUEUEPRB\r')
+                            caller.sendall(b'A0:CLS\r')
                             remote(caller, b'PENDING COMMAND ARMED')
                             os.write(master, b'\x02')
                             local(prompt)
@@ -226,7 +229,7 @@ def run(source, runtime, tools, builds, output, tcpser, romwbw=None, autostart=F
                                 local(prompt)
                             os.write(master, b'TYPE PRIVATE.TXT\r')
                             local(prompt)
-                            os.write(master, b'QUEUEPRB\r')
+                            os.write(master, b'A0:CLS\r')
                             local(b'PENDING COMMAND ARMED')
                             os.write(master, b'\x02')
                             local(prompt)
@@ -247,13 +250,13 @@ def run(source, runtime, tools, builds, output, tcpser, romwbw=None, autostart=F
                                 caller.sendall(b'THIS DRAFT MUST BE DISCARDED\r')
                                 remote(caller, b'> ')
                             else:
-                                caller.sendall(b'QUEUEPRB\r')
+                                caller.sendall(b'A0:CLS\r')
                                 remote(caller, b'PENDING COMMAND ARMED')
                             caller.close()
                             local(b'[Carrier lost]', timeout=20)
                         else:
                             if attempt == calls - 1:
-                                caller.sendall(b'QUEUEPRB\r')
+                                caller.sendall(b'A0:CLS\r')
                                 remote(caller, b'PENDING COMMAND ARMED')
                                 os.write(master, b'\x0e')  # BYE's local forced-disconnect key.
                             else:

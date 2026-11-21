@@ -1,0 +1,86 @@
+{
+  "inputs_verified": true,
+  "guest_outputs": {
+    "build/caller-tools/SDZ.COM": "4fa51cf5210962d0dde5071f12adbf11628b9ccaa5c37846016fcebcb39db952",
+    "build/ppip18/PPIP.COM": "4d88bad8ce234268e0ba70b5b1e04a0e8e7352c2cb5fa185812f6b01b974e09e",
+    "build/release-bye/direct/BYE.COM": "9ebe619f937eed6c44eb798e5b71afd203cced506ad11e4f5116f3a476b3f5ce",
+    "build/release-bye/direct/BYEBYE.COM": "6bc14aeb37ce7ecb72bf482f9a6cb80b4a6cfb6279ac83ee68f7ef4891562427",
+    "build/release-bye/direct/BYEDRIV.COM": "9d89f8ee49fc5e1375d9967744a4016fcdd70df71a0288f23efc71d939f9622a",
+    "build/release-bye/ip232/BYE.COM": "9ebe619f937eed6c44eb798e5b71afd203cced506ad11e4f5116f3a476b3f5ce",
+    "build/release-bye/ip232/BYEBYE.COM": "6bc14aeb37ce7ecb72bf482f9a6cb80b4a6cfb6279ac83ee68f7ef4891562427",
+    "build/release-bye/ip232/BYEDRIV.COM": "c7e08e1e9e3a1dc58c68b7c31170d88fdf93dd7de3bfc3e63529e445afef91f0",
+    "build/sysop-editor/ZDE.COM": "d505cc0c35384993771eec3a03b787c4ab31920b4200287eb49df1ef881047aa"
+  },
+  "mismatches": {},
+  "packages": {
+    "rcpm-macos-arm64-candidate.zip": "823bf938dc297bf69998ad181164a0c615b6e10ba072e992ec8596a883634f88",
+    "rcpm-common-candidate.zip": "b439f180aa87b41d96b795eba91a433cb34dc30c33fe2851e4f5b881c5a6cac9"
+  },
+  "date": "2026-11-21",
+  "baseline": "docs/release-baseline.json",
+  "input_files_verified": 321,
+  "rebuild_directory": "build/release-baseline-rebuild",
+  "qualified_candidate": "build/release-1.0-stabilization/rcpm-macos-arm64-candidate.zip",
+  "media_comparison": {
+    "disks/drivea.dsk": {
+      "sha256": "bc83c72dd18fc3dd935f3895589465a6df006d0df1dca8f2b6f4068cb9541363",
+      "identical": true
+    },
+    "disks/drivei.dsk": {
+      "sha256": "a3ba08cd45e786512c8029f4d1e1ee105e1a91b78e5be4027c88eb65b19d2ce5",
+      "identical": true
+    },
+    "disks/drivep.dsk": {
+      "sha256": "fcb16e1e957aaebba8484bef8755bbd4346901c2f9f1f77255bb3081806c2365",
+      "identical": true
+    },
+    "volumes/GAMES.dsk": {
+      "sha256": "4dd0f17c9cac97d96dbfb77c10789052c8c6e9c9b9727b399ad81faa3643db99",
+      "identical": true
+    },
+    "volumes/GUIDES.dsk": {
+      "sha256": "c766d32f4d36552153ed86c745076c6e7128e9f4e690f5a5656fd77fb7ebf70e",
+      "identical": true
+    }
+  },
+  "host_comparison": {
+    "runtime/rcpm": {
+      "sha256": "0f5a6f43eaf4ac700a475d51d6e0848e89a70aad4ae3d87270a7d52c105079d5",
+      "identical": true
+    },
+    "runtime/cpmsim": {
+      "sha256": "67088a0b4a95706e1c477b57e4d08444635c65437cf84577623ac4f870243cb1",
+      "identical": true
+    },
+    "runtime/cpmcp": {
+      "sha256": "8e7cbd4ddc366d6824913f88f4640955afbf958a62ea6cc28d6cdfcdd88f2be5",
+      "identical": false
+    },
+    "runtime/cpmls": {
+      "sha256": "0c8c9b6504eb6db31c49ba45537153fc74162b3b67786265fe77c71c841a797f",
+      "identical": false
+    },
+    "runtime/cpmrm": {
+      "sha256": "d511c82ad82c8a88cccbee33c1b57c1c1a0cd4024b76e02a312ee8d7dd55a153",
+      "identical": false
+    },
+    "runtime/cpmchattr": {
+      "sha256": "10862a988a37bac8e72ab0961e68557b8738b137e1737fdf1f46727a54e78645",
+      "identical": false
+    },
+    "runtime/mkfs.cpm": {
+      "sha256": "d8c217c83ea9566ea113a1d7453dd74d5194f79196a978979e234f0040f382ca",
+      "identical": false
+    },
+    "Start-RCPM.command": {
+      "sha256": "56dce7cea74014c85bab99259ecf7d46cfedf07a7a18ffc9ce77415648c3b574",
+      "identical": true
+    },
+    "runtime/cpmsim.features.json": {
+      "sha256": "42cdf7b7438cd4d98add49ab6b76dff0f1ffee723ced84ae33ee0bb2d59f31a4",
+      "identical": true
+    }
+  },
+  "launcher_regressions_passed": 5,
+  "python_syntax_files": 62
+}

@@ -1,0 +1,169 @@
+{
+  "date": "2026-11-21",
+  "status": "windows-x64-cross-build-complete-runtime-unqualified",
+  "archive": "build/windows-x64-final-candidate/rcpm-windows-x64-candidate.zip",
+  "archive_sha256": "7a08b52d65d5fe4e82491f7829a255f9590bb073d8ec1b45de4880133f8aaee1",
+  "common_archive_sha256": "697ee17645aeb5a8e77a42022b655c0c6bb5c69cc0b435dc7f1306830ebdd498",
+  "common_files_verified": 487,
+  "host_files_verified": 47,
+  "runtime_executables": 7,
+  "qualification_executables": 1,
+  "native": {
+    "runtime/cpmsim.exe": {
+      "sha256": "d0129d179d7d5652ed28b1c67ce9a0b1e9769585b08efd65e87e228a878af5a3",
+      "imports": [
+        "WS2_32.dll",
+        "api-ms-win-crt-stdio-l1-1-0.dll",
+        "api-ms-win-crt-runtime-l1-1-0.dll",
+        "api-ms-win-crt-string-l1-1-0.dll",
+        "api-ms-win-crt-locale-l1-1-0.dll",
+        "api-ms-win-crt-time-l1-1-0.dll",
+        "api-ms-win-crt-convert-l1-1-0.dll",
+        "api-ms-win-crt-heap-l1-1-0.dll",
+        "api-ms-win-crt-environment-l1-1-0.dll",
+        "api-ms-win-crt-private-l1-1-0.dll",
+        "api-ms-win-crt-utility-l1-1-0.dll",
+        "KERNEL32.dll",
+        "api-ms-win-crt-math-l1-1-0.dll",
+        "api-ms-win-crt-filesystem-l1-1-0.dll"
+      ]
+    },
+    "runtime/rcpm.exe": {
+      "sha256": "dafb28d303bd7d085faa204d91f9737e3df871b9d1c6a292013346e27be067f0",
+      "imports": [
+        "WS2_32.dll",
+        "ADVAPI32.dll",
+        "bcrypt.dll",
+        "api-ms-win-crt-stdio-l1-1-0.dll",
+        "api-ms-win-crt-runtime-l1-1-0.dll",
+        "api-ms-win-crt-environment-l1-1-0.dll",
+        "api-ms-win-crt-filesystem-l1-1-0.dll",
+        "api-ms-win-crt-string-l1-1-0.dll",
+        "api-ms-win-crt-locale-l1-1-0.dll",
+        "api-ms-win-crt-heap-l1-1-0.dll",
+        "api-ms-win-crt-private-l1-1-0.dll",
+        "api-ms-win-crt-convert-l1-1-0.dll",
+        "KERNEL32.dll",
+        "api-ms-win-crt-math-l1-1-0.dll"
+      ]
+    },
+    "runtime/cpmls.exe": {
+      "sha256": "a5dcafc539cf1fcd70d1f49f6ff2bd0d2899feee7eba735625db18abd87fffc3",
+      "imports": [
+        "api-ms-win-crt-stdio-l1-1-0.dll",
+        "api-ms-win-crt-environment-l1-1-0.dll",
+        "api-ms-win-crt-runtime-l1-1-0.dll",
+        "api-ms-win-crt-string-l1-1-0.dll",
+        "api-ms-win-crt-locale-l1-1-0.dll",
+        "api-ms-win-crt-time-l1-1-0.dll",
+        "api-ms-win-crt-heap-l1-1-0.dll",
+        "api-ms-win-crt-private-l1-1-0.dll",
+        "api-ms-win-crt-utility-l1-1-0.dll",
+        "api-ms-win-crt-convert-l1-1-0.dll",
+        "KERNEL32.dll",
+        "api-ms-win-crt-math-l1-1-0.dll"
+      ]
+    },
+    "runtime/cpmcp.exe": {
+      "sha256": "e4ae57fb1c36c24b3427df91337539918376ee4d84d9d7bd22cc3dba6b97ec4c",
+      "imports": [
+        "api-ms-win-crt-stdio-l1-1-0.dll",
+        "api-ms-win-crt-environment-l1-1-0.dll",
+        "api-ms-win-crt-runtime-l1-1-0.dll",
+        "api-ms-win-crt-string-l1-1-0.dll",
+        "api-ms-win-crt-locale-l1-1-0.dll",
+        "api-ms-win-crt-time-l1-1-0.dll",
+        "api-ms-win-crt-heap-l1-1-0.dll",
+        "api-ms-win-crt-private-l1-1-0.dll",
+        "api-ms-win-crt-convert-l1-1-0.dll",
+        "KERNEL32.dll",
+        "api-ms-win-crt-math-l1-1-0.dll",
+        "api-ms-win-crt-filesystem-l1-1-0.dll"
+      ]
+    },
+    "runtime/mkfs.cpm.exe": {
+      "sha256": "03970c945db9b6c5439db6987b6598a786323349e44624cfa3768c98181a33db",
+      "imports": [
+        "api-ms-win-crt-stdio-l1-1-0.dll",
+        "api-ms-win-crt-environment-l1-1-0.dll",
+        "api-ms-win-crt-runtime-l1-1-0.dll",
+        "api-ms-win-crt-string-l1-1-0.dll",
+        "api-ms-win-crt-locale-l1-1-0.dll",
+        "api-ms-win-crt-time-l1-1-0.dll",
+        "api-ms-win-crt-heap-l1-1-0.dll",
+        "api-ms-win-crt-private-l1-1-0.dll",
+        "api-ms-win-crt-convert-l1-1-0.dll",
+        "KERNEL32.dll",
+        "api-ms-win-crt-math-l1-1-0.dll"
+      ]
+    },
+    "runtime/cpmrm.exe": {
+      "sha256": "9ec39762616e5c390c450e39dbe43f57461e2e770a1656330eb676bea8db5365",
+      "imports": [
+        "api-ms-win-crt-stdio-l1-1-0.dll",
+        "api-ms-win-crt-environment-l1-1-0.dll",
+        "api-ms-win-crt-runtime-l1-1-0.dll",
+        "api-ms-win-crt-string-l1-1-0.dll",
+        "api-ms-win-crt-locale-l1-1-0.dll",
+        "api-ms-win-crt-time-l1-1-0.dll",
+        "api-ms-win-crt-heap-l1-1-0.dll",
+        "api-ms-win-crt-private-l1-1-0.dll",
+        "api-ms-win-crt-convert-l1-1-0.dll",
+        "KERNEL32.dll",
+        "api-ms-win-crt-math-l1-1-0.dll"
+      ]
+    },
+    "runtime/cpmchattr.exe": {
+      "sha256": "bd81df1a6565face1768ad1386f1bdec1b41fcfef25d6562246207562f1ed56d",
+      "imports": [
+        "api-ms-win-crt-stdio-l1-1-0.dll",
+        "api-ms-win-crt-environment-l1-1-0.dll",
+        "api-ms-win-crt-runtime-l1-1-0.dll",
+        "api-ms-win-crt-string-l1-1-0.dll",
+        "api-ms-win-crt-locale-l1-1-0.dll",
+        "api-ms-win-crt-time-l1-1-0.dll",
+        "api-ms-win-crt-heap-l1-1-0.dll",
+        "api-ms-win-crt-private-l1-1-0.dll",
+        "api-ms-win-crt-convert-l1-1-0.dll",
+        "KERNEL32.dll",
+        "api-ms-win-crt-math-l1-1-0.dll"
+      ]
+    },
+    "qualification/host-probe.exe": {
+      "sha256": "d9d79d54c7fbf3390986559db28f2bb964635f091de67a5e1d54f4ff48476ae1",
+      "imports": [
+        "WS2_32.dll",
+        "ADVAPI32.dll",
+        "api-ms-win-crt-stdio-l1-1-0.dll",
+        "api-ms-win-crt-runtime-l1-1-0.dll",
+        "api-ms-win-crt-filesystem-l1-1-0.dll",
+        "api-ms-win-crt-locale-l1-1-0.dll",
+        "api-ms-win-crt-heap-l1-1-0.dll",
+        "api-ms-win-crt-private-l1-1-0.dll",
+        "api-ms-win-crt-string-l1-1-0.dll",
+        "api-ms-win-crt-convert-l1-1-0.dll",
+        "KERNEL32.dll",
+        "api-ms-win-crt-math-l1-1-0.dll",
+        "api-ms-win-crt-environment-l1-1-0.dll"
+      ]
+    }
+  },
+  "local_packaging_tests_passed": 15,
+  "windows_runtime_tests_run": false,
+  "native_host_probes": "compiled-not-executed",
+  "optional_ip232": "not-tested",
+  "existing_modem_tests": {
+    "passed": 1,
+    "blocked_by_socket_bind_denial": 7,
+    "skipped_optional_tcpser": 1
+  },
+  "blockers": [
+    "UTM guest-agent commands abort with exit 134 in this session",
+    "Windows x64 QEMU monitor socket connection denied: Operation not permitted",
+    "Host localhost bind denied: Operation not permitted"
+  ],
+  "no_shipped_credentials": true,
+  "guest_media_and_shared_services_unchanged": true,
+  "vm_changes": false,
+  "redistribution": "not-cleared"
+}

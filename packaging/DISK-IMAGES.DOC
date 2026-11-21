@@ -1,0 +1,155 @@
+RCP/M DISK IMAGE FORMATS AND HOST MAINTENANCE
+
+These are z80pack cpmsim RAW sector images: no DSK/IMD container header,
+partition table or embedded geometry. The .dsk suffix does not identify a
+format. Each drive has a fixed geometry in this cpmsim build; renaming an
+arbitrary CP/M image to drivea.dsk or GAME.dsk does not convert it.
+
+The bundled runtime/diskdefs is the cpmtools format reference used to build
+and maintain these images. Keep it with the matching host tools.
+
+Drive    cpmtools format    Tracks  Sectors/track  Bytes/sector  Exact bytes
+A:       ibm-3740              77       26             128          256256
+I:, J:   z80pack-hd           255      128             128         4177920
+P:       z80pack-hdb          256    16384             128       536870912
+
+A: is 250.25 KiB total; I:/J: are 4080 KiB (nominal 4 MB); P: is 512 MiB.
+These are total image sizes, not free file-storage capacity.
+
+Format        Block bytes  Directory entries  Reserved boot tracks  Skew
+ibm-3740          1024             64                   2               6
+z80pack-hd        2048           1024                   0               0
+z80pack-hdb      16384           8192                   0               0
+
+The hard-disk images have their directory at byte zero: 32768 bytes on I:/J:,
+262144 bytes on P:. A: has reserved system tracks AND a skewed sector layout;
+use a format-aware tool, not a guessed contiguous directory offset.
+
+The diskdefs entries say 'os 2.2' for the on-disk directory conventions. The
+guest operating system is banked CP/M 3; that setting does not select CP/M 2.2
+or replace the configured sector geometry.
+
+1. BEFORE HOST EDITING
+
+Stop the emulator cleanly with SYSUTLS:BYEBYE and copy the image as a backup.
+Do not edit a disk still open in cpmsim, even if no caller is connected.
+Do not use host edits to bypass caller permissions while a guest is running.
+
+From the unpacked package directory in a Mac/Linux shell, configure the
+bundled cpmtools definitions:
+
+    export DISKDEFS="$PWD/runtime/diskdefs"
+
+The native launcher sets this for its own tools automatically. When calling
+tools manually, set it yourself. These bundled cpmtools use direct POSIX I/O;
+no libdsk installation or driver selection is required. Earlier libdsk-backed
+builds misread one of this project's guest-written I: files; use these tools
+and the specified geometry rather than mixing cpmtools builds/settings.
+
+Names in host cpmtools commands use a numeric USER prefix such as 0: or 13:.
+They do not resolve Z-System directory aliases like SYSUTLS: or SIGM:.
+Quote wildcard specifications so the HOST shell does not expand them.
+CP/M names use 8.3 characters, and user areas range from 0 through 15 here.
+
+2. LIST, EXTRACT, ADD AND DELETE FILES
+
+List public system files and private system tools while the guest is stopped:
+
+    ./runtime/cpmls -f ibm-3740 disks/drivea.dsk '0:*'
+    ./runtime/cpmls -f z80pack-hd disks/drivei.dsk '13:*'
+    ./runtime/cpmls -f z80pack-hdb disks/drivep.dsk '0:*'
+
+Extract the welcome banner or a library to a host file:
+
+    ./runtime/cpmcp -f ibm-3740 disks/drivea.dsk 0:WELCOME.TXT welcome.txt
+    ./runtime/cpmcp -f z80pack-hdb disks/drivep.dsk 1:CPMUG001.LBR CPMUG001.LBR
+
+Replace a file by removing its old entry and importing its replacement:
+
+    ./runtime/cpmrm -f ibm-3740 disks/drivea.dsk 0:WELCOME.TXT
+    ./runtime/cpmcp -f ibm-3740 disks/drivea.dsk welcome.txt 0:WELCOME.TXT
+
+Use CRLF line endings for guest text. Binary copies preserve raw bytes;
+CP/M files have record-sized storage and extracted files may include trailing
+record padding. Do not apply text conversion to programs or LBR archives.
+The cpmcp -t option is available for intentional host/CP/M text conversion.
+
+SYS attributes are stored on disk but do not enforce permissions. To set or
+clear SYS, for example on the private PATH command:
+
+    ./runtime/cpmchattr -f ibm-3740 disks/drivea.dsk s 0:PATH.COM
+    ./runtime/cpmchattr -f ibm-3740 disks/drivea.dsk ms 0:PATH.COM
+
+'s' adds SYS; 'm' reverses following flags, so 'ms' removes SYS while retaining
+other attributes. 'r' adds read-only; 'mr' removes read-only. These affect
+CP/M directory attributes, separately from host filesystem permissions and
+the BYE caller-access checks. Keep the release's documented A0 policy when
+finishing maintenance.
+
+3. CREATE A NEW SWAPPABLE J: IMAGE
+
+Use a NEW name, 1-8 letters/digits/underscores, with the .dsk extension.
+MOUNT recognizes these files under volumes/. All such catalog volumes are
+caller-readable when mounted. Keep private sysop media under offline/, not
+in volumes/. Do not leave private media mounted when returning to callers.
+
+Example creating a blank 4177920-byte image on macOS or Linux:
+
+    (
+    set -e
+    test ! -e volumes/NEW.dsk
+    dd if=/dev/zero of=volumes/NEW.dsk bs=16384 count=0 seek=255
+    ./runtime/mkfs.cpm -f z80pack-hd volumes/NEW.dsk
+    ./runtime/cpmcp -f z80pack-hd volumes/NEW.dsk README.TXT 0:README.TXT
+    ./runtime/cpmls -f z80pack-hd volumes/NEW.dsk '0:*'
+    chmod 444 volumes/NEW.dsk
+    )
+
+Run these steps only after the test confirms NEW.dsk does not exist. The
+parenthesized command group stops if the existence check fails.
+The dd step sets the exact full length; mkfs.cpm alone may only write the
+directory/reserved regions. An undersized image will fail MOUNT's geometry
+validation. Never format an existing image you intend to keep.
+
+Start RCP/M, then type MOUNT /L and MOUNT NEW. The image is opened read-only
+for callers. To modify it later, stop RCP/M, 'chmod u+w volumes/NEW.dsk', make
+your changes with cpmtools and restore 'chmod 444' before starting again.
+
+For a host image editor on Windows, use a raw CP/M image editor configured
+with the exact geometry above, or a compatible cpmtools build plus the same
+diskdefs. A program offering a generic '.dsk' format may mean a different
+container. This first release includes only macOS ARM64 host executables;
+the table describes platform-independent disk bytes.
+
+4. CREATING OTHER DISK TYPES
+
+An I:-style blank image uses the same steps as J:. It does not create the
+release's SYSUTLS contents or RBBS data files automatically.
+
+A NEW empty P:-style archive is exactly 536870912 bytes:
+
+    (
+    set -e
+    test ! -e EMPTY-P.dsk
+    dd if=/dev/zero of=EMPTY-P.dsk bs=16384 count=0 seek=32768
+    ./runtime/mkfs.cpm -f z80pack-hdb EMPTY-P.dsk
+    )
+
+This creates an EMPTY archive, not SIGM/CPMUG. Preserve the supplied P: or
+rebuild collections with the supplied source/rcpm/build_archive.py instructions.
+The distributed ARCHIVE.sha256 records all 403 original library checksums.
+
+Formatting a blank 256256-byte ibm-3740 image does NOT make a bootable A:.
+The system tracks, loader, CP/M 3 BIOS/BDOS and startup files must agree.
+For normal maintenance, clone the supplied A: and change selected files
+using cpmtools. Full boot-media generation is documented in the included
+source/building material; do not copy boot tracks between unrelated formats.
+
+5. HOST PROTECTION VERSUS CP/M PROTECTION
+
+A: and I: are writable host files so the sysop and board can maintain them.
+BYE restricts caller mutations and program loads inside the guest. Programs
+copied to WORK do not become executable. P: and swappable J: archive images
+are also host read-only. Removing a SYS attribute does not grant execution
+or directory access. Do not remove the release guards to run an unreviewed
+compiler, interpreter or game in a caller session.

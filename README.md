@@ -1,39 +1,52 @@
 # RCP/M on cpmsim
 
-**Architecture transition:** The current scripts below still run separate local
-and caller instances. The agreed target is one shared CP/M machine following
-mid-1980s BYE behavior. See the [BYE510 source review and implementation
-recommendation](docs/bye510-review.md) and [shared-console requirements](SHARED-CONSOLE-DESIGN.md).
-The replacement has not yet been activated.
+The [1.0 release notes](docs/RELEASE-NOTES-1.0.md) describe the macOS ARM64
+and Windows x64 downloads, startup and tested limits. The
+[release plan](docs/release-1.0-plan.md) records qualification evidence.
+The [source baseline](docs/source-baseline.md) pins the qualified candidate's
+inputs and documents the verified isolated rebuild.
 
-The [architecture completion gates](docs/architecture-status.md) track the
-remaining lifecycle, storage, transfer and launcher work. Caller permission
-and directory configuration follow in the security configuration phase.
+Current administration: [AUTH drive/DU permissions](docs/caller-execution.md).
+All drives share one default-deny caller R/W policy. Private sysop mode permits
+maintenance; caller execution requires R, no W, and F4. AUTH.COM in I13:
+changes permissions and executable approval live; AUTH /SAVE persists the map.
+Older build-history sections below describe preceding implementation stages.
 
-The [direct TCP and tcpser modem interface](docs/modem-interface.md) is built
-and tested in isolation, including actual CP/M 3 guest I/O. Both [BYE5 builds](docs/bye5-build.md)
-now pass shared-console checks with Z3PLUS. Z3PLUS wheel transitions
-and automatic boot startup are verified. Emulator security enforcement and
-migration remain pending; the current launcher is unchanged.
 
-The [shared-machine service checks](docs/shared-services.md) now cover
-X/YMODEM uploads, YMODEM downloads, persistent messages and guest-safe WORK
-cleanup with both connection options. Remaining protocols and operator
-controls during transfers still require integration.
+The **distribution** is a foreground cpmsim session, without Python or tmux
+prerequisites. The common A:/I:/P: payload includes all 310 SIGM and 93 CPMUG
+libraries, with public GAMES and documentation-only GUIDES volumes for J:.
+See [release packaging](docs/release-packaging.md). The tmux launcher below
+is the operator’s local convenience workflow, separate from the package.
+See the [post-1.0 roadmap](docs/roadmap.md) for configurable CPU speed, retaining
+the 4 MHz default, and the [online-game execution policy](docs/online-games.md) for
+game-specific caller admission.
 
-For a separate interactive instance of that build, follow
-[Try the shared-machine prototype](docs/try-shared-trial.md). Its generated
-launcher uses loopback port 4001 and leaves the older installation untouched.
+The default `launch_rcpm.zsh` now starts or attaches to one shared CP/M 3 /
+Z3PLUS / BYE510 machine in tmux (`rcpm-shared`). The default installation is
+`build/upper-system-final`, listening on **127.0.0.1:4002**. Its local console
+and caller use the same guest and disks.
 
-In the new disk set, `BYE.COM` is BYE5 remote service/logoff; the native
-cpmsim shutdown program is preserved as `BYEBYE.COM`. Restricting shutdown
-to the local sysop is required but has not yet been enforced.
+See [current operation and backup/restore](docs/shared-operations.md) for the
+one-time transition from a manually started console, detachment, shutdown,
+verified backups, restoration and the `rcpm` wrapper update.
 
-The [security review](docs/security-boundary.md) records the confirmed remote
-shutdown failure and the approved restriction to operator-approved caller
-programs, whose enforcement remains pending. The new
-runtime now disables native host-file I/O whenever RCP/M transport is selected.
+The [upper-area system profile](docs/zsystem-utilities.md) builds fresh media
+with I0:WORK, I13:SYSUTLS, I14:HELP and I15:RBBS. Callers enter `RBBS` from A0:;
+system tools and board data remain private. Caller programs, A0: attributes,
+ZDE configuration and the shared host helpers are included in new builds.
 
+Backup/restore has been checked with populated RBBS media and a caller login
+to the restored guest. Real tmux attachment still needs an operator check:
+the development sandbox denies access to the tmux server.
+
+## Earlier separate-instance prototype
+
+The remainder records the earlier architecture and build investigations.
+Commands referring to publication, separate caller instances, or the
+`rcpm-console` / `rcpm-listener` sessions belong to **`launch_legacy_rcpm.zsh`**.
+They are not the current shared launcher workflow. Historical trial instructions
+may also describe the old B: / I2: layout; use the upper-area profile above.
 
 A Remote CP/M system in development for the CPMArchives software collection.
 Callers will land directly at the CP/M prompt. The local prototype uses

@@ -1,0 +1,55 @@
+{
+  "date": "2026-11-21",
+  "evidence": "Maintainer screenshots and direct reports in release thread",
+  "candidate": "build/windows-x64-final-candidate/rcpm-windows-x64-candidate.zip",
+  "candidate_sha256": "7a08b52d65d5fe4e82491f7829a255f9590bb073d8ec1b45de4880133f8aaee1",
+  "windows_build": 26300,
+  "native_architecture": "ARM64",
+  "application_architecture": "x64 under Windows emulation",
+  "manual_checks": {
+    "boot_to_modem_ready": true,
+    "loopback_caller_login": true,
+    "directory_system": true,
+    "directory_public_archive": true,
+    "help_index": true,
+    "mount_list_games_guides": true,
+    "mount_games_and_list_adventure_files": true,
+    "rbbs_first_name_prompt": true,
+    "caller_socket_disconnect_returns_ready": true,
+    "reconnect_to_system_prompt": true,
+    "bye_logoff_returns_ready": true
+  },
+  "earlier_automated_checks_passed": [
+    "native_host_probes",
+    "disk_tool_roundtrip_and_relocation",
+    "21_retained_development_files"
+  ],
+  "earlier_automated_failure": "45-second wait for modem-ready; manual startup subsequently succeeded. Original console logger replayed rows on cursor movement. Runner changed for longer boot wait and changed-row capture; revised runner not yet runtime-validated.",
+  "full_automated_runtime_qualified": false,
+  "not_demonstrated": [
+    "all_nine_help_topics",
+    "GUIDES_mount_and_read",
+    "credential_preservation_across_process_restart",
+    "complete_duplicate_instance_check",
+    "optional_real_tcpser_IP232",
+    "write_interruption_recovery"
+  ],
+  "v3_automated_checks_passed": [
+    "native_host_probes",
+    "disk_tool_roundtrip_and_relocation",
+    "21_retained_development_files",
+    "duplicate_refused",
+    "direct_boot_and_caller",
+    "nine_help_topics",
+    "archives_mounts_rbbs",
+    "private_credentials_match",
+    "orderly_shutdown"
+  ],
+  "v3_failure": {
+    "stage": "restart and credential preservation",
+    "error": "ConnectionResetError WinError 10054",
+    "evidence": "maintainer result screenshot",
+    "result_folder": "RCPM-check-32025-31847"
+  },
+  "v4_runner_fix": "Baseline existing console rows before launching each guest, preventing prior modem-ready text being mistaken for restart readiness; separate restart stages and capture traceback. Locally regression-checked, not yet Windows validated."
+}

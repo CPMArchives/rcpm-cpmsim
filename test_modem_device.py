@@ -26,7 +26,11 @@ class ModemTests(unittest.TestCase):
         root = Path(cls.tmp.name)
         source = Path(__file__).resolve().parent / 'emulator/rcpm_modem.c'
         wrapper = root / 'device.c'
-        wrapper.write_text(f'#include "{source}"\n' + '''
+        wrapper.write_text('''#include <stdint.h>
+static uint64_t test_now;
+static uint64_t test_clock_now(void) { return test_now; }
+#define RM_CLOCK_NOW test_clock_now
+''' + f'#include "{source}"\n' + '''
 int device_init(void) { return rcpm_modem_init(); }
 void device_close(void) { rcpm_modem_close(); }
 unsigned char device_status(void) { return rcpm_modem_status(); }
@@ -34,6 +38,9 @@ unsigned char device_read(void) { return rcpm_modem_read(); }
 void device_write(unsigned char c) { rcpm_modem_write(c); }
 void device_control(unsigned char c) { rcpm_modem_control(c); }
 unsigned char device_control_read(void) { return rcpm_modem_control_read(); }
+void device_clock_set(uint64_t now) { test_now = now; }
+void device_idle_reset(void) { rcpm_idle_reset(0); }
+unsigned char device_idle_read(void) { return rcpm_idle_read(); }
 ''')
         library = root / 'device.so'
         subprocess.run(['cc', '-std=c99', '-D_DEFAULT_SOURCE', '-Wall', '-Wextra', '-Werror',
@@ -43,9 +50,12 @@ unsigned char device_control_read(void) { return rcpm_modem_control_read(); }
             getattr(cls.dev, name).restype = ctypes.c_ubyte
         cls.dev.device_write.argtypes = [ctypes.c_ubyte]
         cls.dev.device_control.argtypes = [ctypes.c_ubyte]
+        cls.dev.device_clock_set.argtypes = [ctypes.c_uint64]
+        cls.dev.device_idle_read.restype = ctypes.c_ubyte
 
     def setUp(self):
         self.dev.device_close()
+        self.dev.device_clock_set(0)
         env = {k: v for k, v in os.environ.items() if not k.startswith('RCPM_MODEM')}
         self.env = patch.dict(os.environ, env, clear=True)
         self.env.start()
@@ -98,6 +108,35 @@ unsigned char device_control_read(void) { return rcpm_modem_control_read(); }
         self.assertEqual(self.dev.device_init(), 0)
         self.assertEqual(self.dev.device_status(), 0)
         self.assertEqual(self.dev.device_read(), 0)
+
+    def test_idle_minutes_are_monotonic_latched_and_resettable(self):
+        self.start('direct', free_port())
+        minute = 60 * 1000**3
+        self.dev.device_clock_set(17 * minute)
+        self.dev.device_idle_reset()
+        self.dev.device_clock_set(18 * minute - 1)
+        self.assertEqual([self.dev.device_idle_read(), self.dev.device_idle_read()], [0, 0])
+        self.dev.device_clock_set(18 * minute)
+        self.assertEqual([self.dev.device_idle_read(), self.dev.device_idle_read()], [1, 0])
+        self.dev.device_clock_set((17 + 255) * minute)
+        self.assertEqual(self.dev.device_idle_read(), 255)
+        self.dev.device_clock_set((17 + 256) * minute)
+        self.assertEqual(self.dev.device_idle_read(), 0)  # high byte from the latched 255
+        self.assertEqual([self.dev.device_idle_read(), self.dev.device_idle_read()], [0, 1])
+        self.dev.device_idle_reset()
+        self.assertEqual([self.dev.device_idle_read(), self.dev.device_idle_read()], [0, 0])
+        self.dev.device_clock_set((17 + 256 + 70000) * minute)
+        self.assertEqual([self.dev.device_idle_read(), self.dev.device_idle_read()], [255, 255])
+
+    def test_idle_polls_do_not_advance_clock_or_wait(self):
+        self.start('direct', free_port())
+        self.dev.device_idle_reset()
+        start = time.monotonic()
+        for _ in range(10000):
+            self.assertEqual(self.dev.device_idle_read(), 0)
+        self.assertLess(time.monotonic() - start, .5)
+        self.dev.device_clock_set(60 * 1000**3)
+        self.assertEqual([self.dev.device_idle_read(), self.dev.device_idle_read()], [1, 0])
 
     def test_direct_bytes_busy_hangup_and_reconnect(self):
         port = free_port()

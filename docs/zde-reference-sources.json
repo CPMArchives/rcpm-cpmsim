@@ -1,0 +1,27 @@
+[
+  {
+    "path": "zde16.com",
+    "url": "https://www.dflund.se/~pi/cpm/files/ftp.mayn.de/pub/cpm/archive/zsystem/zde16/zde16.com",
+    "sha256": "973de121dc278c62f1c68779bed67911b09277746b9a5f9a9526678bf93101f0"
+  },
+  {
+    "path": "zdenst16.com",
+    "url": "https://www.dflund.se/~pi/cpm/files/ftp.mayn.de/pub/cpm/archive/zsystem/zde16/zdenst16.com",
+    "sha256": "e34f7a7f027fa486c1ad2160571e722f5f5f3629a5feef5f6f872472e9e54e78"
+  },
+  {
+    "path": "zde16.for.txt",
+    "url": "https://www.dflund.se/~pi/cpm/files/ftp.mayn.de/pub/cpm/archive/zsystem/zde16/zde16.for.txt",
+    "sha256": "b372b405bbe5df2f1ffbc7080fcfa655593cfb190477ce0016f469a792ddf82e"
+  },
+  {
+    "path": "zde16.new.txt",
+    "url": "https://www.dflund.se/~pi/cpm/files/ftp.mayn.de/pub/cpm/archive/zsystem/zde16/zde16.new.txt",
+    "sha256": "c34896bf34bda717f5d2019203c6dd61597a6a8662d5679c1860189d90aed174"
+  },
+  {
+    "path": "zde16.lbr",
+    "url": "https://www.dflund.se/~pi/cpm/files/ftp.mayn.de/pub/cpm/archive/zsystem/zde16.lbr",
+    "sha256": "150ce82102eb623be9ce7c4d5271b22d12f15f6c9f47afed58bab4e8e7a95341"
+  }
+]

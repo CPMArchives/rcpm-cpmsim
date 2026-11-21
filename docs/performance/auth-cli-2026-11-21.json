@@ -1,0 +1,29 @@
+{
+  "cli": {
+    "queries_and_permission_spellings": true,
+    "effective_file_status": true,
+    "named_policy_save_load": true,
+    "no_prompt_overwrite_guard": true,
+    "overwrite_backup": true,
+    "invalid_load_preserves_live_map": true,
+    "interactive_names_and_cancel": true,
+    "startup_filename_unchanged": true
+  },
+  "core": {
+    "caller_writes_denied_A_J_P": true,
+    "caller_WORK_writes_allowed": true,
+    "F4_only_approval_all_drives": true,
+    "private_J_P_writes_allowed": true,
+    "live_grant_revoke": true,
+    "DU_overrides_drive": true,
+    "inheritance": true,
+    "writable_DU_non_executable": true,
+    "save_reload": true,
+    "RBBS_scoped_private_data": true,
+    "restart_persistence": true
+  },
+  "archive": "build/release-auth-cli-final/rcpm-macos-arm64-candidate.zip",
+  "sha256": "6ded4813520c69fe39fb3244d58ebf3a12590b79ffeff00f3a4a68d23f420142",
+  "bytes": 44783100,
+  "scope": "AUTH.COM, documentation, and test harness updates; BYE and emulator binaries unchanged; existing operator installation untouched."
+}

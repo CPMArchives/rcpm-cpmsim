@@ -1,0 +1,11 @@
+;
+ENDING A CALL
+
+Type BYE at the CP/M prompt to log off normally.
+Exit an active game or the bulletin board before typing BYE.
+Files in I0:WORK are cleared when the call ends.
+The bulletin board's persistent account and messages are retained.
+
+Type MESSAGE at the CP/M prompt to leave a message for the sysop.
+Follow its prompts; this is separate from messages posted in RBBS.
+Your terminal client's disconnect operation also ends the connection.

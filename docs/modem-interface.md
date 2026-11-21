@@ -15,7 +15,8 @@ the unresolved privileged-takeover boundary.
 The device is additive. Existing console, serial and archive ports retain
 their handlers. Upload/message/YMODEM service ports retain their command
 contract; their binary transfer I/O now follows the selected modem transport.
-Decimal ports 70-72 are the modem device; 73 resets session-only service state.
+Decimal ports 70-72 are the modem device; 73 resets session-only service state;
+74 provides the nonblocking inactivity stopwatch.
 The build rejects conflicts with these ports.
 
 The environment selects one backend before emulator startup:
@@ -51,6 +52,20 @@ All port numbers below are decimal. Bits not listed read zero.
 | 72 (`48h`) | IN | Last persistent control value, bits 0/1 only. |
 | 72 (`48h`) | OUT | Set DTR/answer flags; optional direct hangup pulse. |
 | 73 (`49h`) | OUT | Discard unsaved service state and prepared transfer handles; committed inbox files remain. |
+| 74 (`4Ah`) | OUT | Any value resets the inactivity stopwatch and its read phase. |
+| 74 (`4Ah`) | IN | Paired reads return elapsed whole monotonic minutes, low byte then high byte. The first read latches both bytes. |
+
+The stopwatch never waits for input or emulated CPU cycles. It saturates at
+65535 minutes, returns zero while disabled/unarmed, and disarms on disconnect.
+BYE resets it on initialization, input requests, ready input and output,
+preserving its activity semantics. Existing minute-warning and timeout exits
+remain in BYE. A zero timeout retains the legacy 256-minute interpretation.
+Deliberate modem initialization delays are unchanged; 4 MHz remains the default.
+
+Timer-enabled drivers require the matching emulator. Builds emit
+`cpmsim.features.json` with the timer port and executable SHA-256; trial creation,
+release creation and BYE upgrades validate that pair. The updater installs and
+backs up both the runtime and boot disk while holding the console lock.
 
 | Status bit | Meaning |
 | --- | --- |

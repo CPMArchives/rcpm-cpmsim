@@ -1,0 +1,32 @@
+{
+  "archive": "build/release-1.0-stabilization/rcpm-macos-arm64-candidate.zip",
+  "relocated_with_spaces": true,
+  "minimal_system_path": true,
+  "common_and_host_hashes": true,
+  "shipped_disks": [
+    "A",
+    "I",
+    "P"
+  ],
+  "default_port": 4000,
+  "tested_port": 4000,
+  "shipped_caller_help_topics": 9,
+  "direct_boot": true,
+  "caller_login": true,
+  "archive_named_directories": true,
+  "both_public_volumes": true,
+  "documentation_read": true,
+  "rbbs_entry": true,
+  "first_start_private_credentials": true,
+  "duplicate_guest_refused": true,
+  "orderly_shutdown": true,
+  "no_python_tmux_or_homebrew_required": true,
+  "generated_passwords_match_guest_record": true,
+  "ip232_driver_switch": true,
+  "real_tcpser_caller_login": true,
+  "credentials_preserved_on_restart": true,
+  "switch_back_to_direct": true,
+  "public_redistribution": "not cleared; retained notices identify unresolved restrictions",
+  "archive_sha256": "45b735470dc998f2200eaecaaf6073ce7b76af5d4a2babc12c6378764b59f485",
+  "execution": "operator Terminal, 21 November 2026"
+}

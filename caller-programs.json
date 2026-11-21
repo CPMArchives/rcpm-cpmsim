@@ -1,0 +1,9 @@
+{
+  "drive": "A",
+  "user": 0,
+  "programs": [
+    "BYE.COM", "CLS.COM", "DIR.COM", "HELP.COM", "TYPE.COM",
+    "MOUNT.COM", "UPLOAD.COM", "MESSAGE.COM", "YSEND.COM", "RBBS.COM",
+    "LDIR.COM", "LT.COM", "SDZ.COM"
+  ]
+}

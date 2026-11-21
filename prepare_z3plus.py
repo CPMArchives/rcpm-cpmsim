@@ -6,11 +6,43 @@ from pathlib import Path
 import shutil
 import subprocess
 import tempfile
+import hashlib
+import re
 
 
-def configure_library(source, archive_names=("ARCHIVE",)):
+def configure_library(source, archive_names=("ARCHIVE",), extra_directories=()):
     library = bytearray(source.read_bytes())
     directory_length = int.from_bytes(library[14:16], "little") * 128
+    for cpr_record in range(32, directory_length, 32):
+        if library[cpr_record:cpr_record + 12] == b'\x00DEFCP3  ZRL':
+            break
+    else:
+        raise ValueError('Z3PLUS.LBR has no DEFCP3.ZRL member')
+    cpr_start = int.from_bytes(library[cpr_record + 12:cpr_record + 14], 'little') * 128
+    cpr_size = int.from_bytes(library[cpr_record + 14:cpr_record + 16], 'little') * 128
+    cpr = library[cpr_start:cpr_start + cpr_size]
+    if hashlib.sha256(cpr).hexdigest() != '8e7887432ccd2fc422dbe3502cf46f21bdcc25bd74d79bf359e6212801e7cc06':
+        raise ValueError('Unsupported command processor; recheck GET/GO/JUMP wheel protection')
+    # In this supplied RCP the high bit of a command's first character
+    # requires wheel privileges. WHL must not elevate a caller using the
+    # distribution's published default password. BYE owns local elevation.
+    for record in range(32, directory_length, 32):
+        if library[record:record + 12] == b'\x00DEFRCP  ZRL':
+            break
+    else:
+        raise ValueError('Z3PLUS.LBR has no DEFRCP.ZRL member')
+    rcp_start = int.from_bytes(library[record + 12:record + 14], 'little') * 128
+    rcp_size = int.from_bytes(library[record + 14:record + 16], 'little') * 128
+    rcp = library[rcp_start:rcp_start + rcp_size]
+    if hashlib.sha256(rcp).hexdigest() != '3c23bc048b8933935bd2ef148928de3b7e2895542ee19bf6a643cc867ed728c0':
+        raise ValueError('Unsupported DEFRCP.ZRL revision for local-only WHL configuration')
+    token = b'\x03WHL \x81\xb8\x08'
+    if len(rcp) != rcp_size or rcp.count(token) != 1:
+        raise ValueError('Unrecognized RCP wheel-command table; refusing an unprotected build')
+    # Exact table context identifies the command entry, not help/password text.
+    rcp[rcp.index(token) + 1] |= 0x80
+    library[rcp_start:rcp_start + rcp_size] = rcp
+    library[record + 16:record + 18] = crc_hqx(rcp, 0).to_bytes(2, 'little')
     for entry in range(32, directory_length, 32):
         if library[entry:entry + 12] == b"\x00DEFAULT NDR":
             break
@@ -22,13 +54,32 @@ def configure_library(source, archive_names=("ARCHIVE",)):
         raise ValueError("Unexpected DEFAULT.NDR layout")
     names = bytearray()
     directories = [(1, 0, "SYSTEM"), (9, 0, "WORK"), (10, 0, "VOLUME")]
+    directories.extend(extra_directories)
     directories.extend((16, user, name) for user, name in enumerate(archive_names))
+    for config_record in range(32, directory_length, 32):
+        if library[config_record:config_record + 12] == b'\x00DEFAULT Z3P':
+            config_offset = int.from_bytes(library[config_record + 12:config_record + 14], 'little') * 128
+            config_size = int.from_bytes(library[config_record + 14:config_record + 16], 'little') * 128
+            descriptor = library[config_offset:config_offset + config_size].decode('ascii')
+            capacity = re.search(r'(?m)^Z3NDIRS\s*=\s*(\d+)\s*;', descriptor)
+            break
+    else:
+        raise ValueError('Missing DEFAULT.Z3P named-directory allocation')
+    if not capacity or len(directories) > int(capacity[1]):
+        raise ValueError('Names exceed the configured Z3PLUS NDR memory allocation')
     for drive, user, name in directories:
-        if not 1 <= len(name) <= 8 or not name.isascii() or not name.isalnum():
-            raise ValueError("Directory names must be 1 to 8 ASCII letters or digits")
+        if not 1 <= len(name) <= 7 or not name.isascii() or not name.isalnum():
+            raise ValueError("Directory names must be 1 to 7 ASCII letters or digits")
         names.extend(bytes((drive, user)) + name.upper().encode().ljust(8) + b" " * 8)
     if len(names) > size:
-        raise ValueError("Named directories exceed the DEFAULT.NDR member capacity")
+        # Allocate whole records at EOF without moving any other member.
+        # DEFAULT.Z3P already reserves 14 entries (256 bytes). Never exceed
+        # that allocation merely by growing the file loaded into it.
+        size = ((len(names) + 127) // 128) * 128
+        offset = ((len(library) + 127) // 128) * 128
+        library.extend(b'\0' * (offset + size - len(library)))
+        library[entry + 12:entry + 14] = (offset // 128).to_bytes(2, 'little')
+        library[entry + 14:entry + 16] = (size // 128).to_bytes(2, 'little')
     library[offset:offset + size] = names.ljust(size, b"\0")
     library[entry + 16:entry + 18] = crc_hqx(library[offset:offset + size], 0).to_bytes(2, "little")
     library[16:18] = b"\0\0"

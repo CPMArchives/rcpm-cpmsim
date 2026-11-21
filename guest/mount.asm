@@ -91,8 +91,6 @@ REQUEST:
 	LD	E,JDRIVE
 	LD	C,14
 	CALL	BDOS
-	LD	C,28
-	CALL	BDOS
 	POP	AF
 	LD	E,A
 	LD	C,14
@@ -109,5 +107,5 @@ PRINT:	LD	C,9
 USEMSG:	DB	'Usage: MOUNT /L or MOUNT name (1-8 letters, digits, or underscores)',13,10,'$'
 LISTERR:	DB	'Mount catalog unavailable. Update the cpmsim mount patch.',13,10,'$'
 FAILMSG:	DB	'Volume unavailable. J: unchanged.',13,10,'$'
-OKMSG:	DB	'Volume mounted read-only on J:.',13,10,'$'
+OKMSG:	DB	'Volume mounted on J:.',13,10,'$'
 	END
