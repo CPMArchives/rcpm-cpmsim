@@ -1,0 +1,13 @@
+Microsoft BASIC Compiler 5.3 (CP/M), July 1981 manual: Royalty Information.
+https://www.scribd.com/document/859988938/03-BASIC-Compiler-User-s-Manual
+
+Standalone applications linked with the runtime libraries may be distributed
+royalty-free with this media notice:
+PORTIONS COPYRIGHTED BY MICROSOFT, 1981
+
+The separate runtime module requires a distribution license. The compiler,
+interpreter and raw libraries are not included in this download.
+
+Hammurabi uses BASCOM /O and OBSLIB.REL, statically linked into HAMURABI.COM;
+it needs no BRUN.COM. The notice appears at startup and in COPYRIGHT.TXT.
+The original game's credits and rights remain applicable.

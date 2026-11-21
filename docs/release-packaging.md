@@ -22,7 +22,7 @@ qualified. Download quarantine/signing/notarization needs host release validatio
 - GAMES contains compiled games, required runtime data and playing instructions.
   Source-only and unqualified sets, old catalogs and MCHORIG.COM are excluded;
   the original archives remain on P:. The optional expanded GAMES download
-  adds eleven qualified games and does not enlarge the base packaging inputs.
+  adds eighteen qualified games and does not enlarge the base packaging inputs.
 - GUIDES contains documentation only. A public development toolbox was rejected;
   compilers/interpreters/loaders remain private sysop tools or offline media.
 - Both BYEDRIV variants ship under drivers/. Direct raw TCP is default on
