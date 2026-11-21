@@ -10,6 +10,7 @@ from pathlib import Path
 import hashlib
 import json
 import os
+import re
 import shutil
 import subprocess
 import sys
@@ -17,6 +18,9 @@ import tempfile
 
 base, collection, tools, output = (Path(s).resolve() for s in sys.argv[1:])
 manifest = json.loads((collection / 'manifest.json').read_text())
+for row in manifest['payload']:
+    if not re.fullmatch(r'[A-Z0-9_-]{1,8}(?:\.[A-Z0-9]{1,3})?', row['file']):
+        raise ValueError('Invalid CP/M 8.3 payload name: ' + row['file'])
 def sha(path):
     return hashlib.sha256(path.read_bytes()).hexdigest()
 assert sha(base) == manifest['base_sha256'], 'Unexpected base image'

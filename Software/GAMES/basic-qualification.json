@@ -1,0 +1,277 @@
+{
+  "ACEYDUCY": {
+    "cpu_mhz": 4,
+    "transport": "direct",
+    "native_user": 4,
+    "launcher_user": 0,
+    "gameplay_input": true,
+    "exit_to_WORK": true,
+    "carrier_recovery": true,
+    "qualified": true
+  },
+  "BAGELS": {
+    "cpu_mhz": 4,
+    "transport": "direct",
+    "native_user": 4,
+    "launcher_user": 0,
+    "gameplay_input": true,
+    "exit_to_WORK": true,
+    "carrier_recovery": true,
+    "qualified": true
+  },
+  "BATNUM": {
+    "cpu_mhz": 4,
+    "transport": "direct",
+    "native_user": 4,
+    "launcher_user": 0,
+    "gameplay_input": true,
+    "exit_to_WORK": true,
+    "carrier_recovery": true,
+    "qualified": true
+  },
+  "BATTLE": {
+    "cpu_mhz": 4,
+    "transport": "direct",
+    "native_user": 4,
+    "launcher_user": 0,
+    "gameplay_input": true,
+    "exit_to_WORK": true,
+    "carrier_recovery": true,
+    "qualified": true
+  },
+  "BLACKJCK": {
+    "cpu_mhz": 4,
+    "transport": "direct",
+    "native_user": 4,
+    "launcher_user": 0,
+    "gameplay_input": true,
+    "exit_to_WORK": true,
+    "carrier_recovery": true,
+    "qualified": true
+  },
+  "BOMBARD": {
+    "cpu_mhz": 4,
+    "transport": "direct",
+    "native_user": 4,
+    "launcher_user": 0,
+    "gameplay_input": true,
+    "exit_to_WORK": true,
+    "carrier_recovery": true,
+    "qualified": true
+  },
+  "BOMBSAWY": {
+    "cpu_mhz": 4,
+    "transport": "direct",
+    "native_user": 4,
+    "launcher_user": 0,
+    "gameplay_input": true,
+    "exit_to_WORK": true,
+    "carrier_recovery": true,
+    "qualified": true
+  },
+  "BOWLING": {
+    "cpu_mhz": 4,
+    "transport": "direct",
+    "native_user": 4,
+    "launcher_user": 0,
+    "gameplay_input": true,
+    "exit_to_WORK": true,
+    "carrier_recovery": true,
+    "qualified": true
+  },
+  "BOXING": {
+    "cpu_mhz": 4,
+    "transport": "direct",
+    "native_user": 4,
+    "launcher_user": 0,
+    "gameplay_input": true,
+    "exit_to_WORK": true,
+    "carrier_recovery": true,
+    "qualified": true
+  },
+  "BULLSEYE": {
+    "cpu_mhz": 4,
+    "transport": "direct",
+    "native_user": 4,
+    "launcher_user": 0,
+    "gameplay_input": true,
+    "exit_to_WORK": true,
+    "carrier_recovery": true,
+    "qualified": true
+  },
+  "CHOMP": {
+    "cpu_mhz": 4,
+    "transport": "direct",
+    "native_user": 4,
+    "launcher_user": 0,
+    "gameplay_input": true,
+    "exit_to_WORK": true,
+    "carrier_recovery": true,
+    "qualified": true
+  },
+  "CIVILWAR": {
+    "cpu_mhz": 4,
+    "transport": "direct",
+    "native_user": 4,
+    "launcher_user": 0,
+    "gameplay_input": true,
+    "exit_to_WORK": true,
+    "carrier_recovery": true,
+    "qualified": true
+  },
+  "COMBAT": {
+    "cpu_mhz": 4,
+    "transport": "direct",
+    "native_user": 4,
+    "launcher_user": 0,
+    "gameplay_input": true,
+    "exit_to_WORK": true,
+    "carrier_recovery": true,
+    "qualified": true
+  },
+  "CRAPS": {
+    "cpu_mhz": 4,
+    "transport": "direct",
+    "native_user": 4,
+    "launcher_user": 0,
+    "gameplay_input": true,
+    "exit_to_WORK": true,
+    "carrier_recovery": true,
+    "qualified": true
+  },
+  "CUBE": {
+    "cpu_mhz": 4,
+    "transport": "direct",
+    "native_user": 4,
+    "launcher_user": 0,
+    "gameplay_input": true,
+    "exit_to_WORK": true,
+    "carrier_recovery": true,
+    "qualified": true
+  },
+  "DEPTHCHG": {
+    "cpu_mhz": 4,
+    "transport": "direct",
+    "native_user": 4,
+    "launcher_user": 0,
+    "gameplay_input": true,
+    "exit_to_WORK": true,
+    "carrier_recovery": true,
+    "qualified": true
+  },
+  "DIAMOND": {
+    "cpu_mhz": 4,
+    "transport": "direct",
+    "native_user": 4,
+    "launcher_user": 0,
+    "gameplay_input": true,
+    "exit_to_WORK": true,
+    "carrier_recovery": true,
+    "qualified": true
+  },
+  "DICE": {
+    "cpu_mhz": 4,
+    "transport": "direct",
+    "native_user": 4,
+    "launcher_user": 0,
+    "gameplay_input": true,
+    "exit_to_WORK": true,
+    "carrier_recovery": true,
+    "qualified": true
+  },
+  "FURTRADR": {
+    "cpu_mhz": 4,
+    "transport": "direct",
+    "native_user": 4,
+    "launcher_user": 0,
+    "gameplay_input": true,
+    "exit_to_WORK": true,
+    "carrier_recovery": true,
+    "qualified": true
+  },
+  "GOMOKO": {
+    "cpu_mhz": 4,
+    "transport": "direct",
+    "native_user": 4,
+    "launcher_user": 0,
+    "gameplay_input": true,
+    "exit_to_WORK": true,
+    "carrier_recovery": true,
+    "qualified": true
+  },
+  "GUESS": {
+    "cpu_mhz": 4,
+    "transport": "direct",
+    "native_user": 4,
+    "launcher_user": 0,
+    "gameplay_input": true,
+    "exit_to_WORK": true,
+    "carrier_recovery": true,
+    "qualified": true
+  },
+  "GUNNER": {
+    "cpu_mhz": 4,
+    "transport": "direct",
+    "native_user": 4,
+    "launcher_user": 0,
+    "gameplay_input": true,
+    "exit_to_WORK": true,
+    "carrier_recovery": true,
+    "qualified": true
+  },
+  "HILO": {
+    "cpu_mhz": 4,
+    "transport": "direct",
+    "native_user": 4,
+    "launcher_user": 0,
+    "gameplay_input": true,
+    "exit_to_WORK": true,
+    "carrier_recovery": true,
+    "qualified": true
+  },
+  "HURKLE": {
+    "cpu_mhz": 4,
+    "transport": "direct",
+    "native_user": 4,
+    "launcher_user": 0,
+    "gameplay_input": true,
+    "exit_to_WORK": true,
+    "carrier_recovery": true,
+    "qualified": true
+  },
+  "MUGWUMP": {
+    "cpu_mhz": 4,
+    "transport": "direct",
+    "native_user": 4,
+    "launcher_user": 0,
+    "gameplay_input": true,
+    "exit_to_WORK": true,
+    "carrier_recovery": true,
+    "qualified": true
+  },
+  "NIM": {
+    "cpu_mhz": 4,
+    "transport": "direct",
+    "native_user": 4,
+    "launcher_user": 0,
+    "gameplay_input": true,
+    "exit_to_WORK": true,
+    "carrier_recovery": true,
+    "qualified": true
+  },
+  "ROCKSP": {
+    "cpu_mhz": 4,
+    "transport": "direct",
+    "native_user": 4,
+    "launcher_user": 0,
+    "gameplay_input": true,
+    "exit_to_WORK": true,
+    "carrier_recovery": true,
+    "qualified": true
+  },
+  "_master_unchanged": true,
+  "_harness_corrections": {
+    "CIVILWAR": "N skips descriptions and seed question",
+    "FURTRADR": "End-of-trade prompt says WANT, not WISH"
+  }
+}
