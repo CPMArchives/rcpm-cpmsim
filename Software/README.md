@@ -9,13 +9,14 @@ the [main RCP/M download](https://github.com/CPMArchives/rcpm-cpmsim/releases/ta
 | Disk | Contents | Download | Test report |
 | --- | --- | --- | --- |
 | **GAMES expanded** | 76 tested titles; shared areas, J0 launchers | [GAMES-expanded.zip](https://github.com/CPMArchives/rcpm-cpmsim/releases/download/software-games-2026-11-22/GAMES-expanded.zip) | [Results and exclusions](GAMES/README.md) |
+| **SCOTT** | 12 Scott Adams adventures and sampler; original CP/M interpreter, user 0 | [SCOTT-collection.zip](https://github.com/CPMArchives/rcpm-cpmsim/releases/download/software-scott-2026-11-22/SCOTT-collection.zip) | [Results and controls](SCOTT/README.md) |
 | **INFOCOM** | 27 Infocom games and five InvisiClues hint books; user 0 | [INFOCOM-collection.zip](https://github.com/CPMArchives/rcpm-cpmsim/releases/download/software-2026-11-21/INFOCOM-collection.zip) | [Results and exclusions](https://github.com/CPMArchives/rcpm-cpmsim/releases/download/software-2026-11-21/INFOCOM-REPORT.txt) |
 | **MODERNIF** | 11 selected IFComp games: nine v5 and two v8; user 0 | [MODERNIF-collection.zip](https://github.com/CPMArchives/rcpm-cpmsim/releases/download/software-2026-11-21/MODERNIF-collection.zip) | [Results and exclusions](https://github.com/CPMArchives/rcpm-cpmsim/releases/download/software-2026-11-21/MODERNIF-REPORT.txt) |
 
 The [expanded GAMES guide](GAMES/README.md) explains its replacement-image installation and limits.
 
-Each IF collection ZIP contains one `volumes/*.dsk` image, its file manifest, usage notes,
-validation results and the interpreter's accompanying license. MODERNIF also
+Each collection ZIP contains one `volumes/*.dsk` image, its file manifest, usage notes,
+validation results and accompanying component notices. MODERNIF also
 includes Gosling's original distribution with its host-side map and hints.
 
 [Software release](https://github.com/CPMArchives/rcpm-cpmsim/releases/tag/software-2026-11-21) ·
@@ -31,6 +32,16 @@ Requires RCP/M 1.0 or later with the existing J: disk geometry.
 3. Copy its `.dsk` file into your installation's `volumes/` folder. Keep the
    other volumes already in that folder.
 4. Restart RCP/M. At `A0:SYSTEM>` enter `MOUNT /L` to see the available disks.
+
+For SCOTT:
+
+```text
+MOUNT SCOTT
+J0:SCOTT
+```
+
+Use a plain player name; SCOTT automatically saves in WORK. Its game menu
+and save conventions are described in the [SCOTT guide](SCOTT/README.md).
 
 For INFOCOM:
 
@@ -52,7 +63,7 @@ Substitute a filename from the disk's `README.TXT` or `INFOCOM.TXT`. These
 collections use **user 0**. Vezza takes a drive-qualified story name such as
 `J:ZORK1.DAT`; its story argument does not accept `J0:ZORK1.DAT`.
 
-At a save/restore filename prompt, use **`I:NAME.SAV`** for temporary WORK.
+For INFOCOM and MODERNIF, at a save/restore filename prompt, use **`I:NAME.SAV`** for temporary WORK.
 WORK is cleared when the call ends, so download a save before logging off if
 you want to keep it. Persistent per-caller storage has not been added.
 
