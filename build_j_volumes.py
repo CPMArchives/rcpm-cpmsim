@@ -7,8 +7,9 @@ from pathlib import Path
 import subprocess
 import tempfile
 
-# Each game or source set gets its own user area so original names do not
-# collide. No source from superseded SIGMV001 is installed on GAMES.
+# Retain the existing collection slots without renaming historical members.
+# Future games should share category/runtime areas when filenames permit;
+# a new game does not require a new user area. SIGMV001 remains excluded.
 GAME_SETS = (
     (1, 11, None, 'Expanded Adventure: compiled game and runtime data'),
     (8, 134, ('ANIMALS.COM', 'ANIMALS.PAS', 'BEASTS.QQQ', 'BEASTS.QQX',
@@ -67,8 +68,9 @@ def unpack(data, source, depth=0):
             yield target, content, origin
 
 
-def install_member(tools, image, work, user, name, content):
-    content += b'\x1a' * (-len(content) % 128)
+def install_member(tools, image, work, user, name, content, pad=True):
+    if pad:
+        content += b'\x1a' * (-len(content) % 128)
     path = work / 'member.bin'
     path.write_bytes(content)
     subprocess.run([str(tools / 'cpmcp'), '-f', 'z80pack-hd', str(image),
@@ -82,7 +84,7 @@ def install_member(tools, image, work, user, name, content):
     return content
 
 
-def build(sigm, tools, output, terminal_patch=None):
+def build(sigm, tools, output, terminal_patch=None, launcher_dir=None):
     output.mkdir(parents=True, exist_ok=False)
     rows = []
     image = output / 'GAMES.dsk'
@@ -90,7 +92,7 @@ def build(sigm, tools, output, terminal_patch=None):
     with image.open('r+b') as stream:
         stream.truncate(255 * 128 * 128)
     text = ['RCP/M GAMES - unpacked games and supporting material', '',
-            'J0: contains this guide. Each set uses a separate user area.',
+            'J0: contains the guide and launchers; game files use J1: and above.',
             'No LBR extraction is required, including nested Osborne libraries.',
             'SIGMV001 is omitted. SIGMV152 was not a game and is omitted.', '',
             'Compiled games:',
@@ -99,7 +101,7 @@ def build(sigm, tools, output, terminal_patch=None):
             'J3:MCHASE.COM  Maze Chase; read MCHASE.DOC for terminal installation.', '',
             'Inspect a set: DIR J1:       Read its notes: LT J1:ABSTRACT.011',
             'Download a file: YSEND J1:ADV.COM', '',
-            'After MOUNT GAMES, use ADVENT, ANIMALS or MCHASE at the CP/M prompt.',
+            'After MOUNT GAMES, use J0:ADVENT, J0:ANIMALS or J0:MCHASE.',
             'The fixed launchers copy seed data to WORK and run approved J: code.',
             'Saves/high scores in WORK last for this call only.',
             'WORK remains non-executable. Other programs require sysop approval.',
@@ -156,6 +158,20 @@ def build(sigm, tools, output, terminal_patch=None):
             data = install_member(tools, image, work, 3, 'ANSI.TXT', note)
             rows.append(dict(volume='GAMES', user=3, file='ANSI.TXT',
                              sha256=hashlib.sha256(data).hexdigest(), description='Terminal adaptation notes'))
+        if launcher_dir is not None:
+            for name in ('ADVENT', 'ANIMALS', 'MCHASE'):
+                data = install_member(tools, image, work, 0, name + '.COM',
+                                      (launcher_dir / (name + '.COM')).read_bytes(), pad=False)
+                subprocess.run([str(tools / 'cpmchattr'), '-f', 'z80pack-hd',
+                                str(image), 'r4', '0:' + name + '.COM'], check=True)
+                rows.append(dict(volume='GAMES', user=0, file=name + '.COM',
+                                 sha256=hashlib.sha256(data).hexdigest(),
+                                 description='WORK-data preparation launcher; no A0 copy'))
+        else:
+            text[2] = 'J0: contains this guide; game files use J1: and above.'
+            text = [line for line in text if not line.startswith(
+                    ('After MOUNT GAMES, use ', 'The fixed launchers copy '))]
+            text.append('Online preparation launchers are not included in this standalone build.')
         document = ('\r\n'.join(text) + '\r\n\x1a').encode('ascii')
         for name, data in (('README.TXT', document), ('-GAMES', b'\x1a')):
             data = install_member(tools, image, work, 0, name, data)
@@ -181,7 +197,7 @@ def build(sigm, tools, output, terminal_patch=None):
              "GAMES is a separate themed volume: MOUNT GAMES.\r\n"
              "Caller programs load from protected A0:, including when WORK is current.\r\n"
              "Additional protected-media programs require sysop F4 approval in a caller-read-only DU.\r\n"
-             "WORK remains non-executable. MOUNT GAMES then ADVENT, ANIMALS or MCHASE.\r\n\x1a").encode('ascii')
+             "WORK remains non-executable. MOUNT GAMES then J0:ADVENT, J0:ANIMALS or J0:MCHASE.\r\n\x1a").encode('ascii')
     documents = {'README.TXT': guide, '-GUIDES': b'\x1a',
                  'COMMANDS.TXT': (repo / 'guest/welcome.txt').read_bytes(),
                  'DIR.TXT': (repo / 'build/ztools/sd137/sd.doc.txt').read_bytes(),
@@ -208,6 +224,8 @@ if __name__ == '__main__':
     p.add_argument('--sigm', type=Path, required=True)
     p.add_argument('--tools', type=Path, default=Path('build/cpmtools/bin'))
     p.add_argument('--output', type=Path, required=True)
+    p.add_argument('--launchers', type=Path, help='Built game-launcher directory for J0:')
     args = p.parse_args()
-    rows = build(args.sigm.resolve(), args.tools.resolve(), args.output.resolve())
+    rows = build(args.sigm.resolve(), args.tools.resolve(), args.output.resolve(),
+                 launcher_dir=args.launchers.resolve() if args.launchers else None)
     print('Built GAMES and GUIDES:', len(rows), 'verified files')

@@ -1,0 +1,15 @@
+{
+  "cpu_mhz": 4,
+  "transport": "direct",
+  "no_system_game_launchers": true,
+  "final_ladder_menu_exit_seed_prepared": true,
+  "carrier_loss_during_rogue": true,
+  "fresh_caller_recovered": true,
+  "work_cleaned": true,
+  "private_tools_denied": true,
+  "master_unchanged_after_calls": true,
+  "verified_added_or_replaced_approved_files": 25,
+  "launchers": 14,
+  "new_native_games": 11,
+  "existing_native_games": 3
+}

@@ -18,6 +18,7 @@ qualified. Download quarantine/signing/notarization needs host release validatio
   against the preserved SHA256 list before the archive image is packaged.
 - No J: image is shipped under disks/. The native launcher creates an empty J:
   on first start. `MOUNT GAMES` / `MOUNT GUIDES` select public read-only volumes.
+- GAMES user 0 holds its game-data preparation launchers; A0 has no game-specific wrappers.
 - GAMES holds unpacked compiled games and supporting/source sets in separate
   user areas; nested game libraries are unpacked too. Original catalogs/notices
   are retained. SIGMV001 and the non-game SIGMV152 are omitted from GAMES.
