@@ -82,8 +82,11 @@ another computer.
 ## Run it your way
 
 RCP/M supports **one caller at a time**, alongside the local sysop console.
-It uses CP/M 3, Z3PLUS and BYE510 on Udo Munk’s z80pack emulator, with tools for
-archive browsing, file transfers and system administration.
+It uses [CP/M 3](https://www.cpm.z80.de/source.html),
+[Z3PLUS](https://www.gaby.de/edownf.htm) and
+[BYE510](https://dflund.se/~pi/cpm/files/ftp.mayn.de/pub/cpm/archive/bye5/bye510/)
+on [Udo Munk’s z80pack emulator](https://github.com/udo-munk/z80pack), with tools
+for archive browsing, file transfers and system administration.
 
 The release includes `INSTALLATION.DOC` and `SYSOP-GUIDE.DOC`. For technical
 details, source builds, the roadmap and the project’s development history,
