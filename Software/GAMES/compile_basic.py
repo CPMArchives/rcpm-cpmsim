@@ -24,7 +24,7 @@ from build_bye5 import wait_prompt
 from check_modem_runtime import stop
 
 
-def normalize(data):
+def normalize(data, console_printer=False):
     lines = []
     for line in data.split(b'\x1a')[0].decode('ascii').splitlines():
         if not line.strip():
@@ -39,6 +39,8 @@ def normalize(data):
     source = re.sub(r'(?i)\bPRINT\s+CHR\$\(26\)',
                     'PRINT CHR$(27);"[2J";CHR$(27);"[H"', source)
     source = re.sub(r'(?i)\bRUN\s+"MENU"', 'END', source)
+    if console_printer:
+        source = re.sub(r'(?i)\bLPRINT\b', 'PRINT', source)
     # Keep every original line number, including existing line zero.
     number, separator, body = source.partition(' ')
     source = number + ' PRINT "PORTIONS COPYRIGHTED BY MICROSOFT, 1981":' + body
@@ -49,6 +51,8 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     for name in ('archive', 'compiler', 'tools', 'cpmsim', 'boot', 'output'):
         parser.add_argument('--' + name, type=Path, required=True)
+    parser.add_argument('--console-printer', action='store_true',
+                        help='Redirect LPRINT to terminal for reviewed online editions')
     parser.add_argument('--names', required=True, help='Comma-separated 8.3 stems')
     args = parser.parse_args()
     for name in ('archive', 'compiler', 'tools', 'cpmsim', 'boot', 'output'):
@@ -83,7 +87,7 @@ def main():
             # Historical ZIP uses the Implode method, unsupported by zipfile.
             original = subprocess.check_output(['unzip', '-p', str(args.archive), matches[0]])
             f = out / 'prepared' / (name + '.BAS')
-            f.write_bytes(normalize(original))
+            f.write_bytes(normalize(original, args.console_printer))
             rows.append(dict(game=name, archive_member=matches[0], source_sha256=hashlib.sha256(original).hexdigest(), prepared_sha256=hashlib.sha256(f.read_bytes()).hexdigest(), qualified_for_GAMES=False))
             tool('cpmcp', '-f', 'z80pack-hd', disk, f, '0:' + f.name)
     master, slave = pty.openpty()
@@ -128,7 +132,7 @@ def main():
             f = out / 'games' / (row['game'] + '.COM')
             tool('cpmcp', '-f', 'z80pack-hd', disk, '0:' + f.name, f)
             row.update(bytes=f.stat().st_size, sha256=hashlib.sha256(f.read_bytes()).hexdigest())
-    (out / 'build-results.json').write_text(json.dumps(dict(compiler_hashes=compiler_hashes, archive_sha256=hashlib.sha256(args.archive.read_bytes()).hexdigest(), standalone_option='/O', runtime_library='OBSLIB.REL', gameplay_qualification_required=True, games=rows), indent=2)+'\n')
+    (out / 'build-results.json').write_text(json.dumps(dict(compiler_hashes=compiler_hashes, archive_sha256=hashlib.sha256(args.archive.read_bytes()).hexdigest(), standalone_option='/O', runtime_library='OBSLIB.REL', console_printer=args.console_printer, gameplay_qualification_required=True, games=rows), indent=2)+'\n')
     print('Built', sum(r['status']=='built' for r in rows), 'standalone candidates; none admitted to GAMES without gameplay tests.')
 
 

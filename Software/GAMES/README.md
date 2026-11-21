@@ -1,7 +1,8 @@
 # Expanded GAMES disk
 
-An optional expanded edition of the v1.0 GAMES disk. It adds 18 tested CP/M
-games and keeps only playable games, required data and playing instructions. Download it
+An optional expanded edition of the v1.0 GAMES disk. It adds 45 tested CP/M
+titles, including the 27 newly qualified BASIC programs, and keeps ready-to-run
+software, required data, playing instructions and notices. Download it
 separately; game binaries are not added to Git history or the base release.
 
 [Download GAMES-expanded.zip](https://github.com/CPMArchives/rcpm-cpmsim/releases/download/software-games-2026-11-22/GAMES-expanded.zip) ·
@@ -10,14 +11,15 @@ separately; game binaries are not added to Git history or the base release.
 
 | Area | Games |
 | --- | --- |
-| J0: | All 21 launchers and the guide |
+| J0: | All 48 launchers and the guide |
 | J2: | Ladder, CatChum, CPMtris, Robots, Snake |
+| J4: | 27 standalone BASIC titles; see [BASIC collection](BASIC.md) |
 | J9: | Rogue, Wanderer, Star Trek, Sokoban, Hunt the Wumpus, Hangman, Minesweeper |
 | J10: | Sargon, Othello, Backgammon, Battleships, Mastermind, Hammurabi |
 
 Adventure J1:, Maze Chase J3: and Animals J8: remain playable. Source-only
-sets, unqualified programs and old catalogs have been removed. J4:–J7: and
-J11:–J15: are empty. The image has **3,228 KiB free**, with 874 of its 1,024
+sets, unqualified programs and old catalogs have been removed. J5:–J7: and
+J11:–J15: are empty. The image has **2,748 KiB free**, with 813 of its 1,024
 directory slots free.
 
 ## Install and play
@@ -42,7 +44,7 @@ builds place those launchers on GAMES.
 
 ## Qualification and limits
 
-All 18 additions received actual caller-session tests on RCP/M v1.0, CP/M 3,
+All 45 additions received actual caller-session tests on RCP/M v1.0, CP/M 3,
 Z3PLUS/BYE, ANSI terminal and the normal 4 MHz setting over direct TCP. Tests
 covered meaningful moves or turns and exit. Rogue and Sargon also passed disk
 save/reload checks. These are opening/session tests, not complete playthroughs.
@@ -91,9 +93,12 @@ routines. It requires neither an interpreter nor `BRUN.COM`. The original
 Microsoft manual permits distributing linked applications royalty-free with
 the prescribed notice; the compiler and separate runtime module have different
 terms. [Distribution terms](MICROSOFT-RUNTIME-TERMS.txt) and the image's
-`COPYRIGHT.TXT` retain the distinction and required notice.
+`COPYING.TXT` retain the distinction and required notice.
 
 A [reusable private build pipeline](compile_basic.py) compiled 27 of 30 more
-BASIC games. AWARI, DIGITS and HEXAPAWN need source/compiler compatibility
-fixes. These are **compiled candidates, not extra games on the disk**: gameplay
-qualification remains necessary. See [BASIC compilation](BASIC.md).
+BASIC programs. All 27 passed meaningful input, exit to WORK and individual
+carrier-loss recovery tests and are now on J4:, with launchers on J0:. BOMBARD
+uses terminal output in place of its mandatory printer output. DIAMOND is a
+pattern activity and DICE is a roll-frequency simulation. AWARI, DIGITS and
+HEXAPAWN still need compiler compatibility fixes and are excluded. See
+[BASIC qualification and controls](BASIC.md).

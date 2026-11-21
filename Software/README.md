@@ -8,7 +8,7 @@ the [main RCP/M download](https://github.com/CPMArchives/rcpm-cpmsim/releases/ta
 
 | Disk | Contents | Download | Test report |
 | --- | --- | --- | --- |
-| **GAMES expanded** | 21 playable games only; shared areas, J0 launchers | [GAMES-expanded.zip](https://github.com/CPMArchives/rcpm-cpmsim/releases/download/software-games-2026-11-22/GAMES-expanded.zip) | [Results and exclusions](GAMES/README.md) |
+| **GAMES expanded** | 48 tested titles; shared areas, J0 launchers | [GAMES-expanded.zip](https://github.com/CPMArchives/rcpm-cpmsim/releases/download/software-games-2026-11-22/GAMES-expanded.zip) | [Results and exclusions](GAMES/README.md) |
 | **INFOCOM** | 27 Infocom games and five InvisiClues hint books; user 0 | [INFOCOM-collection.zip](https://github.com/CPMArchives/rcpm-cpmsim/releases/download/software-2026-11-21/INFOCOM-collection.zip) | [Results and exclusions](https://github.com/CPMArchives/rcpm-cpmsim/releases/download/software-2026-11-21/INFOCOM-REPORT.txt) |
 | **MODERNIF** | 11 selected IFComp games: nine v5 and two v8; user 0 | [MODERNIF-collection.zip](https://github.com/CPMArchives/rcpm-cpmsim/releases/download/software-2026-11-21/MODERNIF-collection.zip) | [Results and exclusions](https://github.com/CPMArchives/rcpm-cpmsim/releases/download/software-2026-11-21/MODERNIF-REPORT.txt) |
 
