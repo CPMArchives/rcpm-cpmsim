@@ -1,0 +1,117 @@
+RCP/M - INSTALLATION GUIDE
+
+1. MACOS ARM64: DOWNLOAD, UNPACK, RUN
+
+This package targets Apple Silicon Macs with macOS 11 or later.
+The deployment target is 11.0; testing was performed on the build host,
+not on every macOS release. Unpack the ZIP into a writable
+folder, then open Start-RCPM.command. Keep all files together. No Python,
+tmux, compiler, Homebrew or separately installed CP/M tools are required.
+The program uses macOS system libraries. About 550 MB is needed after
+unpacking. The first start creates unique RBBS passwords in SYSOP.DOC;
+keep that file private. No historical users or messages are supplied.
+
+This is an unsigned engineering candidate. macOS download security policy
+may require you to approve an identified application through Privacy &
+Security. Code signing/notarization and a fresh-Mac download test are still
+release qualification work. Do not disable system-wide security settings.
+
+The local terminal is the sysop console. On successful listener creation:
+
+    RCP/M is now running on port 4000.
+    Listening address: 127.0.0.1 (direct raw TCP).
+    See INSTALLATION.DOC for information on how to connect
+    from your system (Windows, Linux, macOS).
+
+Wait for 'RCP/M modem ready.' before connecting. One caller at a time.
+This foreground session must stay open while the service runs. There is no
+tmux service, background daemon, automatic client launch or auto-reattach.
+
+2. CONNECTING FROM WINDOWS, LINUX OR MACOS
+
+Use your preferred terminal client with a RAW TCP connection to
+127.0.0.1 port 4000. Select ANSI/VT100, 80 columns, and carriage-return
+line endings. Press Return after connecting if the CP/M prompt does not
+appear. The connection is byte-transparent; it is not a Telnet protocol
+server. Select RAW rather than Telnet negotiation in the client.
+
+Windows: PuTTY can use Connection type Raw, host 127.0.0.1, port 4000.
+SyncTERM can use its Raw connection type on Windows, Linux and macOS.
+Linux/macOS: 'nc 127.0.0.1 4000' is useful for a basic connection check;
+a proper raw terminal client is preferable for file transfers and editing.
+Clients are supplied/installed by the operator, not bundled with RCP/M.
+The packaged emulator currently runs on macOS ARM64; these client notes do
+not imply native Windows/Linux host binaries have been qualified.
+
+127.0.0.1 is local to the machine running RCP/M. For another computer to
+connect, stop RCP/M, edit ADDRESS in RCPM.CONF to the Mac's LAN IPv4
+address, restart, and allow that port in the host firewall as appropriate.
+Connect clients to that LAN address. Raw TCP provides no encryption.
+
+3. FIRST-START FILES AND ADMINISTRATION
+
+The package supplies A:, I: and P:. P: includes all 310 SIGM and 93 CPMUG
+libraries. The first start creates an empty J: mount disk and unique local
+RBBS passwords. SYSOP.DOC contains those PRIVATE generated passwords; it is
+not the general manual and must not be shared with callers.
+
+Read SYSOP-GUIDE.DOC for routine operation, RBBS administration, uploads,
+archive maintenance and backups. DISK-IMAGES.DOC describes the raw image
+formats and host editing tools. Keep the emulator stopped during host edits.
+
+4. FIRST SHUTDOWN
+
+BYE logs a caller off; it does not stop the server. To stop locally between
+calls, press Ctrl-C, select Return at BYE's menu, wait for the CP/M prompt,
+then enter SYSUTLS:BYEBYE. Full operating instructions are in SYSOP-GUIDE.DOC.
+
+5. OPTIONAL VIRTUAL MODEM (TCPSER / IP232)
+
+Direct raw TCP passthrough is the default and requires no virtual modem.
+Both compiled BYE5 drivers are in drivers/direct/ and drivers/ip232/.
+The launcher installs the driver matching MODE before boot, while stopped.
+Never replace the driver on a mounted/running A: disk.
+
+For tcpser, there are TWO ports: its caller port and its IP232 virtual
+serial endpoint. cpmsim connects OUT to the IP232 endpoint; callers connect
+IN to tcpser's caller port. This is not a TCP proxy in front of the direct
+listener. Other virtual modems must implement compatible IP232 control
+framing, including DCD and DTR; an arbitrary virtual serial port is not enough.
+
+Install an IP232-capable tcpser build separately if you want this option:
+    https://github.com/go4retro/tcpser
+
+Example for the tested go4retro tcpser options (Mac/Linux shell; use the
+same flags with a suitable Windows build of that optional program):
+
+    tcpser -v 127.0.0.1:25232 -p 127.0.0.1:4000 -s 2400 -S 2400 -i '&c1&d2' -l 0
+
+Stop RCP/M before switching. Edit RCPM.CONF:
+
+    MODE=ip232
+    ADDRESS=127.0.0.1
+    PORT=25232
+
+Start tcpser, then Start-RCPM.command. The modem build sends Hayes setup
+and uses tcpser carrier detect. Connect callers to tcpser port 4000; do not
+connect them to IP232 port 25232. tcpser is optional and is not bundled.
+
+To switch back, stop RCP/M and tcpser, restore these RCPM.CONF values, then
+start RCP/M:
+
+    MODE=direct
+    ADDRESS=127.0.0.1
+    PORT=4000
+
+The native launcher also accepts --mode, --address and --port as temporary
+overrides, e.g. './runtime/rcpm --mode direct --port 4003'. These options do
+not alter RCPM.CONF. './runtime/rcpm --check' reports configuration only.
+
+6. PROVENANCE AND RELEASE STATUS
+
+MANIFEST.json records the common payload and platform binary checksums.
+ARCHIVE.sha256 lists all 403 P: libraries. VOLUMES.json records the curated
+J: contents. Sources, patches and build notes are under source/. Original
+notices are retained under NOTICES/ and within the original libraries.
+Read DISTRIBUTION-STATUS.DOC: this engineering candidate is not yet cleared
+for public redistribution. It does not import an operator's live disks.

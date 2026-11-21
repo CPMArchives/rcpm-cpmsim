@@ -15,7 +15,7 @@ def main():
     args = parser.parse_args()
     source = args.source.expanduser().resolve()
     output = args.output.expanduser().resolve()
-    programs = ("cpmcp", "cpmls", "cpmrm", "mkfs.cpm")
+    programs = ("cpmcp", "cpmls", "cpmrm", "cpmchattr", "mkfs.cpm")
     with tempfile.TemporaryDirectory(prefix="rcpm-raw-tools-") as temporary:
         work = Path(temporary) / "source"
         shutil.copytree(source, work, ignore=shutil.ignore_patterns(

@@ -6,6 +6,7 @@
 #include <fcntl.h>
 #include <poll.h>
 #include <stdio.h>
+#include <stdint.h>
 #include <stdlib.h>
 #include <string.h>
 #include <sys/socket.h>
@@ -19,6 +20,52 @@ static unsigned char rm_rx[RM_CAP], rm_tx[RM_CAP];
 static size_t rm_nr, rm_nt;
 static struct sockaddr_in rm_address;
 static time_t rm_retry;
+static uint64_t rm_idle_origin;
+static unsigned short rm_idle_snapshot;
+static unsigned char rm_idle_phase, rm_idle_armed;
+
+#ifndef RM_CLOCK_NOW
+static uint64_t rm_clock_now(void)
+{
+    struct timespec now;
+    if (clock_gettime(CLOCK_MONOTONIC, &now) < 0) {
+        perror("RCP/M monotonic clock");
+        exit(EXIT_FAILURE);
+    }
+    return (uint64_t)now.tv_sec * UINT64_C(1000000000) + (uint64_t)now.tv_nsec;
+}
+#define RM_CLOCK_NOW rm_clock_now
+#endif
+
+/* Port 74 is an inactivity stopwatch, independent of the emulated CPU.
+ * OUT resets it. Paired INs return elapsed whole minutes, low then high;
+ * the first read latches both bytes. Saturation cannot wrap away a timeout.
+ */
+static void rcpm_idle_reset(unsigned char unused)
+{
+    (void)unused;
+    rm_idle_origin = RM_CLOCK_NOW();
+    rm_idle_snapshot = 0;
+    rm_idle_phase = 0;
+    rm_idle_armed = rm_mode != 0;
+}
+
+static unsigned char rcpm_idle_read(void)
+{
+    if (!rm_idle_phase) {
+        uint64_t elapsed = 0;
+        if (rm_idle_armed) {
+            uint64_t now = RM_CLOCK_NOW();
+            if (now >= rm_idle_origin)
+                elapsed = (now - rm_idle_origin) / UINT64_C(60000000000);
+        }
+        rm_idle_snapshot = elapsed > 65535 ? 65535 : (unsigned short)elapsed;
+        rm_idle_phase = 1;
+        return (unsigned char)rm_idle_snapshot;
+    }
+    rm_idle_phase = 0;
+    return (unsigned char)(rm_idle_snapshot >> 8);
+}
 
 static void rm_disconnect(void)
 {
@@ -27,6 +74,7 @@ static void rm_disconnect(void)
     rm_connecting = 0;
     rm_dcd = rm_ri = rm_escape = 0;
     rm_nr = rm_nt = 0;
+    rm_idle_armed = rm_idle_phase = 0;
     rm_retry = time(NULL) + 1;
 }
 
@@ -96,6 +144,20 @@ static int rcpm_modem_init(void)
         if (setsockopt(rm_listener, SOL_SOCKET, SO_REUSEADDR, &one, sizeof(one)) < 0 ||
             bind(rm_listener, (struct sockaddr *)&rm_address, sizeof(rm_address)) < 0 ||
             listen(rm_listener, 4) < 0) goto bad;
+    }
+    /* Release launchers opt in; print locally only after listen succeeds. */
+    if (getenv("RCPM_ANNOUNCE") && !strcmp(getenv("RCPM_ANNOUNCE"), "1")) {
+        if (rm_mode == 1) {
+            printf("RCP/M is now running on port %ld.\r\n", number);
+            printf("Listening address: %s (direct raw TCP).\r\n", host ? host : "127.0.0.1");
+            printf("See INSTALLATION.DOC for information on how to connect\r\n"
+                   "from your system (Windows, Linux, macOS).\r\n");
+        } else {
+            printf("RCP/M is using the virtual modem endpoint %s:%ld (IP232).\r\n",
+                   host ? host : "127.0.0.1", number);
+            printf("Callers connect to the virtual modem's caller port; see INSTALLATION.DOC.\r\n");
+        }
+        fflush(stdout);
     }
     return 0;
 bad:

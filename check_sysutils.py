@@ -12,13 +12,14 @@ import subprocess
 import tempfile
 import time
 import tty
+import execution_checks
 
 from build_bye5 import wait_prompt
 from check_modem_runtime import free_port, stop
 from prepare_shared_trial import create
 
 
-def run(source, romwbw, runtime, builds, tools, tcpser, modes=('direct', 'ip232')):
+def run(source, romwbw, runtime, builds, tools, tcpser, modes=('direct', 'ip232'), execution=False):
     with tempfile.TemporaryDirectory(prefix='rcpm-sysutils-') as temporary:
         root = Path(temporary)
         for mode in modes:
@@ -35,11 +36,20 @@ def run(source, romwbw, runtime, builds, tools, tcpser, modes=('direct', 'ip232'
             subprocess.run([str(tools / 'cpmcp'), '-f', 'ibm-3740', str(b),
                             str(probe), '0:BPROBE.COM'], check=True)
             original_b = hashlib.sha256(b.read_bytes()).digest()
+            private = root / 'USERS'
+            private.write_bytes(b'PRIVATE-I2-DATA-MUST-STAY-PRIVATE\r\n')
+            subprocess.run([str(tools / 'cpmcp'), '-f', 'z80pack-hd',
+                            str(instance / 'disks/drivei.dsk'), str(private), '2:USERS'], check=True)
             shutil.copyfile(Path(__file__).parent / 'guest/baccessprobe.asm', instance / 'baccessprobe.asm')
             subprocess.run([str(source / 'z80asm/z80asm'), '-fb', '-x', 'baccessprobe.asm'],
                            cwd=instance, check=True, stdout=subprocess.DEVNULL)
+            # The test-only BDOS harness replaces one approved transient;
+            # it is never installed in distributable/operator trial images.
+            subprocess.run([str(tools / 'cpmrm'), '-f', 'ibm-3740', str(a), '0:CLS.COM'], check=True)
             subprocess.run([str(tools / 'cpmcp'), '-f', 'ibm-3740', str(a),
-                            str(instance / 'baccessprobe.bin'), '0:BACCESS.COM'], check=True)
+                            str(instance / 'baccessprobe.bin'), '0:CLS.COM'], check=True)
+            if execution:
+                execution_checks.prepare(source, tools, instance)
             for name in ('BYE.COM', 'BYEDRIV.COM'):
                 subprocess.run([str(tools / 'cpmrm'), '-f', 'ibm-3740', str(a), '0:' + name], check=True)
                 subprocess.run([str(tools / 'cpmcp'), '-f', 'ibm-3740', str(a),
@@ -81,6 +91,8 @@ def run(source, romwbw, runtime, builds, tools, tcpser, modes=('direct', 'ip232'
                             if not block:
                                 raise RuntimeError('Caller disconnected')
                             data.extend(block)
+                            if data.count(b'Directory access denied.') > 1:
+                                raise AssertionError('Directory-denial recovery loop reached the caller')
                             if marker in data:
                                 time.sleep(.15)
                                 return bytes(data)
@@ -105,7 +117,12 @@ def run(source, romwbw, runtime, builds, tools, tcpser, modes=('direct', 'ip232'
                     for call in range(2):
                         caller = socket.create_connection(('127.0.0.1', port if mode == 'direct' else public), timeout=5)
                         remote(kick=mode == 'direct')
-                        if b'B-ACCESS-DENIED-PASS' not in command('BACCESS'):
+                        selection = command('B:')
+                        if b'Directory access denied.' not in selection or b'B0>' in selection:
+                            raise AssertionError('Denied B: selection did not restore the actual prompt')
+                        if execution and execution_checks.MARKER in command('A0:UNSAFE'):
+                            raise AssertionError('Execution restriction missing at login')
+                        if b'B-ACCESS-DENIED-PASS' not in command('A0:CLS'):
                             raise AssertionError('BDOS B: access probe failed')
                         for text, forbidden in (
                             ('B:BPROBE', b'SYSUTILS-EXECUTED'),
@@ -129,15 +146,60 @@ def run(source, romwbw, runtime, builds, tools, tcpser, modes=('direct', 'ip232'
                         os.write(master, b'TYPE B:VOLUME.TXT\r')
                         if b'private system maintenance' not in local():
                             raise AssertionError('Local B: read denied')
+                        os.write(master, b'A2:\r')
+                        local(b'A2>')
+                        os.write(master, b'TYPE I:USERS\r')
+                        if b'PRIVATE-I2-DATA-MUST-STAY-PRIVATE' not in local(b'A2>'):
+                            raise AssertionError('Private sysop could not read I2:')
+                        # Reproduce takeover from a currently selected private
+                        # DU, not merely a forbidden selection from A0:.
+                        for directory, selected in ((b'I2:', b'I2>'), (b'B0:', b'B0>')):
+                            os.write(master, directory + b'\r')
+                            local(selected)
+                            os.write(master, b'\x02')
+                            recovered = remote()
+                            if recovered.count(b'Directory access denied.') > 1:
+                                raise AssertionError('Unblank caused a directory-denial loop')
+                            if b'SYSUTILS-EXECUTED' in command('B:BPROBE'):
+                                raise AssertionError('Unblank retained private privileges')
+                            os.write(master, b'\x02')
+                            local()
                         os.write(master, b'B:PIP I:LOCAL.TXT=J:HELLO.TXT\r')
                         local()
+                        if execution:
+                            execution_checks.local_setup(master, local)
                         os.write(master, b'\x02')
                         remote()
                         if b'SYSUTILS-EXECUTED' in command('B:BPROBE'):
                             raise AssertionError('B: remained public after unblank')
+                        if execution:
+                            execution_checks.caller_checks(command, caller, remote)
                         if b'Hello from' not in command('TYPE I:LOCAL.TXT'):
                             raise AssertionError('Local PIP did not work')
-                        caller.sendall(b'BYE\r')
+                        if call == 0:
+                            caller.sendall(b'BYE\r')
+                            deadline = time.monotonic() + 20
+                            while time.monotonic() < deadline:
+                                ready = select.select([caller, master], [], [], .05)[0]
+                                if master in ready:
+                                    log.write(os.read(master, 8192)); log.flush()
+                                if caller in ready and not caller.recv(8192):
+                                    break
+                            else:
+                                raise RuntimeError('Caller BYE did not hang up')
+                        # Second call closes without BYE to test carrier loss.
+                        if execution and call == 1:
+                            command('RBBS')  # Arm an unused trusted-load permission.
+                        caller.close()
+                        caller = None
+                        local(b'RCP/M modem ready.' if mode == 'direct' else b'ATE0Q0V0S0=0M0S10=25X1H0')
+                        if mode == 'ip232':
+                            settle_modem()
+                    if execution:
+                        caller = socket.create_connection(('127.0.0.1', port if mode == 'direct' else public), timeout=5)
+                        remote(kick=mode == 'direct')
+                        if execution_checks.RBBS_MARKER in command('A15:RBBS37'):
+                            raise AssertionError('Launcher permission survived carrier loss')
                         caller.close()
                         caller = None
                         local(b'RCP/M modem ready.' if mode == 'direct' else b'ATE0Q0V0S0=0M0S10=25X1H0')
@@ -159,7 +221,12 @@ def run(source, romwbw, runtime, builds, tools, tcpser, modes=('direct', 'ip232'
                         raise AssertionError('Local shutdown failed')
                     if hashlib.sha256(b.read_bytes()).digest() != original_b:
                         raise AssertionError('Private B: image changed')
+                    if execution:
+                        execution_checks.verify(tools, instance)
                     print(f'PASS {mode}: caller B: denial, local read/execute/PIP, rearm and local shutdown')
+                    if execution:
+                        print(f'PASS {mode}: approved A0: loads; other sources/boot tools denied; '
+                              'resident privilege/memory controls; A: writes denied; executable YMODEM download')
                 finally:
                     if caller:
                         caller.close()
@@ -179,6 +246,7 @@ if __name__ == '__main__':
     p.add_argument('--builds', type=Path, default=Path('build/bye5/sysutils'))
     p.add_argument('--cpmtools', type=Path, default=Path('build/cpmtools/bin'))
     p.add_argument('--mode', choices=('direct', 'ip232'), action='append')
+    p.add_argument('--execution', action='store_true')
     a = p.parse_args()
     run(*(getattr(a, name).resolve() for name in ('source', 'romwbw', 'runtime', 'builds', 'cpmtools', 'tcpser')),
-        modes=a.mode or ('direct', 'ip232'))
+        modes=a.mode or ('direct', 'ip232'), execution=a.execution)

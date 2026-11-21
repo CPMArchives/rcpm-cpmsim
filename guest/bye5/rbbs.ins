@@ -1,0 +1,179 @@
+; I15: (legacy I2:) is private board data. Successful A0:RBBS launcher
+; loading permits the next program-load attempt only if it is the trusted
+; A15:RBBS37. Legacy A2: entry remains private to the operator.
+; Wheel and SYSUTLS remain unchanged.
+WXRBCAND:PUSH B
+        PUSH D
+        PUSH H
+        XCHG
+        SHLD WXRBFCB
+        XCHG
+        LDAX D
+        ANI 7FH
+        CPI 1
+        JZ WXRBA
+        ORA A
+        JNZ WXRBNOT
+        MVI C,25
+        CALL REALBD
+        ORA A
+        JNZ WXRBNOT
+WXRBA:  MVI C,32
+        MVI E,0FFH
+        CALL REALBD
+        STA WXRBUSR
+        CPI 15
+        JZ WXRBUSEROK
+        CPI 2
+        JNZ WXRBNOT
+WXRBUSEROK:
+        LHLD WXRBFCB
+        INX H
+        LXI D,WXRBNAME
+        MVI B,11
+WXRBCMP:LDAX D
+        MOV C,A
+        MOV A,M
+        ANI 7FH
+        CMP C
+        JNZ WXRBNOT
+        INX H
+        INX D
+        DCR B
+        JNZ WXRBCMP
+        MVI A,1
+        JMP WXRBRET
+WXRBNOT:XRA A
+WXRBRET:POP H
+        POP D
+        POP B
+        RET
+; Identify only the immutable public launcher at A0:RBBS.COM.
+WXRBPUB:PUSH B
+        PUSH D
+        PUSH H
+        XCHG
+        SHLD WXRBFCB
+        XCHG
+        LDAX D
+        ANI 7FH
+        CPI 1
+        JZ WXRBPA
+        ORA A
+        JNZ WXRBPFAIL
+        MVI C,25
+        CALL REALBD
+        ORA A
+        JNZ WXRBPFAIL
+WXRBPA: MVI C,32
+        MVI E,0FFH
+        CALL REALBD
+        ORA A
+        JNZ WXRBPFAIL
+        LHLD WXRBFCB
+        INX H
+        LXI D,WXRBPNAME
+        MVI B,11
+WXRBPLOP:LDAX D
+        MOV C,A
+        MOV A,M
+        ANI 7FH
+        CMP C
+        JNZ WXRBPFAIL
+        INX H
+        INX D
+        DCR B
+        JNZ WXRBPLOP
+        MVI A,1
+        JMP WXRBPRET
+WXRBPFAIL:XRA A
+WXRBPRET:POP H
+        POP D
+        POP B
+        RET
+; Runs with the caller's original registers, after load policy approval.
+; Activate only after BDOS reports a successful program load.
+WXRBLOAD:CALL WXRBCAND
+        STA WXRBWANT
+        CALL WXRBPUB
+        STA WXRBNEW
+        XRA A
+        STA WXRBENTRY
+        ; The loader may issue ordinary file reads through the RSX chain.
+        ; Scope board access over that exact load, and revoke it on failure.
+        LDA WXRBWANT
+        STA WXRBON
+        CALL WXBGO
+        PUSH PSW
+        PUSH H
+        ORA A
+        JNZ WXRBLFAIL
+        LDA WXRBNEW
+        STA WXRBENTRY
+        JMP WXRBLEND
+WXRBLFAIL:XRA A
+        STA WXRBON
+WXRBLEND:POP H
+        POP PSW
+        RET
+; Warm boot clears active board access. Pending launcher authorization must
+; survive alias/CCP warm boots, but grants only one exact trusted load. Every
+; subsequent load attempt consumes it; WXRESET clears it at call boundaries.
+WXRBCLEAR:PUSH PSW
+        PUSH B
+        PUSH D
+        PUSH H
+        LDA WXRBON
+        PUSH PSW
+        XRA A
+        STA WXRBON
+        STA WXRBWANT
+        MVI A,1
+        STA WXBSRC
+        POP PSW
+        ORA A
+        JZ WXRBCLEND
+        MVI C,32
+        MVI E,0
+        CALL REALBD
+        MVI C,14
+        MVI E,0
+        CALL REALBD
+        XRA A
+        STA 4
+        CALL WXCLR
+WXRBCLEND:POP H
+        POP D
+        POP B
+        POP PSW
+        RET
+; Reject a forbidden directory selection by aborting the command. CP/M's
+; CCP ignores select errors and otherwise leaves a false drive/user prompt.
+; Always choose A0: before warming. The previous DU can itself be forbidden
+; after private mode is released; restoring it would repeat this trap forever.
+WXDUABORT:POP H
+        POP D
+        POP B
+        MVI C,32
+        MVI E,0
+        CALL REALBD
+        MVI C,14
+        MVI E,0
+        CALL REALBD
+        XRA A
+        STA 4
+        CALL WXCLR
+        LXI D,WXDUMSG
+        MVI C,9
+        CALL REALBD
+        MVI C,0
+        JMP REALBD
+WXRBON: DB 0
+WXRBUSR:DB 0
+WXRBENTRY:DB 0
+WXRBNEW:DB 0
+WXRBWANT:DB 0
+WXRBFCB:DW 0
+WXRBNAME:DB 'RBBS37  COM'
+WXRBPNAME:DB 'RBBS    COM'
+WXDUMSG:DB 13,10,'Directory access denied.',13,10,'$'

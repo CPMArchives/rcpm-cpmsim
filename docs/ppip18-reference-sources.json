@@ -1,0 +1,67 @@
+[
+  {
+    "path": "ppip-z.com",
+    "url": "https://dflund.se/~pi/cpm/files/ftp.mayn.de/pub/cpm/archive/filcpy/ppip18/ppip-z.com",
+    "sha256": "cb00d654caac8789c4aadc3032c48a04edf314ca397d0252615fd244d63a1ac4"
+  },
+  {
+    "path": "ppip.doc.txt",
+    "url": "https://dflund.se/~pi/cpm/files/ftp.mayn.de/pub/cpm/archive/filcpy/ppip18/ppip.doc.txt",
+    "sha256": "62325fe82dbceaa18794642e8c4cf6745b4e88b1d2d603a3935e84bd0d6528f7"
+  },
+  {
+    "path": "ppip18.z80.txt",
+    "url": "https://dflund.se/~pi/cpm/files/ftp.mayn.de/pub/cpm/archive/filcpy/ppip18/ppip18.z80.txt",
+    "sha256": "0e5a9510420d02c62a1104ae3a2ec5d028e8f77324ecffbc73f8245e6cb31435"
+  },
+  {
+    "path": "read.me.txt",
+    "url": "https://dflund.se/~pi/cpm/files/ftp.mayn.de/pub/cpm/archive/filcpy/ppip18/read.me.txt",
+    "sha256": "1d4ee741347659755b79f04fe361a81ca822158e97e9946baba97a916e912a69"
+  },
+  {
+    "path": "ppip-0.z80.txt",
+    "url": "https://dflund.se/~pi/cpm/files/ftp.mayn.de/pub/cpm/archive/filcpy/ppip18/ppip-0.z80.txt",
+    "sha256": "29719309f5f770343133c7d47b4507299ca12e841ebc4bc5ab0a30d6d048f0da"
+  },
+  {
+    "path": "ppip-1.z80.txt",
+    "url": "https://dflund.se/~pi/cpm/files/ftp.mayn.de/pub/cpm/archive/filcpy/ppip18/ppip-1.z80.txt",
+    "sha256": "d2ba739127a42519bd6b0cadc601a5c98ac399d4386442bf81eb48345a292814"
+  },
+  {
+    "path": "ppip-2.z80.txt",
+    "url": "https://dflund.se/~pi/cpm/files/ftp.mayn.de/pub/cpm/archive/filcpy/ppip18/ppip-2.z80.txt",
+    "sha256": "c90b3032a3cc1b364c87a930fa15969fa3a144d4c89c691db14a60af8c47eeae"
+  },
+  {
+    "path": "ppip-3.z80.txt",
+    "url": "https://dflund.se/~pi/cpm/files/ftp.mayn.de/pub/cpm/archive/filcpy/ppip18/ppip-3.z80.txt",
+    "sha256": "57396d4e25021ab2d9a9d38507c6283793e8cc40c5e695e206a850fe990a82a0"
+  },
+  {
+    "path": "ppip-4.z80.txt",
+    "url": "https://dflund.se/~pi/cpm/files/ftp.mayn.de/pub/cpm/archive/filcpy/ppip18/ppip-4.z80.txt",
+    "sha256": "8c3fd68dd7fb95e35582785ef0e48e2e03f68afe83b2581742d2df0cc02b726e"
+  },
+  {
+    "path": "ppip-5.z80.txt",
+    "url": "https://dflund.se/~pi/cpm/files/ftp.mayn.de/pub/cpm/archive/filcpy/ppip18/ppip-5.z80.txt",
+    "sha256": "2ce3f2ae50ac266a5cc259de416c4d082cee475aca8443cf120447d9ff96544f"
+  },
+  {
+    "path": "ppip-7.z80.txt",
+    "url": "https://dflund.se/~pi/cpm/files/ftp.mayn.de/pub/cpm/archive/filcpy/ppip18/ppip-7.z80.txt",
+    "sha256": "cb3841f12af0be9e594743600ff01014bcd34e34e6b317013e2701f53b61d4cb"
+  },
+  {
+    "path": "ppip-8.z80.txt",
+    "url": "https://dflund.se/~pi/cpm/files/ftp.mayn.de/pub/cpm/archive/filcpy/ppip18/ppip-8.z80.txt",
+    "sha256": "9a4339dd3db9022852276dded022ed6f6fec9fc23eacc86b2e7d4c04209e131f"
+  },
+  {
+    "path": "ppip-9.z80.txt",
+    "url": "https://dflund.se/~pi/cpm/files/ftp.mayn.de/pub/cpm/archive/filcpy/ppip18/ppip-9.z80.txt",
+    "sha256": "4f4b29459385dc5da51717d2b765e0dbfc73ecba761a7448b31b8de4b7337b9b"
+  }
+]

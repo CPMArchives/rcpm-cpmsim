@@ -101,7 +101,8 @@ WXSET:  STA WXLOCAL
         JZ WXSDONE
         LDA WXLOCAL
         MOV M,A
-WXSDONE: POP H
+WXSDONE: CALL WXPATH
+        POP H
         POP PSW
         RET
 WXADDR: DW 0
@@ -110,10 +111,53 @@ WXDRIVE: DB 15
 WXUSER: DB 16
 WXSPD:  DB 0
 WXENV:  DW 0
+; ENV+9 contains the external path pointer, +11 its entry capacity.
+; Only A0: is searched for callers; private mode also searches I13:.
+; No current-directory wildcard: this is lookup convenience, not authority.
+WXPATH: PUSH PSW
+        PUSH B
+        PUSH D
+        PUSH H
+        LHLD WXENV
+        MOV A,H
+        ORA L
+        JZ WXPDONE
+        LXI D,9
+        DAD D
+        MOV E,M
+        INX H
+        MOV D,M
+        INX H
+        MOV A,M
+        CPI 3
+        JC WXPDONE
+        MOV A,D
+        CPI 80H
+        JC WXPDONE
+        XCHG
+        MVI M,1
+        INX H
+        MVI M,0
+        INX H
+        LDA WXLOCAL
+        ORA A
+        JZ WXPTAIL
+        MVI M,9
+        INX H
+        MVI M,13
+        INX H
+WXPTAIL:MVI M,0
+WXPDONE:POP H
+        POP D
+        POP B
+        POP PSW
+        RET
 ; Reset host service drafts/staging handles at call boundaries, not on
 ; private blank/unblank. The host reset does not touch committed files.
 WXRESET: PUSH PSW
+        CALL WXRBCLEAR
         XRA A
+        STA WXRBENTRY
         OUT 49H
         POP PSW
         JMP WXCLR

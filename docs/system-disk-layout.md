@@ -1,5 +1,10 @@
 # A: boot and caller services; B: private maintenance
 
+**Superseding fresh-system profile:** [I13:SYSUTLS, I14:HELP and I15:RBBS](zsystem-utilities.md)
+eliminates runtime B:, keeps PIP and adds PPIP plus private Z-System tools.
+This document retains the legacy B: layout for existing trials and regression
+checks. The new builder never changes their mounted images or databases.
+
 Decision: retain IBM 3740 geometry for A: and B:. Do not enlarge A: or
 introduce a new emulator/BIOS disk geometry solely for system utilities.
 The builder now creates this layout and BYE gates caller BDOS access to B:.
@@ -98,10 +103,13 @@ a denied search and after a local search until a new permitted caller search.
 
 With local/operator privileges the same disk is accessible. B: is not added
 to the public command path; use explicit `B:tool` commands locally for now.
-Denials return an error without modifying the private disk. A failed B:
-selection also denies subsequent implicit-drive file access until a permitted
-disk selection or local operation, so utilities that ignore selection errors
-cannot silently operate on the prior drive instead.
+FCB denials return an error without modifying the private disk. A failed B:
+selection now selects A0: natively, resets the login byte, clears pending
+commands and aborts through warm boot. Reusing a private current directory
+after unblanking would repeat the rejection forever. The CCP therefore cannot
+leave a false B0: prompt or let a utility silently use the previous drive.
+The same adapter also protects [RBBS's private I2: area](rbbs-trial.md), with
+a narrowly scoped exception while the trusted board is executing.
 
 This is guest policy for approved software. It does not isolate hostile
 machine code, direct BIOS access, resident-memory writes, or a caller utility
@@ -121,8 +129,10 @@ python3 check_sysutils.py --source /absolute/path/to/z80pack \
   --builds build/bye5
 ```
 
-The check covers FCB read/write and metadata denial, default-drive operations
-after a rejected select, explicit B:/B0: executable loads, private text and
+The check covers FCB read/write and metadata denial, corrected prompts after
+a rejected select, explicit B:/B0: executable loads, private text and
 directory access, local private execution/read/PIP, privilege restoration,
 two calls per backend, native shutdown from B:, and unchanged B: disk bytes.
 Its diagnostic executables are installed only on disposable test disks.
+It also exercises denied I2: file operations and all-user I: directory scans,
+and confirms that private sysop access to I2: remains available.

@@ -1,87 +1,115 @@
-; B: is a private maintenance disk. Gate ordinary BDOS file access using
-; BYE's local/remote state, NOT the command search path. Internal BYE calls
-; through REALBD bypass this public entry. This is not protection against
-; arbitrary machine code calling the BIOS or changing resident memory.
-WXBCHK: PUSH B
+; Shared caller policy: R=1 W=2; DU overrides drive, FF inherits.
+; The same gate serves every drive. Private local wheel bypasses caller ACLs.
+WXBCHK: MOV A,C
+        CPI 200
+        JZ WXAAPI
+        CPI 13
+        JC WXBGO
+        PUSH B
         PUSH D
         PUSH H
-        MOV A,C
-        CPI 17
-        JNZ WXBWHL
-        MVI A,1
-        STA WXBSRC
-WXBWHL:
         CALL WXGET
         ORA A
-        JNZ WXBSYS
+        JNZ WXBOK
         MOV A,C
-        CPI 14
-        JZ WXBCUR
-        CPI 46
-        JZ WXBSEL
-        CPI 101
-        JZ WXBSEL
+        CPI 59
+        JNZ WXAFILE
+        CALL WXELOAD
+        ORA A
+        JNZ WXBDEN
+        JMP WXBOK
+WXAFILE:CPI 17
+        JNZ WXANEXT
+        MVI A,1
+        STA WXBSRC
+WXANEXT:MOV A,C
         CPI 18
         JZ WXBNXT
-        CPI 17
-        JNZ WXBFC
-        XRA A
-        STA WXBSRC
-WXBFC:  LXI H,WXBFNS
-WXBFNL: MOV A,M
+        LXI H,WXBFNS
+WXAFIND:MOV A,M
         ORA A
         JZ WXBOK
         CMP C
-        JZ WXBGET
+        JZ WXACHECK
         INX H
-        JMP WXBFNL
-WXBGET: LDAX D
+        JMP WXAFIND
+WXACHECK:
+        LDAX D
         ANI 7FH
-        CPI 2
-        JZ WXBDEN
-        ORA A
-        JZ WXBDEF
         CPI 17
-        JC WXBOK
-        ; Search First permits '?' as a full-directory request on the
-        ; current disk. Never let special/invalid drive bytes bypass B:.
-WXBDEF:
-        LDA WXBDRV
+        JNC WXBDEN
+        CALL WXAFPERM
+        STA WXAPERMS
+        ; Z3 may search/open the exact pending board before its BDOS 59 load.
+        LDA WXRBENTRY
         ORA A
-        JNZ WXBDEN
-        PUSH B
-        PUSH D
-        MVI C,25
-        CALL REALBD
-        POP D
-        POP B
-        CPI 1
-        JZ WXBDEN
-        JMP WXBOK
-WXBSEL: MOV A,E
-        CPI 1
-        JZ WXBDEN
-        JMP WXBOK
-WXBCUR: MOV A,E
-        CPI 1
-        JNZ WXBCLR
+        JZ WXAPENDINGEND
+        CALL WXRBCAND
+        ORA A
+        JZ WXAPENDINGEND
         MVI A,1
-        STA WXBDRV
-        JMP WXBDEN
-WXBSYS:
-WXBCLR: XRA A
-        STA WXBDRV
+        STA WXAPERMS
+WXAPENDINGEND:
+        ; Board data access is scoped to an active trusted RBBS instance.
+        LDA WXRBON
+        ORA A
+        JZ WXANORMAL
+        LDA WXATDR
+        CPI 8
+        JNZ WXABREAD
+        LDA WXATUS
+        MOV H,A
+        LDA WXRBUSR
+        CMP H
+        JNZ WXANORMAL
+        JMP WXBOK
+WXABREAD:LDA WXATDR
+        ORA A
+        JNZ WXANORMAL
+        LDA WXATUS
+        CPI 15
+        JNZ WXANORMAL
+        MVI A,1
+        STA WXAPERMS
+WXANORMAL:
+        ; CLOSE completes both reader and writer lifecycles. Requiring R
+        ; here would strand files created under a write-only policy.
+        MOV A,C
+        CPI 16
+        JNZ WXAMLIST
+        LDA WXAPERMS
+        ANI 3
+        JZ WXBDEN
+        JMP WXBOK
+WXAMLIST:
+        LXI H,WXAMUT
+WXAMLOP:MOV A,M
+        ORA A
+        JZ WXAREAD
+        CMP C
+        JZ WXAWRITE
+        INX H
+        JMP WXAMLOP
+WXAREAD:LDA WXAPERMS
+        ANI 1
+        JZ WXBDEN
+        MOV A,C
+        CPI 17
+        JNZ WXBOK
+        XRA A
+        STA WXBSRC
+        JMP WXBOK
+WXAWRITE:LDA WXAPERMS
+        ANI 2
+        JZ WXBDEN
         JMP WXBOK
 WXBNXT: LDA WXBSRC
         ORA A
         JNZ WXBDEN
+        ; Successful SEARCH FIRST grants this chain. Every ACL update
+        ; invalidates it, including /LOAD. Explicit-drive searches are valid.
         JMP WXBOK
-WXBDEN: MOV A,C
-        CPI 17
-        JNZ WXBDN1
-        MVI A,1
-        STA WXBSRC
-WXBDN1: POP H
+WXBDEN: POP H
         POP D
         POP B
         LXI H,0FFFFH
@@ -90,10 +118,83 @@ WXBDN1: POP H
 WXBOK:  POP H
         POP D
         POP B
+        MOV A,C
+        CPI 59
+        JZ WXRBLOAD
         JMP WXBGO
-; FCB file functions, including CP/M Plus extensions. Rename source on B:
-; is rejected; a cross-drive rename is not supported by CP/M.
+; Selection alone grants no access: Z3 changes user before drive, so an
+; intermediate private DU must be selectable. All file operations are gated.
 WXBFNS: DB 15,16,17,19,20,21,22,23,30,33,34,35,36,40
-        DB 41,42,43,59,99,100,102,103,0
-WXBSRC: DB 0
+        DB 41,42,43,59,98,99,100,102,103,0
+WXAMUT: DB 19,21,22,23,30,34,40,41,98,99,100,103,0
+WXBSRC: DB 1
 WXBDRV: DB 0
+WXAPERMS: DB 0
+; Return effective permissions for FCB DE. Preserve caller registers.
+WXAFPERM:PUSH B
+        PUSH D
+        PUSH H
+        LDAX D
+        ANI 7FH
+        ORA A
+        JNZ WXAEXPLICIT
+        MVI C,25
+        CALL REALBD
+        INR A
+WXAEXPLICIT:DCR A
+        STA WXATDR
+        MVI C,32
+        MVI E,0FFH
+        CALL REALBD
+        STA WXATUS
+        CALL WXALOOK
+        POP H
+        POP D
+        POP B
+        RET
+WXACURRENT:PUSH B
+        PUSH D
+        PUSH H
+        MVI C,25
+        CALL REALBD
+        STA WXATDR
+        MVI C,32
+        MVI E,0FFH
+        CALL REALBD
+        STA WXATUS
+        CALL WXALOOK
+        POP H
+        POP D
+        POP B
+        RET
+WXALOOK:LDA WXATDR
+        CPI 16
+        JNC WXANONE
+        MOV B,A
+        LDA WXATUS
+        CPI 16
+        JNC WXANONE
+        MOV C,A
+        MOV A,B
+        RLC
+        RLC
+        RLC
+        RLC
+        ADD C
+        MOV L,A
+        MVI H,0
+        LXI D,WXADUS
+        DAD D
+        MOV A,M
+        CPI 0FFH
+        RNZ
+        LXI H,WXADRVS
+        MOV E,B
+        MVI D,0
+        DAD D
+        MOV A,M
+        RET
+WXANONE:XRA A
+        RET
+WXATDR: DB 0
+WXATUS: DB 0

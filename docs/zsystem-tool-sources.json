@@ -1,0 +1,62 @@
+[
+  {
+    "path": "PWD.COM",
+    "sha256": "13c93b1a8e9305e9dc41ff5187c9cee7a2e7bfead492be6f34ffb24eb782c704",
+    "url": "https://raw.githubusercontent.com/wwarthen/RomWBW/cb887a1a2191072dff952bfa836a8dca201b1450/Source/Images/Common/NZ3PLUS/u15/PWD.COM"
+  },
+  {
+    "path": "FF.COM",
+    "sha256": "2c29cbd49c551074cbf36f1249df6e9754fb79ca4052247dacbb1532cb58d70f",
+    "url": "https://raw.githubusercontent.com/wwarthen/RomWBW/cb887a1a2191072dff952bfa836a8dca201b1450/Source/Images/Common/NZ3PLUS/u15/FF.COM"
+  },
+  {
+    "path": "ZSHOW.COM",
+    "sha256": "cc2f8ac2bfd29becc9229cc4ff4b56b1320b29eff87ca8e66f1489c76cff762c",
+    "url": "https://raw.githubusercontent.com/wwarthen/RomWBW/cb887a1a2191072dff952bfa836a8dca201b1450/Source/Images/Common/NZ3PLUS/u15/ZSHOW.COM"
+  },
+  {
+    "path": "ZHELP.COM",
+    "sha256": "8425b780b012cac8e41d8d7cd9985bddaa8104d4964141ee957305ea0d53bf8b",
+    "url": "https://raw.githubusercontent.com/wwarthen/RomWBW/cb887a1a2191072dff952bfa836a8dca201b1450/Source/Images/Common/NZ3PLUS/u15/ZHELP.COM"
+  },
+  {
+    "path": "LBRHELP.COM",
+    "sha256": "7558a212a9c895abc3770afbddb0265fd36d1ea1fb317e50b96c973555ed3a44",
+    "url": "https://raw.githubusercontent.com/wwarthen/RomWBW/cb887a1a2191072dff952bfa836a8dca201b1450/Source/Images/Common/NZ3PLUS/u15/LBRHELP.COM"
+  },
+  {
+    "path": "LPUT.COM",
+    "sha256": "5413394af78910cda42d29021efca3a03e4bc6becfb69cb01f188b266a23f9ce",
+    "url": "https://raw.githubusercontent.com/wwarthen/RomWBW/cb887a1a2191072dff952bfa836a8dca201b1450/Source/Images/Common/NZ3PLUS/u15/LPUT.COM"
+  },
+  {
+    "path": "ZLT.COM",
+    "sha256": "d6d6c675875c04ebd975611bbcb6c94cd6f467b732d387c8e4e698e899658720",
+    "url": "https://raw.githubusercontent.com/wwarthen/RomWBW/cb887a1a2191072dff952bfa836a8dca201b1450/Source/Images/Common/NZ3PLUS/u15/ZLT.COM"
+  },
+  {
+    "path": "LX.COM",
+    "sha256": "bc6bde64b4f43915d9a6d1f8729b8dc439f0633a56318d0efca0e4e1e53acacf",
+    "url": "https://raw.githubusercontent.com/wwarthen/RomWBW/cb887a1a2191072dff952bfa836a8dca201b1450/Source/Images/Common/NZ3PLUS/u15/LX.COM"
+  },
+  {
+    "path": "NAME.COM",
+    "sha256": "08b4ddc7b5fe5dfbab3f948dc4b576ad04524ee12c7af75ba92335070e202680",
+    "url": "https://raw.githubusercontent.com/wwarthen/RomWBW/cb887a1a2191072dff952bfa836a8dca201b1450/Source/Images/Common/NZ3PLUS/u15/NAME.COM"
+  },
+  {
+    "path": "ARUNZ.COM",
+    "sha256": "1d11c37199a74272b76cbe915e5f93ad27ab5a2484cc5f2025d718773f48fd2b",
+    "url": "https://raw.githubusercontent.com/wwarthen/RomWBW/cb887a1a2191072dff952bfa836a8dca201b1450/Source/Images/Common/NZ3PLUS/u15/ARUNZ.COM"
+  },
+  {
+    "path": "IF.COM",
+    "sha256": "4f172a84cd0f06d4054581934080c3a619898e88d5c87f850b4745bedb569dae",
+    "url": "https://raw.githubusercontent.com/wwarthen/RomWBW/cb887a1a2191072dff952bfa836a8dca201b1450/Source/Images/Common/NZ3PLUS/u15/IF.COM"
+  },
+  {
+    "path": "VIEW.COM",
+    "sha256": "0c04b3dea8081867113228d65f2d0c2f739d178896e19a4f8a6a7751b7b605f4",
+    "url": "https://raw.githubusercontent.com/wwarthen/RomWBW/cb887a1a2191072dff952bfa836a8dca201b1450/Source/Images/Common/NZ3PLUS/u15/VIEW.COM"
+  }
+]

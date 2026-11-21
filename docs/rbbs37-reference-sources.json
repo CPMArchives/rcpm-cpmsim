@@ -1,0 +1,142 @@
+[
+  {
+    "path": "rbbs37-1/-readme.001",
+    "url": "https://dflund.se/~pi/cpm/files/ftp.mayn.de/pub/cpm/archive/rbbs/rbbs37-1/-readme.001",
+    "sha256": "f304e17ff2b804e3461a5865a1165cd9f9ed35d1572ceaa801864e92d1fe78fe"
+  },
+  {
+    "path": "rbbs37-1/bootpwd",
+    "url": "https://dflund.se/~pi/cpm/files/ftp.mayn.de/pub/cpm/archive/rbbs/rbbs37-1/bootpwd",
+    "sha256": "efebf2217206038d1cb6a360a0a669b6a898c68218674d88f730ecb81a8cbd74"
+  },
+  {
+    "path": "rbbs37-1/bulletin",
+    "url": "https://dflund.se/~pi/cpm/files/ftp.mayn.de/pub/cpm/archive/rbbs/rbbs37-1/bulletin",
+    "sha256": "5b735b8915c4668b80bbf35472a5c3c0168ed1f726fb43fc84b3714261728090"
+  },
+  {
+    "path": "rbbs37-1/callers",
+    "url": "https://dflund.se/~pi/cpm/files/ftp.mayn.de/pub/cpm/archive/rbbs/rbbs37-1/callers",
+    "sha256": "5937c0937585699cc5a1b19f5517eff5b444f11120b2ce434f1c07f9b92cb5ac"
+  },
+  {
+    "path": "rbbs37-1/comments",
+    "url": "https://dflund.se/~pi/cpm/files/ftp.mayn.de/pub/cpm/archive/rbbs/rbbs37-1/comments",
+    "sha256": "3cb8e39da10432adda1c08240b56f16988f407f722e6cfdfa6ee4d4aef410955"
+  },
+  {
+    "path": "rbbs37-1/counters",
+    "url": "https://dflund.se/~pi/cpm/files/ftp.mayn.de/pub/cpm/archive/rbbs/rbbs37-1/counters",
+    "sha256": "c0735c7e90f46ec22c50d88dcec663c0b2dfb285c0b13cfafbbe6d2b5a55032c"
+  },
+  {
+    "path": "rbbs37-1/entercpm",
+    "url": "https://dflund.se/~pi/cpm/files/ftp.mayn.de/pub/cpm/archive/rbbs/rbbs37-1/entercpm",
+    "sha256": "250c8bd51d7284143ca7aaa33823be7710b9a429f15e00c69ce35306e65cff33"
+  },
+  {
+    "path": "rbbs37-1/help",
+    "url": "https://dflund.se/~pi/cpm/files/ftp.mayn.de/pub/cpm/archive/rbbs/rbbs37-1/help",
+    "sha256": "993a59e0eca1ba8de22d81f76537ec51402b29ce738c8415966cd67f5ac6f186"
+  },
+  {
+    "path": "rbbs37-1/info",
+    "url": "https://dflund.se/~pi/cpm/files/ftp.mayn.de/pub/cpm/archive/rbbs/rbbs37-1/info",
+    "sha256": "3090184c500a5bc0ae29780e6261d3a82a73ea6a55e93a51271e882af9b04bcd"
+  },
+  {
+    "path": "rbbs37-1/lastcalr",
+    "url": "https://dflund.se/~pi/cpm/files/ftp.mayn.de/pub/cpm/archive/rbbs/rbbs37-1/lastcalr",
+    "sha256": "a561b2826a075d23a9f8722705e1db7f759893ec2e59fc040a1c4c18ed8420e5"
+  },
+  {
+    "path": "rbbs37-1/menurbbs",
+    "url": "https://dflund.se/~pi/cpm/files/ftp.mayn.de/pub/cpm/archive/rbbs/rbbs37-1/menurbbs",
+    "sha256": "67224cb9fd29e0d6daaa97c23bb1a983671eda78c2836b17433bb0763bbeca71"
+  },
+  {
+    "path": "rbbs37-1/messages",
+    "url": "https://dflund.se/~pi/cpm/files/ftp.mayn.de/pub/cpm/archive/rbbs/rbbs37-1/messages",
+    "sha256": "19c1c584040a485195d9582479f33c776bdf06c6dae1b93098cea9803f868bbb"
+  },
+  {
+    "path": "rbbs37-1/newcom",
+    "url": "https://dflund.se/~pi/cpm/files/ftp.mayn.de/pub/cpm/archive/rbbs/rbbs37-1/newcom",
+    "sha256": "50bbbda777e741c324ae6a00d952749878020d0b499f1b2048581e1258b86fe7"
+  },
+  {
+    "path": "rbbs37-1/news",
+    "url": "https://dflund.se/~pi/cpm/files/ftp.mayn.de/pub/cpm/archive/rbbs/rbbs37-1/news",
+    "sha256": "229258d595db8c549c9c1f5ae1e17e6b505cd1d33cb442f21b3816953a208843"
+  },
+  {
+    "path": "rbbs37-1/rbbs.com",
+    "url": "https://dflund.se/~pi/cpm/files/ftp.mayn.de/pub/cpm/archive/rbbs/rbbs37-1/rbbs.com",
+    "sha256": "9a561172b90af293f892911e5172c856639e530f54638d4790c38422f479b829"
+  },
+  {
+    "path": "rbbs37-1/rbbs37.com",
+    "url": "https://dflund.se/~pi/cpm/files/ftp.mayn.de/pub/cpm/archive/rbbs/rbbs37-1/rbbs37.com",
+    "sha256": "60164511a0365583e94b3e88e859375f0e6499d9a93a82728a475772b8666526"
+  },
+  {
+    "path": "rbbs37-1/rbbs37.doc.txt",
+    "url": "https://dflund.se/~pi/cpm/files/ftp.mayn.de/pub/cpm/archive/rbbs/rbbs37-1/rbbs37.doc.txt",
+    "sha256": "99a9b29971c632ade58a0d841ddbdbcc685d7090e1dddaede6b4bbf53be97d33"
+  },
+  {
+    "path": "rbbs37-1/rbbsinst.com",
+    "url": "https://dflund.se/~pi/cpm/files/ftp.mayn.de/pub/cpm/archive/rbbs/rbbs37-1/rbbsinst.com",
+    "sha256": "f28299a2ac920be0c72f2b64e0df3aa7db9fddc84d2da7ac1cffc76d746de6af"
+  },
+  {
+    "path": "rbbs37-1/rbbsinst.hlp",
+    "url": "https://dflund.se/~pi/cpm/files/ftp.mayn.de/pub/cpm/archive/rbbs/rbbs37-1/rbbsinst.hlp",
+    "sha256": "98b63e9d39b42114a0369d1f92b0454c6507e3598a2f628ea9a26973f413bfb1"
+  },
+  {
+    "path": "rbbs37-1/rbbsutil.com",
+    "url": "https://dflund.se/~pi/cpm/files/ftp.mayn.de/pub/cpm/archive/rbbs/rbbs37-1/rbbsutil.com",
+    "sha256": "01faa5476d6da7f7975a91dd99331cd21276c29e675c89b414b593c0e773a76d"
+  },
+  {
+    "path": "rbbs37-1/summary",
+    "url": "https://dflund.se/~pi/cpm/files/ftp.mayn.de/pub/cpm/archive/rbbs/rbbs37-1/summary",
+    "sha256": "ff3093db2f3877661c3902379a9986a002e557ea6b759bc396c7337c15dab3e1"
+  },
+  {
+    "path": "rbbs37-1/twit",
+    "url": "https://dflund.se/~pi/cpm/files/ftp.mayn.de/pub/cpm/archive/rbbs/rbbs37-1/twit",
+    "sha256": "2b9aabc8e28173e8f2d82f4f2b17d8ab9feedffefde4bb1c920f9b9e44abaf05"
+  },
+  {
+    "path": "rbbs37-1/users",
+    "url": "https://dflund.se/~pi/cpm/files/ftp.mayn.de/pub/cpm/archive/rbbs/rbbs37-1/users",
+    "sha256": "29661eee6cbedd66cb47167960b6b8548b0aaddc61ee06c6ad4b9353800e645c"
+  },
+  {
+    "path": "rbbs37-2/-readme.002",
+    "url": "https://dflund.se/~pi/cpm/files/ftp.mayn.de/pub/cpm/archive/rbbs/rbbs37-2/-readme.002",
+    "sha256": "800c3672097f5c10c17112529cbbfc26e05d354ec885cdd269f441d9f580d6f0"
+  },
+  {
+    "path": "rbbs37-2/rbbs37.asc",
+    "url": "https://dflund.se/~pi/cpm/files/ftp.mayn.de/pub/cpm/archive/rbbs/rbbs37-2/rbbs37.asc",
+    "sha256": "40aaf3f0a4abdf058aeba4b33abb9c308ea32045370b6b01c89fb1547fab45a0"
+  },
+  {
+    "path": "rbbs37-2/rbbs37nc.asc",
+    "url": "https://dflund.se/~pi/cpm/files/ftp.mayn.de/pub/cpm/archive/rbbs/rbbs37-2/rbbs37nc.asc",
+    "sha256": "a316c8c9fdc443b27c34beebd2aaa7b4d5504c8ce441406c35f144011323b38d"
+  },
+  {
+    "path": "rbbs37-2/rbbsinst.asc",
+    "url": "https://dflund.se/~pi/cpm/files/ftp.mayn.de/pub/cpm/archive/rbbs/rbbs37-2/rbbsinst.asc",
+    "sha256": "e0b5d31a52d46b632f7aa81720d200bd21613527645ae8d92009c8a96cdc9393"
+  },
+  {
+    "path": "rbbs37-2/rbbsutil.asc",
+    "url": "https://dflund.se/~pi/cpm/files/ftp.mayn.de/pub/cpm/archive/rbbs/rbbs37-2/rbbsutil.asc",
+    "sha256": "328c3bb43a202881c1912fee9079d3f6522e684242fdbc1ec404133175b20458"
+  }
+]

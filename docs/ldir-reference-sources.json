@@ -1,0 +1,22 @@
+[
+  {
+    "path": "ldirb15.com",
+    "url": "https://www.dflund.se/~pi/cpm/files/ftp.mayn.de/pub/cpm/archive/arc-lbr/ldirb15/ldirb15.com",
+    "sha256": "afc35c4783e7a31eb81116fd8d068d069ab947d715cbe58a9600755b7d57b692"
+  },
+  {
+    "path": "ldirb15.z80.txt",
+    "url": "https://www.dflund.se/~pi/cpm/files/ftp.mayn.de/pub/cpm/archive/arc-lbr/ldirb15/ldirb15.z80.txt",
+    "sha256": "57a88f2839cacf43570c19e1f9387b31705fbf5d9ea118351c48891777f84113"
+  },
+  {
+    "path": "ldir-b.doc.txt",
+    "url": "https://www.dflund.se/~pi/cpm/files/ftp.mayn.de/pub/cpm/archive/arc-lbr/ldirb15/ldir-b.doc.txt",
+    "sha256": "957a4e263bdd02de0c8f1ead112c33d03a50c89508a306b7cfa9cb2f7069fbdf"
+  },
+  {
+    "path": "ldir-b.upd",
+    "url": "https://www.dflund.se/~pi/cpm/files/ftp.mayn.de/pub/cpm/archive/arc-lbr/ldirb15/ldir-b.upd",
+    "sha256": "b9a366cbb4cd1664767864cf4faa3c30627fef7804eaca374f56823c44df43c9"
+  }
+]

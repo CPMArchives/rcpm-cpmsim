@@ -1,0 +1,27 @@
+[
+  {
+    "name": "DIR.COM",
+    "source": "build/caller-tools/SDZ.COM",
+    "sha256": "4fa51cf5210962d0dde5071f12adbf11628b9ccaa5c37846016fcebcb39db952"
+  },
+  {
+    "name": "SDZ.COM",
+    "source": "build/caller-tools/SDZ.COM",
+    "sha256": "4fa51cf5210962d0dde5071f12adbf11628b9ccaa5c37846016fcebcb39db952"
+  },
+  {
+    "name": "LDIR.COM",
+    "source": "build/ztools/ldirb15/ldirb15.com",
+    "sha256": "afc35c4783e7a31eb81116fd8d068d069ab947d715cbe58a9600755b7d57b692"
+  },
+  {
+    "name": "HELP.COM",
+    "source": "Source/Images/Common/NZ3PLUS/u15/ZHELP.COM",
+    "sha256": "8425b780b012cac8e41d8d7cd9985bddaa8104d4964141ee957305ea0d53bf8b"
+  },
+  {
+    "name": "LT.COM",
+    "source": "Source/Images/Common/NZ3PLUS/u15/ZLT.COM",
+    "sha256": "d6d6c675875c04ebd975611bbcb6c94cd6f467b732d387c8e4e698e899658720"
+  }
+]

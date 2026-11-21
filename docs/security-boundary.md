@@ -1,15 +1,31 @@
 # Shared-machine security review
 
+Current policy: [unified drive/DU authorization](caller-execution.md). AUTH
+replaces the older drive-specific file gates and compiled A0 filename grants
+described in the historical review below. Caller read/write access defaults to
+deny; private sysop mode bypasses those permissions. Execution requires R,
+no W, and actual F4. A:, J: and P: share the same write-protection mechanism.
+
 Reviewed November 19, 2026. The replacement still runs on disposable media;
 the live launcher and private disk set have not been migrated.
+
+Current additions are documented in [caller execution](caller-execution.md)
+and the [RBBS boundary](rbbs-trial.md#public-launcher-permission): the fresh
+upper-area profile uses I13:SYSUTLS, read-only I14:HELP and private I15:RBBS.
+A0:RBBS grants one specific trusted board load without wheel privileges.
+The older B: layout and initial negative findings below remain historical
+evidence, not a description of the complete current guest policy.
 
 The newer [SYSUTILS disk layout](system-disk-layout.md) moves BYEBYE and
 maintenance programs to B:, with a BYE BDOS gate denying caller B: access.
 `check_sysutils.py` verifies that boundary on both modem backends. The
 shutdown probe below deliberately retains BYEBYE on public A: to demonstrate
 the older unrestricted layout's failure; it does not build the SYSUTILS layout.
-The wider caller execution policy and retained A: support tools still need
-configuration and review.
+The [approved caller execution mechanism](caller-execution.md) now restricts
+loads to the compiled A0: program list, protects A: from caller writes, and
+makes the RCP WHL command require existing operator privileges. Boot tools
+are excluded from the caller list. Full directory/application security
+configuration remains work to do.
 
 ## Approved caller execution policy
 
@@ -103,8 +119,9 @@ python3 check_bye5.py --source /absolute/path/to/z80pack \
   --autostart --probe-remote-shutdown --output build/bye5/shutdown-probe
 ```
 
-Currently this intentionally fails on the first direct-TCP call after
-BYEBYE stops the guest. Inspect `direct/console.log` for `System halted`.
+With the current execution adapter this should pass: BYEBYE on A: is not an
+approved caller load, and the guest remains available. Before that adapter
+was introduced, this probe demonstrated `System halted` on the first call.
 The ordinary shared-console checks do not send this hostile request.
 
 ## Residual risk at privileged takeover

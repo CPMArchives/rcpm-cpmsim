@@ -1,0 +1,17 @@
+
+                      R C P / M
+               CP/M 3 - Z3PLUS - BYE5
+
+Type commands at the CP/M prompt. Upper or lower case is fine.
+
+DIR / SDZ - directory       HELP - system help     LT - read text
+LDIR - library contents     MOUNT - mount disks   RBBS - enter BBS
+YSEND - download files      UPLOAD - upload files BYE - log off
+MESSAGE - leave a message for the sysop
+
+MOUNT /L lists disks. DIR HELP: lists help topics.
+LT also reads LBR members: LT J:LIBRARY README.TXT
+MOUNT GAMES, then ADVENT / ANIMALS / MCHASE to play.
+
+I0:WORK is temporary; its files are cleared when the call ends.
+

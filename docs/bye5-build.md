@@ -1,5 +1,13 @@
 # BYE5 builds and shared-console checks
 
+November 20 output fix: both builds now use the emulator's port-74 monotonic
+inactivity stopwatch instead of delaying every empty keyboard-status poll.
+BDOS functions 0-12 take an early route to the existing BYE handler; all file,
+load and directory permission checks remain on their guarded paths. Install
+the matching emulator and BYE driver together. CPU speed remains 4 MHz.
+See [output measurements](output-performance.md) and the
+[timer contract](modem-interface.md#guest-register-contract).
+
 Status on November 19, 2026: both configured CP/M 3 BYE510 builds work with
 Z3PLUS in isolated tests and now control its actual wheel byte. A missing
 valid Z3PLUS environment is refused before answering. This is an integration
@@ -34,7 +42,15 @@ configuration of those services can follow once the foundation works.
 BYE.COM is the common CP/M 3 entry program. BYEDRIV.COM is a loader with the
 configuration-specific BYE5 RSX attached by GENCOM. Each pair is installed
 on A: in its test system; install only the chosen pair in a running system.
+The local CKFUNC adapter passes control keys to the application while MDMOFF
+is nonzero, except Ctrl-B with carrier present, which retains the blank toggle.
+This avoids intercepting editor keys as BYE messages, hangup, bell and screen
+commands during private work. It does not use the mutable wheel byte as its
+mode selector. Original function-key dispatch remains intact in shared mode.
 The original loader's filename reference is configured to A:BYEDRIV.COM.
+WELFILE is enabled on A0: with the exact FCB `WELCOME TXT`, replacing the
+upstream `WELCOME ???` wildcard so an editor-created WELCOME.BAK cannot be
+mistaken for the current banner. `welcome_exact` records this build setting.
 The stock cpmsim shutdown program is supplied unchanged as BYEBYE.COM in
 both build directories. BYE.COM starts or resets remote service and logs a
 caller off; BYEBYE.COM terminates the machine. The disk-set installer must
@@ -120,7 +136,7 @@ transcript is build/bye5/build.log. Commands, configured source hashes,
 artifact hashes and the runtime hash are recorded in build-result.json.
 The builder has not been pointed at live installation disks.
 
-The direct driver is 5120 bytes; the Hayes driver is 5504 bytes; each entry
+The direct driver is 5376 bytes; the Hayes driver is 5760 bytes; each entry
 program is 512 bytes. These are file sizes, not measured resident-memory
 requirements. Distribution of the configured upstream binaries still requires
 resolving the notice discussed in the reference review. The binaries remain
@@ -280,3 +296,13 @@ locates the wheel pointer at ENV+29h. The Z3PLUS distribution's DEFAULT.Z3P
 records MAXDRV as 1-16 and MAXUSR as 0-15; those are not interchangeable
 with every historical BYE limit byte. The adapter therefore changes the
 wheel linkage without pretending to enforce a new directory policy.
+
+## Adapter relocation correction
+
+The current source preparer emits direct WXDRIVE/WXUSER/WXSPD references
+in place of forward EQU aliases. The former aliases resolved to the RSX base
+and could corrupt transient stack storage during remote console checks.
+RBBS testing exposed this defect. Regenerate the sources and rebuild both BYE
+variants before preparing new trial disks; build metadata records the correction.
+This fix changes BYE, not the CP/M BDOS or cpmsim executable. Existing running
+images are not changed by rebuilding. See [the RBBS evaluation](rbbs-trial.md).

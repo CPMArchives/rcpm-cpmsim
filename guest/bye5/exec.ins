@@ -1,0 +1,109 @@
+; Caller load policy: CP/M Plus BDOS 59 is the Z3PLUS program/overlay
+; loading interface. File reads remain available for archive downloads.
+; Every ordinary COM load requires R, no W, and actual directory F4. Never trust caller FCB bits.
+WXELOAD:PUSH B
+        PUSH D
+        PUSH H
+        LDA WXRBENTRY
+        ORA A
+        JZ WXEBASE
+        XRA A
+        STA WXRBENTRY
+        CALL WXRBCAND
+        ORA A
+        JZ WXEBASE
+        LDA WXRBUSR
+        CPI 15
+        JZ WXERBOK
+WXEBASE:XRA A
+        STA WXRBENTRY
+        XCHG
+        SHLD WXEFCB
+        XCHG
+        CALL WXAFPERM
+        CPI 1
+        JNZ WXEDEN1
+        CALL WXEATTR
+        JMP WXEEND
+WXEDEN1:MVI A,1
+        JMP WXEEND
+WXERBOK:XRA A
+WXEEND: POP H
+        POP D
+        POP B
+        RET
+; Permission was checked above. Inspect actual file flags, never caller FCB bits.
+WXEATTR:
+WXEFNAME:
+        LHLD WXEFCB
+        LXI D,WXEFFCB
+        MVI B,12
+WXEFCOPY:MOV A,M
+        ANI 7FH
+        CPI '?'
+        JZ WXEFNO
+        CPI '*'
+        JZ WXEFNO
+        STAX D
+        INX H
+        INX D
+        DCR B
+        JNZ WXEFCOPY
+        MVI B,24
+        XRA A
+WXEFZERO:STAX D
+        INX D
+        DCR B
+        JNZ WXEFZERO
+        LDA WXEFFCB+9
+        CPI 'C'
+        JNZ WXEFNO
+        LDA WXEFFCB+10
+        CPI 'O'
+        JNZ WXEFNO
+        LDA WXEFFCB+11
+        CPI 'M'
+        JNZ WXEFNO
+        LXI D,WXEFSCB
+        MVI C,49
+        CALL REALBD
+        SHLD WXEFDMA
+        LXI D,WXEFBUF
+        MVI C,26
+        CALL REALBD
+        LXI D,WXEFFCB
+        MVI C,17
+        CALL REALBD
+        CPI 4
+        JNC WXEFREST
+        MOV L,A
+        MVI H,0
+        DAD H
+        DAD H
+        DAD H
+        DAD H
+        DAD H
+        LXI D,WXEFBUF+4
+        DAD D
+        MOV A,M
+        ANI 80H
+        JZ WXEFREST
+        XRA A
+        JMP WXEFDONE
+WXEFREST:MVI A,1
+WXEFDONE:PUSH PSW
+        LHLD WXEFDMA
+        XCHG
+        MVI C,26
+        CALL REALBD
+        POP PSW
+        RET
+WXEFNO: MVI A,1
+        RET
+WXEFSCB:DB 3CH,0,0,0
+WXEFDMA:DW 0
+WXEFFCB:DS 36
+WXEFBUF:DS 128
+WXEFCB: DW 0
+WXENAMES:
+; @@CALLER_TABLE@@

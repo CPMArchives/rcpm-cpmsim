@@ -7,6 +7,7 @@ import subprocess
 import tempfile
 from pathlib import Path
 import re
+from caller_policy import assembly
 
 
 def configure(reference, mode):
@@ -15,12 +16,30 @@ def configure(reference, mode):
                    B5IM='YES' if mode == 'ip232' else 'NO', SKTERM='YES', MHZ='4',
                    TOVALUE='255', ZCPR2='YES', WHEEL='WXLOCAL',
                    MAXDRIV='WXDRIVE', MAXUSER='WXUSER', MSPEED='WXSPD',
-                   MAXDRV="'P'-'@'", MAXUSR='15', SYSDRV="'P'-'@'", SYSUSR='15')
+                   MAXDRV="'P'-'@'", MAXUSR='15', SYSDRV="'P'-'@'", SYSUSR='15',
+                   WELFILE='YES', WELDRV="'A'", WELUSR='0')
     for name, value in options.items():
         pattern = rf'(?m)^({name}\s+EQU\s+)\S+'
         text, count = re.subn(pattern, lambda match: match[1] + value, text)
         if count != 1:
             raise ValueError(f'Unexpected option {name}: {count} definitions')
+    # The upstream wildcard can open ZDE's WELCOME.BAK instead of the
+    # edited WELCOME.TXT. Keep backups, but select the exact banner file.
+    old = "WELFILN:DB\t0,'WELCOME ???'"
+    if text.count(old) != 1:
+        raise ValueError('Unexpected BYE welcome-file FCB')
+    text = text.replace(old, "WELFILN:DB\t0,'WELCOME TXT'")
+    # RMAC does not preserve these forward EQU aliases as relocatable
+    # addresses. They otherwise become the RSX base, corrupting transient
+    # stack storage during carrier/console checks. Reference the labels
+    # directly so LINK generates relocation bits for each operand.
+    for name, target, expected in (('MAXDRIV', 'WXDRIVE', 6),
+                                   ('MAXUSER', 'WXUSER', 6),
+                                   ('MSPEED', 'WXSPD', 10)):
+        text, count = re.subn(r'(?m)^(\t(?:LDA|STA)\t)' + name + r'\b',
+                              lambda match: match[1] + target, text)
+        if count != expected:
+            raise ValueError(f'Unexpected {name} adapter reference count: {count}')
     # Apply Irv Hoff's August 4, 1986 local-keyboard correction.
     start = text.index('MINP2:')
     end = text.index('MINP3:', start)
@@ -40,6 +59,15 @@ def configure(reference, mode):
 ''' + text[offset:]
     offset = text.index('\tPUSH\tPSW', offset)
     text = text[:offset] + 'MSTAT0:\n' + text[offset:]
+    # Status polling must be nonblocking. Keep the existing timeout exit
+    # and warning behavior, but count actual host minutes rather than calls.
+    start = text.index('MSTAT1:')
+    end = text.index('TMOUT:', start)
+    text = text[:start] + 'MSTAT1: JMP WXIDPOLL\n;\n' + text[end:]
+    text, count = re.subn(r'(?m)^(\tSTA\tMSFLAG[^\n]*\n)',
+                         r'\1\tCALL\tWXIDRESET\n', text)
+    if count != 4:
+        raise ValueError(f'Unexpected no-activity reset count: {count}')
     marker = ';\t   ++++ Install your I/O port insert here ++++\n'
     if text.count(marker) != 1:
         raise ValueError('Machine insert point missing')
@@ -56,14 +84,45 @@ def configure(reference, mode):
         ('EXCPM:\t IF\tB5IM', 'EXCPM:\tCALL\tWXRESET\n\t IF\tB5IM'),
         ('BLNKTOG:LDA\tMDMOFF', 'BLNKTOG:CALL\tWXCLR\n\tLDA\tMDMOFF'),
         ('NULLP:\tCALL\tMDOUTST', 'NULLP:\tCALL\tCHECK\n\tCALL\tMDOUTST'),
+        ('MBOOT:\tLDA\tOPTION', 'MBOOT: CALL WXRBCLEAR\n\tLDA\tOPTION'),
     ):
         if text.count(old) != 1:
             raise ValueError('Unexpected BYE5 lifecycle hook: ' + old.split(':')[0])
         text = text.replace(old, new)
+    # A blanked caller gives the sysop the console. Other local function
+    # keys must reach editors (notably ZDE's ^Q prefix, ^G and ^O). Retain
+    # only the blank toggle while private; the original hotkeys still work
+    # in shared caller mode. Test the blank state, not the mutable wheel.
+    old = 'CKFUNC:\t IF\tLEADIN'
+    if text.count(old) != 1:
+        raise ValueError('Unexpected BYE function-key entry')
+    text = text.replace(old, '''CKFUNC: PUSH PSW
+        LDA MDMOFF
+        ORA A
+        JZ WXFNORM
+        POP PSW
+        CPI BLNKKEY
+        RNZ
+        PUSH PSW
+        CALL MDCARCK
+        ORA A
+        JZ WXFNRET
+        POP PSW
+        JMP BLNKTOG
+WXFNRET:POP PSW
+        RET
+WXFNORM:POP PSW
+         IF LEADIN''')
     insert = (Path(__file__).parent / 'guest/bye5/cpmsim.ins').read_text()
     insert += '\n' + (Path(__file__).parent / 'guest/bye5/z3wheel.ins').read_text()
     insert += '\n' + (Path(__file__).parent / 'guest/bye5/work.ins').read_text()
     insert += '\n' + (Path(__file__).parent / 'guest/bye5/privateb.ins').read_text()
+    insert += '\n' + (Path(__file__).parent / 'guest/bye5/rbbs.ins').read_text()
+    insert += '\n' + (Path(__file__).parent / 'guest/bye5/auth.ins').read_text()
+    execution = (Path(__file__).parent / 'guest/bye5/exec.ins').read_text()
+    if execution.count('; @@CALLER_TABLE@@') != 1:
+        raise ValueError('Missing caller policy assembly table')
+    insert += '\n' + execution.replace('; @@CALLER_TABLE@@', assembly())
     if text.count('BYERSX:\n') != 1:
         raise ValueError('Unexpected BYE BDOS interceptor')
     text = text.replace('BYERSX:\n', 'BYERSX: JMP WXBCHK\nWXBGO:\n')

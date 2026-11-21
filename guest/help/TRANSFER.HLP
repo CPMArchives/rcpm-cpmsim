@@ -1,0 +1,16 @@
+;
+FILE TRANSFERS
+
+YSEND sends files to your terminal client's YMODEM receiver.
+Example: YSEND A0:WELCOME.TXT
+Start the matching receive operation in your client when prompted.
+For an archive, download the LBR itself and unpack it locally.
+
+UPLOAD FILE.EXT receives one file using XMODEM/CRC.
+UPLOAD /Y receives a YMODEM batch into the private review inbox.
+Start the matching send operation in your terminal client.
+Uploads do not become public files or files in I0:WORK automatically.
+The sysop reviews completed submissions before publishing them.
+
+Client transfer commands depend on the terminal program you use.
+A failed transfer does not grant access to private system directories.

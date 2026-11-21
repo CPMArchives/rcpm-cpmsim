@@ -1,3 +1,7 @@
+> For the current I13:/I14:/I15: installation and tmux launcher, use
+> [shared operations](shared-operations.md). This page describes the earlier
+> standalone prototype; its B: and I2: locations do not apply to the upper-area build.
+
 # Try the shared-machine prototype
 
 This is a separate, loopback-only trial. The older installation, listener,
@@ -26,6 +30,11 @@ BDOS access to it. Boot support (including SUBMIT and Z3PLUS.LBR) remains
 on A:. Development/build materials are in `offline/BUILD.dsk`, outside the
 mount collection. Store that image offsite until required for maintenance.
 See [the disk layout and boundary](system-disk-layout.md).
+The [caller execution boundary](caller-execution.md) admits only the compiled
+A0: program list. GET, PATH, SUBMIT and other boot support tools cannot be
+loaded by callers; A: rejects caller file modifications. RCP WHL cannot grant
+caller privileges using its default password. Use local private mode for
+maintenance. These changes require a newly prepared boot disk and BYE build.
 
 ## Start and connect
 
@@ -98,6 +107,6 @@ to a newly prepared trial on the same port; preserve its inbox separately.
 The trial launcher holds an instance lock to prevent opening its disks in
 two emulator processes. It also checks its TCP port before booting. Running
 it again while it is active reports that the trial is already running; the
-final automatic background/reattach launcher remains separate architecture
-work. An alternative loopback port can be selected with
+current tmux background/reattach launcher is documented in
+[shared operations](shared-operations.md). An alternative loopback port can be selected with
 `python3 run_shared_trial.py --instance ../rcpm-shared-trial --port 4002`.

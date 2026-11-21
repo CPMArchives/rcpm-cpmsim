@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
-"""Build isolated cpmsim with BYE modem ports 70-72 and service-reset port 73."""
+"""Build isolated cpmsim with modem ports 70-72, reset 73 and idle timer 74."""
 import argparse
+import hashlib
+import json
 from pathlib import Path
 import re
 import shutil
@@ -10,7 +12,7 @@ import tempfile
 
 def integrate(io_text):
     # Existing console and serial devices retain their handlers and semantics.
-    for port in (70, 71, 72, 73):
+    for port in (70, 71, 72, 73, 74):
         if re.search(r'\[\s*' + str(port) + r'\s*\]\s*=', io_text):
             raise ValueError(f'I/O port {port} is already assigned')
     replacements = {
@@ -21,10 +23,11 @@ def integrate(io_text):
             '\tif (rm_mode) { A = 0xff; return; }\n'
             '\thost_bdos_out(data);\n}\n\n'
             'in_func_t *const port_in[256] = {\n'
-            '\t[70] = rcpm_modem_status,\n\t[71] = rcpm_modem_read,\n\t[72] = rcpm_modem_control_read,',
+            '\t[70] = rcpm_modem_status,\n\t[71] = rcpm_modem_read,\n\t[72] = rcpm_modem_control_read,\n'
+            '\t[74] = rcpm_idle_read,',
         'out_func_t *const port_out[256] = {': 'out_func_t *const port_out[256] = {\n'
             '\t[71] = rcpm_modem_write,\n\t[72] = rcpm_modem_control,\n'
-            '\t[73] = rcpm_services_reset,',
+            '\t[73] = rcpm_services_reset,\n\t[74] = rcpm_idle_reset,',
         '\n#ifdef PIPES\n\t/* check if /tmp/.z80pack exists */':
             '\n\tif (rcpm_modem_init() < 0) exit(EXIT_FAILURE);\n'
             '\n#ifdef PIPES\n\t/* check if /tmp/.z80pack exists */',
@@ -57,6 +60,10 @@ def integrate(io_text):
         'static int rcpm_transfer_read(BYTE *, size_t, int);\n'
         'static ssize_t rcpm_transfer_write(const void *, size_t);\n\n'
         + services + io_text[end:])
+    old = 'fd = open(path, O_RDONLY | O_NONBLOCK);'
+    if io_text.count(old) != 1:
+        raise ValueError('Unexpected catalog open point')
+    io_text = io_text.replace(old, 'fd = open(path, O_RDWR | O_NONBLOCK);\n\tif (fd == -1) fd = open(path, O_RDONLY | O_NONBLOCK);')
     return io_text.replace('cpu_state = STOPPED;', 'cpu_state = ST_STOPPED;')
 
 
@@ -105,6 +112,9 @@ def main():
         staged = output.with_name(output.name + '.new')
         shutil.copy2(root / 'cpmsim-modem', staged)
         staged.replace(output)
+        output.with_name(output.name + '.features.json').write_text(json.dumps(dict(
+            format='rcpm-runtime-features-1', idle_timer_port=74, sysop_writable_catalog=True,
+            sha256=hashlib.sha256(output.read_bytes()).hexdigest()), indent=2) + '\n')
     print(f'Built {output}')
 
 

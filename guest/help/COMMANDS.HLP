@@ -1,0 +1,15 @@
+;
+BASIC COMMANDS
+
+DIR or SDZ lists files. Examples: DIR P:   DIR HELP:   DIR J1:
+LT reads text. Example: LT A0:WELCOME.TXT
+HELP topic displays instructions. Example: HELP MOUNT
+MOUNT /L lists the swappable volumes; MOUNT GAMES selects GAMES.
+RBBS enters the bulletin board. BYE ends your call.
+
+A0:SYSTEM contains caller commands. I0:WORK is temporary workspace.
+I14:HELP contains these topics. J: is the selected swappable volume.
+P0:SIGM and P1:CPMUG contain the permanent archive collections.
+Use a DU prefix such as J1: to specify drive J, user area 1.
+Caller access is controlled by the sysop. A visible program is not
+necessarily approved for online execution.

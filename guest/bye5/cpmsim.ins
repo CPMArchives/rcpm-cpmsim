@@ -17,6 +17,7 @@ MDCARCK: IN 46H
         ANI 4
         RET
 MDINIT: CALL WXINIT
+        CALL WXASTART
         CALL WXRESET
         PUSH H
         LHLD WXADDR
@@ -51,6 +52,45 @@ MDQUIT:
 MDSTOP: XRA A
         OUT 48H
         RET
+; Preserve the original no-activity reset points, including requests for
+; input, input ready and every output character. No BDOS re-entry here.
+WXIDRESET:PUSH PSW
+        LDA TOVAL
+        STA TOCNTM
+        XRA A
+        OUT 4AH
+        POP PSW
+        RET
+; A keyboard-status query must never wait a millisecond merely because no
+; input is ready. The paired reads latch elapsed whole host-clock minutes.
+WXIDPOLL:PUSH B
+        IN 4AH
+        MOV B,A
+        IN 4AH
+        ORA A
+        JNZ WXIDEXP
+        LDA TOVAL
+        ORA A
+        JZ WXIDLEFT
+        CMP B
+        JC WXIDEXP
+        JZ WXIDEXP
+WXIDLEFT:SUB B
+        MOV B,A
+        LDA TOCNTM
+        CMP B
+        JZ WXIDRET
+        MOV A,B
+        STA TOCNTM
+        MVI A,7
+        CALL MDOUTP
+WXIDRET:POP B
+        XRA A
+        RET
+WXIDEXP:POP B
+        JMP TMOUT
+; TOVAL=0 retains the legacy 8-bit countdown's 256-minute interpretation.
+; The elapsed-minute high byte expires that case without a wraparound.
 ; The emulated serial link has no baud clock. Report successful selection.
 SET300:
 SET450:

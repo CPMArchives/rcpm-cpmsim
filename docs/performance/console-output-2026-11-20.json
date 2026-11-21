@@ -1,0 +1,1043 @@
+{
+  "date": "2026-11-20",
+  "configured_cpu_mhz": 4,
+  "characters_per_sample": 512,
+  "method": "Z80 instruction T-state counters, separate bank/PC buckets, guest port markers bound output only",
+  "baseline": [
+    {
+      "label": "public-bdos2",
+      "microseconds": 1324339,
+      "tstates": 4554275,
+      "tstates_per_character": 8895.1,
+      "bytes_per_second": 387,
+      "keyboard_delay_tstates": 2090496,
+      "keyboard_delay_percent": 45.9,
+      "top": [
+        {
+          "bank": "0",
+          "pc": "D1BD",
+          "hits": "86016",
+          "tstates": "860160"
+        },
+        {
+          "bank": "0",
+          "pc": "D1BA",
+          "hits": "86016",
+          "tstates": "516096"
+        },
+        {
+          "bank": "0",
+          "pc": "D1BB",
+          "hits": "86016",
+          "tstates": "344064"
+        },
+        {
+          "bank": "0",
+          "pc": "D1BC",
+          "hits": "86016",
+          "tstates": "344064"
+        },
+        {
+          "bank": "0",
+          "pc": "CA01",
+          "hits": "11776",
+          "tstates": "117760"
+        },
+        {
+          "bank": "0",
+          "pc": "CA05",
+          "hits": "11264",
+          "tstates": "112640"
+        },
+        {
+          "bank": "0",
+          "pc": "CA09",
+          "hits": "11264",
+          "tstates": "112640"
+        },
+        {
+          "bank": "0",
+          "pc": "C9FF",
+          "hits": "11776",
+          "tstates": "82432"
+        },
+        {
+          "bank": "0",
+          "pc": "CA08",
+          "hits": "11264",
+          "tstates": "67584"
+        },
+        {
+          "bank": "0",
+          "pc": "CA00",
+          "hits": "11776",
+          "tstates": "47104"
+        },
+        {
+          "bank": "0",
+          "pc": "CA04",
+          "hits": "11264",
+          "tstates": "45056"
+        },
+        {
+          "bank": "0",
+          "pc": "FF4C",
+          "hits": "3072",
+          "tstates": "33792"
+        }
+      ],
+      "permission_dispatcher_body_tstates": 730112,
+      "permission_dispatcher_percent": 16.03
+    },
+    {
+      "label": "public-bdos6",
+      "microseconds": 404859,
+      "tstates": 1397283,
+      "tstates_per_character": 2729.1,
+      "bytes_per_second": 1265,
+      "keyboard_delay_tstates": 0,
+      "keyboard_delay_percent": 0.0,
+      "top": [
+        {
+          "bank": "0",
+          "pc": "CA01",
+          "hits": "11776",
+          "tstates": "117760"
+        },
+        {
+          "bank": "0",
+          "pc": "CA05",
+          "hits": "11264",
+          "tstates": "112640"
+        },
+        {
+          "bank": "0",
+          "pc": "CA09",
+          "hits": "11264",
+          "tstates": "112640"
+        },
+        {
+          "bank": "0",
+          "pc": "C9FF",
+          "hits": "11776",
+          "tstates": "82432"
+        },
+        {
+          "bank": "0",
+          "pc": "CA08",
+          "hits": "11264",
+          "tstates": "67584"
+        },
+        {
+          "bank": "0",
+          "pc": "CA00",
+          "hits": "11776",
+          "tstates": "47104"
+        },
+        {
+          "bank": "0",
+          "pc": "CA04",
+          "hits": "11264",
+          "tstates": "45056"
+        },
+        {
+          "bank": "0",
+          "pc": "C9C2",
+          "hits": "512",
+          "tstates": "8704"
+        },
+        {
+          "bank": "0",
+          "pc": "CF3A",
+          "hits": "512",
+          "tstates": "8704"
+        },
+        {
+          "bank": "0",
+          "pc": "D1A5",
+          "hits": "512",
+          "tstates": "8704"
+        },
+        {
+          "bank": "0",
+          "pc": "D207",
+          "hits": "512",
+          "tstates": "8704"
+        },
+        {
+          "bank": "0",
+          "pc": "D30B",
+          "hits": "512",
+          "tstates": "8704"
+        }
+      ],
+      "permission_dispatcher_body_tstates": 730112,
+      "permission_dispatcher_percent": 52.25
+    },
+    {
+      "label": "public-bdos9",
+      "microseconds": 1051892,
+      "tstates": 3601363,
+      "tstates_per_character": 7033.9,
+      "bytes_per_second": 487,
+      "keyboard_delay_tstates": 2090496,
+      "keyboard_delay_percent": 58.0,
+      "top": [
+        {
+          "bank": "0",
+          "pc": "D1BD",
+          "hits": "86016",
+          "tstates": "860160"
+        },
+        {
+          "bank": "0",
+          "pc": "D1BA",
+          "hits": "86016",
+          "tstates": "516096"
+        },
+        {
+          "bank": "0",
+          "pc": "D1BB",
+          "hits": "86016",
+          "tstates": "344064"
+        },
+        {
+          "bank": "0",
+          "pc": "D1BC",
+          "hits": "86016",
+          "tstates": "344064"
+        },
+        {
+          "bank": "0",
+          "pc": "FF4C",
+          "hits": "3072",
+          "tstates": "33792"
+        },
+        {
+          "bank": "0",
+          "pc": "FC51",
+          "hits": "3072",
+          "tstates": "30720"
+        },
+        {
+          "bank": "0",
+          "pc": "FF4E",
+          "hits": "3072",
+          "tstates": "30720"
+        },
+        {
+          "bank": "0",
+          "pc": "CF3A",
+          "hits": "1024",
+          "tstates": "17408"
+        },
+        {
+          "bank": "0",
+          "pc": "D207",
+          "hits": "1024",
+          "tstates": "17408"
+        },
+        {
+          "bank": "0",
+          "pc": "F789",
+          "hits": "1024",
+          "tstates": "17408"
+        },
+        {
+          "bank": "0",
+          "pc": "F78F",
+          "hits": "1024",
+          "tstates": "17408"
+        },
+        {
+          "bank": "0",
+          "pc": "CF35",
+          "hits": "1024",
+          "tstates": "13312"
+        }
+      ],
+      "permission_dispatcher_body_tstates": 1426,
+      "permission_dispatcher_percent": 0.04
+    },
+    {
+      "label": "public-bdosB",
+      "microseconds": 851874,
+      "tstates": 2957337,
+      "tstates_per_character": 5776.0,
+      "bytes_per_second": 601,
+      "keyboard_delay_tstates": 0,
+      "keyboard_delay_percent": 0.0,
+      "top": [
+        {
+          "bank": "0",
+          "pc": "FF48",
+          "hits": "18432",
+          "tstates": "184320"
+        },
+        {
+          "bank": "0",
+          "pc": "FF41",
+          "hits": "18432",
+          "tstates": "129024"
+        },
+        {
+          "bank": "0",
+          "pc": "FF42",
+          "hits": "18432",
+          "tstates": "129024"
+        },
+        {
+          "bank": "0",
+          "pc": "CA01",
+          "hits": "11776",
+          "tstates": "117760"
+        },
+        {
+          "bank": "0",
+          "pc": "CA05",
+          "hits": "11264",
+          "tstates": "112640"
+        },
+        {
+          "bank": "0",
+          "pc": "CA09",
+          "hits": "11264",
+          "tstates": "112640"
+        },
+        {
+          "bank": "0",
+          "pc": "FF43",
+          "hits": "18432",
+          "tstates": "110592"
+        },
+        {
+          "bank": "0",
+          "pc": "FF44",
+          "hits": "18432",
+          "tstates": "110592"
+        },
+        {
+          "bank": "0",
+          "pc": "FF45",
+          "hits": "18432",
+          "tstates": "110592"
+        },
+        {
+          "bank": "0",
+          "pc": "C9FF",
+          "hits": "11776",
+          "tstates": "82432"
+        },
+        {
+          "bank": "0",
+          "pc": "FF46",
+          "hits": "18432",
+          "tstates": "73728"
+        },
+        {
+          "bank": "0",
+          "pc": "FF47",
+          "hits": "18432",
+          "tstates": "73728"
+        }
+      ],
+      "permission_dispatcher_body_tstates": 730112,
+      "permission_dispatcher_percent": 24.69
+    },
+    {
+      "label": "private-bdos2",
+      "microseconds": 398313,
+      "tstates": 1346083,
+      "tstates_per_character": 2629.1,
+      "bytes_per_second": 1285,
+      "keyboard_delay_tstates": 0,
+      "keyboard_delay_percent": 0.0,
+      "top": [
+        {
+          "bank": "0",
+          "pc": "FF4C",
+          "hits": "3072",
+          "tstates": "33792"
+        },
+        {
+          "bank": "0",
+          "pc": "FC51",
+          "hits": "3072",
+          "tstates": "30720"
+        },
+        {
+          "bank": "0",
+          "pc": "FF4E",
+          "hits": "3072",
+          "tstates": "30720"
+        },
+        {
+          "bank": "0",
+          "pc": "F789",
+          "hits": "1024",
+          "tstates": "17408"
+        },
+        {
+          "bank": "0",
+          "pc": "F78F",
+          "hits": "1024",
+          "tstates": "17408"
+        },
+        {
+          "bank": "0",
+          "pc": "F786",
+          "hits": "1024",
+          "tstates": "11264"
+        },
+        {
+          "bank": "0",
+          "pc": "F783",
+          "hits": "1024",
+          "tstates": "10240"
+        },
+        {
+          "bank": "0",
+          "pc": "F793",
+          "hits": "1024",
+          "tstates": "10240"
+        },
+        {
+          "bank": "0",
+          "pc": "5C11",
+          "hits": "512",
+          "tstates": "9728"
+        },
+        {
+          "bank": "0",
+          "pc": "5C2F",
+          "hits": "512",
+          "tstates": "8704"
+        },
+        {
+          "bank": "0",
+          "pc": "5C3B",
+          "hits": "512",
+          "tstates": "8704"
+        },
+        {
+          "bank": "0",
+          "pc": "5C3E",
+          "hits": "512",
+          "tstates": "8704"
+        }
+      ]
+    },
+    {
+      "label": "private-bdos6",
+      "microseconds": 159599,
+      "tstates": 537635,
+      "tstates_per_character": 1050.1,
+      "bytes_per_second": 3208,
+      "keyboard_delay_tstates": 0,
+      "keyboard_delay_percent": 0.0,
+      "top": [
+        {
+          "bank": "0",
+          "pc": "C9C2",
+          "hits": "512",
+          "tstates": "8704"
+        },
+        {
+          "bank": "0",
+          "pc": "D1A5",
+          "hits": "512",
+          "tstates": "8704"
+        },
+        {
+          "bank": "0",
+          "pc": "D306",
+          "hits": "512",
+          "tstates": "8704"
+        },
+        {
+          "bank": "1",
+          "pc": "0132",
+          "hits": "512",
+          "tstates": "8704"
+        },
+        {
+          "bank": "0",
+          "pc": "C6F3",
+          "hits": "512",
+          "tstates": "8192"
+        },
+        {
+          "bank": "0",
+          "pc": "F628",
+          "hits": "512",
+          "tstates": "8192"
+        },
+        {
+          "bank": "0",
+          "pc": "F62C",
+          "hits": "512",
+          "tstates": "8192"
+        },
+        {
+          "bank": "0",
+          "pc": "F8CB",
+          "hits": "512",
+          "tstates": "8192"
+        },
+        {
+          "bank": "0",
+          "pc": "F8CF",
+          "hits": "512",
+          "tstates": "8192"
+        },
+        {
+          "bank": "0",
+          "pc": "CB1C",
+          "hits": "512",
+          "tstates": "6656"
+        },
+        {
+          "bank": "0",
+          "pc": "D2FE",
+          "hits": "512",
+          "tstates": "6656"
+        },
+        {
+          "bank": "0",
+          "pc": "D301",
+          "hits": "512",
+          "tstates": "6656"
+        }
+      ]
+    },
+    {
+      "label": "private-bdos9",
+      "microseconds": 301052,
+      "tstates": 1033454,
+      "tstates_per_character": 2018.5,
+      "bytes_per_second": 1701,
+      "keyboard_delay_tstates": 0,
+      "keyboard_delay_percent": 0.0,
+      "top": [
+        {
+          "bank": "0",
+          "pc": "FF4C",
+          "hits": "3072",
+          "tstates": "33792"
+        },
+        {
+          "bank": "0",
+          "pc": "FC51",
+          "hits": "3072",
+          "tstates": "30720"
+        },
+        {
+          "bank": "0",
+          "pc": "FF4E",
+          "hits": "3072",
+          "tstates": "30720"
+        },
+        {
+          "bank": "0",
+          "pc": "F789",
+          "hits": "1024",
+          "tstates": "17408"
+        },
+        {
+          "bank": "0",
+          "pc": "F78F",
+          "hits": "1024",
+          "tstates": "17408"
+        },
+        {
+          "bank": "0",
+          "pc": "F786",
+          "hits": "1024",
+          "tstates": "11264"
+        },
+        {
+          "bank": "0",
+          "pc": "F783",
+          "hits": "1024",
+          "tstates": "10240"
+        },
+        {
+          "bank": "0",
+          "pc": "F793",
+          "hits": "1024",
+          "tstates": "10240"
+        },
+        {
+          "bank": "0",
+          "pc": "5C11",
+          "hits": "512",
+          "tstates": "9728"
+        },
+        {
+          "bank": "0",
+          "pc": "5C2F",
+          "hits": "512",
+          "tstates": "8704"
+        },
+        {
+          "bank": "0",
+          "pc": "5C3B",
+          "hits": "512",
+          "tstates": "8704"
+        },
+        {
+          "bank": "0",
+          "pc": "5C3E",
+          "hits": "512",
+          "tstates": "8704"
+        }
+      ]
+    },
+    {
+      "label": "private-bdosB",
+      "microseconds": 604712,
+      "tstates": 2097689,
+      "tstates_per_character": 4097.0,
+      "bytes_per_second": 847,
+      "keyboard_delay_tstates": 0,
+      "keyboard_delay_percent": 0.0,
+      "top": [
+        {
+          "bank": "0",
+          "pc": "FF48",
+          "hits": "18432",
+          "tstates": "184320"
+        },
+        {
+          "bank": "0",
+          "pc": "FF41",
+          "hits": "18432",
+          "tstates": "129024"
+        },
+        {
+          "bank": "0",
+          "pc": "FF42",
+          "hits": "18432",
+          "tstates": "129024"
+        },
+        {
+          "bank": "0",
+          "pc": "FF43",
+          "hits": "18432",
+          "tstates": "110592"
+        },
+        {
+          "bank": "0",
+          "pc": "FF44",
+          "hits": "18432",
+          "tstates": "110592"
+        },
+        {
+          "bank": "0",
+          "pc": "FF45",
+          "hits": "18432",
+          "tstates": "110592"
+        },
+        {
+          "bank": "0",
+          "pc": "FF46",
+          "hits": "18432",
+          "tstates": "73728"
+        },
+        {
+          "bank": "0",
+          "pc": "FF47",
+          "hits": "18432",
+          "tstates": "73728"
+        },
+        {
+          "bank": "0",
+          "pc": "FF4C",
+          "hits": "1024",
+          "tstates": "11264"
+        },
+        {
+          "bank": "0",
+          "pc": "FC51",
+          "hits": "1024",
+          "tstates": "10240"
+        },
+        {
+          "bank": "0",
+          "pc": "FF4E",
+          "hits": "1024",
+          "tstates": "10240"
+        },
+        {
+          "bank": "0",
+          "pc": "7D7A",
+          "hits": "512",
+          "tstates": "9728"
+        }
+      ]
+    },
+    {
+      "label": "unpatched-bdos2",
+      "microseconds": 281375,
+      "tstates": 985635,
+      "tstates_per_character": 1925.1,
+      "bytes_per_second": 1820,
+      "keyboard_delay_tstates": 0,
+      "keyboard_delay_percent": 0.0,
+      "top": [
+        {
+          "bank": "0",
+          "pc": "FF4C",
+          "hits": "3072",
+          "tstates": "33792"
+        },
+        {
+          "bank": "0",
+          "pc": "FC51",
+          "hits": "3072",
+          "tstates": "30720"
+        },
+        {
+          "bank": "0",
+          "pc": "FF4E",
+          "hits": "3072",
+          "tstates": "30720"
+        },
+        {
+          "bank": "0",
+          "pc": "F789",
+          "hits": "1024",
+          "tstates": "17408"
+        },
+        {
+          "bank": "0",
+          "pc": "F78F",
+          "hits": "1024",
+          "tstates": "17408"
+        },
+        {
+          "bank": "0",
+          "pc": "F786",
+          "hits": "1024",
+          "tstates": "11264"
+        },
+        {
+          "bank": "0",
+          "pc": "F783",
+          "hits": "1024",
+          "tstates": "10240"
+        },
+        {
+          "bank": "0",
+          "pc": "F793",
+          "hits": "1024",
+          "tstates": "10240"
+        },
+        {
+          "bank": "0",
+          "pc": "5C11",
+          "hits": "512",
+          "tstates": "9728"
+        },
+        {
+          "bank": "0",
+          "pc": "5C2F",
+          "hits": "512",
+          "tstates": "8704"
+        },
+        {
+          "bank": "0",
+          "pc": "5C3B",
+          "hits": "512",
+          "tstates": "8704"
+        },
+        {
+          "bank": "0",
+          "pc": "5C3E",
+          "hits": "512",
+          "tstates": "8704"
+        }
+      ]
+    },
+    {
+      "label": "unpatched-bdos6",
+      "microseconds": 85314,
+      "tstates": 262179,
+      "tstates_per_character": 512.1,
+      "bytes_per_second": 6001,
+      "keyboard_delay_tstates": 0,
+      "keyboard_delay_percent": 0.0,
+      "top": [
+        {
+          "bank": "1",
+          "pc": "0132",
+          "hits": "512",
+          "tstates": "8704"
+        },
+        {
+          "bank": "0",
+          "pc": "F628",
+          "hits": "512",
+          "tstates": "8192"
+        },
+        {
+          "bank": "0",
+          "pc": "F62C",
+          "hits": "512",
+          "tstates": "8192"
+        },
+        {
+          "bank": "0",
+          "pc": "F8CB",
+          "hits": "512",
+          "tstates": "8192"
+        },
+        {
+          "bank": "0",
+          "pc": "F8CF",
+          "hits": "512",
+          "tstates": "8192"
+        },
+        {
+          "bank": "0",
+          "pc": "F63B",
+          "hits": "512",
+          "tstates": "6656"
+        },
+        {
+          "bank": "1",
+          "pc": "0124",
+          "hits": "512",
+          "tstates": "6656"
+        },
+        {
+          "bank": "0",
+          "pc": "D925",
+          "hits": "512",
+          "tstates": "6144"
+        },
+        {
+          "bank": "0",
+          "pc": "F62B",
+          "hits": "512",
+          "tstates": "5632"
+        },
+        {
+          "bank": "0",
+          "pc": "F635",
+          "hits": "512",
+          "tstates": "5632"
+        },
+        {
+          "bank": "0",
+          "pc": "F643",
+          "hits": "512",
+          "tstates": "5632"
+        },
+        {
+          "bank": "0",
+          "pc": "F644",
+          "hits": "512",
+          "tstates": "5632"
+        }
+      ]
+    },
+    {
+      "label": "unpatched-bdos9",
+      "microseconds": 239122,
+      "tstates": 848790,
+      "tstates_per_character": 1657.8,
+      "bytes_per_second": 2141,
+      "keyboard_delay_tstates": 0,
+      "keyboard_delay_percent": 0.0,
+      "top": [
+        {
+          "bank": "0",
+          "pc": "FF4C",
+          "hits": "3072",
+          "tstates": "33792"
+        },
+        {
+          "bank": "0",
+          "pc": "FC51",
+          "hits": "3072",
+          "tstates": "30720"
+        },
+        {
+          "bank": "0",
+          "pc": "FF4E",
+          "hits": "3072",
+          "tstates": "30720"
+        },
+        {
+          "bank": "0",
+          "pc": "F789",
+          "hits": "1024",
+          "tstates": "17408"
+        },
+        {
+          "bank": "0",
+          "pc": "F78F",
+          "hits": "1024",
+          "tstates": "17408"
+        },
+        {
+          "bank": "0",
+          "pc": "F786",
+          "hits": "1024",
+          "tstates": "11264"
+        },
+        {
+          "bank": "0",
+          "pc": "F783",
+          "hits": "1024",
+          "tstates": "10240"
+        },
+        {
+          "bank": "0",
+          "pc": "F793",
+          "hits": "1024",
+          "tstates": "10240"
+        },
+        {
+          "bank": "0",
+          "pc": "5C11",
+          "hits": "512",
+          "tstates": "9728"
+        },
+        {
+          "bank": "0",
+          "pc": "5C2F",
+          "hits": "512",
+          "tstates": "8704"
+        },
+        {
+          "bank": "0",
+          "pc": "5C3B",
+          "hits": "512",
+          "tstates": "8704"
+        },
+        {
+          "bank": "0",
+          "pc": "5C3E",
+          "hits": "512",
+          "tstates": "8704"
+        }
+      ]
+    },
+    {
+      "label": "unpatched-bdosB",
+      "microseconds": 508274,
+      "tstates": 1822233,
+      "tstates_per_character": 3559.0,
+      "bytes_per_second": 1007,
+      "keyboard_delay_tstates": 0,
+      "keyboard_delay_percent": 0.0,
+      "top": [
+        {
+          "bank": "0",
+          "pc": "FF48",
+          "hits": "18432",
+          "tstates": "184320"
+        },
+        {
+          "bank": "0",
+          "pc": "FF41",
+          "hits": "18432",
+          "tstates": "129024"
+        },
+        {
+          "bank": "0",
+          "pc": "FF42",
+          "hits": "18432",
+          "tstates": "129024"
+        },
+        {
+          "bank": "0",
+          "pc": "FF43",
+          "hits": "18432",
+          "tstates": "110592"
+        },
+        {
+          "bank": "0",
+          "pc": "FF44",
+          "hits": "18432",
+          "tstates": "110592"
+        },
+        {
+          "bank": "0",
+          "pc": "FF45",
+          "hits": "18432",
+          "tstates": "110592"
+        },
+        {
+          "bank": "0",
+          "pc": "FF46",
+          "hits": "18432",
+          "tstates": "73728"
+        },
+        {
+          "bank": "0",
+          "pc": "FF47",
+          "hits": "18432",
+          "tstates": "73728"
+        },
+        {
+          "bank": "0",
+          "pc": "FF4C",
+          "hits": "1024",
+          "tstates": "11264"
+        },
+        {
+          "bank": "0",
+          "pc": "FC51",
+          "hits": "1024",
+          "tstates": "10240"
+        },
+        {
+          "bank": "0",
+          "pc": "FF4E",
+          "hits": "1024",
+          "tstates": "10240"
+        },
+        {
+          "bank": "0",
+          "pc": "7D7A",
+          "hits": "512",
+          "tstates": "9728"
+        }
+      ]
+    }
+  ],
+  "controlled_skip_keyboard_delay": [
+    {
+      "label": "public-bdos2",
+      "microseconds": 710362,
+      "tstates": 2461219,
+      "tstates_per_character": 4807.1,
+      "bytes_per_second": 721
+    },
+    {
+      "label": "public-bdos6",
+      "microseconds": 405169,
+      "tstates": 1397283,
+      "tstates_per_character": 2729.1,
+      "bytes_per_second": 1264
+    },
+    {
+      "label": "public-bdos9",
+      "microseconds": 431877,
+      "tstates": 1508307,
+      "tstates_per_character": 2945.9,
+      "bytes_per_second": 1186
+    },
+    {
+      "label": "public-bdosB",
+      "microseconds": 877380,
+      "tstates": 2957337,
+      "tstates_per_character": 5776.0,
+      "bytes_per_second": 584
+    }
+  ],
+  "production_changes": false
+}
