@@ -31,7 +31,9 @@ def remove_system_launchers(tools, image):
         raise ValueError('Game launcher remains on A0:')
 
 
-def build(source, romwbw, output, games=GAMES):
+def build(source, romwbw, output, games=GAMES, volume='GAMES'):
+    if not volume or len(volume) > 8 or any(c not in "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_-" for c in volume):
+        raise ValueError("Expected an uppercase volume name of 1-8 characters")
     output.mkdir(parents=True, exist_ok=False)
     alias = romwbw / 'Source/Images/d_z3plus/u0/STARTZ3P.COM'
     if hashlib.sha256(alias.read_bytes()).hexdigest() != ALIAS_SHA256:
@@ -177,7 +179,7 @@ NEXTPTR: DW 0
 NAMES:
 {names}
  DB 0
-ERROR: DB 13,10,'Game preparation failed. MOUNT GAMES first; WORK must be writable.',13,10,'$'
+ERROR: DB 13,10,'Game preparation failed. MOUNT {volume} first; WORK must be writable.',13,10,'$'
 SRC: DS 36
 DST: DS 36
 BUFFER: DS 128

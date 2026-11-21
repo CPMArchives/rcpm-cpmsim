@@ -1,0 +1,17 @@
+{
+  "tested_image_sha256": "74b318e74660926ccd6a91af9f4536d64cad3cbe1fe89ef1cbe1e6ac12a7d9c4",
+  "cpu_mhz": 4,
+  "transport": "direct",
+  "permissions_checked": true,
+  "no_system_launchers": true,
+  "adventureland_changed_room_save_restore": true,
+  "pirate_changed_inventory_save_restore": true,
+  "saves_in_WORK": true,
+  "carrier_loss_during_game": true,
+  "fresh_caller_recovered": true,
+  "WORK_cleared": true,
+  "private_tools_denied": true,
+  "master_unchanged": true,
+  "GAMES_unchanged": true,
+  "qualified": true
+}

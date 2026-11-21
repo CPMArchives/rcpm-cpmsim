@@ -1,0 +1,82 @@
+{
+  "archive_url": "https://www.ifarchive.org/if-archive/scott-adams/games/cpm/scott-adams-cpm.zip",
+  "archive_sha256": "cdb4eb9c85ad4a291b3c008bc1fea8def4c25526ec8c4accb083d460e58f5118",
+  "author_notice_url": "https://www.msadams.com/downloads/advgames.zip",
+  "author_archive_sha256": "79e7e0c5ab1726e09426df1d1b716e67fbdd755d59ba0ad5fd7ab4c0443c4013",
+  "interpreter": "ADVENTUR.COM 8.4c",
+  "interpreter_sha256": "9cc6e4f3e4cc350d97b575f03be55b6fa97083fa35c06f5fdbfe136d55ced923",
+  "refresh_register_samples": [
+    77,
+    110,
+    98,
+    9,
+    51
+  ],
+  "stories": [
+    {
+      "file": "ADVENT.D0",
+      "bytes": 14464,
+      "sha256": "2ed8e1e90b265185d84c2e18db6225b15dc8569c043ba5763f4557a360d91071"
+    },
+    {
+      "file": "ADVENT.D1",
+      "bytes": 16768,
+      "sha256": "442095b28bef7137b375ec616f2b5936252d60cc6cfd0a622d3ce75236224e72"
+    },
+    {
+      "file": "ADVENT.D2",
+      "bytes": 16512,
+      "sha256": "50401f78e3bb3f510297a2d4cb176d57d58152eeb936ac3951e57e9b22da23ef"
+    },
+    {
+      "file": "ADVENT.D3",
+      "bytes": 15488,
+      "sha256": "7cd306788bba7ff859752694f225e5560a966243fe16b296e4fbb8c0ffc44476"
+    },
+    {
+      "file": "ADVENT.D4",
+      "bytes": 16768,
+      "sha256": "516d87b4f72b2eb6f6a6480249613dc561cd8f7163e1bb811aa37f16441c26dd"
+    },
+    {
+      "file": "ADVENT.D5",
+      "bytes": 18048,
+      "sha256": "c555eb9c93af13dfa31d462dcc3a00aa6df6d79b2786108574aca65e0d16a9b0"
+    },
+    {
+      "file": "ADVENT.D6",
+      "bytes": 17792,
+      "sha256": "111da8c14a1188f73a329446bcdc3e03490dfd4715b7412f0c5b22e8cb070ebc"
+    },
+    {
+      "file": "ADVENT.D7",
+      "bytes": 17536,
+      "sha256": "d10181e9afda36fc4db76322c1febbc9997f60f550bdaad68e631a220077d2a0"
+    },
+    {
+      "file": "ADVENT.D8",
+      "bytes": 18048,
+      "sha256": "955684691b5b125fd26f996f72d7c6c0fe4482b5c23bf37fcba8eb3fed8a9e95"
+    },
+    {
+      "file": "ADVENT.D9",
+      "bytes": 19328,
+      "sha256": "3de121d222f8ba634e0d9e6564c1981c1fc91c993f60c31b38202d923a7b9a7f"
+    },
+    {
+      "file": "ADVENT.DA",
+      "bytes": 19840,
+      "sha256": "d9ad0593ad81634d6113eb45513edc17da1aac5e463c02920f59cb3bc8d07d9d"
+    },
+    {
+      "file": "ADVENT.DB",
+      "bytes": 18560,
+      "sha256": "87c3a7ee9cf0ae0fcfa796786ee7eb01b53b574bde4648d68d7ce84c9ee8f15b"
+    },
+    {
+      "file": "ADVENT.DC",
+      "bytes": 19328,
+      "sha256": "17d4323b894fb1528d7947aea94f09091a99f9cece3c86e677f92220e30a5c25"
+    }
+  ]
+}

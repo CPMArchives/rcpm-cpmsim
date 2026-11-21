@@ -79,6 +79,28 @@
       ],
       "mission_ansi_qualified": true,
       "walnut_games_added": 24
+    },
+    {
+      "id": "SCOTT",
+      "release_tag": "software-scott-2026-11-22",
+      "release_url": "https://github.com/CPMArchives/rcpm-cpmsim/releases/tag/software-scott-2026-11-22",
+      "archive": "SCOTT-collection.zip",
+      "download": "https://github.com/CPMArchives/rcpm-cpmsim/releases/download/software-scott-2026-11-22/SCOTT-collection.zip",
+      "report": "https://github.com/CPMArchives/rcpm-cpmsim/releases/download/software-scott-2026-11-22/SCOTT-REPORT.txt",
+      "archive_sha256": "29c7bf82cf129c914a7951fa4726bd054495a43588421c2494387f3dcab4f1b4",
+      "image": "SCOTT.dsk",
+      "image_sha256": "74b318e74660926ccd6a91af9f4536d64cad3cbe1fe89ef1cbe1e6ac12a7d9c4",
+      "image_bytes": 4177920,
+      "format": "z80pack-hd",
+      "user": 0,
+      "story_files": 13,
+      "numbered_adventures": 12,
+      "samplers": 1,
+      "launcher": "SCOTT.COM",
+      "interpreter": "ADVENTUR.COM 8.4c",
+      "minimum_rcpm": "1.0",
+      "free_kib": 3796,
+      "qualification": "All 13: startup/input/save/restore/quit; changed-location/inventory restoration; carrier recovery/WORK cleanup; master preservation; byte-identical rebuild"
     }
   ]
 }
