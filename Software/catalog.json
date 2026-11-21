@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "release_tag": "software-2026-11-21",
+  "release_url": "https://github.com/CPMArchives/rcpm-cpmsim/releases/tag/software-2026-11-21",
+  "collections": [
+    {
+      "id": "INFOCOM",
+      "archive": "INFOCOM-collection.zip",
+      "download": "https://github.com/CPMArchives/rcpm-cpmsim/releases/download/software-2026-11-21/INFOCOM-collection.zip",
+      "report": "https://github.com/CPMArchives/rcpm-cpmsim/releases/download/software-2026-11-21/INFOCOM-REPORT.txt",
+      "archive_sha256": "0a4cdf53c8cfa5c88aecebe063b4b59f84004fea5a21153d9cb2809a4cde6c3f",
+      "image": "INFOCOM.dsk",
+      "image_sha256": "0bcc13cdf580cc2781d9883511bf4d849bf61791a8e81c04a8f98f44089fb47b",
+      "image_bytes": 4177920,
+      "format": "z80pack-hd",
+      "user": 0,
+      "story_files": 32,
+      "minimum_rcpm": "1.0",
+      "interpreter": "Vezza RW 251222",
+      "qualification": "Representative v3/v4/v5 gameplay and caller save/recovery checks; all files read back"
+    },
+    {
+      "id": "MODERNIF",
+      "archive": "MODERNIF-collection.zip",
+      "download": "https://github.com/CPMArchives/rcpm-cpmsim/releases/download/software-2026-11-21/MODERNIF-collection.zip",
+      "report": "https://github.com/CPMArchives/rcpm-cpmsim/releases/download/software-2026-11-21/MODERNIF-REPORT.txt",
+      "archive_sha256": "c0b609865e2789c005ac46bdff445818a387897e7796a0677348c19b27918bec",
+      "image": "MODERNIF.dsk",
+      "image_sha256": "5033081f97c183e0802561e17c060d0bee39721f3becc61e4566c8a645cb6343",
+      "image_bytes": 4177920,
+      "format": "z80pack-hd",
+      "user": 0,
+      "story_files": 11,
+      "minimum_rcpm": "1.0",
+      "interpreter": "Vezza RW 251222",
+      "qualification": "All 11 entries: startup, commands, save/restore and quit; caller recovery/WORK cleanup checked"
+    }
+  ]
+}
