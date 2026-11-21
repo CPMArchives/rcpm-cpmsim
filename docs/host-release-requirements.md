@@ -6,8 +6,8 @@ are build-time conveniences, not package runtime requirements.
 
 | Host | Existing implementation | Remaining qualification/build work |
 | --- | --- | --- |
-| macOS ARM64 | Native C launcher, cpmsim and raw cpmtools; deployment target 11.0; package built locally | Extracted candidate live checks, downloaded/quarantined archive startup, supported startup instructions |
-| Linux x64 | Launcher has `/proc/self/exe` path discovery; host runtime and image tools use POSIX interfaces | Build all native files on Linux, add platform packaging, inspect dependencies and qualify on the declared minimum distribution |
+| macOS ARM64 | Native candidate passes extracted-package checks; runtime identity preserved through development-tool separation; deployment target 11.0 | Downloaded/quarantined archive startup and final write-interruption qualification |
+| Linux x64 | [Native packager and transferable build kit](linux-host-build.md) prepared; common-payload integrity and portable extraction checks pass | Run native compilation, ELF/dependency audit and extracted-package live checks on a Linux x64 host; establish the supported distribution baseline |
 | Windows x64 | No native release launcher/backend has been established | Resolve POSIX socket, terminal, process, file locking and randomness dependencies; select and document a native Windows runtime approach, then build/package/qualify it |
 | macOS Intel | No qualified package | Inclusion in 1.0 remains a scope decision; build and test if included |
 

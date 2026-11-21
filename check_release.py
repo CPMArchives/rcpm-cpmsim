@@ -5,17 +5,20 @@ import fcntl
 import hashlib
 import json
 import os
-from pathlib import Path
+from pathlib import Path, PurePosixPath
 import pty
 import re
 import select
 import shutil
 import socket
 import struct
+import stat
 import subprocess
+import tarfile
 import termios
 import time
 import tty
+import zipfile
 
 
 def sha(path):
@@ -32,6 +35,40 @@ def free_port():
         return server.getsockname()[1]
 
 
+def extract_package(archive, output):
+    """Unpack a regular-file release archive, retaining executable modes."""
+    def safe(name):
+        path = PurePosixPath(name)
+        if path.is_absolute() or '..' in path.parts or '\\' in name:
+            raise ValueError('Unsafe release archive member: ' + name)
+    if zipfile.is_zipfile(archive):
+        with zipfile.ZipFile(archive) as source:
+            entries = source.infolist()
+            for entry in entries:
+                safe(entry.filename)
+                if stat.S_ISLNK(entry.external_attr >> 16):
+                    raise ValueError('Unexpected release archive symlink')
+            if shutil.which('ditto') and os.uname().sysname == 'Darwin':
+                subprocess.run(['ditto', '-x', '-k', str(archive), str(output)], check=True)
+            else:
+                source.extractall(output)
+                for entry in entries:
+                    mode = (entry.external_attr >> 16) & 0o777
+                    if mode:
+                        (output / entry.filename).chmod(mode)
+    else:
+        with tarfile.open(archive, 'r:*') as source:
+            for entry in source.getmembers():
+                safe(entry.name)
+                if not (entry.isfile() or entry.isdir()):
+                    raise ValueError('Unexpected special file in release archive')
+            source.extractall(output)
+    manifests = list(output.glob('*/MANIFEST.json'))
+    if len(manifests) != 1:
+        raise ValueError('Expected one top-level release package manifest')
+    return manifests[0].parent
+
+
 class Guest:
     def __init__(self, package, output, *args):
         self.package = package
@@ -41,7 +78,10 @@ class Guest:
         env = {key: value for key, value in os.environ.items()
                if not key.startswith(('RCPM_', 'PYTHON')) and key not in ('TMUX', 'DISKDEFS')}
         env.update(PATH='/usr/bin:/bin', TERM='vt100')
-        self.process = subprocess.Popen([str(package / 'Start-RCPM.command'), *args],
+        launcher = package / 'Start-RCPM.command'
+        if not launcher.is_file():
+            launcher = package / 'Start-RCPM.sh'
+        self.process = subprocess.Popen([str(launcher), *args],
                                         cwd='/tmp', env=env, stdin=slave, stdout=slave, stderr=slave)
         # Keep a slave descriptor until logs are drained. Darwin can discard
         # unread PTY output when the last slave closes after a short refusal.
@@ -141,8 +181,7 @@ def main():
     print('Results: ' + str(output), flush=True)
     extracted = output / 'Unpacked elsewhere with spaces'
     print('Extracting release archive...', flush=True)
-    subprocess.run(['/usr/bin/ditto', '-x', '-k', str(args.archive.resolve()), str(extracted)], check=True)
-    package = extracted / 'RCPM-macOS-arm64'
+    package = extract_package(args.archive.resolve(), extracted)
     manifest = json.loads((package / 'MANIFEST.json').read_text())
     print('Verifying packaged file hashes...', flush=True)
     for group in ('common', 'host'):
@@ -191,13 +230,15 @@ def main():
         assert b'R C P / M' in guest.remote
         # Exercise shipped media directly; do not install topics during this
         # check, which would conceal omissions from the release archive.
-        topics = Path(__file__).resolve().parent / 'guest/help'
-        for topic in sorted(topics.glob('*.HLP')):
+        topics = package / 'source/rcpm/guest/help'
+        topic_files = sorted(topics.glob('*.HLP'))
+        assert topic_files, 'Shipped HELP reference topics are missing'
+        for topic in topic_files:
             name = topic.stem
             expected = topic.read_text(encoding='ascii').splitlines()[1].encode('ascii')
             command = 'HELP' if name == 'HELP' else 'HELP ' + name
             assert expected in guest.command(command), command
-        result['shipped_caller_help_topics'] = len(list(topics.glob('*.HLP')))
+        result['shipped_caller_help_topics'] = len(topic_files)
         listing = guest.command('DIR SIGM:SIGMV001.LBR')
         assert b'SIGMV001' in listing
         listing = guest.command('DIR CPMUG:CPMUG093.LBR')

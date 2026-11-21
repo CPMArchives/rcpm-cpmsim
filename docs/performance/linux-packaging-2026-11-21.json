@@ -1,0 +1,26 @@
+{
+  "date": "2026-11-21",
+  "status": "packaging-source-and-build-kit-ready-native-linux-qualification-pending",
+  "host": "macOS ARM64",
+  "native_linux_x64_build": false,
+  "native_linux_x64_live_qualification": false,
+  "local_checks": {
+    "focused_packaging_tests_passed": 4,
+    "real_macos_archive_extraction_and_manifest_hashes": true,
+    "common_zip_identity": true,
+    "kit_file_hashes": true,
+    "kit_helper_imports_and_cli": true,
+    "kit_archive_integrity": true,
+    "wrong_host_build_refused_before_output": true
+  },
+  "common_zip_sha256": "697ee17645aeb5a8e77a42022b655c0c6bb5c69cc0b435dc7f1306830ebdd498",
+  "kit_files": 16,
+  "kit_archive_sha256": "aa85423a0d8cbb6df19e73bc4836c39b8fb717795bf5d66876a7013ca42a681b",
+  "kit_path": "build/linux-x64-build-kit-final/rcpm-linux-x64-build-kit.tar.gz",
+  "environment_limits": {
+    "local_iso": "Debian 13.7 ARM64",
+    "utmctl_exit_code": 134,
+    "usable_linux_x64_host": "not established"
+  },
+  "next_required": "Run native build and extracted-package qualification on a Linux x64 host; provide real tcpser for optional IP232 qualification"
+}

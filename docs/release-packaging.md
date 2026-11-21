@@ -82,6 +82,11 @@ future platform builds; it is not itself a runnable package.
 
 ## Qualification
 
+The [Linux x64 host path](linux-host-build.md) now has a native packager and a
+transferable build kit. It consumes this exact common ZIP and builds only native
+host files. Actual Linux x64 compilation and live qualification remain pending;
+the Mac-side packaging checks are not Linux runtime evidence.
+
 ```sh
 python3 check_release.py build/release-final/rcpm-macos-arm64-candidate.zip \
   --output build/release-final-check --tcpser /path/to/tcpser
