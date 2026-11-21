@@ -5,6 +5,11 @@ unresolved. This records component evidence and engineering choices; it does
 not classify every archive member as cleared or prohibited. The tested
 candidate and its notices are unchanged. No rights holder was contacted.
 
+Subsequent approved packaging change: the new runtime profile excludes M80,
+L80 and WM from a freshly reconstructed offline/BUILD.dsk and omits the
+unfiltered stock cpm3-2.dsk from the source bundle. The original reviewed
+candidate remains preserved. The tools remain external, pinned build inputs.
+
 ## Findings supported by component evidence
 
 | Component | Evidence | Assessment for this candidate |
@@ -28,8 +33,8 @@ retrieval from local files inspected directly.
 | Z3PLUS | Original 1988 notice restricts distribution. [Gaby's download page](https://www.gaby.de/edownf.htm) attributes later free-download authorization to Jay Sage. [RomWBW's catalog](https://wwarthen.github.io/RomWBW/Catalog/#z3plus) calls it public domain. | The distributor page establishes free downloads, not an explicit grant to rehost modified bundles. Obtain the originating broader grant or confirmation covering our configured library, aliases and distribution. The old notice alone is not the complete historical picture. |
 | BYE510 | Original source and BYE5.DOC permit unmodified, no-fee distribution. The installation chapter instructs operators to edit inserts/options and add an application subroutine. | Configuration is expected; describing all operator edits as forbidden would be wrong. Our AUTH/BDOS, execution and lifecycle changes go beyond ordinary equates. A grant covering distribution of those derivatives has not been established. |
 | ZDE 1.6 | ZDE16.NEW restricts incomplete/modified circulation and commercial distribution, while directing users to configure ZDE with ZDENSTAL 1.6. Our changes use that installer. | Ordinary configuration is intended use. The question is distribution of our preconfigured copy, not permission to configure it locally. Original ZDE16.LBR and installer are retained; no later clarification was found. |
-| Microsoft M80/L80 | Both occur in offline/BUILD.dsk, the shipped stock toolchain snapshot and the build inputs. L80 embeds Microsoft's copyright; M80 identifies itself as MACRO-80 3.44. | No applicable Microsoft redistribution grant was found. CP/M permissions and inclusion in z80pack do not answer this. Removing only offline/BUILD would leave the stock B: snapshot under source/upstream. |
-| MicroPro WM | offline/BUILD.dsk/0:WM.COM embeds a 1978 MicroPro copyright and occurs in the shipped stock toolchain snapshot. | No applicable MicroPro grant was established. Treat it separately from DRI components. |
+| Microsoft M80/L80 | Present on the original candidate's development media; L80 embeds Microsoft's copyright and M80 identifies itself as MACRO-80 3.44. | No applicable grant was found. The approved new runtime profile excludes them from offline media and excludes the unfiltered stock source disk. They remain separately supplied build inputs. |
+| MicroPro WM | The original development copy embeds a 1978 MicroPro copyright. | No applicable grant was established. The approved new runtime profile excludes this copy along with the stock source disk; it remains an external build input. |
 | HELPC/ZLT and other utilities | Installed hashes are pinned. ZHELP embeds Greenberg's non-profit reproduction text; ZLT embeds non-profit terms for Warren and Greenberg/Falconer code. | These identify constituent routines, not necessarily the whole program's terms. Complete the exact-version inventory for SDZ, HELPC, remaining private utilities and RBBS. Missing explicit terms in a header are not proof of prohibition or public-domain status. |
 | SIG/M and CPMUG | All 403 LBR files are preserved and checksum-verified. Notice discovery inspected top-level members of all 310 SIG/M and 93 CPMUG libraries. SIG/M contribution forms describe its noncommercial public-use policy. | This is meaningful provenance, but blank forms are not signed grants for every file. Member-specific terms remain authoritative. Compressed and nested material needs review; this is not completed collection clearance. |
 | Original project code | No root project LICENSE/COPYING file is recorded. | Declare the intended license for original contributions if publishing as open source; third-party terms remain separate. This review does not select a license for the maintainer. |
@@ -48,11 +53,12 @@ a compact hash-based record is tracked in
    source patches, modified binary distribution, notice retention and proposed
    release terms. An author named in an old header is not necessarily the
    person who can grant permission today. Contact requires separate authorization.
-2. Decide whether development-only Microsoft/MicroPro binaries belong in the
-   public runtime package. They are not needed to run the built system. A
-   proposed separation would omit them from both offline and source media and
-   let builders provide their own toolchain disks. That changes packaging and
-   recorded inputs; it has not been implemented.
+2. The maintainer approved separating development-only Microsoft/MicroPro
+   binaries from the public runtime package. The builder now reconstructs the
+   offline image without them, omits the unfiltered stock source disk, and
+   records retained/excluded hashes in DEVELOPMENT-MEDIA.json. Exact build
+   input pins are retained. P: and its preserved archives are unchanged; this
+   does not claim removal of every historical reference or descendant in P:.
 3. Finish utility/member notice review and declare release terms consistent
    with the noncommercial grants being used. Do not describe the complete
    aggregate as unrestricted public domain.

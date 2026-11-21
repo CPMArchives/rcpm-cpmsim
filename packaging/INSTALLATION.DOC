@@ -115,3 +115,8 @@ J: contents. Sources, patches and build notes are under source/. Original
 notices are retained under NOTICES/ and within the original libraries.
 Read DISTRIBUTION-STATUS.DOC: this engineering candidate is not yet cleared
 for public redistribution. It does not import an operator's live disks.
+
+Microsoft M80/L80 and MicroPro WM (including WM.HLP) are not bundled as development tools.
+Running this package does not require them. Builders supply their original
+pinned toolchain disk separately; see source/BUILDING.DOC and
+DEVELOPMENT-MEDIA.json. The DRI files remain on offline/BUILD.dsk.

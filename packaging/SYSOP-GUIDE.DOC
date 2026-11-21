@@ -603,3 +603,9 @@ RCPM.CONF and restart to switch direct/IP232; do not change mounted drivers.
 Read DISTRIBUTION-STATUS.DOC before redistributing this aggregate. Original
 Z3PLUS, BYE5, utility and archive notices have not been replaced with a uniform
 license. This local candidate has not been published as release 1.0.
+
+The package's offline/BUILD.dsk retains the DRI development files. Microsoft
+M80/L80 and MicroPro WM (including WM.HLP) are separately supplied build inputs and are omitted
+from that image and from the source bundle's original toolchain-disk copies.
+They are not required to run the system. DEVELOPMENT-MEDIA.json records the
+separation; source/BUILDING.DOC explains how builders supply their own inputs.

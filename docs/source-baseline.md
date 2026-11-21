@@ -1,10 +1,13 @@
 # RCP/M 1.0 source baseline
 
 Recorded 21 November 2026. This is a local engineering baseline, not a public
-release. The qualified macOS candidate remains
-`build/release-1.0-stabilization/rcpm-macos-arm64-candidate.zip`; its exact hash
-is recorded in [release-baseline.json](release-baseline.json). Consolidating
-source does not replace that qualified archive or clear redistribution.
+release. The original live-qualified candidate is preserved at
+`build/release-1.0-stabilization/rcpm-macos-arm64-candidate.zip`. The current
+packaging profile separates Microsoft M80/L80 and MicroPro WM from development
+media and omits the unfiltered stock toolchain disk from bundled sources.
+`build/release-runtime-separated/` holds this new candidate. Runtime guest
+outputs and all input pins are unchanged. Neither profile is cleared for public
+redistribution; hashes and evidence identify their different package contents.
 
 ## What is pinned
 
@@ -14,7 +17,7 @@ component reference manifests retain original download URLs and hashes.
 
 | Input group | Required material | Recovery/source |
 | --- | --- | --- |
-| z80pack | Exact host source snapshot, native assembler sources and stock CP/M 3 toolchain disks | Qualified candidate `source/upstream/z80pack`; do not substitute a different upstream snapshot for this reviewed, service-capable input |
+| z80pack | Exact host source snapshot, native assembler sources and stock CP/M 3 toolchain disks | Package source supplies the host/assembler sources and stock A:. The original pinned cpm3-2.dsk must be supplied separately by the builder in an external source-input tree. It is intentionally absent from the new package. |
 | cpmtools | cpmtools 2.23 source | Qualified candidate `source/upstream/cpmtools-2.23`; the builder applies the raw-device option fix in a private copy |
 | bye | Seven pristine BYE510 reference files | Qualified candidate `source/upstream/bye510`; original URLs/hashes in `bye510-reference-sources.json` |
 | romwbw | Selected Z3PLUS files, tools and notices | RomWBW commit `cb887a1a2191072dff952bfa836a8dca201b1450`; every selected file is individually pinned |
@@ -69,6 +72,9 @@ Output includes `work/`, pinned `inputs/`, new `candidate/` packages and
 `rebuild-result.json`. A repository checkout or a packaged source snapshot can
 supply the project scripts. Future source snapshots include the host wrapper,
 check command and reproduction fixtures as well as the build scripts.
+Only `candidate/` contains the distributable artifacts under review. The
+`inputs/` and `work/` trees retain the builder-supplied legacy development tools
+needed to reproduce the binaries; they are separate from the runtime package.
 
 ## Verification evidence and limits
 
@@ -86,3 +92,10 @@ The replay does not qualify Windows/Linux, crash recovery during writes, or
 download quarantine behavior. It does establish that the recorded source and
 pinned inputs reproduce the tested guest media and emulator. The tested archive
 is preserved; no new network test is required solely for source consolidation.
+
+The subsequent development-media separation is verified in
+[development-separation-2026-11-21.json](performance/development-separation-2026-11-21.json).
+The new package excludes M80.COM, L80.COM, WM.COM and WM.HLP from a fresh
+BUILD image, preserves the remaining 21 development files byte for byte, and
+omits the unfiltered stock B: snapshot. All five runtime images, both drivers
+and all nine host files remain identical to the original qualified artifact.

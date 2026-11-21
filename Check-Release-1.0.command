@@ -9,15 +9,15 @@ if [ ! -f check_release.py ]; then
   fi
   cd -P "$qualification_checkout"
 fi
-if [ ! -f build/release-1.0-stabilization/rcpm-macos-arm64-candidate.zip ]; then
-  echo "The release candidate is missing from $PWD/build/release-1.0-stabilization." >&2
+if [ ! -f build/release-runtime-separated/rcpm-macos-arm64-candidate.zip ]; then
+  echo "The release candidate is missing from $PWD/build/release-runtime-separated." >&2
   exit 1
 fi
 mkdir -p build
 qualification_output="$(mktemp -d "$PWD/build/release-1.0-live.XXXXXX")"
 # check_release.py requires a new output path beneath the retained run folder.
 set -- python3 check_release.py \
-  build/release-1.0-stabilization/rcpm-macos-arm64-candidate.zip \
+  build/release-runtime-separated/rcpm-macos-arm64-candidate.zip \
   --output "$qualification_output/results"
 if [ -x /tmp/rcpm-tcpser-review/tcpser ]; then
   set -- "$@" --tcpser /tmp/rcpm-tcpser-review/tcpser

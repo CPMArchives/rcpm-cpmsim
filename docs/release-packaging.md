@@ -36,6 +36,12 @@ qualified. Download quarantine/signing/notarization needs host release validatio
   Generated SYSOP.DOC remains a private credential file, not the general guide.
 - Documentation includes raw image geometries and format/edit examples. cpmtools
   format selection is explicit; the bundled diskdefs is used via DISKDEFS.
+- `offline/BUILD.dsk` is reconstructed from a fresh image, retaining DRI files
+  while omitting Microsoft M80/L80 and MicroPro WM, including WM.HLP. The unfiltered original
+  `cpm3-2.dsk` is also omitted from the source bundle. Builders supply that
+  pinned disk separately; it is not a runtime dependency. `DEVELOPMENT-MEDIA.json`
+  records excluded hashes and verifies every retained development file.
+  The P: archive collections are preserved unchanged.
 
 The native launcher holds `.console.lock` across driver installation and exec into
 cpmsim. It stages A: changes before replacing it. It never edits live disks. Mode

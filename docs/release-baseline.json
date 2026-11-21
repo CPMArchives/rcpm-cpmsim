@@ -349,6 +349,22 @@
       "z80core/simz80.h": "4ddaf2601da8a505b5684dbc2724c092831c816ff0c33338726fbdee80974563"
     }
   },
+  "packaging_profile": {
+    "excluded_build_files": [
+      "L80.COM",
+      "M80.COM",
+      "WM.COM",
+      "WM.HLP"
+    ],
+    "excluded_build_programs": [
+      "L80.COM",
+      "M80.COM",
+      "WM.COM"
+    ],
+    "name": "external-legacy-development-tools",
+    "stock_cpm3_2_disk": "builder-supplied input; omitted from runtime source bundle"
+  },
+  "qualified_archive_profile": "Original engineering candidate before development-tool separation; retained as historical live-qualification evidence",
   "qualified_archives": {
     "rcpm-common-candidate.zip": "cd9274dfe8d65967575a7c3b91c43925d9013823140c9a160da8a9c5d4e32638",
     "rcpm-macos-arm64-candidate.zip": "45b735470dc998f2200eaecaaf6073ce7b76af5d4a2babc12c6378764b59f485"

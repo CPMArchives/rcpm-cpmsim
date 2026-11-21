@@ -152,6 +152,10 @@ def main():
     assert not (package / 'SYSOP.DOC').exists()
     assert not (package / 'state/initialized').exists()
     assert not (package / 'rbbs-trial-passwords.json').exists()
+    if (package / 'DEVELOPMENT-MEDIA.json').is_file():
+        from release_media import verify_public_development_media
+        print('Checking separated development tools...', flush=True)
+        verify_public_development_media(package, package / 'runtime')
     config = subprocess.check_output([str(package / 'runtime/rcpm'), '--check'], cwd='/tmp', text=True)
     assert 'direct 127.0.0.1:4000' in config
     try:

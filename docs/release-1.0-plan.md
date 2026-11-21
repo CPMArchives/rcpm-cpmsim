@@ -23,7 +23,7 @@ Do not redesign this policy during release stabilization.
 | AUTH CLI and protection boundary | Direct/IP232, grants/revocation, inheritance, save/load, restart and RBBS tests recorded under docs/performance | Preserve results; repeat relevant checks after the close fix |
 | Caller HELP | Nine I14 topics installed by fresh generation; build/caller-help-1.0-check/result.json passes every topic through HELPC as caller; rebuilt media readback passes | All nine shipped topics passed in the extracted candidate without reinstalling |
 | Sysop guide | Detailed AUTH chapter already in SYSOP-GUIDE.DOC | Keep examples consistent with actual behavior and document limitations |
-| Redistribution | [Component review](distribution-review.md) identifies the later CP/M grant and specific game terms; Z3PLUS/BYE/ZDE scope, bundled Microsoft/MicroPro tools and remaining utility/member terms remain unresolved | Resolve applicable grants and development-tool packaging; preserve component terms and agree any scope changes before publication |
+| Redistribution | [Component review](distribution-review.md) identifies the later CP/M grant and specific game terms; Microsoft/MicroPro build tools are separated from the new runtime package | Resolve Z3PLUS/BYE/ZDE scope and remaining utility/member terms; preserve notices before publication |
 | Native host packages | macOS ARM64 candidate rebuilt; [host requirements](host-release-requirements.md) identify remaining implementation and qualification | Build and qualify Windows x64 and Linux x64; decide whether Intel Mac is included in 1.0 |
 | Source consolidation | [Source baseline](source-baseline.md) pins 321 inputs; isolated rebuild reproduces nine guest outputs, all five media images and the emulator exactly | Preserve the baseline and qualified archive; changes to inputs or runtime behavior require affected checks |
 | Frozen qualification | Boot, port conflict, RBBS, games, caller boundary and driver switching have prior reports | Qualify final extracted archives with minimal environment; target interruption during transfers and RBBS writes; verify recovery and no credential leakage |
@@ -47,6 +47,17 @@ Do not redesign this policy during release stabilization.
    authorized. Keep the local candidate label until then.
 
 ## Current candidate and qualification boundary
+
+The current packaging profile is `build/release-runtime-separated/`. It
+reconstructs offline/BUILD.dsk without M80, L80 and WM, and omits the original
+stock cpm3-2.dsk from bundled sources. Builders still supply the pinned original
+disk separately. DEVELOPMENT-MEDIA.json records the separation. The original
+candidate below remains the exact historical live-qualification artifact.
+The [separation checks](performance/development-separation-2026-11-21.json)
+verify the four excluded files (including WM.HLP), all 21 retained development
+files, absence of the unfiltered source disk, ZIP integrity and manifests.
+All five runtime images, both drivers and all nine host files match the earlier
+qualified candidate exactly; no repeated live run is required for this change.
 
 `build/release-1.0-stabilization/rcpm-macos-arm64-candidate.zip` includes the
 fixed `build/bye5-writeonly` drivers and all nine caller HELP topics. The common

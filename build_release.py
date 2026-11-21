@@ -18,6 +18,7 @@ from prepare_shared_trial import create
 from prepare_rbbs_trial import install, references
 from prepare_system_trial import upper_layout
 from game_launchers import build as build_game_launchers
+from release_media import separate_development_tools, verify_public_development_media
 
 REPO = Path(__file__).resolve().parent
 NATIVE = ('rcpm', 'cpmsim', 'cpmcp', 'cpmls', 'cpmrm', 'cpmchattr', 'mkfs.cpm')
@@ -71,6 +72,7 @@ def clean_common(args, output):
     create(args.source, args.romwbw, args.runtime, args.builds, args.tools, output)
     install(output, REPO / 'build/rbbs37/original', args.tools, args.romwbw, output)
     upper_layout(output, args.tools, args.romwbw, REPO / 'build/ppip18')
+    separate_development_tools(args.source, args.tools, output)
     # Never use operator media. Remove development helpers and generated secrets.
     for path in output.glob('*.command'):
         path.unlink()
@@ -175,8 +177,12 @@ def sources_and_notices(args, output):
         shutil.copy2(args.source / relative, upstream / 'z80pack' / relative)
     stock = upstream / 'z80pack/cpmsim/disks/library'
     stock.mkdir(parents=True)
-    for name in ('cpm3-1.dsk', 'cpm3-2.dsk'):
-        shutil.copy2(args.source / 'cpmsim/disks/library' / name, stock / name)
+    shutil.copy2(args.source / 'cpmsim/disks/library/cpm3-1.dsk', stock / 'cpm3-1.dsk')
+    (stock / 'BUILD-INPUTS.DOC').write_text(
+        'The original cpm3-2.dsk is a separately supplied build input.\n'
+        'It contains Microsoft M80/L80 and MicroPro WM and is not bundled here.\n'
+        'Its required SHA256 and relative path are in rcpm/docs/release-baseline.json.\n'
+        'See source/BUILDING.DOC for assembling the complete build-input tree.\n')
     shutil.copytree(args.cpmtools_source, upstream / 'cpmtools-2.23', ignore=source_ignore)
     shutil.copytree(args.bye_reference, upstream / 'bye510', ignore=source_ignore)
     shutil.copytree(REPO / 'build/rbbs37/original/rbbs37-2', upstream / 'rbbs37-source')
@@ -228,8 +234,12 @@ def sources_and_notices(args, output):
         '  python3 build_raw_cpmtools.py ../upstream/cpmtools-2.23\n'
         'The cpmtools builder applies the documented POSIX raw-image option fix.\n'
         'BYE configured assembly is in configured/bye5; pristine upstream and RBBS\n'
-        'BASIC sources are under upstream/. Guest assembler/linker tools are also\n'
-        'retained on offline/BUILD.dsk. Utility sources and hashes are included.\n'
+        'BASIC sources are under upstream/. offline/BUILD.dsk retains the DRI\n'
+        'development files; Microsoft M80/L80 and MicroPro WM are excluded.\n'
+        'Builders supply the pinned original cpm3-2.dsk outside this package,\n'
+        'combining it with the source snapshot in their separate input tree.\n'
+        'Utility sources and hashes are included. DEVELOPMENT-MEDIA.json records\n'
+        'the separation and hashes of every retained development file.\n'
         'Reference downloads and their exact hashes are listed in rcpm/docs/*.json.\n'
         'Full fresh system generation uses prepare_system_trial.py; consult its\n'
         '--help and docs/zsystem-utilities.md for source/toolchain inputs.\n'
@@ -267,6 +277,7 @@ def main():
     common = args.output / 'rcpm-common'
     collections = clean_common(args, common)
     sources_and_notices(args, common)
+    verify_public_development_media(common, args.tools)
     common_files = {str(path.relative_to(common)): sha(path) for path in sorted(common.rglob('*')) if path.is_file()}
     payload = args.output / 'RCPM-macOS-arm64'
     shutil.copytree(common, payload, copy_function=lambda source, target: copy_file(Path(source), Path(target), Path(source).stat().st_mode & 0o777) and target)
