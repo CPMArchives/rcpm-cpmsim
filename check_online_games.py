@@ -18,6 +18,14 @@ def run(args, mode):
     out = args.output / mode; out.mkdir()
     p = out / 'instance'
     shutil.copytree(args.package, p, copy_function=lambda a,b: copy_file(Path(a),Path(b),Path(a).stat().st_mode & 0o777) and b)
+    env = dict(os.environ, DISKDEFS=str(p/'runtime/diskdefs'))
+    def listing(image, fmt, pattern):
+        return subprocess.check_output([str(p/'runtime/cpmls'), '-f', fmt,
+                                        str(image), pattern], env=env).decode().lower().split()
+    a0 = listing(p/'disks/drivea.dsk', 'ibm-3740', '0:*')
+    j0 = listing(p/'volumes/GAMES.dsk', 'z80pack-hd', '0:*')
+    for name in ('advent.com', 'animals.com', 'mchase.com'):
+        assert name not in a0 and name in j0, name
     port = free_port(); public = port; modem = None; log = None
     if mode == 'ip232':
         public = free_port(); log = (out/'tcpser.log').open('wb')
@@ -46,13 +54,13 @@ def run(args, mode):
         g.wait(b'RCP/M modem ready.' if mode == 'direct' else b'ATE0Q0V0S0=0M0S10=25X1H0')
         if mode == 'ip232': g.collect(3)
         login(); g.command('MOUNT GAMES')
-        offset = line('ADVENT'); wait(b'Would you like instructions?', offset)
+        offset = line('J0:ADVENT'); wait(b'Would you like instructions?', offset)
         offset = line('N'); wait(b'small brick building.', offset); wait(b'>', offset)
         offset = line('LOOK'); wait(b'small brick building.', offset); wait(b'>', offset)
         offset = line('QUIT'); wait(b'Do you really want to quit now?', offset)
         offset = line('Y'); wait(b'I0:WORK>', offset)
         print(mode+': Adventure command/quit PASS', flush=True)
-        offset = line('ANIMALS'); wait(b'Would you like to play the animal guessing game?', offset); wait(b'\x1bk', offset)
+        offset = line('J0:ANIMALS'); wait(b'Would you like to play the animal guessing game?', offset); wait(b'\x1bk', offset)
         offset = send(b'Y\r'); wait(b'Does it live in the water?', offset); wait(b'\x1bk', offset)
         offset = send(b'Y'); wait(b'Is it an octopus?', offset); wait(b'\x1bk', offset)
         offset = send(b'Y'); wait(b'I WON!', offset)
@@ -60,7 +68,7 @@ def run(args, mode):
         wait(b'\x1bk', offset)
         offset = send(b'N'); wait(b'I0:WORK>', offset)
         print(mode+': Animals round/exit PASS', flush=True)
-        offset = line('MCHASE'); wait(b'Insert Coin:', offset)
+        offset = line('J0:MCHASE'); wait(b'Insert Coin:', offset)
         offset = send(b'1'); wait(b'Boss?', offset)
         positions = re.findall(rb'\x1b\[(\d+);(\d+)H', g.remote[offset:])
         assert positions and all(1 <= int(y) <= 24 and 1 <= int(x) <= 80 for y,x in positions)
@@ -77,7 +85,7 @@ def run(args, mode):
         wait(b'Boss?', offset)
         offset = send(b'E'); wait(b'I0:WORK>', offset)
         print(mode+': Maze Chase ANSI/play/exit PASS', flush=True)
-        offset = line('ADVENT'); wait(b'Would you like instructions?', offset)
+        offset = line('J0:ADVENT'); wait(b'Would you like instructions?', offset)
         local = len(g.local); os.write(g.master, b'\x02'); g.wait(b'[Remote off]', start=local)
         local = len(g.local); os.write(g.master, b'\x02'); g.wait(b'[Remote on]', start=local)
         local = len(g.local); g.caller.close(); g.caller = None
@@ -90,7 +98,7 @@ def run(args, mode):
         assert (b'Directory access denied.' in reply or b'SYSUTLS:PIP?' in reply) and b'*' not in reply, reply
         g.stop()
         assert hashlib.sha256((p/'volumes/GAMES.dsk').read_bytes()).digest() == games_hash
-        result = dict(mode=mode, cpu_mhz=4, adventure_play_quit=True,
+        result = dict(mode=mode, cpu_mhz=4, launchers_on_J0=True, no_A0_game_wrappers=True, adventure_play_quit=True,
                       animals_round_exit=True, maze_ansi_play_exit=True,
                       ansi_coordinates_valid=True, local_blank_controls=True,
                       game_carrier_loss_recovery=True, work_cleaned_between_calls=True,

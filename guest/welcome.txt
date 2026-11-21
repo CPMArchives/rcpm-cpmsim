@@ -11,7 +11,7 @@ MESSAGE - leave a message for the sysop
 
 MOUNT /L lists disks. DIR HELP: lists help topics.
 LT also reads LBR members: LT J:LIBRARY README.TXT
-MOUNT GAMES, then ADVENT / ANIMALS / MCHASE to play.
+MOUNT GAMES, then J0:ADVENT / J0:ANIMALS / J0:MCHASE to play.
 
 I0:WORK is temporary; its files are cleared when the call ends.
 

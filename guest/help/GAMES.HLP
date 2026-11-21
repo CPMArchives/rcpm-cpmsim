@@ -2,13 +2,14 @@
 ONLINE GAMES
 
 First type MOUNT GAMES at the CP/M prompt.
-Then choose ADVENT, ANIMALS or MCHASE.
+Then choose J0:ADVENT, J0:ANIMALS or J0:MCHASE.
 ADVENT starts expanded Adventure; answer its instructions prompt.
 ANIMALS starts the animal guessing game.
 MCHASE starts Maze Chase and requires an ANSI-compatible terminal.
 
-These fixed launchers prepare required data in I0:WORK and run the
-approved game on J:. WORK must be readable and writable for preparation.
+These launchers reside on GAMES, not A0:.
+They prepare data in I0:WORK and run the approved game on J:.
+WORK must be readable and writable for preparation.
 Use the game's own quit command to return to the CP/M prompt.
 WORK files, including any temporary game data, are cleared at logoff.
 

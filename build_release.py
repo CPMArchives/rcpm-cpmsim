@@ -17,7 +17,7 @@ from build_j_volumes import build as build_volumes
 from prepare_shared_trial import create
 from prepare_rbbs_trial import install, references
 from prepare_system_trial import upper_layout
-from game_launchers import build as build_game_launchers
+from game_launchers import build as build_game_launchers, remove_system_launchers
 from release_media import separate_development_tools, verify_public_development_media
 
 REPO = Path(__file__).resolve().parent
@@ -90,12 +90,9 @@ def clean_common(args, output):
     shutil.copy2(args.archive.with_suffix('.sha256'), output / 'ARCHIVE.sha256')
     launchers = output / 'source/configured/game-launchers'
     build_game_launchers(args.source, args.romwbw, launchers)
-    for name in ('ADVENT', 'ANIMALS', 'MCHASE'):
-        put(args.tools, output / 'disks/drivea.dsk', 0, name + '.COM',
-            (launchers / (name + '.COM')).read_bytes())
-        tool(args.tools, 'cpmchattr', '-f', 'ibm-3740', output / 'disks/drivea.dsk',
-             'r4', '0:' + name + '.COM')
-    rows = build_volumes(args.sigm, args.tools, output / 'volumes', launchers / 'mchansi.bin')
+    remove_system_launchers(args.tools, output / 'disks/drivea.dsk')
+    rows = build_volumes(args.sigm, args.tools, output / 'volumes',
+                         launchers / 'mchansi.bin', launcher_dir=launchers)
     from auth_policy import install as install_auth
     install_auth(output, args.tools, args.source / 'z80asm/z80asm')
     (output / 'VOLUMES.json').write_text(json.dumps(rows, indent=2) + '\n')

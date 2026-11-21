@@ -14,16 +14,33 @@ GAMES = (
 )
 
 
-def build(source, romwbw, output):
+def remove_system_launchers(tools, image):
+    """Remove game launchers only from a stopped, staged A: image."""
+    def tool(name, *args):
+        return subprocess.run([str(tools / name), '-f', 'ibm-3740',
+                               str(image), *args], check=True,
+                              capture_output=True).stdout
+    names = tool('cpmls', '0:*').decode('ascii').lower().split()
+    for command, _, _, _ in GAMES:
+        name = command + '.COM'
+        if name.lower() in names:
+            tool('cpmchattr', 'mr', '0:' + name)
+            tool('cpmrm', '0:' + name)
+    remaining = tool('cpmls', '0:*').decode('ascii').lower().split()
+    if any((command + '.COM').lower() in remaining for command, _, _, _ in GAMES):
+        raise ValueError('Game launcher remains on A0:')
+
+
+def build(source, romwbw, output, games=GAMES):
     output.mkdir(parents=True, exist_ok=False)
     alias = romwbw / 'Source/Images/d_z3plus/u0/STARTZ3P.COM'
     if hashlib.sha256(alias.read_bytes()).hexdigest() != ALIAS_SHA256:
         raise ValueError('Expected the pinned Z3PLUS alias')
-    for command, user, executable, files in GAMES:
+    for command, user, executable, files in games:
         program = bytearray(configure_startup(alias, f'I0:;J{user}:{executable}'))
         entry = int.from_bytes(program[1:3], 'little')
         origin = 0x100 + len(program)
-        names = '\n'.join(" DB '" + name.split('.')[0].ljust(8) + name.split('.')[1] + "'" for name in files)
+        names = '\n'.join(" DB '" + name.partition('.')[0].ljust(8) + name.partition('.')[2].ljust(3) + "'" for name in files)
         asm = f''' ORG {origin}
 START: LD C,49
  LD DE,DMAPB

@@ -1,0 +1,27 @@
+{
+  "new_games": {
+    "LADDER": true,
+    "CATCHUM": true,
+    "ROGUE": true,
+    "WANDERER": true,
+    "TREK": true,
+    "SARGON": true,
+    "OTHELLO": true,
+    "GAMMON": true,
+    "BSHIP": true,
+    "SOKOBAN": true,
+    "WUMPUS": true
+  },
+  "manual_sessions_at_4mhz": true,
+  "direct_tcp": true,
+  "guide_only_changed_after_legacy_regression": true,
+  "byte_identical_rebuild": true,
+  "opening_session_tests_only": true,
+  "excluded": {
+    "ALIENS": "ADM-3A terminal incompatible"
+  },
+  "limitations": {
+    "WUMPUS": "N at instructions; no cave3; cave0 gameplay only",
+    "SOKOBAN": "movement and undo qualified; persistent saves not claimed"
+  }
+}
