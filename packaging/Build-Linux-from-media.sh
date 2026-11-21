@@ -6,7 +6,7 @@ if [ "$(uname -s)" != Linux ]; then
   exit 1
 fi
 kit_archive=""
-for candidate in rcpm-linux-arm64-build-kit.tar.gz rcpm-linux-arm64-build-kit.gz RCPM-LINUX-ARM64-BUILD-KIT.TAR.GZ RCPM-LINUX-ARM64-BUILD-KIT.GZ; do
+for candidate in kit.tgz rcpm-linux-arm64-build-kit*.gz RCPM-LINUX-ARM64-BUILD-KIT*.GZ; do
   if [ -f "$candidate" ]; then
     kit_archive="$candidate"
     break

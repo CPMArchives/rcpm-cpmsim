@@ -1,6 +1,6 @@
 {
   "date": "2026-11-21",
-  "status": "v2-media-attached-after-native-launcher-compile-failure",
+  "status": "native-compilation-succeeded-packaging-shadowed-platform-fixed-v3-prepared",
   "target": "linux-arm64",
   "utm_guest": "Debian 13 KDE ARM64",
   "observed_architecture": "aarch64",
@@ -21,10 +21,12 @@
   ],
   "vm_restarted": false,
   "security_settings_changed": false,
-  "native_build_failure": "User screenshot: GCC -Werror=misleading-indentation in packaging/launcher.c; four statement groups reformatted without behavioral changes.",
+  "native_build_failure": "Latest screenshot: native compilation passed, metadata serialization failed because target platform variable was shadowed by host-source destination Path.",
   "v2_kit_sha256": "033309f662abd5b50e82caed400c3a3f8e90081556eae18a6a190017073ad4cf",
   "v2_iso_sha256": "3b12e5aef70a0fe9578494c4cdf243e44d003994f14781ac011f905e76964549",
   "v2_iso_label": "RCPMBUILD2",
   "v2_iso_attached": true,
-  "validation": "7 packaging/bootstrap tests passed; launcher compiles with macOS Clang using release warning flags. Native GCC and live qualification remain pending."
+  "validation": "10 local tests passed. New test executes packaging through metadata, manifests, archive creation, relocation and hash verification with fixture native tools, not live Linux executables. ISO contents and every kit manifest hash verified. Native live qualification remains pending.",
+  "v3_iso_sha256": "2e577d1a52d8e7e9d3a19ec90df486caadd5974ed083ede842ba20fdeb53fe17",
+  "v3_iso_attached": false
 }

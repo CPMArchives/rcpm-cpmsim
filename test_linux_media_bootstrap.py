@@ -11,7 +11,7 @@ import unittest
 class MediaBootstrapChecks(unittest.TestCase):
     def test_read_only_media_and_both_archive_spellings(self):
         bootstrap = Path(__file__).resolve().parent / 'packaging/Build-Linux-from-media.sh'
-        for filename in ('rcpm-linux-arm64-build-kit.tar.gz', 'rcpm-linux-arm64-build-kit.gz'):
+        for filename in ('kit.tgz', 'rcpm-linux-arm64-build-kit.tar.gz', 'rcpm-linux-arm64-build-kit.gz'):
             with self.subTest(filename=filename), tempfile.TemporaryDirectory() as folder:
                 root = Path(folder)
                 media = root / 'media'

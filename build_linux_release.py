@@ -146,9 +146,9 @@ def build(common_archive, output):
         for source in ('build_linux_release.py', 'build_raw_cpmtools.py', 'build_modem_runtime.py',
                        'backup_rcpm.py', 'shared_instance.py', 'release_media.py',
                        'check_release.py', 'packaging/launcher.c'):
-            target = host_source / source
-            target.parent.mkdir(parents=True, exist_ok=True)
-            shutil.copy2(REPO / source, target)
+            source_target = host_source / source
+            source_target.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copy2(REPO / source, source_target)
         for folder in ('emulator', 'patches'):
             shutil.copytree(REPO / folder, host_source / folder)
         audit = {name: audit_native(runtime / name, architecture) for name in NATIVE}

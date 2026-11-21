@@ -8,7 +8,7 @@ import unittest
 import zipfile
 from unittest.mock import patch
 
-from build_linux_release import unpack_common, verify_common, host_architecture, audit_native
+from build_linux_release import unpack_common, verify_common, host_architecture, audit_native, build
 from check_release import extract_package
 
 
@@ -70,6 +70,42 @@ class LinuxPackagingChecks(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, 'Unexpected common archive member'):
             unpack_common(archive, self.root / 'unpacked')
         self.assertFalse((self.root / 'outside').exists())
+
+    def test_packaging_completes_after_native_compilation(self):
+        archive, expected = self.common()
+        with zipfile.ZipFile(archive, 'a') as output:
+            output.writestr('rcpm-common/runtime/', b'')
+            output.writestr('rcpm-common/source/', b'')
+        def compile_fixture(command, **kwargs):
+            if command[1].endswith('build_raw_cpmtools.py'):
+                directory = Path(command[-1]) / 'bin'
+                directory.mkdir(parents=True)
+                for name in ('cpmcp', 'cpmls', 'cpmrm', 'cpmchattr', 'mkfs.cpm'):
+                    (directory / name).write_bytes(b'native-tool-fixture')
+            elif command[1].endswith('build_modem_runtime.py'):
+                Path(command[-1]).write_bytes(b'emulator-fixture')
+                Path(command[-1]).with_name('cpmsim.features.json').write_text('{}')
+            else:
+                Path(command[-1]).write_bytes(b'launcher-fixture')
+        destination = self.root / 'package'
+        with patch('build_linux_release.host_architecture', return_value='arm64'), \
+             patch('build_linux_release.platform.platform', return_value='Linux fixture'), \
+             patch('build_linux_release.subprocess.run', side_effect=compile_fixture), \
+             patch('build_linux_release.subprocess.check_output', return_value='compiler fixture\n'), \
+             patch('build_linux_release.audit_native', return_value={'dependencies': []}), \
+             patch('build_linux_release.verify_public_development_media'):
+            build(archive, destination)
+        package_archive = destination / 'rcpm-linux-arm64-candidate.tar.gz'
+        package = extract_package(package_archive, self.root / 'relocated')
+        metadata = json.loads((package / 'BUILD-HOST.json').read_text())
+        manifest = json.loads((package / 'MANIFEST.json').read_text())
+        self.assertEqual(metadata['platform'], 'linux-arm64')
+        self.assertEqual(manifest['platform'], 'linux-arm64')
+        self.assertEqual(manifest['common'], expected)
+        for group in ('common', 'host'):
+            for name, digest in manifest[group].items():
+                self.assertEqual(hashlib.sha256((package / name).read_bytes()).hexdigest(), digest)
+        self.assertTrue((destination / 'SHA256SUMS').is_file())
 
     def test_native_host_architecture_is_selected_explicitly(self):
         with patch('build_linux_release.platform.system', return_value='Linux'):
