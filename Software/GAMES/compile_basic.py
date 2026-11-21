@@ -53,6 +53,8 @@ def main():
         parser.add_argument('--' + name, type=Path, required=True)
     parser.add_argument('--console-printer', action='store_true',
                         help='Redirect LPRINT to terminal for reviewed online editions')
+    parser.add_argument('--source-overrides', type=Path,
+                        help='Reviewed numbered BASIC sources replacing selected archive members')
     parser.add_argument('--names', required=True, help='Comma-separated 8.3 stems')
     args = parser.parse_args()
     for name in ('archive', 'compiler', 'tools', 'cpmsim', 'boot', 'output'):
@@ -87,8 +89,12 @@ def main():
             # Historical ZIP uses the Implode method, unsupported by zipfile.
             original = subprocess.check_output(['unzip', '-p', str(args.archive), matches[0]])
             f = out / 'prepared' / (name + '.BAS')
-            f.write_bytes(normalize(original, args.console_printer))
+            replacement = args.source_overrides / (name + '.BAS') if args.source_overrides else None
+            source = replacement.read_bytes() if replacement and replacement.exists() else original
+            f.write_bytes(normalize(source, args.console_printer))
             rows.append(dict(game=name, archive_member=matches[0], source_sha256=hashlib.sha256(original).hexdigest(), prepared_sha256=hashlib.sha256(f.read_bytes()).hexdigest(), qualified_for_GAMES=False))
+            if source != original:
+                rows[-1]['reviewed_source_sha256'] = hashlib.sha256(source).hexdigest()
             tool('cpmcp', '-f', 'z80pack-hd', disk, f, '0:' + f.name)
     master, slave = pty.openpty()
     tty.setraw(slave)

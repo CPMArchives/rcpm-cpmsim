@@ -1,0 +1,2 @@
+# Patch payloads preserve whitespace from the original historical sources.
+*.patch -whitespace

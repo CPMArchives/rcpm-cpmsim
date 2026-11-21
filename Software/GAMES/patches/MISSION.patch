@@ -1,0 +1,414 @@
+--- MISSION.BAS
++++ MISSION.BAS
+@@ -1,20 +1,6 @@
+-5 '	***
+-
+-	***						
+-
+-	***	    M I S S I O N :    I M P O S S I B L E
+-
+-	***
+-6 '	***		 Program by Richard  Altman
+-
+-	***		 CP/M Version  --  11/20/89
+-
+-	***
+-7 '	***	     Copyright (c) 1989 by Richard Altman
+-
+-	***		     All Rights Reserved.
+-
+-	***
++5 '	*** *** ***	    M I S S I O N :    I M P O S S I B L E ***
++6 '	***		 Program by Richard  Altman ***		 CP/M Version  --  11/20/89 ***
++7 '	***	     Copyright (c) 1989 by Richard Altman ***		     All Rights Reserved. ***
+ 8 '	***********************************************************************
+ 9 '
+ 10 '	 USER SUPPORTED
+@@ -47,24 +33,20 @@
+ 37 ' to change without notice.
+ 38 '
+ 39 '***************************************************************************
+-
+-
+ 40 '	Set Up Variables
+ 41 DEFSTR C,F,H-I,L:DEFINT A-B,E,M-N,P,W,Z:WIDTH 255
+-42 DIM F(24),J(10,10),K(10,10),L(16),M(16),N(16),O(22)
+-43 CLR=CHR$(23):F=CHR$(8):H=".":ESC$=CHR$(27):FQ=ESC$+CHR$(61):GOSUB 70
+-44 FOR X=1 TO 24:F(X)=FQ+CHR$(X+31)+" ":NEXT:GOSUB 5020:C7=CHR$(7)
+-45 DEF FNF(X,Y)=FQ+CHR$(X+31)+CHR$(Y+31):DEF FNRN(X)=INT(RND*X)+1
+-46 DEF FNTITLE$(X,M$)=FNF(X,1)+STRING$((80-LEN(M$))/2,12)+M$:CX=">>>>>  "
+-47 CA=STRING$(79,45):H1="/":Q$=CHR$(34):FB=CHR$(121):FC=CHR$(191)
++42 DIM F(24),J(10,10),K(10,10),L(16),M(16),N(16),O(22),HF(3),P(5),T(5),H$(5),A$(5),K$(5),W(5),A(5),E1(5),G(10),B(5),D(3)
++43 CLR=CHR$(27)+"[K":F=CHR$(8):H=".":ESC$=CHR$(27):GOSUB 70
++44 FOR X=1 TO 24:F(X)=ESC$+"["+MID$(STR$(X),2)+";1H":NEXT:GOSUB 5020:C7=CHR$(7)
++45 DEF FNF$(X,Y)=ESC$+"["+MID$(STR$(X),2)+";"+MID$(STR$(Y),2)+"H":DEF FNRN(X)=INT(RND*X)+1
++46 DEF FNTITLE$(X,M$)=FNF$(X,1)+STRING$((80-LEN(M$))/2,32)+M$:CX=">>>>>  "
++47 CA=STRING$(79,45):H1="/":Q$=CHR$(34):FB="|":FC="|"
+ 48 C=STRING$(5,32):LH=" Headquarters":LS=" State Building"
+ 49 LC="Secret Code Book":LT=" Terrorists":LM="Mission Team Member"
+-50 LU=" the"+LT:LF=STRING$(80,138)+CHR$(10):LA=" Enemy Agent"
+-51 FD=FNF(16,6)+CLR+" <A> = Get a Team Member or Code Book -or- "
+-52 FD=FD+F(18)+CA+FNF(17,6)+" <F> = Receive a Secret Report....         "
+-53 EL$=ESC$+"L":ED$=ESC$+"D":HF(1)="Foreign Embassy":GOTO 89
+-
+-
++50 LU=" the"+LT:LF=STRING$(79,45)+CHR$(10):LA=" Enemy Agent"
++51 FD=FNF$(16,6)+CLR+" <A> = Get a Team Member or Code Book -or- "
++52 FD=FD+F(18)+CA+FNF$(17,6)+" <F> = Receive a Secret Report....         "
++53 HF(1)="Foreign Embassy":GOTO 89
+ 54 '	Miscellaneous Subroutines
+ 55 L=FNTITLE$(2,"  MISSION:  IMPOSSIBLE  ")
+ 56 GOSUB 5025:IF L0="I"THEN GOSUB 5065 ELSE GOSUB 5060
+@@ -81,7 +63,7 @@
+ 67 J(X,Y)=0:K(X,Y)=0:RETURN
+ 68 PRINT" at"K"-"J;H:RETURN
+ 69 J(J,K)=K(J,K):RETURN
+-70 PRINT CHR$(26):LK=INKEY$:RETURN
++70 PRINT ESC$;"[2J";ESC$;"[H";:LK=INKEY$:RETURN
+ 71 PRINT:PRINT C"Your Mission, should you decide to accept it, is to ";:RETURN
+ 72 PRINT C"You don't have any "LZ"s.":RETURN
+ 73 PRINT C"You have";:IF D=1 THEN PRINT" one "LZ; ELSE PRINT D;LZ"s";
+@@ -89,7 +71,7 @@
+ 75 W=0:FOR A=1 TO 16:IF M(A)=1 THEN W=W+1
+ 76 NEXT:E1=0:FOR A=1 TO 5:IF P(A)=1 THEN E1=E1+1
+ 77 NEXT:RETURN
+-78 L=C+"LEGAL MOVES:    NORTH - SOUTH - EAST - WEST - REPORT - DISCOVER - MAP"
++78 L=C+"LEGAL MOVES: N/S/E/W, REPORT (R), DISCOVER (D), MAP (M), QUIT (Q)"
+ 79 L=L+C:GOSUB 5065:PRINT:RETURN
+ 80 PRINT C"All of"LU" have been killed... ";:RETURN
+ 81 K=K-J:K=K*100:K=INT(K+.5):RETURN
+@@ -106,8 +88,6 @@
+ 92 L=L+" LEFT to complete the Mission."+C+C:IF Z<10 THEN L=L+" "
+ 93 GOSUB 5065:PRINT:RETURN
+ 94 GOSUB 8000:H1="\":GOSUB 2700:GOTO 2800
+-
+-
+ 100 '	Start Mission
+ 105 RESTORE 8500
+ 110 FOR A=1 TO 16:READ L(A):M(A)=0:N(A)=1:NEXT
+@@ -135,13 +115,9 @@
+ 220 PRINT C"You will start with "L(1)" to aid you."
+ 225 PRINT C"You have only"Z"hours to complete your Mission, "LL;H
+ 230 PRINT CA:GOTO 2045
+-
+-
+ 249 '	Print Final Map
+-250 GOSUB 70:L=FNF(1,16)+"  FINAL MAP of ALL LOCATIONS  ":GOSUB 5065
++250 GOSUB 70:L=FNF$(1,16)+"  FINAL MAP of ALL LOCATIONS  ":GOSUB 5065
+ 255 PRINT:Z1=9:GOTO 310
+-
+-
+ 299 '	Print Map
+ 300 IF R7=1 THEN 840 ELSE R7=1
+ 305 GOSUB 70:PRINT F(1)"H="LH",  X="LEFT$(LS,8);"ldg,  A="LA",  T="LT
+@@ -149,16 +125,14 @@
+ 315 T=3:FOR A=1 TO 10:FOR B=1 TO 10:S5=J(A,B):IF Z1=9 THEN S5=K(A,B)
+ 320 IF S5=0 THEN PRINT TAB(T)"S";:GOTO 350
+ 325 IF S5=1 THEN PRINT TAB(T)"?";:GOTO 350
+-330 IF S5>9 AND S5<51 THEN IF Z1=9 THEN PRINT TAB(T-1)CHR$(149)CHR$(179)CHR$(170);:GOTO 350 ELSE PRINT TAB(T)"H";:GOTO 350
+-335 IF S5>999 THEN IF Z1=9 THEN PRINT TAB(T-1)CHR$(144)"X"CHR$(160);:GOTO 350 ELSE PRINT TAB(T)"X";:GOTO 350
++330 IF S5>9 AND S5<51 THEN IF Z1=9 THEN PRINT TAB(T-1)"|""H""|";:GOTO 350 ELSE PRINT TAB(T)"H";:GOTO 350
++335 IF S5>999 THEN IF Z1=9 THEN PRINT TAB(T-1)"[""X""]";:GOTO 350 ELSE PRINT TAB(T)"X";:GOTO 350
+ 340 IF S5<0 THEN PRINT TAB(T)"T";:GOTO 350
+ 345 PRINT TAB(T)"A";
+ 350 T=T+6:NEXT B:T=3:PRINT:NEXT A:Y2=Y*6
+-355 PRINT FNF(X+3,Y2-4)CHR$(186)FNF(X+3,Y2-2)CHR$(181);:IF WIN=1 THEN RETURN
++355 PRINT FNF$(X+3,Y2-4)">"FNF$(X+3,Y2-2)"<";:IF WIN=1 THEN RETURN
+ 360 PRINT F(16);:IF Z1<>9 THEN 800 ELSE Z1=0
+ 365 PRINT CX"The Secretary will dis-avow any knowledge of your actions.":RETURN
+-
+-
+ 399 '	Get Team Member
+ 400 Q=K(X,Y)/10:U=FNRN(2):A=2
+ 405 IF U=1 THEN 415 ELSE 445
+@@ -172,8 +146,6 @@
+ 445 IF E1(Q)>0 THEN E1(Q)=0:A=A-1 ELSE A=A-1:GOTO 410
+ 450 D1=FNRN(5):IF A(D1)=1 THEN P(D1)=1:A(D1)=0 ELSE 450
+ 455 J$="a "+LC:RETURN
+-
+-
+ 499 '	Get Secret Report
+ 500 Q=K(X,Y)/10:GQ=FNRN(9):IF Q=1 THEN GQ=9
+ 505 IF G(Q)=0 AND G(Q+5)=0 THEN 515
+@@ -203,21 +175,18 @@
+ 625 J(J,K)=K(J,K)+3:K(J,K)=J(J,K):RETURN
+ 630 PRINT C"I'm sorry, "LL", but Enemy"LT" have sabotaged the":PRINT C"receiv";
+ 635 PRINT"ing station.    We have no more information at this time.":RETURN
+-
+-
+ 699 '	Move to new location
+ 700 PRINT:J(X,Y)=K(X,Y):Z=Z-1:Z4=FNRN(99):IF Z4>96 THEN Z=Z+1
+ 705 RX=K(X,Y):IF RX<51 AND RX>9 THEN GOSUB 70:S2=K(X,Y)/10:PRINT C"You are at the "H(S2);LH;H:GOSUB 2500:PRINT F(15);:GOTO 2000
+ 710 IF RX<0 THEN 1500
+ 715 IF RX>999 THEN 2100
+ 720 IF RX=100 OR RX=200 OR RX=300 OR RX=400 OR RX=500 THEN 1800
+-725 PRINT:PRINT C;STRING$(9,166)"  You have reached a SAFE ZONE.":S1=1
+-
+-
++725 PRINT:PRINT C;STRING$(9,45)"  You have reached a SAFE ZONE.":S1=1
+ 799 '	Obtain Orders
+ 800 GOSUB 2300:LK=INKEY$:IF S1=0 THEN GOSUB 78:PRINT ELSE S1=0
+ 805 GOSUB 90:PRINT C"You are now at"Y"-"X" "STRING$(13,95)"  Your orders, "LL"?   ";
+ 810 GOSUB 6000
++812 IF I="Q"THEN 4540
+ 815 IF I="R"THEN 900
+ 820 IF I="M"THEN 300 ELSE R7=0
+ 825 IF I="D"THEN 1000
+@@ -225,8 +194,6 @@
+ 835 IF I="E"THEN IF Y+1>10 THEN 1055 ELSE Y=Y+1:GOTO 700
+ 840 IF I="N"THEN IF X-1<1 THEN 1055 ELSE X=X-1:GOTO 700
+ 845 IF I="S"THEN IF X+1>10 THEN 1055 ELSE X=X+1:GOTO 700 ELSE 810
+-
+-
+ 899 '	Condition Report
+ 900 IF R7=2 THEN 810 ELSE R7=2
+ 905 GOSUB 70:L=FNTITLE$(1,"  . . S T A T U S   R E P O R T . .  "):GOSUB 5065
+@@ -245,8 +212,6 @@
+ 970 IF D=0 THEN GOSUB 72:GOTO 975 ELSE GOSUB 73:PRINT H
+ 975 PRINT:GOSUB 58:PRINT"before"LA"s will ";:L=LR
+ 980 GOSUB 5050:PRINT F" ":PRINT C;C;LQ;H:PRINT:PRINT:GOTO 800
+-
+-
+ 999 '	Search (Discover) an area
+ 1000 Z=Z-1:PRINT
+ 1005 PRINT C"Which direction do you wish to explore and not enter?   ";
+@@ -262,8 +227,6 @@
+ 1055 PRINT:PRINT C"..... There is ";:L="nothing":GOSUB 5050
+ 1060 PRINT" in that direction.  Why try there?":IF Z<15 THEN Z=Z+1
+ 1065 S1=2:GOTO 800
+-
+-
+ 1070 PRINT:PRINT:LK=INKEY$:R5=K(Q1,Q2):D2=FNRN(32):IF D2>27 THEN 1075 ELSE 1105
+ 1075 Z=Z-1:L=STRING$(82,148):GOSUB 1100
+ 1080 PRINT"  I'm sorry, "LL", but"LT" have sabotaged the "LB;LD;
+@@ -277,13 +240,11 @@
+ 1120 IF R5<51 THEN PRINT"a"LH" Building.":GOTO 800
+ 1125 IF R5<501 THEN PRINT"an"LA;H:GOTO 800
+ 1130 PRINT"a Foreign"LS;H:GOTO 800
+-
+-
+ 1499 '	Terrorist Attack
+ 1500 GOSUB 70:PRINT CX"Oh, no!   You've run into a group of";-RX;F;LT;H
+ 1505 GOSUB 5025:FOR T=1 TO 450:NEXT:AC=-RX/1.5:IF AC<7 THEN AC=7
+ 1510 FOR A=1 TO AC:B=FNRN(8)+4:BA=FNRN(70):D1=FNRN(5)
+-1515 PRINT FNF(B,BA)K$(D1);:FOR T=1 TO 300:NEXT:PRINT FNF(B,BA)C;C;
++1515 PRINT FNF$(B,BA)K$(D1);:FOR T=1 TO 300:NEXT:PRINT FNF$(B,BA)C;C;
+ 1520 NEXT:GOSUB 5020:V=ABS(RX):GOSUB 75
+ 1525 IF E1+W<3 AND V>9 THEN GOSUB 250:PRINT CX"You have been killed by"LU;H:GOTO 1850
+ 1530 IF E1+W=0 THEN GOSUB 250:PRINT CX"You've been given a torturous death by"LU"....":GOTO 1850
+@@ -313,32 +274,28 @@
+ 1650 NEXT:RETURN
+ 1655 GOSUB 80:PRINT
+ 1660 D2=FNRN(15):Y1=FNRN(5)+3:GOSUB 1860:IF M(D2)=1 THEN PRINT C"But... "L(D2)" has been injured and you've lost"Y1"hours.":PRINT:GOTO 66 ELSE 1660
+-
+-
+ 1799 '	Enemy Agent
+ 1800 S3=K(X,Y)/100:S3=INT(S3+.5)
+ 1805 GOSUB 70:PRINT C;LA" "A$(S3)" ... is operating out of this sector."
+ 1810 FOR T=1 TO 400:NEXT:GOSUB 5025
+-1815 FOR A=1 TO 90:E=FNRN(10)+4:PRINT FNF(E,FNRN(78))H;:NEXT
++1815 FOR A=1 TO 90:E=FNRN(10)+4:PRINT FNF$(E,FNRN(78))H;:NEXT
+ 1820 GOSUB 75:FOR T=1 TO 500:NEXT:GOSUB 5020
+ 1825 IF W<3 OR E1<1 THEN GOSUB 250:PRINT F(15)CX;F;LA" "A$(S3)" has shot you down in cold blood!!!":GOTO 1850
+ 1830 Y1=FNRN(6)+5:GOSUB 1860:IF Y1<8 THEN PRINT F(15)C"Agent "A$(S3)" has wounded you...   Healing will take"Y1"hours.":Z=Z-Y1:PRINT:GOTO 800
+ 1835 Y1=13:IF Z<13 THEN Y1=Z-1
+ 1840 Y1=FNRN(Y1)+2:IF Y1<5 AND Z>9 THEN 1835
+ 1845 GOSUB 1860:PRINT F(15)C"You have destroyed Agent "A$(S3)",";:GOTO 65
+-1850 L=STRING$(4,170):PRINT:PRINT C" "LA"s will soon "LR;LQ" ("L")."
+-1855 GOSUB 5025:PRINT FNF(R1+3,R2*6-4)L:GOTO 4500
++1850 L=STRING$(4,88):PRINT:PRINT C" "LA"s will soon "LR;LQ" ("L")."
++1855 GOSUB 5025:PRINT FNF$(R1+3,R2*6-4)L:GOTO 4500
+ 1860 IF(Z-Y1)<1 THEN 1870 ELSE RETURN
+ 1865 IF Z<1 THEN 1870 ELSE RETURN
+ 1870 GOSUB 250:PRINT CX"Sorry, "LL", but time ran out!":GOTO 1850
+-
+-
+ 1999 '	At Headquarters
+ 2000 PRINT F(15)CA:L=FD:PRINT L"   ";:J$="":GOSUB 5020
+ 2005 GOSUB 6000
+ 2010 IF I="A"THEN S3=1:GOTO 2020
+ 2015 IF I="F"THEN S3=2:GOTO 2020 ELSE 2005
+-2020 L=FNF(15+S3,6)+" <"+I+"> ":GOSUB 5065:PRINT F(18)CLR
++2020 L=FNF$(15+S3,6)+" <"+I+"> ":GOSUB 5065:PRINT F(18)CLR
+ 2025 IF S3=1 THEN GOSUB 400 ELSE GOSUB 500
+ 2030 IF LEN(J$)>50 THEN PRINT J$:GOTO 2040
+ 2035 IF S3=1 AND J$<>""THEN PRINT C"You now have "J$" to assist you."
+@@ -347,8 +304,6 @@
+ 2050 GOSUB 6000
+ 2055 IF I="Y"THEN Z=Z-1:GOSUB 5025:GOTO 2000
+ 2060 IF I="N"OR I="M"OR I=CHR$(13)THEN PRINT F(16)CLR;:GOTO 800 ELSE 2050
+-
+-
+ 2099 '	At Foreign State Building
+ 2100 GOSUB 70:S3=INT(K(X,Y)/1000)
+ 2105 PRINT C"You are at the "HF(S3);H:GOSUB 2600:GOSUB 75
+@@ -383,37 +338,17 @@
+ 2315 NEXT:IF M3+W<5 OR M4+E1<2 THEN 2320 ELSE RETURN
+ 2320 GOSUB 250:PRINT
+ 2325 PRINT C"  Not enough help is left to enter the "HF(S3);H:GOTO 1850
+-
+-
+ 2499 '	Draw Headquarters Building
+-2500 GOSUB 5025:AD=107:AE=116:FOR A=56 TO 60
+-2505 PRINT EL$CHR$(A)CHR$(AD)CHR$(A)CHR$(AE);:AD=AD-4:AE=AE+4:NEXT
+-2510 FOR A=61 TO 78:PRINT EL$CHR$(A)CHR$(77)CHR$(A)CHR$(146);:NEXT
+-2515 FOR A=31 TO 52 STEP 4:PRINT FNF(9,A)CHR$(131);:NEXT
+-2520 PRINT EL$CHR$(52)CHR$(141)CHR$(60)CHR$(141)
+-2525 PRINT FNF(6,56)STRING$(2,166):GOTO 5020
+-
+-
++2500 GOSUB 5025:PRINT FNF$(7,55);"[ HEADQUARTERS ]":GOTO 5020
+ 2599 '	Draw Embassy Building
+-2600 GOSUB 5025:PRINT EL$CHR$(61)CHR$(74)CHR$(78)CHR$(74)
+-2605 PRINT EL$CHR$(61)CHR$(149)CHR$(78)CHR$(149)
+-2610 AD=82:AE=141:FOR A=55 TO 60
+-2615 PRINT EL$CHR$(A)CHR$(AD)CHR$(A)CHR$(AE);:AD=AD-1:AE=AE+1:NEXT
+-2620 FOR A=61 TO 78:PRINT EL$CHR$(A)CHR$(74)CHR$(A)CHR$(149);:NEXT
+-2625 PRINT ED$CHR$(62)CHR$(75)CHR$(62)CHR$(148)
+-2630 PRINT ED$CHR$(77)CHR$(75)CHR$(77)CHR$(148)
+-2635 PRINT ED$CHR$(62)CHR$(95)CHR$(77)CHR$(95)
+-2640 PRINT ED$CHR$(62)CHR$(129)CHR$(77)CHR$(129)
+-2645 FOR A=36 TO 46 STEP 2:PRINT FNF(10,A)" ";:NEXT
+-2650 IF S3=1 THEN LW=" FOREIGN "+STRING$(18,12)+" EMBASSY "
+-2655 IF S3=2 THEN LW="PARLIAMNT"+STRING$(18,12)+"  HOUSE  "
+-2660 IF S3=3 THEN LW="  STATE  "+STRING$(18,12)+"  HOUSE  "
+-2665 L=FNF(10,23)+LW:GOSUB 5065:GOTO 5020
+-
+-
++2600 GOSUB 5025:GOTO 2650
++2650 IF S3=1 THEN LW=" FOREIGN "+STRING$(18,32)+" EMBASSY "
++2655 IF S3=2 THEN LW="PARLIAMNT"+STRING$(18,32)+"  HOUSE  "
++2660 IF S3=3 THEN LW="  STATE  "+STRING$(18,32)+"  HOUSE  "
++2665 L=FNF$(10,23)+LW:GOSUB 5065:GOTO 5020
+ 2700 '	Input your name
+ 2701 'LL="Mr. Altman":RETURN
+-2705 GOSUB 55:GOSUB 2765:I=CHR$(12)
++2705 GOSUB 55:GOSUB 2765:I=""
+ 2710 L=" Smith"+Q$+"   ":PRINT F(8)I;C"Mission Leader Identification:"
+ 2715 PRINT F(10)I;C"Enter your name as follows:"
+ 2720 PRINT I;C;Q$"Mr."L;Q$"Mrs."L;Q$"Miss"L;Q$"Ms."L;Q$"Dr."L:LL=L:PRINT F(16)
+@@ -423,12 +358,10 @@
+ 2740 IF LN="Miss "OR LN="MISS "THEN RETURN
+ 2745 IF LJ="Ms. "OR LJ="MS. "THEN RETURN
+ 2750 IF LJ="Dr. "OR LJ="DR. "THEN RETURN
+-2755 PRINT FNF(20,7)"A correct repsonse is necessary before you can listen to";
++2755 PRINT FNF$(20,7)"A correct repsonse is necessary before you can listen to";
+ 2760 PRINT" the tape!"C7:FOR A=1 TO 3200:NEXT:GOTO 2700
+-2765 GOSUB 5025:PRINT F(6)STRING$(79,176)F(13)STRING$(79,131)
+-2770 FOR X=7 TO 12:PRINT F(X)CHR$(170);FNF(X,79)CHR$(149):NEXT:GOTO 5020
+-
+-
++2765 GOSUB 5025:PRINT F(6);STRING$(79,45);F(13);STRING$(79,45)
++2770 FOR X=7 TO 12:PRINT F(X);"|";FNF$(X,79);"|":NEXT:GOTO 5020
+ 2800 '	Input the Skill Level
+ 2801 'R3=1:P=LEN(LL):GOTO 2820
+ 2805 GOSUB 55:PRINT F(4)CLR;F(6)LL",":P=LEN(LL)
+@@ -440,8 +373,6 @@
+ 2835 IF P<14 THEN LB="Relay Station":GOTO 3000
+ 2840 IF P<18 THEN LB="IMF Relay":GOTO 3000
+ 2845 LB="Relay"
+-
+-
+ 2999 '	Display Assignment
+ 3000 LB=LB+H:LD=STRING$(27-P-LEN(LB),32):GOSUB 70
+ 3005 PRINT F(1)LF"Good morning, "LL",":GOSUB 5025
+@@ -494,8 +425,6 @@
+ 4030 PRINT"e of":PRINT"	your actions.":PRINT:PRINT"=====  (This tape will ";
+ 4040 PRINT"self-destruct in 10 seconds.)   Good luck!"
+ 4050 PRINT F(21)LF;:GOTO 105
+-
+-
+ 4499 '	End of Mission
+ 4500 FOR T=1 TO 750:NEXT:I=""
+ 4505 PRINT F(22)C"  Do you want to try another Mission   (Y/N)  ?   ";
+@@ -506,56 +435,46 @@
+ 4530 PRINT" Your Mission, "LL", has been concluded. ";
+ 4535 IF WIN=1 THEN PRINT">>>"F(18)ELSE PRINT
+ 4540 END:GOTO 88
+-
+-
+ 5000 '	Misc. Subroutines
+ 5005 '
+-5010 PRINT ESC$"B0";:RETURN:'	Inverse Video ON/OFF
+-5015 PRINT ESC$"C0";:RETURN
+-5020 PRINT ESC$"B4";:RETURN:'	Turn Cursor ON/OFF
+-5025 PRINT ESC$"C4";:RETURN
+-5030 PRINT ESC$"B1";:RETURN:'	Reduced Intensity ON/OFF
+-5035 PRINT ESC$"C1";:RETURN
+-5040 PRINT ESC$"B3";:RETURN:'	Underline ON/OFF
+-5045 PRINT ESC$"C3";:RETURN
++5010 PRINT ESC$;"[7m";:RETURN
++5015 PRINT ESC$;"[27m";:RETURN
++5020 PRINT ESC$;"[?25h";:RETURN
++5025 PRINT ESC$;"[?25l";:RETURN
++5030 PRINT ESC$;"[2m";:RETURN
++5035 PRINT ESC$;"[22m";:RETURN
++5040 PRINT ESC$;"[4m";:RETURN
++5045 PRINT ESC$;"[24m";:RETURN
+ 5050 GOSUB 5040:PRINT L;:GOTO 5045:'	Underline L$ -----
+ 5055 '
+ 5060 GOSUB 5010:GOSUB 5030:PRINT L;:GOSUB 5015:GOTO 5035:'	Revrs. Video L$
+ 5065 GOSUB 5010:PRINT L;:GOTO 5015:'				BRIGHT Video L$
+-
+-
+ 6000 '	INKEY$ Subroutines
+ 6010 IZ=INKEY$:I="":IF Z3=1 THEN 6050
+ 6015 I=INKEY$:IF I=""THEN 6015
+ 6020 IF ASC(I)>90 THEN I=CHR$(ASC(I)-32)
+ 6025 RETURN
+-
+-
+ 6050 I=INKEY$:IF I=""THEN 6055 ELSE RETURN
+-6055 TX=-200:GOSUB 6065:PRINT:PRINT CHR$(13);CHR$(11);CHR$(24)
+-6060 PRINT CHR$(11);:RETURN
++6055 TX=-200:GOSUB 6065:PRINT F(24);CLR;
++6060 RETURN
+ 6065 IJ=INKEY$:IK=""
+ 6070 PRINT F(24);:GOSUB 5025:PRINT L;:GOSUB 5020
+ 6075 IK=INKEY$:IF IK<>""THEN RETURN ELSE TX=TX+1:IF TX<250 THEN 6075
+ 6080 PRINT F(24);:GOSUB 5025:GOSUB 5065:GOSUB 5020:TX=0
+ 6085 IK=INKEY$:IF IK<>""THEN RETURN ELSE TX=TX+1:IF TX<150 THEN 6085
+ 6090 TX=0:GOTO 6070
+-
+-
+ 8000 '	Instructions??
+-8005 L0="I":GOSUB 55:FA=" ":PRINT FNF(1,1)FA
+-8010 PRINT EL$FA;FA;FA;FC;:PRINT EL$FA;FA;FB;FA;
+-8015 PRINT EL$FA;FC;FB;FC;:PRINT EL$FB;FA;FB;FC;
+-8020 PRINT FNF(12,22)"Do you need instructions  (Y or N) ?"
+-8025 PRINT FNF(24,15)+"(c) 1989 by Richard Altman  ---  All rights reserved.";
+-8030 IK=INKEY$:I="":PRINT FNF(12,62)C7;
++8005 L0="I":GOSUB 55:FA=" ":PRINT FNF$(1,1)FA
++8010 REM Kaypro line graphics omitted in ANSI edition
++8015 REM Gameplay text and map retained
++8020 PRINT FNF$(12,22)"Do you need instructions  (Y or N) ?"
++8025 PRINT FNF$(24,15)+"(c) 1989 by Richard Altman  ---  All rights reserved.";
++8030 IK=INKEY$:I="":PRINT FNF$(12,62)C7;
+ 8035 I=INKEY$:IF I=""THEN VL=VL+1:IF VL>32222 THEN VL=100:GOTO 8035 ELSE 8035
+ 8040 GOSUB 6020:IF I="Y"OR I="N"OR I=CHR$(13)THEN 8045 ELSE 8035
+-8045 RANDOMIZE VL:PRINT ED$FA;FA;FA;FC:GOSUB 5025:PRINT ED$FA;FA;FB;FA
+-8050 PRINT FNF(1,80)FA;FNF(2,60)CLR:FA="   | "
++8045 RANDOMIZE VL:GOSUB 5025
++8050 PRINT FNF$(1,80);" ";FNF$(2,60);CLR:FA="   | "
+ 8055 IF I="Y"THEN 8100 ELSE 5020
+-
+-
+ 8100 '	Display Instructions
+ 8105 PRINT F(3)CLR;F(5)C"The object of the Mission is to get back the object";
+ 8110 PRINT"(s) or person taken":PRINT"by the"LA"s and hidden in a Foreign"LS;
+@@ -583,8 +502,6 @@
+ 8220 PRINT"complete your Mission  (should you decide to accept it).     The ";
+ 8225 PRINT"higher the  number you select, the ";:L="fewer":GOSUB 5050
+ 8230 PRINT" hours you will have.   Good luck!!":Z=2:GOTO 62
+-
+-
+ 8499 '	Data
+ 8500 DATA Rollin Hand,Barney Collier,Cinnamon Carter,Gregory Grant
+ 8505 DATA Pablo San Ramon,Chung Ling Sun,Cameron Mitchell,Giuseppe Bonnano
+@@ -594,6 +511,4 @@
+ 8525 DATA Central Files,Delta,Ouch!,Central Intelligence,Zeta,Pain!
+ 8530 DATA Field Operations,Omega,Scream!,Foreign Parliament House
+ 8535 DATA Foreign State House,
+-
+-
+ 8600 '.........................................................................

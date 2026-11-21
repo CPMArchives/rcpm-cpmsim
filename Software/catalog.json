@@ -42,14 +42,14 @@
       "archive": "GAMES-expanded.zip",
       "download": "https://github.com/CPMArchives/rcpm-cpmsim/releases/download/software-games-2026-11-22/GAMES-expanded.zip",
       "report": "https://github.com/CPMArchives/rcpm-cpmsim/releases/download/software-games-2026-11-22/GAMES-REPORT.txt",
-      "archive_sha256": "76417eda8db398d527bc7c86d7d5892922f0df89bc72deec239746ee595aea42",
+      "archive_sha256": "5a43e056dd6e65b93fa4dd2afb6c5ba8f08c5bfc6d2d8dde777ad82ef5080ae5",
       "image": "GAMES.dsk",
-      "image_sha256": "0237b66ae0d9e1a139eaccc24e13142af3331ba5c621d7ce10d40f84251f90a9",
+      "image_sha256": "1da826a888bba3af57ca9daf20646613d49a3e64a2e20994c011f37e94aa4e5a",
       "image_bytes": 4177920,
       "format": "z80pack-hd",
       "minimum_rcpm": "1.0",
-      "new_games": 45,
-      "total_approved_games": 48,
+      "new_games": 49,
+      "total_approved_games": 52,
       "launcher_user": 0,
       "new_shared_users": [
         2,
@@ -57,8 +57,8 @@
         9,
         10
       ],
-      "free_kib": 2748,
-      "qualification": "All 45 additions: opening/input/exit; all 27 new BASIC titles individually tested for carrier recovery; finished image WORK cleanup/private-tool denial/master preservation; byte-identical rebuild",
+      "free_kib": 2638,
+      "qualification": "All 49 additions: input/exit; all 31 standalone BASIC additions separately tested for carrier recovery; repaired games completed rounds/replay; MISSION ANSI commands; byte-identical rebuild",
       "empty_users": [
         5,
         6,
@@ -70,13 +70,14 @@
         15
       ],
       "removed_archive_files": 46,
-      "basic_compiled_candidates": 27,
-      "basic_candidates_on_image": 27,
-      "basic_games_tested": 27,
+      "basic_compiled_candidates": 30,
+      "basic_candidates_on_image": 31,
+      "basic_games_tested": 31,
       "noncompetitive_activities": [
         "DIAMOND",
         "DICE"
-      ]
+      ],
+      "mission_ansi_qualified": true
     }
   ]
 }
