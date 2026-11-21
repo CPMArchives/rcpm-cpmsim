@@ -1,6 +1,8 @@
 # RCP/M on cpmsim
 
-The [1.0 release plan](docs/release-1.0-plan.md) tracks remaining release gates.
+The [1.0 release notes](docs/RELEASE-NOTES-1.0.md) describe the macOS ARM64
+and Windows x64 downloads, startup and tested limits. The
+[release plan](docs/release-1.0-plan.md) records qualification evidence.
 The [source baseline](docs/source-baseline.md) pins the qualified candidate's
 inputs and documents the verified isolated rebuild.
 

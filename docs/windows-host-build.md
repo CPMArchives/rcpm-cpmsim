@@ -1,8 +1,9 @@
 # Native Windows x64 host build
 
 21 November 2026. Maintainer approved the native Windows host port. A complete
-engineering candidate is cross-compiled; **Windows runtime qualification has not
-been performed**. This is not a cleared public release.
+engineering candidate is cross-compiled; **manual Windows runtime checks have now passed on Windows 11 ARM64 running
+the x64 application under emulation**. The required automated Windows suite has now passed on that VM.
+This is not a cleared public release.
 
 ## Build and package
 
@@ -101,3 +102,37 @@ executing and retrieving the qualification result.
 - [Windows file sharing modes](https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-createfilea).
 - [WinSock exclusive endpoint ownership](https://learn.microsoft.com/en-us/windows/win32/winsock/using-so-reuseaddr-and-so-exclusiveaddruse).
 - [Windows console input](https://learn.microsoft.com/en-us/windows/console/low-level-console-input-functions).
+
+## Manual Windows runtime evidence — 21 November 2026
+
+The maintainer ran the unchanged x64 candidate under Windows 11 ARM64, build
+26300, in UTM. Screenshots and direct reports establish boot to modem-ready,
+loopback caller login, system/public archive directory access, HELP index,
+GAMES/GUIDES listing, GAMES mounting and Adventure-file listing, RBBS entry,
+socket-disconnect recovery, reconnect, and normal BYE logoff returning ready.
+The earlier runner passed native host probes, disk-tool round trips and all
+21 retained development-file checks before timing out waiting for modem-ready.
+Its screen logger replayed rows on cursor movement; manual startup subsequently
+succeeded. A revised runner allows 180 seconds for boot, reports progress and
+records changed console rows. That revised runner has not yet passed on Windows.
+
+These are Windows ARM64 emulation results, not native x64 Windows-machine
+evidence. No all-topics HELP, GUIDES read, process-restart credential persistence,
+complete duplicate-instance, real IP232 or interrupted-write pass is claimed.
+See [manual evidence](performance/windows-manual-2026-11-21.json).
+
+## Required automated suite PASS — 21 November 2026
+
+The maintainer ran RCPMManualTests-v4 against the unchanged candidate and
+provided the complete PASS report (exit 0). Host probes, disk tools, retained
+development files, duplicate refusal, direct boot/login, all nine HELP topics,
+archives, both public mounts, RBBS, credential ACL/record consistency, orderly
+shutdown, restart/login, preserved credentials and final shutdown passed.
+This supersedes earlier pending/failed-run status above. The corrected runner
+baselines the existing screen before each launch, excluding stale readiness
+text; its runtime pass is now established.
+
+Evidence is [the transcribed report](performance/windows-runtime-2026-11-21.json),
+explicitly distinguished from a retrieved original guest file. The application
+is x64 running under Windows 11 ARM64 emulation (build 26300). Optional Windows
+IP232 and interrupted-write behavior remain outside this suite's result.

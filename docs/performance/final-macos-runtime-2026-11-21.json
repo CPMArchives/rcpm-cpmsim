@@ -1,0 +1,31 @@
+{
+  "evidence_kind": "local extracted final-review archive execution",
+  "runtime_payload": "unchanged in final assembly; manifests verify identity",
+  "raw_result": {
+    "archive": "/Users/nathanael/.codex/.chatgpt-projects/g-p-6a682f002be881918281554d644daf48/rcpm-cpmsim/build/release-1.0-final-review/rcpm-v1.0-macos-arm64.zip",
+    "relocated_with_spaces": true,
+    "minimal_system_path": true,
+    "common_and_host_hashes": true,
+    "shipped_disks": [
+      "A",
+      "I",
+      "P"
+    ],
+    "default_port": 4000,
+    "tested_port": 4000,
+    "shipped_caller_help_topics": 9,
+    "direct_boot": true,
+    "caller_login": true,
+    "archive_named_directories": true,
+    "both_public_volumes": true,
+    "documentation_read": true,
+    "rbbs_entry": true,
+    "first_start_private_credentials": true,
+    "duplicate_guest_refused": true,
+    "orderly_shutdown": true,
+    "no_python_tmux_or_homebrew_required": true,
+    "generated_passwords_match_guest_record": true,
+    "public_redistribution": "not cleared; retained notices identify unresolved restrictions"
+  },
+  "interpretation": "Runtime checks passed. The raw public_redistribution string is obsolete hardcoded checker text, not a runtime finding; component decisions are in distribution-review.md."
+}

@@ -100,23 +100,26 @@ refusal, orderly shutdown, real tcpser/IP232 operation, switching back to direct
 TCP and credential preservation. The device-level socket suite is also retained.
 No live operator instance is stopped or modified.
 
-## Redistribution status
+## Distribution and qualification status
 
-These artifacts are **local engineering candidates, not cleared public releases**.
-The preserved Z3PLUS notice explicitly prohibits reproduction/distribution, and
-BYE510's original notice grants unmodified distribution while our binary is
-patched. Other utilities and archive members retain individual terms. A later
-grant/permission or replacement must resolve these notices before publication.
-The inclusion of a file in an archive or RomWBW inventory does not resolve this.
-Original notices, source snapshots, configured BYE assembly, utility references
-and build instructions accompany the candidate. No uniform license is asserted
-for the aggregate. Nothing has been published.
+The maintainer's release decisions are in [the component review](distribution-review.md).
+Retain Z3PLUS on its later free-release/public-domain evidence, retain configured
+ZDE with the original complete archive, and retain the modified BYE510 with its
+original notices, documented changes and the maintainer's accepted uncertainty.
+The SIG/M and CPMUG collection authorization is accepted. Noncommercial and
+other component-specific conditions remain; no uniform public-domain or
+open-source license is asserted for the aggregate.
 
-The [component review](distribution-review.md) records a later public-domain
-release claim in RomWBW's Z3PLUS catalog, which still needs its originating grant
-traced, and the configured ZDE circulation question. The [host requirements](host-release-requirements.md)
-distinguish qualified macOS packaging from remaining Windows/Linux qualification.
-The [native Windows host build](windows-host-build.md) now produces a complete
-x64 candidate ZIP with the unchanged common payload, seven native runtime
-executables and separate qualification tools. It is cross-compiled and
-statically audited; no Windows runtime pass has been recorded.
+The required Windows suite passed on Windows 11 ARM64 (build 26300), running
+our x64 executables through Windows emulation, including restart and credential
+preservation. [Windows evidence](performance/windows-runtime-2026-11-21.json)
+distinguishes the transcribed screenshot from a retrieved original guest report.
+Optional Windows IP232 and native x64 hardware were not tested. Linux remains
+outside the qualified 1.0 host set. macOS ARM64 retains its direct/IP232 live
+qualification. Final distribution checks are recorded with the frozen assets.
+
+`finalize_release.py` refreshes documentation and source/qualification scripts
+around the frozen runtime files and regenerates the common/host manifests.
+It rejects changes to guest images, BYE drivers, native runtime executables or
+startup launchers relative to the tested candidates. A changed ZIP hash from
+updated documentation does not imply a rebuilt runtime.

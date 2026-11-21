@@ -1,7 +1,7 @@
 # RCP/M candidate distribution review
 
-Reviewed and rechecked 21 November 2026. Public redistribution of the aggregate is still
-unresolved. This records component evidence and engineering choices; it does
+Reviewed and rechecked 21 November 2026. Component release decisions are recorded below;
+remaining utility notice questions are distinct from accepted maintainer decisions. This records component evidence and engineering choices; it does
 not classify every archive member as cleared or prohibited. The tested
 candidate and its notices are unchanged. No rights holder was contacted.
 
@@ -108,3 +108,31 @@ for Z3PLUS and express original-distribution permission for BYE510. The BYE
 question left open is the breadth of permission for our new core modifications.
 No program or archive has been removed, no runtime bytes changed, and no rights
 holder contacted as part of this review.
+
+## Maintainer decisions following the recheck — 21 November 2026
+
+These decisions supersede earlier requests above to resolve Z3PLUS, BYE510 and
+ZDE as release gates. They do not replace original third-party notices.
+
+- Z3PLUS: retain it, based on the documented later free-release/public-domain
+  evidence. Preserve the original notices and later-release provenance.
+- ZDE: retain the configured 1.6 sysop editor and complete original archive and
+  notices. The configured-copy wording remains an acknowledged ambiguity, not
+  an established redistribution prohibition. No replacement is requested.
+- BYE510: the maintainer explicitly authorizes proceeding with distribution of
+  the project's modified build and accepts responsibility for that decision.
+  This is a maintainer release decision, not a newly established grant from
+  BYE's authors. Preserve their notices, pristine reference sources, and the
+  project modifications. The remaining permission uncertainty is documented
+  and accepted for this release; it does not require a wrapper rewrite.
+
+The modified build includes configuration/hardware adaptation, the historical
+keyboard fix, elapsed-time idle polling, dynamic Z3PLUS wheel integration and
+relocation fixes, AUTH file/program-load enforcement and administration,
+trusted RBBS state, session/WORK cleanup, private editor-key handling, exact
+welcome-file selection, carrier checking and the driver filename adjustment.
+`prepare_bye5.py` and `guest/bye5/` preserve the actual transformation and
+project-authored additions separately from the pristine references.
+
+Other utility notice questions, original project-code license selection, and
+platform runtime qualification are not resolved by these decisions.

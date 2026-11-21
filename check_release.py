@@ -316,7 +316,7 @@ def main():
             result['switch_back_to_direct'] = True
         finally:
             guest.close()
-    result['public_redistribution'] = 'not cleared; retained notices identify unresolved restrictions'
+    result['public_redistribution'] = 'not assessed by runtime checks; see docs/distribution-review.md'
     (output / 'result.json').write_text(json.dumps(result, indent=2) + '\n')
     print('Release package checks passed.', flush=True)
     print(json.dumps(result, indent=2))

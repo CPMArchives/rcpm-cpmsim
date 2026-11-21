@@ -1,6 +1,6 @@
 # RCP/M 1.0 release plan
 
-Status: engineering candidate, not a cleared public release. Updated 21 November 2026.
+Status: macOS ARM64 and Windows x64 release assets prepared; not yet published. Updated 21 November 2026.
 
 ## Release contract
 
@@ -23,8 +23,8 @@ Do not redesign this policy during release stabilization.
 | AUTH CLI and protection boundary | Direct/IP232, grants/revocation, inheritance, save/load, restart and RBBS tests recorded under docs/performance | Preserve results; repeat relevant checks after the close fix |
 | Caller HELP | Nine I14 topics installed by fresh generation; build/caller-help-1.0-check/result.json passes every topic through HELPC as caller; rebuilt media readback passes | All nine shipped topics passed in the extracted candidate without reinstalling |
 | Sysop guide | Detailed AUTH chapter already in SYSOP-GUIDE.DOC | Keep examples consistent with actual behavior and document limitations |
-| Redistribution | [Component review](distribution-review.md) identifies the later CP/M grant and specific game terms; Microsoft/MicroPro build tools are separated from the new runtime package | Record later Z3PLUS release evidence; address the narrower new BYE core-derivative and preconfigured ZDE questions; retain utility and user-group collection notices |
-| Native host packages | macOS ARM64 candidate rebuilt; [Windows x64 native candidate](windows-host-build.md) cross-compiled and statically audited; Linux x64 kit prepared with [pending native checks](linux-host-build.md) | Runtime-qualify Windows x64; build and qualify Linux x64; decide whether Intel Mac is included in 1.0 |
+| Redistribution | [Component review](distribution-review.md) identifies the later CP/M grant and specific game terms; Microsoft/MicroPro build tools are separated from the new runtime package | Z3PLUS/ZDE retained and modified BYE accepted by maintainer; finish remaining specific utility notice decisions and retain notices |
+| Native host packages | macOS ARM64 candidate rebuilt; [Windows x64 native candidate](windows-host-build.md) cross-compiled and statically audited; Linux x64 kit prepared with [pending native checks](linux-host-build.md) | Windows required suite PASS on Windows 11 ARM64 with x64 emulation; Linux and Intel Mac excluded from the 1.0 download scope |
 | Source consolidation | [Source baseline](source-baseline.md) pins 321 inputs; isolated rebuild reproduces nine guest outputs, all five media images and the emulator exactly | Preserve the baseline and qualified archive; changes to inputs or runtime behavior require affected checks |
 | Frozen qualification | Boot, port conflict, RBBS, games, caller boundary and driver switching have prior reports | Qualify final extracted archives with minimal environment; target interruption during transfers and RBBS writes; verify recovery and no credential leakage |
 | macOS distribution experience | Local unsigned candidate runs | Test actual downloaded archive/quarantine behavior and document supported startup steps |
@@ -93,3 +93,13 @@ DUs cannot execute caller programs. SYS hides directory entries; it does not
 provide access control. Native approved programs remain trusted code rather
 than a hostile-code sandbox. Existing carrier-loss tests during Adventure input
 do not establish crash safety at every RBBS or transfer write boundary.
+
+Maintainer decision, 21 November 2026: retain Z3PLUS and configured ZDE; proceed
+with the modified BYE510 with responsibility accepted by the maintainer. Keep
+original notices and document changes/uncertainty; no wrapper rewrite is required.
+See distribution-review.md for the decision and remaining separate items.
+
+Windows update, 21 November 2026: required automated suite PASS on Windows 11
+ARM64 running the unchanged x64 candidate through emulation, including process
+restart and credential preservation. See performance/windows-runtime-2026-11-21.json.
+This supersedes earlier Windows runtime-pending status; Linux remains separate.

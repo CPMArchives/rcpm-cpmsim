@@ -5,6 +5,7 @@ Run on Windows: python check_windows_release.py candidate.zip --output NEW_FOLDE
 No commands are typed into the VM and no credentials are printed in the report.
 """
 import argparse
+import difflib
 import hashlib
 import json
 import os
@@ -64,6 +65,16 @@ def unpack(archive, output):
     return package
 
 
+def changed_console_rows(previous, current):
+    """Record changed screen rows, rather than treating cursor motion as output."""
+    lines = []
+    for kind, _, _, first, last in difflib.SequenceMatcher(
+            None, previous, current, autojunk=False).get_opcodes():
+        if kind in ('insert', 'replace'):
+            lines.extend(row for row in current[first:last] if row.strip())
+    return ('\n'.join(lines) + '\n').encode('utf-8') if lines else b''
+
+
 class Guest:
     """Own a console in this isolated worker, and drive it through Win32 APIs."""
     def __init__(self, package, output, port):
@@ -98,7 +109,9 @@ class Guest:
         info = INFO()
         if not self.kernel.GetConsoleScreenBufferInfo(self.screen, c.byref(info)):
             raise c.WinError(c.get_last_error())
-        self.position = info.cursor.Y * info.size.X + info.cursor.X
+        # Exclude all output left by the previous guest before starting this one.
+        self.screen_rows = self.read_screen_rows()
+        self.started = time.monotonic()
         self.local, self.remote, self.caller = bytearray(), bytearray(), None
         self.output, self.package, self.port = output, package, port
         env = {key: value for key, value in os.environ.items()
@@ -108,26 +121,29 @@ class Guest:
         self.process = subprocess.Popen([str(package / 'runtime/rcpm.exe'), *arguments],
                                         cwd=tempfile.gettempdir(), env=env)
 
+    def read_screen_rows(self):
+        info = self.INFO()
+        if not self.kernel.GetConsoleScreenBufferInfo(self.screen, self.c.byref(info)):
+            raise self.c.WinError(self.c.get_last_error())
+        first_row = max(0, info.cursor.Y - 60)
+        length = (info.cursor.Y - first_row) * info.size.X + info.cursor.X
+        if not length:
+            return []
+        text = self.c.create_unicode_buffer(length + 1)
+        count = self.w.DWORD()
+        if not self.kernel.ReadConsoleOutputCharacterW(self.screen, text, length,
+                self.COORD(0, first_row), self.c.byref(count)):
+            raise self.c.WinError(self.c.get_last_error())
+        contents = text[:count.value]
+        return [contents[n:n + info.size.X].rstrip()
+                for n in range(0, len(contents), info.size.X)]
+
     def collect(self, duration=.1):
         deadline = time.monotonic() + duration
         while time.monotonic() < deadline:
-            info = self.INFO()
-            if not self.kernel.GetConsoleScreenBufferInfo(self.screen, self.c.byref(info)):
-                raise self.c.WinError(self.c.get_last_error())
-            end = info.cursor.Y * info.size.X + info.cursor.X
-            if end < self.position:
-                # Cursor-addressing output: retain the visible tail as diagnostic evidence.
-                self.position = max(0, end - info.size.X * 30)
-            length = end - self.position
-            if length:
-                text = self.c.create_unicode_buffer(length + 1)
-                count = self.w.DWORD()
-                origin = self.COORD(self.position % info.size.X, self.position // info.size.X)
-                if not self.kernel.ReadConsoleOutputCharacterW(self.screen, text, length,
-                                                               origin, self.c.byref(count)):
-                    raise self.c.WinError(self.c.get_last_error())
-                self.local.extend(text.value.encode('utf-8'))
-                self.position = end
+            rows = self.read_screen_rows()
+            self.local.extend(changed_console_rows(self.screen_rows, rows))
+            self.screen_rows = rows
             if self.caller and select.select([self.caller], [], [], .02)[0]:
                 data = self.caller.recv(16384)
                 if data:
@@ -143,7 +159,10 @@ class Guest:
         stream = self.remote if remote else self.local
         while marker not in stream[start:]:
             if time.monotonic() > deadline or self.process.poll() is not None:
-                raise AssertionError('Waiting for ' + repr(marker) + ': ' + repr(bytes(stream[-1800:])))
+                raise AssertionError('Waiting for ' + repr(marker) +
+                    ' after %.1fs; launcher exit=%r: ' %
+                    (time.monotonic() - self.started, self.process.poll()) +
+                    repr(bytes(stream[-1800:])))
             self.collect()
         return bytes(stream[start:])
 
@@ -217,7 +236,12 @@ def worker(package, output):
     result['process_machine'] = hex(machine.value)
     result['native_machine'] = hex(native_machine.value)
     guest = None
+    def progress(message):
+        result['stage'] = message
+        with (output / 'progress.txt').open('a', encoding='utf-8') as stream:
+            stream.write(message + '\n')
     try:
+        progress('Checking launcher and native host probes')
         tools = package / 'runtime'
         env = dict(os.environ, DISKDEFS=str(tools / 'diskdefs'))
         env['PATH'] = os.path.join(os.environ['SystemRoot'], 'System32')
@@ -232,6 +256,7 @@ def worker(package, output):
         assert b'HOST-PROBES-PASS' in tested
         (output / 'host-probes.log').write_bytes(tested)
         result['tests']['native_host_probes'] = True
+        progress('Native host probes passed; checking disk tools and retained files')
         image = output / 'roundtrip.dsk'
         image.write_bytes((package / 'disks/drivea.dsk').read_bytes())
         body = output / 'binary-source.bin'; body.write_bytes(bytes(range(256)) * 16)
@@ -260,9 +285,12 @@ def worker(package, output):
                 server.bind(('127.0.0.1', 0))
             port = server.getsockname()[1]
         result['tested_port'] = port
+        progress('Booting CP/M and BYE (up to 180 seconds)')
         guest = Guest(package, output / 'direct', port)
-        guest.wait(b'RCP/M modem ready.')
+        guest.wait(b'RCP/M modem ready.', timeout=180)
+        progress('Modem ready; testing caller login')
         guest.connect()
+        progress('Caller login passed; checking duplicate refusal and nine HELP topics')
         start = len(guest.local)
         duplicate = subprocess.Popen([str(tools / 'rcpm.exe')], cwd=tempfile.gettempdir(), env=env)
         assert duplicate.wait(timeout=10) == 1
@@ -274,6 +302,7 @@ def worker(package, output):
         for topic in topics:
             expected = topic.read_text(encoding='ascii').splitlines()[1].encode('ascii')
             assert expected in guest.command('HELP' if topic.stem == 'HELP' else 'HELP ' + topic.stem)
+        progress('Checking archives, mounts, RBBS and private credentials')
         assert b'SIGMV001' in guest.command('DIR SIGM:SIGMV001.LBR')
         assert b'CPMUG093' in guest.command('DIR CPMUG:CPMUG093.LBR')
         listing = guest.command('MOUNT /L')
@@ -299,18 +328,29 @@ def worker(package, output):
         for kind in (b'sysop', b'validation', b'direct-CP/M'):
             value = re.search(b'RBBS ' + kind + b' password: ([A-Z0-9]+)', secrets).group(1)
             assert value in record
+        progress('Checking orderly shutdown')
         guest.stop(); guest.close(); guest = None
         result['tests'].update(direct_boot_and_caller=True, shipped_help_topics=len(topics),
             archives_mounts_rbbs=True, private_credentials_match=True, orderly_shutdown=True)
+        progress('Checking restart and credential preservation (up to 180 seconds)')
         guest = Guest(package, output / 'restart', port)
-        guest.wait(b'RCP/M modem ready.'); guest.connect()
+        guest.wait(b'RCP/M modem ready.', timeout=180)
+        result['tests']['restart_boot_ready'] = True
+        progress('Restart modem ready; checking fresh caller login')
+        guest.connect()
+        result['tests']['restart_caller_login'] = True
         assert (package / 'SYSOP.DOC').read_bytes() == secrets
-        guest.stop(); guest.close(); guest = None
         result['tests']['restart_preserves_credentials'] = True
+        progress('Restart credentials preserved; checking final orderly shutdown')
+        guest.stop(); guest.close(); guest = None
+        result['tests']['restart_orderly_shutdown'] = True
+        progress('All required checks passed')
         result['runtime_qualified'] = True
         result['optional_ip232'] = 'not-tested'
     except BaseException as error:
         result['error'] = type(error).__name__ + ': ' + str(error)
+        import traceback
+        (output / 'failure-traceback.txt').write_text(traceback.format_exc(), encoding='utf-8')
         raise
     finally:
         if guest:
@@ -328,9 +368,19 @@ def main():
     parser.add_argument('--output', type=Path, required=True)
     args = parser.parse_args()
     output = args.output.resolve(); output.mkdir(parents=True, exist_ok=False)
+    print('Verifying and extracting the Windows package...', flush=True)
     package = unpack(args.archive.resolve(), output / 'Unpacked with spaces and Unicode é')
     process = subprocess.Popen([sys.executable, str(Path(__file__).resolve()), '--worker',
                                 str(package), str(output)], creationflags=subprocess.CREATE_NEW_CONSOLE)
+    printed = 0
+    while process.poll() is None:
+        progress_file = output / 'progress.txt'
+        if progress_file.exists():
+            lines = progress_file.read_text(encoding='utf-8').splitlines()
+            for line in lines[printed:]:
+                print(line, flush=True)
+            printed = len(lines)
+        time.sleep(.5)
     code = process.wait()
     report = output / 'result.json'
     if report.is_file():
