@@ -32,7 +32,21 @@ TERM:INC HL
  INC HL
  CALL SPACE
  OR A
+ JR Z,OPTIONSOK
+ CP '/'
  JP NZ,USAGE
+ INC HL
+ LD A,(HL)
+ AND 0DFH
+ CP 'Q'
+ JP NZ,USAGE
+ INC HL
+ CALL SPACE
+ OR A
+ JP NZ,USAGE
+ LD A,1
+ LD (QUIET),A
+OPTIONSOK:
  LD A,(DRIVE)
  LD E,A
  LD C,201
@@ -260,6 +274,9 @@ NEXTUSER:
  LD DE,(NDRPTR)
  LD BC,(NDRBYTES)
  LDIR
+ LD A,(QUIET)
+ OR A
+ JP NZ,EXIT
  LD A,(DRIVE)
  ADD A,'A'
  LD (MSGDR),A
@@ -460,6 +477,7 @@ OLDUSR:DB 0
 OLDERR:DB 0
 SAVED:DB 0
 RESULT:DB 0
+QUIET:DB 0
 DRIVE:DB 0
 DRONE:DB 1
 CAPACITY:DB 0
@@ -481,7 +499,7 @@ FCBTEMPLATE:DB 0,'-???????   '
 FCB:DS 36,0
 DMABUF:DS 128,0
 STAGE:DS 1152,0
-USEMSG:DB 'Usage: NDSCAN drive:',13,10,'$'
+USEMSG:DB 'Usage: NDSCAN drive: [/Q]',13,10,'$'
 DENYMSG:DB 'NDSCAN requires an updated BYE and read access to every user area.',13,10
  DB 'Names unchanged.',13,10,'$'
 ENVMSG:DB 'Unsupported Z3PLUS named-directory table. Names unchanged.',13,10,'$'

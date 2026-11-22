@@ -533,14 +533,19 @@ image while cpmsim is running.
 
 7. ARCHIVES AND SWAPPABLE VOLUMES
 
-MOUNT /L lists J: images; MOUNT GAMES or MOUNT GUIDES replaces J:.
-MOUNT P: /L lists 512 MiB archives under disks/library/archives/; MOUNT P: NAME selects one.
+MOUNT /L lists both J: and P: catalogs and their current images.
+MOUNT NAME finds a name in either catalog, then uses its exact size to select
+J: (4177920 bytes) or P: (536870912 bytes). For example, MOUNT WALNUT
+reports: Volume WALNUT mounted on P:
+MOUNT J: /L and MOUNT P: /L list only the selected catalog.
+If both catalogs contain the same name, use MOUNT J: NAME or MOUNT P: NAME;
+an unqualified ambiguous name leaves both drives unchanged.
 MOUNT J: /DEFAULT and MOUNT P: /DEFAULT restore the startup images.
 J: requires 4177920-byte images; P: requires 536870912-byte images. Wrong
 sizes are rejected before replacing the mounted image. AUTH rules are the same
 on both drives; grants apply to drive/user slots, not image names.
 
-After a successful swap and relog, MOUNT chains to A0:NDSCAN drive:. NDSCAN
+After a successful swap and relog, MOUNT chains to A0:NDSCAN drive: /Q. NDSCAN
 can also run directly. It rebuilds only that drive's names from extensionless
 -NAME files in user areas 0-15, clearing names where no marker exists. Other
 drives and AUTH settings are unchanged. Use 1-7 uppercase letters/digits or
@@ -548,6 +553,7 @@ underscores after the hyphen; -CATALOG.011 is not a marker. Multiple markers,
 name collisions, disk errors or a full name table abort the name update.
 The prepared Z3PLUS table holds 42 names (768 bytes).
 
+MOUNT suppresses the scanner success message; scan errors are still displayed.
 Callers may run NDSCAN on fully readable drives; private sysops may scan private
 drives. A denied user area aborts scanning rather than clearing unseen names.
 If NDSCAN fails after MOUNT, the new media remains mounted but names stay as

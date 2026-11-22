@@ -124,7 +124,7 @@ def main():
         staged.replace(output)
         output.with_name(output.name + '.features.json').write_text(json.dumps(dict(
             format='rcpm-runtime-features-1', idle_timer_port=74, sysop_writable_catalog=True,
-            mount_protocol=2, swappable_drives=['J', 'P'], installation_layout=2,
+            mount_protocol=3, swappable_drives=['J', 'P'], installation_layout=2,
             sha256=hashlib.sha256(output.read_bytes()).hexdigest()), indent=2) + '\n')
     print(f'Built {output}')
 
