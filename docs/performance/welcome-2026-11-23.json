@@ -1,0 +1,10 @@
+{
+  "welcome_source_sha256": "b42b35b7cc049140dd6174e756c4a2ca37cfcabeae614dcd7d4d286b6ae8c1ee",
+  "max_columns": 76,
+  "four_system_images_exact_welcome_readback": true,
+  "caller": {
+    "new_banner_displayed_to_caller": true,
+    "help_directory_command_verified": true,
+    "orderly_shutdown": true
+  }
+}

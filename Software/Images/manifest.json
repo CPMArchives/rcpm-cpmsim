@@ -1,2050 +1,2091 @@
 {
   "schema_version": 1,
-  "snapshot_date": "2026-11-22",
-  "source": "Maintainer-supplied installed volumes directory; images copied unchanged.",
+  "snapshot_date": "2026-11-23",
+  "source": "Maintainer-supplied collection copies; missing user-0 labels added after full readback verification. Existing programs/data unchanged.",
   "images": [
     {
       "id": "BOSKUG",
       "image": "BOSKUG.dsk",
       "image_bytes": 4177920,
-      "image_sha256": "be746ddbdaba3e37528e94f6673e9a88baca13c4d471f535baa5f4abb0fe2a7f",
       "format": "z80pack-hd",
+      "base_image_sha256": "be746ddbdaba3e37528e94f6673e9a88baca13c4d471f535baa5f4abb0fe2a7f",
+      "image_sha256": "eaee3500143b5c857852f9e0e28a450c1546c220b0b0d3aba850b807c39ebb9d",
+      "directory_marker": "-BOSKUG",
+      "marker_added": true,
+      "existing_files_unchanged": true,
       "files": [
         {
           "user": 0,
-          "name": "boskg101.ark",
+          "name": "-BOSKUG",
+          "record_bytes": 1,
+          "sha256": "58f7b0780592032e4d8602a3e8690fb2c701b2e1dd546e703445aabd6469734d"
+        },
+        {
+          "user": 0,
+          "name": "BOSKG101.ARK",
           "record_bytes": 296704,
           "sha256": "e607d3179c90702142edd8943addea0c15c7a91edd77f468a061742bdd9d6bb8"
         },
         {
           "user": 0,
-          "name": "boskg102.ark",
+          "name": "BOSKG102.ARK",
           "record_bytes": 139904,
           "sha256": "b45c46055ef1ecfb0588341faa2639f5d905d75c9423b51d6bdbd09583ed32bd"
         },
         {
           "user": 0,
-          "name": "boskg103.ark",
+          "name": "BOSKG103.ARK",
           "record_bytes": 218112,
           "sha256": "4fed80d79995a2ee5c19a5a16d8b4cfff94f8753c1c3853daabf8b75ac3b597f"
         },
         {
           "user": 0,
-          "name": "boskg104.ark",
+          "name": "BOSKG104.ARK",
           "record_bytes": 366208,
           "sha256": "e230938c0f844324c1241707d0bb02b10a1436f9b1a6b5e18e1bd51516560e19"
         },
         {
           "user": 0,
-          "name": "boskg131.ark",
+          "name": "BOSKG131.ARK",
           "record_bytes": 290304,
           "sha256": "a0627738a248177059cd4a9068a39a8c57f6eb4c338065ef646840e27a39aaea"
         },
         {
           "user": 0,
-          "name": "boskg161.ark",
+          "name": "BOSKG161.ARK",
           "record_bytes": 288384,
           "sha256": "d3cc6e68731b3785012e1cf89b44076d674ff77a60ac557edcbd7ee574ee5b1b"
         },
         {
           "user": 0,
-          "name": "boskg163.ark",
+          "name": "BOSKG163.ARK",
           "record_bytes": 271488,
           "sha256": "bb16f28b508931ca1a6e298979b3fd4e0c0009342463c2e5264beaa3b34063d8"
         },
         {
           "user": 0,
-          "name": "boskg201.ark",
+          "name": "BOSKG201.ARK",
           "record_bytes": 320000,
           "sha256": "7448d09cc14eb0dfc215fa7ab5d41ae700b469079f061f0e16a842773358685b"
         },
         {
           "user": 0,
-          "name": "boskg302.ark",
+          "name": "BOSKG302.ARK",
           "record_bytes": 153216,
           "sha256": "73010b24ca05401fea3c0c428cc958c0bd8c10c1a963d4cb5a27030595708166"
         },
         {
           "user": 0,
-          "name": "boskg303.ark",
+          "name": "BOSKG303.ARK",
           "record_bytes": 187904,
           "sha256": "601cd99d26301449d04d199dfb595c838fadd8916ecf6a108fede294242704ce"
         },
         {
           "user": 0,
-          "name": "boskg304.ark",
+          "name": "BOSKG304.ARK",
           "record_bytes": 316800,
           "sha256": "df4e3daeb519dae6d30c2da44aeacd6079ffa563defea205e8869ae95333d0a0"
         },
         {
           "user": 0,
-          "name": "boskg504.ark",
+          "name": "BOSKG504.ARK",
           "record_bytes": 282112,
           "sha256": "fd921b5bc0bbc5aad90630d17d4852524d91e685493be7d5779411f519f4e23a"
         },
         {
           "user": 0,
-          "name": "boskg505.ark",
+          "name": "BOSKG505.ARK",
           "record_bytes": 198016,
           "sha256": "a9c288afa2f85dd1f8f5692f6343d034f37037bc05381aec49bbe678c0b0230a"
         },
         {
           "user": 0,
-          "name": "boskg801.ark",
+          "name": "BOSKG801.ARK",
           "record_bytes": 224640,
           "sha256": "27dedae675c9002ede78798d8aad3f77e237071a8d95a2f8ffb66bbe4acb5786"
         }
       ],
-      "validation": "Exact-size check, stable source/copy SHA-256 match, directory listing and complete file readback; no new gameplay claim.",
-      "download": "https://github.com/CPMArchives/rcpm-cpmsim/releases/download/software-images-2026-11-22/BOSKUG-collection.zip"
+      "previous_id": "BOSKUG",
+      "archive": "BOSKUG-collection.zip",
+      "archive_sha256": "ce062d509891a40a05f24465eacae1566e6117cdd91eecbb01cfba5427100537"
     },
     {
       "id": "GAMES",
       "image": "GAMES.dsk",
       "image_bytes": 4177920,
-      "image_sha256": "7086b3ac1e943fe982b93c81eb3b48ca77d52104aae26ad35ae28f84fc31a37e",
       "format": "z80pack-hd",
+      "base_image_sha256": "7086b3ac1e943fe982b93c81eb3b48ca77d52104aae26ad35ae28f84fc31a37e",
+      "image_sha256": "7086b3ac1e943fe982b93c81eb3b48ca77d52104aae26ad35ae28f84fc31a37e",
+      "directory_marker": "-GAMES",
+      "marker_added": false,
+      "existing_files_unchanged": true,
       "files": [
         {
           "user": 0,
-          "name": "-games",
+          "name": "-GAMES",
           "record_bytes": 128,
           "sha256": "6fca86c50b7426e5da476d35a0ce2d64a6cd4db0925f002ab259842a9465a345"
         },
         {
           "user": 0,
-          "name": "aceyducy.com",
+          "name": "ACEYDUCY.COM",
           "record_bytes": 1434,
           "sha256": "604e01e8780c425278ca084a65541f6df2a5f789c854ef46f123038807953e0f"
         },
         {
           "user": 0,
-          "name": "advent.com",
+          "name": "ADVENT.COM",
           "record_bytes": 1478,
           "sha256": "7f212cdfb2fbb818a0891883fefb88986795a4d16a5e1c2b2f2a29bf4c36996c"
         },
         {
           "user": 0,
-          "name": "animals.com",
+          "name": "ANIMALS.COM",
           "record_bytes": 1456,
           "sha256": "f3bfdc286159a814b6237fb0e52655dfa226a4c3e59d4f254d75eb9cccbdbf91"
         },
         {
           "user": 0,
-          "name": "awari.com",
+          "name": "AWARI.COM",
           "record_bytes": 1434,
           "sha256": "6fa2e80c01323310646698ab0273d880eeefc14b324005ddcd685fca1f831240"
         },
         {
           "user": 0,
-          "name": "baccarat.com",
+          "name": "BACCARAT.COM",
           "record_bytes": 1434,
           "sha256": "8ebbdbd8612992d20f6df1b42428bdeece58f504373fa39c28dd467f49044793"
         },
         {
           "user": 0,
-          "name": "bagels.com",
+          "name": "BAGELS.COM",
           "record_bytes": 1434,
           "sha256": "87165f8ceb3d1ee8d4170d7aa0cb438d73c82a3dbac5973e67ed9ca869ee8a3e"
         },
         {
           "user": 0,
-          "name": "basic.txt",
+          "name": "BASIC.TXT",
           "record_bytes": 4601,
           "sha256": "8cbf807320e2ce640cebb812f08516e75e33482197a5153a50c3c9bf067a6fe5"
         },
         {
           "user": 0,
-          "name": "batnum.com",
+          "name": "BATNUM.COM",
           "record_bytes": 1434,
           "sha256": "c0b6debd8c273ffab50a35d129390cb6efb9ad73b2f10c91714846f18c6b5654"
         },
         {
           "user": 0,
-          "name": "battle.com",
+          "name": "BATTLE.COM",
           "record_bytes": 1434,
           "sha256": "71ec87b77cfdd1d7fa2ef5621fd2f833b97d2cf983bb44f9cc61314124c9f167"
         },
         {
           "user": 0,
-          "name": "blackjck.com",
+          "name": "BLACKJCK.COM",
           "record_bytes": 1434,
           "sha256": "806e16028de02461a67ff46dbda265cc1083d1cab285b205e3d94fc94d4bc34e"
         },
         {
           "user": 0,
-          "name": "bombard.com",
+          "name": "BOMBARD.COM",
           "record_bytes": 1434,
           "sha256": "43a51ba7491d5d34b78e8b0b85c67e5a0b001aeb1868131059bd3238ff725b7c"
         },
         {
           "user": 0,
-          "name": "bombsawy.com",
+          "name": "BOMBSAWY.COM",
           "record_bytes": 1434,
           "sha256": "87fdeefbf446d618218779d60b4049470e0e5ee2b257ecc9e3483d3df79cf4a3"
         },
         {
           "user": 0,
-          "name": "bowling.com",
+          "name": "BOWLING.COM",
           "record_bytes": 1434,
           "sha256": "a9a7081961ddf5567056519843217fa606f224588291c24df8c05f6760d30cd5"
         },
         {
           "user": 0,
-          "name": "boxing.com",
+          "name": "BOXING.COM",
           "record_bytes": 1434,
           "sha256": "e52dbdbc0fad9517e95bbe7fe213aa74d5d149d7caed8f473d37a0787e500e5d"
         },
         {
           "user": 0,
-          "name": "bship.com",
+          "name": "BSHIP.COM",
           "record_bytes": 1434,
           "sha256": "f23d3412717ad1a6052546e3d599ad506c8a0350cbcf970127265c75fd9b1251"
         },
         {
           "user": 0,
-          "name": "bug.com",
+          "name": "BUG.COM",
           "record_bytes": 1434,
           "sha256": "11775b8dd524d21638932da3b9709de0dd8710d1079bf1a7998d2b1b445b7de7"
         },
         {
           "user": 0,
-          "name": "bullseye.com",
+          "name": "BULLSEYE.COM",
           "record_bytes": 1434,
           "sha256": "b0934ef891820facdd12eb763094ffa15be95fe4ffb48cb5cf40038438126842"
         },
         {
           "user": 0,
-          "name": "catchum.com",
+          "name": "CATCHUM.COM",
           "record_bytes": 1445,
           "sha256": "ea2347b6ee4556ba8ee28d4ddad383753166b2bb678e0e1c66c52064b40cf5d2"
         },
         {
           "user": 0,
-          "name": "chemist.com",
+          "name": "CHEMIST.COM",
           "record_bytes": 1434,
           "sha256": "f8daac12498ee20d52f085a27386561b4cac9ee0a6b4fcb4ba64ba70ff12e604"
         },
         {
           "user": 0,
-          "name": "chomp.com",
+          "name": "CHOMP.COM",
           "record_bytes": 1434,
           "sha256": "d231921b7388208e65c413986f1d68e86375446d7eecd56c646329d69651ba74"
         },
         {
           "user": 0,
-          "name": "civilwar.com",
+          "name": "CIVILWAR.COM",
           "record_bytes": 1434,
           "sha256": "633b53ce73cb2ea707486ac5075681ea1a276051cfd3f77bce3def723a2131fe"
         },
         {
           "user": 0,
-          "name": "combat.com",
+          "name": "COMBAT.COM",
           "record_bytes": 1434,
           "sha256": "2fefac94c048ce061e3166d0a974f92702a5c58bfcb382000db7716d23e5247f"
         },
         {
           "user": 0,
-          "name": "copying.txt",
+          "name": "COPYING.TXT",
           "record_bytes": 757,
           "sha256": "31c78cd83e4a52a34688bd3008fbbaad356520d3c6baefb4ff7af333d4c33e86"
         },
         {
           "user": 0,
-          "name": "cpmtris.com",
+          "name": "CPMTRIS.COM",
           "record_bytes": 1434,
           "sha256": "839705607647dc07d5033011ad7164a392472b8c0af6a13a5aa3293226a6daa7"
         },
         {
           "user": 0,
-          "name": "craps.com",
+          "name": "CRAPS.COM",
           "record_bytes": 1434,
           "sha256": "b09af9e240daf59703e644f9fe0a2039c1162f4c2d89bd2cc169e5a7f8ca4f1d"
         },
         {
           "user": 0,
-          "name": "crazy8.com",
+          "name": "CRAZY8.COM",
           "record_bytes": 1434,
           "sha256": "e35efbb27c3fa3e8e3aad22857a2d928ff6d8c46435dd6ed51b12a95c67d79c8"
         },
         {
           "user": 0,
-          "name": "cube.com",
+          "name": "CUBE.COM",
           "record_bytes": 1434,
           "sha256": "d7d4e2bec7f19dfb12d000cbf5c7b07b274b299e12cd92911f401eea0a05fc34"
         },
         {
           "user": 0,
-          "name": "depthchg.com",
+          "name": "DEPTHCHG.COM",
           "record_bytes": 1434,
           "sha256": "1e003eb9c45a8f40dd53be16fe135ee0915258bb413206142168ea22b045f5d1"
         },
         {
           "user": 0,
-          "name": "diamond.com",
+          "name": "DIAMOND.COM",
           "record_bytes": 1434,
           "sha256": "80430b78a196c2906d9ae61439aac77c693d9384a49b3ad649f526e5f61c7462"
         },
         {
           "user": 0,
-          "name": "dice.com",
+          "name": "DICE.COM",
           "record_bytes": 1434,
           "sha256": "9c3573d93f7ef412f05870e2183fcdae4003faa98325316d9f8d4fb104f3067f"
         },
         {
           "user": 0,
-          "name": "digits.com",
+          "name": "DIGITS.COM",
           "record_bytes": 1434,
           "sha256": "307a89618f139805c7706892fe5f9191aa6946f6211ca8d6a557ce34fea50305"
         },
         {
           "user": 0,
-          "name": "flipflop.com",
+          "name": "FLIPFLOP.COM",
           "record_bytes": 1434,
           "sha256": "f880cde35796f79e9d03c1b3810c3b8a0aae3bd50dd59d3f3f66240b14d4b8fc"
         },
         {
           "user": 0,
-          "name": "furtradr.com",
+          "name": "FURTRADR.COM",
           "record_bytes": 1434,
           "sha256": "64abf123ddc3c640cef98beb0654d9fac9576896baaeeaa40ccc83bf1dd352ba"
         },
         {
           "user": 0,
-          "name": "gammon.com",
+          "name": "GAMMON.COM",
           "record_bytes": 1434,
           "sha256": "ab5ee904191cdca7af2d94039fb492d42935d0cabff580aa139c6035dcc6eee3"
         },
         {
           "user": 0,
-          "name": "golf.com",
+          "name": "GOLF.COM",
           "record_bytes": 1434,
           "sha256": "d1f753e77a4c2b2ffb39d3a789480bee4ad152b1b9387dbc38ea785e1996d4fb"
         },
         {
           "user": 0,
-          "name": "gomoko.com",
+          "name": "GOMOKO.COM",
           "record_bytes": 1434,
           "sha256": "f9d33526bc5db917a187acf41ed3433247f77d5dbbbf6f396da7d4f44514d4e7"
         },
         {
           "user": 0,
-          "name": "guess.com",
+          "name": "GUESS.COM",
           "record_bytes": 1434,
           "sha256": "09571f58483fd8e3310ab77a7660c71379041f96d1310d8078c2cce04905aec4"
         },
         {
           "user": 0,
-          "name": "gunner.com",
+          "name": "GUNNER.COM",
           "record_bytes": 1434,
           "sha256": "7d0954a6e4cd4a9a253adf919e6c65d9edd8432ff21d20998003fc61391cb227"
         },
         {
           "user": 0,
-          "name": "hamurabi.com",
+          "name": "HAMURABI.COM",
           "record_bytes": 1434,
           "sha256": "5fe4e94f4c282db6abdc655c7f3266aec021c388dfc86cc753f9d34049252562"
         },
         {
           "user": 0,
-          "name": "hangman.com",
+          "name": "HANGMAN.COM",
           "record_bytes": 1445,
           "sha256": "d96e7dd85c4c3c593ab269604e8680d63723687b1c1ffe6ced65026eda8aa269"
         },
         {
           "user": 0,
-          "name": "hexapawn.com",
+          "name": "HEXAPAWN.COM",
           "record_bytes": 1434,
           "sha256": "efaa3381790a6baf08489635ded46296073b6fa68e6b5864fc61f122e3a13169"
         },
         {
           "user": 0,
-          "name": "hilo.com",
+          "name": "HILO.COM",
           "record_bytes": 1434,
           "sha256": "78bc7d33e236a0d48fab7c2a6bb8e6c98755ae3915719d5d1f5f08d16abb4827"
         },
         {
           "user": 0,
-          "name": "hiq.com",
+          "name": "HIQ.COM",
           "record_bytes": 1434,
           "sha256": "cc3d0c8623dde5a8b4fca70c360c7395561fc620c606e7652401f84f608ca255"
         },
         {
           "user": 0,
-          "name": "hockey.com",
+          "name": "HOCKEY.COM",
           "record_bytes": 1434,
           "sha256": "aacdb395391d4fa8459598a4c42275839b8ff5e2628c4245dc11830cd89a9c29"
         },
         {
           "user": 0,
-          "name": "horses.com",
+          "name": "HORSES.COM",
           "record_bytes": 1434,
           "sha256": "3fe7db157c822eb1d3255d288b0c36fb2a8f8edd3a498991018f1ace39057d4a"
         },
         {
           "user": 0,
-          "name": "hurkle.com",
+          "name": "HURKLE.COM",
           "record_bytes": 1434,
           "sha256": "ee021a3c4eac932b8a9bf3fd3ae27bc2b6340cd92f7fe1980c42ce6b798fb717"
         },
         {
           "user": 0,
-          "name": "king.com",
+          "name": "KING.COM",
           "record_bytes": 1434,
           "sha256": "98e69eb0e5c683fd867cec6d7ccdc26860be9d1faabfb4b6eeea4397969a3903"
         },
         {
           "user": 0,
-          "name": "ladder.com",
+          "name": "LADDER.COM",
           "record_bytes": 1445,
           "sha256": "37c1d3f0c68d573f6101b904c8ef0aeaddcea05883c95676b9e5819484012192"
         },
         {
           "user": 0,
-          "name": "lunar.com",
+          "name": "LUNAR.COM",
           "record_bytes": 1434,
           "sha256": "92f621256717421d48d71b0ae7905f6e7bc8aa4f5bfa57ee91d7fa2bd7259156"
         },
         {
           "user": 0,
-          "name": "masterm.com",
+          "name": "MASTERM.COM",
           "record_bytes": 1434,
           "sha256": "29024605c84dba99f0f2759b1efe9befce90d9f9726c7305bcb52e26f2ac89a4"
         },
         {
           "user": 0,
-          "name": "match23.com",
+          "name": "MATCH23.COM",
           "record_bytes": 1434,
           "sha256": "b1c2fbcc87f970ab35723b93201d2eed13007f1e2a33d87a191419c9ab5f2d02"
         },
         {
           "user": 0,
-          "name": "mchase.com",
+          "name": "MCHASE.COM",
           "record_bytes": 1445,
           "sha256": "efac9744d84d43b509b6c52af7268cc085ab05513ea259b9784b51c922aeaa84"
         },
         {
           "user": 0,
-          "name": "mines.com",
+          "name": "MINES.COM",
           "record_bytes": 1434,
           "sha256": "119ba8d55d97cf25d8353379ac9422b5806a46c83744fa65ebd42d9e668544ce"
         },
         {
           "user": 0,
-          "name": "mission.com",
+          "name": "MISSION.COM",
           "record_bytes": 1434,
           "sha256": "75e214a65882819ecd0ac14c047a6a23dd00318e7139548b461180bc39542fb7"
         },
         {
           "user": 0,
-          "name": "mugwump.com",
+          "name": "MUGWUMP.COM",
           "record_bytes": 1434,
           "sha256": "c5c8a2b14d1933db31acc3ee98fa15ec5b975c6ca4b3dfc72858cac9e2d096fc"
         },
         {
           "user": 0,
-          "name": "nicoma.com",
+          "name": "NICOMA.COM",
           "record_bytes": 1434,
           "sha256": "7a51cbd4d76e34086455d378959d8ec32ef4fc13c4226ae201afbc1a2d3bf7a5"
         },
         {
           "user": 0,
-          "name": "nim.com",
+          "name": "NIM.COM",
           "record_bytes": 1434,
           "sha256": "2c7617fa8b6631e55d0728ef9a03be3288fcd703d1ec8940357a90e8baae9892"
         },
         {
           "user": 0,
-          "name": "onecheck.com",
+          "name": "ONECHECK.COM",
           "record_bytes": 1434,
           "sha256": "ab2ea28ff5acf4cabcdb9193efb9ebfc8795ccac8264bf8472ecfaf8a2136dfe"
         },
         {
           "user": 0,
-          "name": "orbit.com",
+          "name": "ORBIT.COM",
           "record_bytes": 1434,
           "sha256": "881940d53ebc8cbcbc48da9aa4d36e704aab729d5ec6f80b28254dfb08c28ee1"
         },
         {
           "user": 0,
-          "name": "othello.com",
+          "name": "OTHELLO.COM",
           "record_bytes": 1434,
           "sha256": "8f70ca0ffeadc9885f1ae8c6278bbfc6e77fff457361ebcbb68f5a2c4f00f363"
         },
         {
           "user": 0,
-          "name": "queen.com",
+          "name": "QUEEN.COM",
           "record_bytes": 1434,
           "sha256": "6b4bd10ff4122c9e06253f04fd3f9c70024eebd30ac91cfb98f086c2c4add800"
         },
         {
           "user": 0,
-          "name": "readme.txt",
+          "name": "README.TXT",
           "record_bytes": 4855,
           "sha256": "322ba86e018777971de92fadc4eddde80c122e4f7d603d617d66eb2f86c74211"
         },
         {
           "user": 0,
-          "name": "reverse.com",
+          "name": "REVERSE.COM",
           "record_bytes": 1434,
           "sha256": "16798e1ac3472ca3733a2aa06c0b7018866d1664df0d01347d815766d5e17a93"
         },
         {
           "user": 0,
-          "name": "robots.com",
+          "name": "ROBOTS.COM",
           "record_bytes": 1434,
           "sha256": "4cbaf5fca243a008f34ee08978540ef6b0fadfb53c1c558e7c1db2f8f78a84a5"
         },
         {
           "user": 0,
-          "name": "rocksp.com",
+          "name": "ROCKSP.COM",
           "record_bytes": 1434,
           "sha256": "29b348006095adda5c0303f83fc17d142a6a73e42c4d2c7aa24c5da2a770584f"
         },
         {
           "user": 0,
-          "name": "rogue.com",
+          "name": "ROGUE.COM",
           "record_bytes": 1434,
           "sha256": "0d1d084a64f20fbc4617985256f948e7e317c157a544ac737109f263cae02541"
         },
         {
           "user": 0,
-          "name": "roulette.com",
+          "name": "ROULETTE.COM",
           "record_bytes": 1434,
           "sha256": "eeaa9cd55e8f33cf99facdabcaf64748b1dac5c8998fe4399d1edd55a633a63b"
         },
         {
           "user": 0,
-          "name": "sargon.com",
+          "name": "SARGON.COM",
           "record_bytes": 1434,
           "sha256": "3c712c63cd4846616a88f7b7b11dc36919a2600231adcd317c5bcef72b9b422d"
         },
         {
           "user": 0,
-          "name": "slalom.com",
+          "name": "SLALOM.COM",
           "record_bytes": 1434,
           "sha256": "a60eb4179c7ef8a52c0202835a81c1ad7ff553050b88bac2cb56f8581315860c"
         },
         {
           "user": 0,
-          "name": "snake.com",
+          "name": "SNAKE.COM",
           "record_bytes": 1434,
           "sha256": "d6411bc53c31a2d0a5b0e20150536f85491c6e7bf5a56627ac00398e2b9ae156"
         },
         {
           "user": 0,
-          "name": "sokoban.com",
+          "name": "SOKOBAN.COM",
           "record_bytes": 1445,
           "sha256": "0fa40166fe466079b0e1f0a37d2cd370b08fcef38972570df1484bcbd957dc82"
         },
         {
           "user": 0,
-          "name": "stock.com",
+          "name": "STOCK.COM",
           "record_bytes": 1434,
           "sha256": "788fdcf50f6a87cab8d173d095b6afcf1632dab17e65b3dc5ff25bb6793366ed"
         },
         {
           "user": 0,
-          "name": "trap.com",
+          "name": "TRAP.COM",
           "record_bytes": 1434,
           "sha256": "dbacde4603bdde5851bd49c1678f8216f848fa997259061d40f349f2b15bac5a"
         },
         {
           "user": 0,
-          "name": "trek.com",
+          "name": "TREK.COM",
           "record_bytes": 1434,
           "sha256": "d779f5cee3d883f86547398420263106e8cdf0055f11767e80b44f2815a1b5a1"
         },
         {
           "user": 0,
-          "name": "walnut.txt",
+          "name": "WALNUT.TXT",
           "record_bytes": 3443,
           "sha256": "bcef51d2b3e9db5c7059a56cea5005752e7ad09c132af0234bf50076d6f63e72"
         },
         {
           "user": 0,
-          "name": "wanderer.com",
+          "name": "WANDERER.COM",
           "record_bytes": 2105,
           "sha256": "6fea098da1b5d25e8de60db9821bfa6875e62ca3647fed12697b4e165baacb77"
         },
         {
           "user": 0,
-          "name": "war.com",
+          "name": "WAR.COM",
           "record_bytes": 1434,
           "sha256": "4a09635f5ff374f30f24def15a7399d3ebd45f3dab471ade3daae8276043e083"
         },
         {
           "user": 0,
-          "name": "word.com",
+          "name": "WORD.COM",
           "record_bytes": 1434,
           "sha256": "418a5acd670f25398f55a397ef1c4738ffe64f8716f947d206e0107d5970ac21"
         },
         {
           "user": 0,
-          "name": "wumpus.com",
+          "name": "WUMPUS.COM",
           "record_bytes": 1500,
           "sha256": "aad9780bda43a7b8bb2d7be55c2306149a9cdd474aacc61e6bf2b2b841ed691e"
         },
         {
           "user": 0,
-          "name": "yahtzee.com",
+          "name": "YAHTZEE.COM",
           "record_bytes": 1434,
           "sha256": "486a33dd360c696e57c603e400f64f7556100d6e39b94ef0ef1d5430045dc4cc"
         },
         {
           "user": 1,
-          "name": "adv.com",
+          "name": "ADV.COM",
           "record_bytes": 36096,
           "sha256": "73e31a3729c1350da2196fbe748cdac4655dd8c449ad612ce8d3710aa02a3aa8"
         },
         {
           "user": 1,
-          "name": "advi.dat",
+          "name": "ADVI.DAT",
           "record_bytes": 31744,
           "sha256": "5ca42cbd8d8410cb8e948d4766046e6b594093a12904ee98cea4f93238002d6b"
         },
         {
           "user": 1,
-          "name": "advi.ptr",
+          "name": "ADVI.PTR",
           "record_bytes": 3840,
           "sha256": "06dd3e0f6d90c0906b377bb23d95a07d8b225a272e2fa0c30e223f80d236441a"
         },
         {
           "user": 1,
-          "name": "advt.dat",
+          "name": "ADVT.DAT",
           "record_bytes": 107264,
           "sha256": "3050aa76a9a71a65130a413f55d64478f37553894ca55de8111b1fd302274ed9"
         },
         {
           "user": 1,
-          "name": "advt.ptr",
+          "name": "ADVT.PTR",
           "record_bytes": 15360,
           "sha256": "df7467b89581588972f7c8c8291d90935c2451adcac1b959a7303923ae0e1968"
         },
         {
           "user": 2,
-          "name": "catchum.com",
+          "name": "CATCHUM.COM",
           "record_bytes": 29312,
           "sha256": "1784db0aa56061ce304910359d8ae652494701e645136ae6fc6aadc6ee9cd686"
         },
         {
           "user": 2,
-          "name": "catchum.dat",
+          "name": "CATCHUM.DAT",
           "record_bytes": 512,
           "sha256": "ae3c5c60a0e7f168a173fc81d7bdf478ad8438752b0faf0bd4fd897c8008a205"
         },
         {
           "user": 2,
-          "name": "cpmtris.com",
+          "name": "CPMTRIS.COM",
           "record_bytes": 2631,
           "sha256": "1eab1dd79958fbbae2ba6bf55f170df6d1f9ebc0b337ffd00b10f8542e1f445f"
         },
         {
           "user": 2,
-          "name": "ladder.com",
+          "name": "LADDER.COM",
           "record_bytes": 39936,
           "sha256": "583399fa98acbe725d15a91f5a3028b195fbe0b28b09d93e26199a90d72d0e67"
         },
         {
           "user": 2,
-          "name": "ladder.dat",
+          "name": "LADDER.DAT",
           "record_bytes": 512,
           "sha256": "98d717ee677df1fd0ab366dfb357868879cdb6050cbc18f22ee2d637886188fd"
         },
         {
           "user": 2,
-          "name": "robots.com",
+          "name": "ROBOTS.COM",
           "record_bytes": 6144,
           "sha256": "f56fc0d448108d15c4a5cc0fd6adaf1f1b1cf16ef2c54ce0f8834f8bc8a3c75a"
         },
         {
           "user": 2,
-          "name": "snake.com",
+          "name": "SNAKE.COM",
           "record_bytes": 11904,
           "sha256": "300882f9839e909cbd72420bf8c2af8a2c5c566d2d57966393e2e72d56c8a0c3"
         },
         {
           "user": 3,
-          "name": "ansi.txt",
+          "name": "ANSI.TXT",
           "record_bytes": 182,
           "sha256": "2e475811f9e72bdf84073cc0221736f23415c9cabd9ec462e97febbb26294e86"
         },
         {
           "user": 3,
-          "name": "mchase.com",
+          "name": "MCHASE.COM",
           "record_bytes": 25344,
           "sha256": "7528f8466f20da882ee9b8fcf51fd67f8dacf24ab4e4fe77cc798b3a0433159e"
         },
         {
           "user": 3,
-          "name": "mchase.doc",
+          "name": "MCHASE.DOC",
           "record_bytes": 6912,
           "sha256": "eb00e15e7a6ab489e9dfd0cfbc1e21ff17e0185e268f6ba371871a5d9a40376d"
         },
         {
           "user": 3,
-          "name": "mchase.hlp",
+          "name": "MCHASE.HLP",
           "record_bytes": 2816,
           "sha256": "a07e29c2c914d171164e6cf8ee597d319d5f90e2351766af56452ecd74f67012"
         },
         {
           "user": 4,
-          "name": "aceyducy.com",
+          "name": "ACEYDUCY.COM",
           "record_bytes": 12800,
           "sha256": "bac6205af3ee33681c736c1c3c736d41ca71a3601c20395872fd426b0534c57e"
         },
         {
           "user": 4,
-          "name": "awari.com",
+          "name": "AWARI.COM",
           "record_bytes": 17152,
           "sha256": "1ff1db30d27631ac6a4371fe522ae23a89f45b45fa17a0d80adf0013df59b4f4"
         },
         {
           "user": 4,
-          "name": "baccarat.com",
+          "name": "BACCARAT.COM",
           "record_bytes": 14208,
           "sha256": "c8a0894fa239936341bccc5421f8032f4dfba16885b89bcfec6bf8d1f00abb24"
         },
         {
           "user": 4,
-          "name": "bagels.com",
+          "name": "BAGELS.COM",
           "record_bytes": 13440,
           "sha256": "788d42935a320bee187e2b97e840f23031238c728ca9fa19beb32cf4dce4b3cc"
         },
         {
           "user": 4,
-          "name": "batnum.com",
+          "name": "BATNUM.COM",
           "record_bytes": 12672,
           "sha256": "233b4dba211cd2d30855c372ce53d36f437e91bc2e6fb5980915f21a9eb08b5a"
         },
         {
           "user": 4,
-          "name": "battle.com",
+          "name": "BATTLE.COM",
           "record_bytes": 21376,
           "sha256": "f8a53aab3f5b52771a69cb59e492080e2dad581ce00ac21b00441cf85ae26696"
         },
         {
           "user": 4,
-          "name": "blackjck.com",
+          "name": "BLACKJCK.COM",
           "record_bytes": 21248,
           "sha256": "605e553d1d8893834aab0ef3e5c7bfd39ded6d6b4d9fe9cd1735a8e7bd358c1a"
         },
         {
           "user": 4,
-          "name": "bombard.com",
+          "name": "BOMBARD.COM",
           "record_bytes": 14592,
           "sha256": "9e1ff6d843779f0ec9860e127500c89b0a456d12ceab98aa2b6ad41656de253f"
         },
         {
           "user": 4,
-          "name": "bombsawy.com",
+          "name": "BOMBSAWY.COM",
           "record_bytes": 14080,
           "sha256": "0cadf402c08fb187385d24ae9063cf7fab22201eb1abd7d77e127b5eb9db2cec"
         },
         {
           "user": 4,
-          "name": "bowling.com",
+          "name": "BOWLING.COM",
           "record_bytes": 16512,
           "sha256": "f7c323c29699fa86759c87059814eda4acde22e6ba9026626034b1e5aaf2f8ff"
         },
         {
           "user": 4,
-          "name": "boxing.com",
+          "name": "BOXING.COM",
           "record_bytes": 13824,
           "sha256": "f78c1161d988b19d90f86a2965d852af464a186b771fe8f0471de73f03c49ca9"
         },
         {
           "user": 4,
-          "name": "bug.com",
+          "name": "BUG.COM",
           "record_bytes": 16384,
           "sha256": "f040fad62c280d3584237eb38db84be89cd25fbe17b89004b76e4b107d830f5b"
         },
         {
           "user": 4,
-          "name": "bullseye.com",
+          "name": "BULLSEYE.COM",
           "record_bytes": 13312,
           "sha256": "584a6f21d680f0320bde2d94356754de1803c8fc0fded9314fc88f6995faa91b"
         },
         {
           "user": 4,
-          "name": "chemist.com",
+          "name": "CHEMIST.COM",
           "record_bytes": 12032,
           "sha256": "1d6efb52c623e550a09c527535d486e8f36964f63c18b097b2d8bb5a99e01606"
         },
         {
           "user": 4,
-          "name": "chomp.com",
+          "name": "CHOMP.COM",
           "record_bytes": 14080,
           "sha256": "1d84035ff82e3f0655d443c87b38defbce08277455454f07d9ab93ccc9e467f9"
         },
         {
           "user": 4,
-          "name": "civilwar.com",
+          "name": "CIVILWAR.COM",
           "record_bytes": 20480,
           "sha256": "015568bc523278a7aace864b68205e2e79b640b968cdbdda337b8469739de9bb"
         },
         {
           "user": 4,
-          "name": "combat.com",
+          "name": "COMBAT.COM",
           "record_bytes": 14848,
           "sha256": "1aa3406e5b0bca24325b5f62eb81374ae7f9b9f1d1bfc72a7753a34240638e95"
         },
         {
           "user": 4,
-          "name": "craps.com",
+          "name": "CRAPS.COM",
           "record_bytes": 13568,
           "sha256": "341e6c8c37e3ff44ae6c1e9e0e913885370d04644d865947eb73edbc2b8c9d65"
         },
         {
           "user": 4,
-          "name": "crazy8.com",
+          "name": "CRAZY8.COM",
           "record_bytes": 18816,
           "sha256": "b460f33a6a5e3644e9859910e22f6d9be47f907d105d4956344aee7d4e722ada"
         },
         {
           "user": 4,
-          "name": "cube.com",
+          "name": "CUBE.COM",
           "record_bytes": 14464,
           "sha256": "1b84780cca86fc2d0379dffd83f320d048d71a21e238ccacfe3be31b0e9b0657"
         },
         {
           "user": 4,
-          "name": "depthchg.com",
+          "name": "DEPTHCHG.COM",
           "record_bytes": 12928,
           "sha256": "eeeaac3eface258936496d967f3f133969931c95b0ab6614313b132b611deca7"
         },
         {
           "user": 4,
-          "name": "diamond.com",
+          "name": "DIAMOND.COM",
           "record_bytes": 11776,
           "sha256": "84b17c7848ba9c61b1231a2e649d1bebf7b5845e3bd3411c6d35f5a859bd8404"
         },
         {
           "user": 4,
-          "name": "dice.com",
+          "name": "DICE.COM",
           "record_bytes": 12672,
           "sha256": "f3984263befac96b05cef0108df293300321908903a6a6f64a8d0b9371646ed3"
         },
         {
           "user": 4,
-          "name": "digits.com",
+          "name": "DIGITS.COM",
           "record_bytes": 15360,
           "sha256": "60fc13aa6c2637378e84e94c06f13c448b79c300a71d4e4a27108e7f67ab1d7d"
         },
         {
           "user": 4,
-          "name": "flipflop.com",
+          "name": "FLIPFLOP.COM",
           "record_bytes": 13440,
           "sha256": "d33641cd7f7f530496af32cb7948d41011261c7ab654f6cee58828e1d4d59df7"
         },
         {
           "user": 4,
-          "name": "furtradr.com",
+          "name": "FURTRADR.COM",
           "record_bytes": 17920,
           "sha256": "cd2e8af9e4503721430842a0d74243d6942efb4134aa09ef7fa2e448a7f369f1"
         },
         {
           "user": 4,
-          "name": "golf.com",
+          "name": "GOLF.COM",
           "record_bytes": 17408,
           "sha256": "a7eaa816c1d7b1bd936bec30dc4041a8d690c5c23928db3576e51894fd12be35"
         },
         {
           "user": 4,
-          "name": "gomoko.com",
+          "name": "GOMOKO.COM",
           "record_bytes": 14720,
           "sha256": "2232b197ad3e054776b198e1d219542e5df15b7f3e4b1c024fc4cffafd3f338b"
         },
         {
           "user": 4,
-          "name": "guess.com",
+          "name": "GUESS.COM",
           "record_bytes": 12416,
           "sha256": "b25e53d195f8c0c096f0e67efdd2d5a5cbff1064c15a72b2fd1ad17550c04081"
         },
         {
           "user": 4,
-          "name": "gunner.com",
+          "name": "GUNNER.COM",
           "record_bytes": 13696,
           "sha256": "d7bad7744220ccb5fbd38ae94a1b675542dfa4775680a361321cf4bf76be45c7"
         },
         {
           "user": 4,
-          "name": "hexapawn.com",
+          "name": "HEXAPAWN.COM",
           "record_bytes": 18560,
           "sha256": "fdd406f1b6401144b3851f102d29d2a8eca07944a58114e10682a0c2d0520b42"
         },
         {
           "user": 4,
-          "name": "hilo.com",
+          "name": "HILO.COM",
           "record_bytes": 12160,
           "sha256": "e5128c46f3386365bb5fade52df3903e7acbdd415c7bd4815ed088cb5e602bd4"
         },
         {
           "user": 4,
-          "name": "hiq.com",
+          "name": "HIQ.COM",
           "record_bytes": 15872,
           "sha256": "680bc35d6b356637331e21a47e30263a64aa9766334a57c37a968be46df89e41"
         },
         {
           "user": 4,
-          "name": "hockey.com",
+          "name": "HOCKEY.COM",
           "record_bytes": 20736,
           "sha256": "58c86e86d90e43ed6f9ddaef6960cdff8bf52f7af3f1a33ba4379b2ed118acb9"
         },
         {
           "user": 4,
-          "name": "horses.com",
+          "name": "HORSES.COM",
           "record_bytes": 13824,
           "sha256": "8a4ced7fe86b31ef490a1d6fdb92645c25ed4f1eb46d758456f4fc8f5a8f66c4"
         },
         {
           "user": 4,
-          "name": "hurkle.com",
+          "name": "HURKLE.COM",
           "record_bytes": 12672,
           "sha256": "f62fab14637e9942edb64ba2f3cc27722df5961724ca5f2110febd6f05ab3114"
         },
         {
           "user": 4,
-          "name": "king.com",
+          "name": "KING.COM",
           "record_bytes": 20608,
           "sha256": "cd4b7e94b67f742cf032ec3d696df867884bf342dec9ffa40ca2beb88b3a9dd8"
         },
         {
           "user": 4,
-          "name": "lunar.com",
+          "name": "LUNAR.COM",
           "record_bytes": 15104,
           "sha256": "60305bdb71399912db1d7f2ff84fd689f5cd96ac13e78b9c8d182352a094a9a9"
         },
         {
           "user": 4,
-          "name": "match23.com",
+          "name": "MATCH23.COM",
           "record_bytes": 12928,
           "sha256": "0f512a30f985c3fcc8cbc1e12b3bf91614b1d99445201b942dd65c1ec71a5997"
         },
         {
           "user": 4,
-          "name": "mission.com",
+          "name": "MISSION.COM",
           "record_bytes": 39040,
           "sha256": "0fb286140007ff714d6a07b33c2a55477ba1fe9c4d6aadc25a3c1a9ccdce2956"
         },
         {
           "user": 4,
-          "name": "mission.doc",
+          "name": "MISSION.DOC",
           "record_bytes": 2944,
           "sha256": "d1db94edce4071089845325596daad58d6aa3ce1a38f3ea2032addfce1aa0c72"
         },
         {
           "user": 4,
-          "name": "mugwump.com",
+          "name": "MUGWUMP.COM",
           "record_bytes": 14592,
           "sha256": "b66a50bdfae22b5959728a1d3fc9459f7404ea8d00bb20c079f030ea6ae8cbaf"
         },
         {
           "user": 4,
-          "name": "nicoma.com",
+          "name": "NICOMA.COM",
           "record_bytes": 12032,
           "sha256": "244908fcd6576e82bfd642c2fa41a600b202b10ac1c4e148b6182f042cfb08fe"
         },
         {
           "user": 4,
-          "name": "nim.com",
+          "name": "NIM.COM",
           "record_bytes": 20864,
           "sha256": "b3932a05ccd0446a86727f76247d5d70941bcd1df2787607a7bd4245357bdd94"
         },
         {
           "user": 4,
-          "name": "onecheck.com",
+          "name": "ONECHECK.COM",
           "record_bytes": 14208,
           "sha256": "fb6591a70bdd5f2f02cff72ac38b283cca5abb871099fc58429e744a874983e1"
         },
         {
           "user": 4,
-          "name": "orbit.com",
+          "name": "ORBIT.COM",
           "record_bytes": 15232,
           "sha256": "4b0f5b874a08106f387da014e3e6aeddd9d7a5dfe6ae7972a7e48d9727a52401"
         },
         {
           "user": 4,
-          "name": "queen.com",
+          "name": "QUEEN.COM",
           "record_bytes": 15744,
           "sha256": "09ba05fa12949e14a9d2105e41307dd4c70bf69f802130711352900652685a47"
         },
         {
           "user": 4,
-          "name": "reverse.com",
+          "name": "REVERSE.COM",
           "record_bytes": 13440,
           "sha256": "1498ee6f85731637dc52057e0e080b69aa6def2801635aedeb1b42bc4cc31f9c"
         },
         {
           "user": 4,
-          "name": "rocksp.com",
+          "name": "ROCKSP.COM",
           "record_bytes": 12672,
           "sha256": "94c599a861a3977bbeada0c406c0f85b5d9fd33e328bf14218e393c71fd3cc0d"
         },
         {
           "user": 4,
-          "name": "roulette.com",
+          "name": "ROULETTE.COM",
           "record_bytes": 22272,
           "sha256": "81ee5a95b82d085d18f1bbfc6c86e0ff600d62c331452c125d98fd6c15263294"
         },
         {
           "user": 4,
-          "name": "slalom.com",
+          "name": "SLALOM.COM",
           "record_bytes": 16640,
           "sha256": "97970fbc2efb43cc3f457ba943cb761ebf63102844def61c79e0f810a8d564c4"
         },
         {
           "user": 4,
-          "name": "stock.com",
+          "name": "STOCK.COM",
           "record_bytes": 17536,
           "sha256": "a5e879d2d0d2d46c8ca418109c62ec3ac84f6b032cc8e2aec1abe38846bf97e6"
         },
         {
           "user": 4,
-          "name": "trap.com",
+          "name": "TRAP.COM",
           "record_bytes": 12672,
           "sha256": "419834070de1b11df8e5f6ed4159e32ccce63e5a69c536e0a39b72eaa1abc600"
         },
         {
           "user": 4,
-          "name": "war.com",
+          "name": "WAR.COM",
           "record_bytes": 14080,
           "sha256": "0f550c78eea78930852fe97f69b4723007347b639ee23550a5ff289cdea7be58"
         },
         {
           "user": 4,
-          "name": "word.com",
+          "name": "WORD.COM",
           "record_bytes": 13824,
           "sha256": "8b7eada8c72d8e75fb263ec00fe85af3db59308573e0d396c09c7530256a7d11"
         },
         {
           "user": 4,
-          "name": "yahtzee.com",
+          "name": "YAHTZEE.COM",
           "record_bytes": 19840,
           "sha256": "4d69bee22fc829430940921575f9deecb65281d8ba045fddb4cf14909601f073"
         },
         {
           "user": 8,
-          "name": "animals.com",
+          "name": "ANIMALS.COM",
           "record_bytes": 26112,
           "sha256": "13c25e190112a09f8116cb385f3a9b4f78115eb9d7cf3d591edb92dbe39b5c62"
         },
         {
           "user": 8,
-          "name": "beasts.qqq",
+          "name": "BEASTS.QQQ",
           "record_bytes": 256,
           "sha256": "a4512477e6f751a53f63b525e41901e252ad9513493cab07611c1d51873398e8"
         },
         {
           "user": 8,
-          "name": "beasts.qqx",
+          "name": "BEASTS.QQX",
           "record_bytes": 512,
           "sha256": "cc9a93cf3b1889613ec6b63ccb21f5d78fbbb7f177f2ab03d4b4b558ab01f92d"
         },
         {
           "user": 9,
-          "name": "cave0",
+          "name": "CAVE0",
           "record_bytes": 236,
           "sha256": "e14e87f9cb330583ea41f1013f0abaf51e8382f6ef949cbadeb87acf34d38db3"
         },
         {
           "user": 9,
-          "name": "cave1",
+          "name": "CAVE1",
           "record_bytes": 236,
           "sha256": "397f9059f5a1ff10f40007419393a931c759bde5eddca24da2e6bab891f78fae"
         },
         {
           "user": 9,
-          "name": "cave2",
+          "name": "CAVE2",
           "record_bytes": 238,
           "sha256": "51e237bfb138c94cc423f8af4f054bd79f4f910629b617a80c6679e3de4080f7"
         },
         {
           "user": 9,
-          "name": "cave4",
+          "name": "CAVE4",
           "record_bytes": 250,
           "sha256": "d7adef5397eac70e709198797e01ab34dd975d6661a36147d72f4db9d4e501d0"
         },
         {
           "user": 9,
-          "name": "cave5",
+          "name": "CAVE5",
           "record_bytes": 234,
           "sha256": "8ba71bbe0450248bfd88abfe0c8dd978ea28d5296f6a02a2a18f80f8ed96f6cf"
         },
         {
           "user": 9,
-          "name": "hangman.com",
+          "name": "HANGMAN.COM",
           "record_bytes": 19712,
           "sha256": "b54a32e46435785354149ca1e1afb2f806b7295bc9be0a3d595981b3e3837c76"
         },
         {
           "user": 9,
-          "name": "mines.com",
+          "name": "MINES.COM",
           "record_bytes": 10496,
           "sha256": "4aca1bf29f90d7ee9ce18dc2894cfbee1c4e160f26d1f9f1e1deedcaaed074bd"
         },
         {
           "user": 9,
-          "name": "rogue.com",
+          "name": "ROGUE.COM",
           "record_bytes": 22774,
           "sha256": "20a97c3449b6c20ccb8cfb87183513d03a57a0a96090cd6af0ec3a740c5475c1"
         },
         {
           "user": 9,
-          "name": "rogue.doc",
+          "name": "ROGUE.DOC",
           "record_bytes": 7296,
           "sha256": "8fb056bc2b5752e9cae5b11581e354ac39d59fff0feb4550e76ca1d07b827347"
         },
         {
           "user": 9,
-          "name": "screen.001",
+          "name": "SCREEN.001",
           "record_bytes": 768,
           "sha256": "dc08f1da17201202c7e7280ae83aa3550d04019407885a9506deb1eb9ab73429"
         },
         {
           "user": 9,
-          "name": "screen.002",
+          "name": "SCREEN.002",
           "record_bytes": 768,
           "sha256": "c6e1ce27882017e23edbad34d207f0048d14d079a8f475325c7c667741aebb15"
         },
         {
           "user": 9,
-          "name": "screen.003",
+          "name": "SCREEN.003",
           "record_bytes": 768,
           "sha256": "2b2eb1605ca5b098e738e92cd3248ad2cc8d4665646c34cd27ada07b27df4e8f"
         },
         {
           "user": 9,
-          "name": "screen.004",
+          "name": "SCREEN.004",
           "record_bytes": 768,
           "sha256": "4b1364e196143e4339d4d354a7e4263540970d074093a846be4bffaaaeea6db4"
         },
         {
           "user": 9,
-          "name": "screen.005",
+          "name": "SCREEN.005",
           "record_bytes": 768,
           "sha256": "a328a894de02cd7f9937bcdb5f17501ec2eae802dda8349a00e680e16dea0517"
         },
         {
           "user": 9,
-          "name": "screen.006",
+          "name": "SCREEN.006",
           "record_bytes": 768,
           "sha256": "1b4ca9e80af5137a8d4df09cc9e9537bb9eb8bcd21d2c7a29d99d3c707dc3e9d"
         },
         {
           "user": 9,
-          "name": "screen.007",
+          "name": "SCREEN.007",
           "record_bytes": 768,
           "sha256": "7e4e074f43b0a9c00da7267989f139be085de15f64a70ab96ba2ca4d1ea03bc5"
         },
         {
           "user": 9,
-          "name": "screen.008",
+          "name": "SCREEN.008",
           "record_bytes": 768,
           "sha256": "a1434d67f6759eb941ad1211455584d4279e251f3b9149f37134641db6b07f9f"
         },
         {
           "user": 9,
-          "name": "screen.009",
+          "name": "SCREEN.009",
           "record_bytes": 768,
           "sha256": "5f04b45ac13450a6e0023440f0b6988249e6b4833a611966c24f49c78e510d0e"
         },
         {
           "user": 9,
-          "name": "screen.010",
+          "name": "SCREEN.010",
           "record_bytes": 768,
           "sha256": "c2ef86078f740c7fd4667434a7bf944465f1a3e396e0c0d8b3b54a0a2911d894"
         },
         {
           "user": 9,
-          "name": "screen.011",
+          "name": "SCREEN.011",
           "record_bytes": 768,
           "sha256": "d10b861b2a4e0a5d45a72bf9ca0c8a0ceac9b4daa19e377289aebb9cead30fb7"
         },
         {
           "user": 9,
-          "name": "screen.012",
+          "name": "SCREEN.012",
           "record_bytes": 768,
           "sha256": "7b4dc29c09b9678817b5e6cb0dfba376efafdfbe48c98c95e024f4e13e41f566"
         },
         {
           "user": 9,
-          "name": "screen.013",
+          "name": "SCREEN.013",
           "record_bytes": 768,
           "sha256": "2500e868518cc878b57206af78cb2a5982da11bbb7f29e7f70346cd0ab3d5d05"
         },
         {
           "user": 9,
-          "name": "screen.014",
+          "name": "SCREEN.014",
           "record_bytes": 768,
           "sha256": "4deb498edd2d8c0c4a27bfb03fd1eb4dda0620ce56d594be96e69d2e156a5f3f"
         },
         {
           "user": 9,
-          "name": "screen.015",
+          "name": "SCREEN.015",
           "record_bytes": 768,
           "sha256": "52341a19406b0efc8f7d144d70d87b4d7058f2e4c2e3edfac4bea44157dff445"
         },
         {
           "user": 9,
-          "name": "screen.016",
+          "name": "SCREEN.016",
           "record_bytes": 768,
           "sha256": "739bbe10763b9978b9bac9ea76e1ddb5e2013a4e54805265352dedd504d30bd6"
         },
         {
           "user": 9,
-          "name": "screen.017",
+          "name": "SCREEN.017",
           "record_bytes": 768,
           "sha256": "03ed15f54e6de8b0c937a87396f57a70dae1635609b3c883a20df012ed348542"
         },
         {
           "user": 9,
-          "name": "screen.018",
+          "name": "SCREEN.018",
           "record_bytes": 768,
           "sha256": "e0a96e366368976add21ad2e6c4f1e47dea39515c98af59de42d03f31615ff29"
         },
         {
           "user": 9,
-          "name": "screen.019",
+          "name": "SCREEN.019",
           "record_bytes": 768,
           "sha256": "4112bc1848e0929b4fff2fcbc6d5d75382d0cca023bffe5d2b22d4390038a480"
         },
         {
           "user": 9,
-          "name": "screen.020",
+          "name": "SCREEN.020",
           "record_bytes": 768,
           "sha256": "06edb765ffbe5a64674a542f06fa897dcc73d123d73785bb98e8f15738633f8d"
         },
         {
           "user": 9,
-          "name": "screen.021",
+          "name": "SCREEN.021",
           "record_bytes": 768,
           "sha256": "523d773040bb075b743cef3c3bcd47cc35616cdf7fb538fb98e60bed29f8a4fa"
         },
         {
           "user": 9,
-          "name": "screen.022",
+          "name": "SCREEN.022",
           "record_bytes": 768,
           "sha256": "a5553cff24a09346316f0db671eab946c51157726b9c4b5327a7d90e88b05d85"
         },
         {
           "user": 9,
-          "name": "screen.023",
+          "name": "SCREEN.023",
           "record_bytes": 768,
           "sha256": "c2fb2c9800a275b7e62567d3277251d65c60eed82e927d6cdb5ef51ea9884995"
         },
         {
           "user": 9,
-          "name": "screen.024",
+          "name": "SCREEN.024",
           "record_bytes": 768,
           "sha256": "03e29e2d0e3254ae46b050caa8058c5c5584a4154b111fd14f893ee14f607686"
         },
         {
           "user": 9,
-          "name": "screen.025",
+          "name": "SCREEN.025",
           "record_bytes": 768,
           "sha256": "7de2bb869ccd994651471ef7349b8c5fb754b20369682b8acf0aca31a13adc33"
         },
         {
           "user": 9,
-          "name": "screen.026",
+          "name": "SCREEN.026",
           "record_bytes": 768,
           "sha256": "d2bbba59baa1614f817e4ac3f825c65a4286b145b4be2dc45330176add4cd5cb"
         },
         {
           "user": 9,
-          "name": "screen.027",
+          "name": "SCREEN.027",
           "record_bytes": 768,
           "sha256": "d5059b0dfa39d62cc263b889cc85af2a65155bf2adc788868587c3e05744bf55"
         },
         {
           "user": 9,
-          "name": "screen.028",
+          "name": "SCREEN.028",
           "record_bytes": 768,
           "sha256": "5a357ae4657e0b706bd81aaf1e1e50480f18347aa3f5438bf108c5dde1b5a0d8"
         },
         {
           "user": 9,
-          "name": "screen.029",
+          "name": "SCREEN.029",
           "record_bytes": 768,
           "sha256": "7642a45e7669d6f39b66910b271eab543f09a254d29fd986c02dc5ce7030e4db"
         },
         {
           "user": 9,
-          "name": "screen.030",
+          "name": "SCREEN.030",
           "record_bytes": 768,
           "sha256": "614b5badc0426dc04aa247f9b38edc8bd6d14a5cf16fe79b3f4e61e14d443279"
         },
         {
           "user": 9,
-          "name": "screen.031",
+          "name": "SCREEN.031",
           "record_bytes": 768,
           "sha256": "d34bfa5168f811e626a041b794d1c388093980897e2a9746efb727ced5a85757"
         },
         {
           "user": 9,
-          "name": "screen.032",
+          "name": "SCREEN.032",
           "record_bytes": 768,
           "sha256": "a86c27061c208d542ff72feece5e52402cd7a06511a37eeda67af16689252aaa"
         },
         {
           "user": 9,
-          "name": "screen.033",
+          "name": "SCREEN.033",
           "record_bytes": 768,
           "sha256": "d678df425156702a060144f3e0f3ea346b583ec5763386ff015bb1395d468589"
         },
         {
           "user": 9,
-          "name": "screen.034",
+          "name": "SCREEN.034",
           "record_bytes": 768,
           "sha256": "bc7bc85e3724fc6e28cbc40bf76531288287d474591c81fe04d19e380f10d5c7"
         },
         {
           "user": 9,
-          "name": "screen.035",
+          "name": "SCREEN.035",
           "record_bytes": 768,
           "sha256": "a22fbe73e084bc308795a6e6a2c8e0d0bc2dfde0f0300306623ab35750d5c233"
         },
         {
           "user": 9,
-          "name": "screen.036",
+          "name": "SCREEN.036",
           "record_bytes": 768,
           "sha256": "89bd721586254b06017f1e82ebc6fb74d5c8c079e36a2071cd4797b20b19d5ae"
         },
         {
           "user": 9,
-          "name": "screen.037",
+          "name": "SCREEN.037",
           "record_bytes": 768,
           "sha256": "b3b8e918b8be3e02c412fcf05c00624efc973e3da0d686753aa5c7db94045bb0"
         },
         {
           "user": 9,
-          "name": "screen.038",
+          "name": "SCREEN.038",
           "record_bytes": 768,
           "sha256": "c6370054f7bcc4b53e273e38906c1fc59fba415287a7d7a27f3bfa8d59d344c5"
         },
         {
           "user": 9,
-          "name": "screen.039",
+          "name": "SCREEN.039",
           "record_bytes": 768,
           "sha256": "1c03c0f393daae994e803340c4334c9eac70530554627d840dbb7d5c89db1969"
         },
         {
           "user": 9,
-          "name": "screen.040",
+          "name": "SCREEN.040",
           "record_bytes": 768,
           "sha256": "4bc77e0e5bccce855cb30264dec18d42cba9fca981799a5a39089b9c5e5daa24"
         },
         {
           "user": 9,
-          "name": "screen.041",
+          "name": "SCREEN.041",
           "record_bytes": 768,
           "sha256": "3b04f3f2b3bfd019f64355633148e1a9daef69a7191c67781c918f1d69372bb0"
         },
         {
           "user": 9,
-          "name": "screen.042",
+          "name": "SCREEN.042",
           "record_bytes": 768,
           "sha256": "4a6629c82d62419facfb26c0ee4c35ca54005436943f05ede4628723b5884f63"
         },
         {
           "user": 9,
-          "name": "screen.043",
+          "name": "SCREEN.043",
           "record_bytes": 768,
           "sha256": "4173dcd1feb73325b28a1e786b21d27e1569347b3a8328636ff824408a155e0e"
         },
         {
           "user": 9,
-          "name": "screen.044",
+          "name": "SCREEN.044",
           "record_bytes": 768,
           "sha256": "16aac1a8c511718cb3fc65acb65bdc0e80ba2a99d4117de1d60e79d5bf149ce1"
         },
         {
           "user": 9,
-          "name": "screen.045",
+          "name": "SCREEN.045",
           "record_bytes": 768,
           "sha256": "95c71cf0a7beb325276da330400d130bf146a69e188943c0186c41753a4ded40"
         },
         {
           "user": 9,
-          "name": "screen.046",
+          "name": "SCREEN.046",
           "record_bytes": 768,
           "sha256": "523d773040bb075b743cef3c3bcd47cc35616cdf7fb538fb98e60bed29f8a4fa"
         },
         {
           "user": 9,
-          "name": "screen.047",
+          "name": "SCREEN.047",
           "record_bytes": 768,
           "sha256": "d8770b3fad4cf10ed3b8ffcfcbf93e61f302e889fcd38f88e78926540a52be36"
         },
         {
           "user": 9,
-          "name": "screen.048",
+          "name": "SCREEN.048",
           "record_bytes": 768,
           "sha256": "bdb8038960b08044faab0f9c6962d6f3d7cea16c13463667f4ab80960d9cf939"
         },
         {
           "user": 9,
-          "name": "screen.049",
+          "name": "SCREEN.049",
           "record_bytes": 768,
           "sha256": "8cc01deab633eb50e155ab7d36deeafeb0a30553f5569b45e93bf602daed5662"
         },
         {
           "user": 9,
-          "name": "screen.050",
+          "name": "SCREEN.050",
           "record_bytes": 768,
           "sha256": "9c91bb3e402b9839ab5dd9d928372362c0317cb3badd20c6a00620cf07d75b60"
         },
         {
           "user": 9,
-          "name": "screen.051",
+          "name": "SCREEN.051",
           "record_bytes": 768,
           "sha256": "21e1a3078b9f6184e382c20164435c79d61d519eef2a5fd8ae21a921f617c95a"
         },
         {
           "user": 9,
-          "name": "screen.052",
+          "name": "SCREEN.052",
           "record_bytes": 768,
           "sha256": "62218e6d550b92b6c78a767fbf3da0e62287d7746043fe15608e2ffe24fe1175"
         },
         {
           "user": 9,
-          "name": "screen.053",
+          "name": "SCREEN.053",
           "record_bytes": 768,
           "sha256": "cd27cc875c7aa64fcf8dde28e5cbed14d61290e2b70a2764d7d8ed3304f1cbda"
         },
         {
           "user": 9,
-          "name": "screen.054",
+          "name": "SCREEN.054",
           "record_bytes": 768,
           "sha256": "e4d129d6cbbc7d2d9d04aa4fbf720a53c872d0590e627e9bd974054a2037957a"
         },
         {
           "user": 9,
-          "name": "screen.055",
+          "name": "SCREEN.055",
           "record_bytes": 768,
           "sha256": "95a04e19b668bed5d38e65466bec372821288b1d986d7f85159cde111cad3b3d"
         },
         {
           "user": 9,
-          "name": "screen.056",
+          "name": "SCREEN.056",
           "record_bytes": 768,
           "sha256": "5a2470e0ab709699b06e60c0015e4befd358f2cd39967de9b8bc4570a3c2593c"
         },
         {
           "user": 9,
-          "name": "screen.057",
+          "name": "SCREEN.057",
           "record_bytes": 768,
           "sha256": "5a480a54c8cde8b1c6af9e3c4a4cc75fe6d2904899cb52c2b61774bc1b2184f7"
         },
         {
           "user": 9,
-          "name": "screen.058",
+          "name": "SCREEN.058",
           "record_bytes": 768,
           "sha256": "dfed1b872f6179af09eff3e3db88a43e0e93ab589c8af774d50e86963ecfa473"
         },
         {
           "user": 9,
-          "name": "screen.059",
+          "name": "SCREEN.059",
           "record_bytes": 768,
           "sha256": "952c79559682f7077bccc55a3cfa0ddf0bb7afe4056f6f94568caf1c959ac14a"
         },
         {
           "user": 9,
-          "name": "screen.060",
+          "name": "SCREEN.060",
           "record_bytes": 768,
           "sha256": "7d685c26a0efbd0b8907cc2b1c3d3354f629030e8eefb18d1c83f1313596fb06"
         },
         {
           "user": 9,
-          "name": "screen.061",
+          "name": "SCREEN.061",
           "record_bytes": 128,
           "sha256": "a92a46af5c99716b50e85cb215f436e01405b2022e064a35349b81bc88f42183"
         },
         {
           "user": 9,
-          "name": "soklevls.dat",
+          "name": "SOKLEVLS.DAT",
           "record_bytes": 11774,
           "sha256": "4119a7eb8a92c4c84bea02f6e247be7ddf999fdddb43843525c3042fdddf3ac7"
         },
         {
           "user": 9,
-          "name": "sokoban.com",
+          "name": "SOKOBAN.COM",
           "record_bytes": 13184,
           "sha256": "dcfa47665a0cd3ac87f7cc250e9be61ea6cae160ee5c93381d83df3f6c82b5bd"
         },
         {
           "user": 9,
-          "name": "sokoban.txt",
+          "name": "SOKOBAN.TXT",
           "record_bytes": 2337,
           "sha256": "926835df28118880c8d6b20d8edcfafa725adecef84f18eeef69098c395fabce"
         },
         {
           "user": 9,
-          "name": "trek.com",
+          "name": "TREK.COM",
           "record_bytes": 36608,
           "sha256": "f2057e736b192ffead8419f2584fb5debebaa9ccd9a3d7dc7a438fec1de0c7d9"
         },
         {
           "user": 9,
-          "name": "wander.doc",
+          "name": "WANDER.DOC",
           "record_bytes": 3072,
           "sha256": "1446fcbb6671693445752e21e6205d3a4512ba41bbdc4841c66cf37c69aaefac"
         },
         {
           "user": 9,
-          "name": "wanderer.com",
+          "name": "WANDERER.COM",
           "record_bytes": 9216,
           "sha256": "84df761d68725deea83efdf9952e69b96348973697a928f668072698921526d0"
         },
         {
           "user": 9,
-          "name": "words.txt",
+          "name": "WORDS.TXT",
           "record_bytes": 1219,
           "sha256": "9e8b47bb529e471c7839bed70e8a49070746d76667f8411e1705ba628c8325ea"
         },
         {
           "user": 9,
-          "name": "wumpus.com",
+          "name": "WUMPUS.COM",
           "record_bytes": 14848,
           "sha256": "4e8ec2d6f83325b71b986b2bbfae0374a9f8ba67710b7119092037f12884745d"
         },
         {
           "user": 9,
-          "name": "wumpus.doc",
+          "name": "WUMPUS.DOC",
           "record_bytes": 3174,
           "sha256": "cc709b7026f3ede858753691e1bcb4dadda543d6e1625bbfd43950936a44afe3"
         },
         {
           "user": 10,
-          "name": "bship.com",
+          "name": "BSHIP.COM",
           "record_bytes": 18560,
           "sha256": "7e3099e2e13e36148ff9339f8f9f63c141f5d0422995d288ef4848e4fd0686fd"
         },
         {
           "user": 10,
-          "name": "bship.txt",
+          "name": "BSHIP.TXT",
           "record_bytes": 2578,
           "sha256": "f53f021d8b6b84569f72ed82ab2124ec22e275c063d5bbdc845576b1162c5338"
         },
         {
           "user": 10,
-          "name": "gammon.com",
+          "name": "GAMMON.COM",
           "record_bytes": 30592,
           "sha256": "2dfffd1ba1aebf0ca316f3260f6e779300891561ee677d64cb6bd611936bb3e5"
         },
         {
           "user": 10,
-          "name": "gammon.txt",
+          "name": "GAMMON.TXT",
           "record_bytes": 2512,
           "sha256": "0d57749b4fc1ef0fcbc08013f5fbaa9fefdd929692f280e01af1f418c1c9cd75"
         },
         {
           "user": 10,
-          "name": "hamurabi.com",
+          "name": "HAMURABI.COM",
           "record_bytes": 15872,
           "sha256": "22ddf73935dfd0721e0cf085a000bc903cfa24e32c6c05a844c4c8e1f78fa321"
         },
         {
           "user": 10,
-          "name": "masterm.com",
+          "name": "MASTERM.COM",
           "record_bytes": 6656,
           "sha256": "7185a5183c2ecad4df86d4049782807edd26329fdcc72cae7c41ec2447b31b43"
         },
         {
           "user": 10,
-          "name": "othello.com",
+          "name": "OTHELLO.COM",
           "record_bytes": 11520,
           "sha256": "7772264c8d845ca2bb3ae4d7d291804877aa42e538ef1179b30b560bb3073761"
         },
         {
           "user": 10,
-          "name": "sargon.com",
+          "name": "SARGON.COM",
           "record_bytes": 14720,
           "sha256": "702f922bbe73c20bc7048fed2bd314eab6dba381c2ec073388ab3eea5c628178"
         }
       ],
-      "validation": "Exact-size check, stable source/copy SHA-256 match, directory listing and complete file readback; no new gameplay claim.",
-      "matches_existing_collection": "GAMES-expanded",
-      "original_distribution": "https://github.com/CPMArchives/rcpm-cpmsim/releases/download/software-games-2026-11-22/GAMES-expanded.zip",
-      "download": "https://github.com/CPMArchives/rcpm-cpmsim/releases/download/software-games-2026-11-22/GAMES-expanded.zip"
+      "previous_id": "GAMES"
     },
     {
       "id": "GUIDES",
       "image": "GUIDES.dsk",
       "image_bytes": 4177920,
-      "image_sha256": "c766d32f4d36552153ed86c745076c6e7128e9f4e690f5a5656fd77fb7ebf70e",
       "format": "z80pack-hd",
+      "base_image_sha256": "c766d32f4d36552153ed86c745076c6e7128e9f4e690f5a5656fd77fb7ebf70e",
+      "image_sha256": "c766d32f4d36552153ed86c745076c6e7128e9f4e690f5a5656fd77fb7ebf70e",
+      "directory_marker": "-GUIDES",
+      "marker_added": false,
+      "existing_files_unchanged": true,
       "files": [
         {
           "user": 0,
-          "name": "-guides",
+          "name": "-GUIDES",
           "record_bytes": 128,
           "sha256": "6fca86c50b7426e5da476d35a0ce2d64a6cd4db0925f002ab259842a9465a345"
         },
         {
           "user": 0,
-          "name": "commands.txt",
+          "name": "COMMANDS.TXT",
           "record_bytes": 640,
           "sha256": "1f5868dccf0aed7a806ac2043a1d16961b9bdef63d75c1890b60b975a4c11963"
         },
         {
           "user": 0,
-          "name": "dir.txt",
+          "name": "DIR.TXT",
           "record_bytes": 10880,
           "sha256": "5ef8b2451fa5a0845198e682b2bc8e8799fc71eb3caa9dd45fc23b3918a865b1"
         },
         {
           "user": 0,
-          "name": "ldir.txt",
+          "name": "LDIR.TXT",
           "record_bytes": 9088,
           "sha256": "fcf60025d33365d873420486e66c9df7f5cc85d63e0dc22b793d86a1b6fc61d3"
         },
         {
           "user": 0,
-          "name": "readme.txt",
+          "name": "README.TXT",
           "record_bytes": 768,
           "sha256": "718bca5ffa42b7ae7ca0a0c1175a430ec7c48018ef537d7c610f36192de6d333"
         }
       ],
-      "validation": "Exact-size check, stable source/copy SHA-256 match, directory listing and complete file readback; no new gameplay claim.",
-      "download": "https://github.com/CPMArchives/rcpm-cpmsim/releases/download/software-images-2026-11-22/GUIDES-collection.zip"
+      "previous_id": "GUIDES"
     },
     {
       "id": "INFOCOM",
       "image": "INFOCOM.dsk",
       "image_bytes": 4177920,
-      "image_sha256": "0bcc13cdf580cc2781d9883511bf4d849bf61791a8e81c04a8f98f44089fb47b",
       "format": "z80pack-hd",
+      "base_image_sha256": "0bcc13cdf580cc2781d9883511bf4d849bf61791a8e81c04a8f98f44089fb47b",
+      "image_sha256": "0295b1cad9fc51d19898058e8460de5a258edccda7b192b5d5fb7e6d8793d4c4",
+      "directory_marker": "-INFOCOM",
+      "marker_added": true,
+      "existing_files_unchanged": true,
       "files": [
         {
           "user": 0,
-          "name": "ballyhoo.dat",
+          "name": "-INFOCOM",
+          "record_bytes": 1,
+          "sha256": "58f7b0780592032e4d8602a3e8690fb2c701b2e1dd546e703445aabd6469734d"
+        },
+        {
+          "user": 0,
+          "name": "BALLYHOO.DAT",
           "record_bytes": 128602,
           "sha256": "2b917e0dd93bf4cd52b4eb074074ad7422d3f130d5db7c6d26bacca03a554633"
         },
         {
           "user": 0,
-          "name": "bureau.dat",
+          "name": "BUREAU.DAT",
           "record_bytes": 243524,
           "sha256": "6ddac3223c22a56283b7b739ce892f10a6cc692372e1b0f94a40da8e688cc1cd"
         },
         {
           "user": 0,
-          "name": "cutthrts.dat",
+          "name": "CUTTHRTS.DAT",
           "record_bytes": 112538,
           "sha256": "076689b963181f8e017f4fae164be97adece242940bb29963d7d4049780f6510"
         },
         {
           "user": 0,
-          "name": "deadline.dat",
+          "name": "DEADLINE.DAT",
           "record_bytes": 108420,
           "sha256": "babcab2c5bfa337cecf5793f2d93af4516c2c45baf28385e308eef1a9cd79f62"
         },
         {
           "user": 0,
-          "name": "enchant.dat",
+          "name": "ENCHANT.DAT",
           "record_bytes": 111126,
           "sha256": "bc9b99be980a1aa67c1aef89d4e5878f1f03edab62fe43ae23b2f7e2c41b1dc8"
         },
         {
           "user": 0,
-          "name": "hitch.dat",
+          "name": "HITCH.DAT",
           "record_bytes": 113330,
           "sha256": "579599e82e2c0d1cef73ec8db9d74ded1d7868f8d85d88d65c2fbe6abd979421"
         },
         {
           "user": 0,
-          "name": "hitchhnt.dat",
+          "name": "HITCHHNT.DAT",
           "record_bytes": 158412,
           "sha256": "48b69acc2c93b8b49a199eeed7d3123712cd1f78e8023d733c555a9c067b3682"
         },
         {
           "user": 0,
-          "name": "hollywod.dat",
+          "name": "HOLLYWOD.DAT",
           "record_bytes": 109650,
           "sha256": "39845a4c71ed6fd97be3fec337bc49545c8ac7ddd33547128a94bc53ae6c958f"
         },
         {
           "user": 0,
-          "name": "infidel.dat",
+          "name": "INFIDEL.DAT",
           "record_bytes": 94144,
           "sha256": "2fe062a0e39fd519b9d9c0d5bb915bd9efec3278725d208b074377af44d85d36"
         },
         {
           "user": 0,
-          "name": "infocom.txt",
+          "name": "INFOCOM.TXT",
           "record_bytes": 1489,
           "sha256": "5b6304c083a98f6d16e11cfd3ce164700ef9579622b781aba11be4831986ebf7"
         },
         {
           "user": 0,
-          "name": "leather.dat",
+          "name": "LEATHER.DAT",
           "record_bytes": 129022,
           "sha256": "0528b5117c26b59e258542bbb7cf10910d9b3b260db9dc59dcde2e9028fbf901"
         },
         {
           "user": 0,
-          "name": "leathhnt.dat",
+          "name": "LEATHHNT.DAT",
           "record_bytes": 159928,
           "sha256": "033b447b5e2d5c36aa0cb2e2f7a4e4c79dc4d939021f89cfe4329d122895e8c3"
         },
         {
           "user": 0,
-          "name": "lurking.dat",
+          "name": "LURKING.DAT",
           "record_bytes": 129944,
           "sha256": "1862ef7ce4c25abd32d442392fe7eaba9c1595ed5411df75e99b06f43af6f5af"
         },
         {
           "user": 0,
-          "name": "moonmist.dat",
+          "name": "MOONMIST.DAT",
           "record_bytes": 128828,
           "sha256": "29267e084d7f228e4f02eb8ad03d7f9db2f7c5e3716cf0b0abba889e9a1fca61"
         },
         {
           "user": 0,
-          "name": "nordbert.dat",
+          "name": "NORDBERT.DAT",
           "record_bytes": 170300,
           "sha256": "638f2124b06e4514f50570bd169fc863149fe5549a90cda9bdfad0683c4e2f86"
         },
         {
           "user": 0,
-          "name": "planet.dat",
+          "name": "PLANET.DAT",
           "record_bytes": 109282,
           "sha256": "94add8ed336846aad0130cd3db08a83f6e38f0a2180412b25432b6cfb8ccf80e"
         },
         {
           "user": 0,
-          "name": "planhnt.dat",
+          "name": "PLANHNT.DAT",
           "record_bytes": 136560,
           "sha256": "69567066cc8fcf925c05be8b08933d9b5d6052cfd2c868eb1c87eedaaf8da966"
         },
         {
           "user": 0,
-          "name": "plunder.dat",
+          "name": "PLUNDER.DAT",
           "record_bytes": 128962,
           "sha256": "3ca0810d1132de6fcd41ecb2c616f5f60c029ee1264e8757fcc274972af069b2"
         },
         {
           "user": 0,
-          "name": "seastalk.dat",
+          "name": "SEASTALK.DAT",
           "record_bytes": 116802,
           "sha256": "822c3b5565f90979278772079f55ed7900143df6d343ad694afca0af48335df5"
         },
         {
           "user": 0,
-          "name": "sherlock.dat",
+          "name": "SHERLOCK.DAT",
           "record_bytes": 189220,
           "sha256": "cb0daa7ce641f46fdcd9257ec47bf227c1883e7472e49c5724b45b7d1fbca7c9"
         },
         {
           "user": 0,
-          "name": "sorcerer.dat",
+          "name": "SORCERER.DAT",
           "record_bytes": 111052,
           "sha256": "f7e1030b54059826196354ff3af09f69b3884af3ee55bd471ea5586e826ba5bf"
         },
         {
           "user": 0,
-          "name": "spellbrk.dat",
+          "name": "SPELLBRK.DAT",
           "record_bytes": 128916,
           "sha256": "e274e4ea6da1224eeb1ad2050bf55c3998426b4de49daa2d04f0fccbd9f987ae"
         },
         {
           "user": 0,
-          "name": "starcros.dat",
+          "name": "STARCROS.DAT",
           "record_bytes": 84740,
           "sha256": "c7dac463c3a51170f82d68e389202a9ab7cc385ebf2239b83e721986e9522768"
         },
         {
           "user": 0,
-          "name": "station.dat",
+          "name": "STATION.DAT",
           "record_bytes": 128934,
           "sha256": "55983c43da044e4b49206012c0fe536fbcd9aa1f291f60431d02b836e8cc9094"
         },
         {
           "user": 0,
-          "name": "suspect.dat",
+          "name": "SUSPECT.DAT",
           "record_bytes": 118746,
           "sha256": "93653ad7a8097cb0cc96c36709a59e1a4ceefadceb23879e25a002da7819cb28"
         },
         {
           "user": 0,
-          "name": "suspend.dat",
+          "name": "SUSPEND.DAT",
           "record_bytes": 105584,
           "sha256": "7deefcd1e4f335dfd7b446f0d6a1dd7e8cd40d71f135fe7c5b788ecbd4749b19"
         },
         {
           "user": 0,
-          "name": "vezza.com",
+          "name": "VEZZA.COM",
           "record_bytes": 14751,
           "sha256": "4b322ea6928be1ee7f2b2fbb57abbccbf9083aed0266e6f298d47b3788c9d9c3"
         },
         {
           "user": 0,
-          "name": "vezza.lic",
+          "name": "VEZZA.LIC",
           "record_bytes": 18088,
           "sha256": "a9d75edc22d7e3d5c5e87b9317ac5b2594e1138ffbdc9ccb584624ca66e4d042"
         },
         {
           "user": 0,
-          "name": "wishbrng.dat",
+          "name": "WISHBRNG.DAT",
           "record_bytes": 128904,
           "sha256": "aced63a8dcaddc64119ce871ba0170fcdbfb07bf0fdb0eeec2b770f0b279fba1"
         },
         {
           "user": 0,
-          "name": "wishhnt.dat",
+          "name": "WISHHNT.DAT",
           "record_bytes": 164712,
           "sha256": "a9f5b3b3266c96b97ada128124a28dd9ade5f3fa6e2108f9e0987ff0ded783da"
         },
         {
           "user": 0,
-          "name": "witness.dat",
+          "name": "WITNESS.DAT",
           "record_bytes": 104260,
           "sha256": "7863e642157f95fd1ca0495724571285ffa43590a3cabfa96c43d263f17f665e"
         },
         {
           "user": 0,
-          "name": "zork1.dat",
+          "name": "ZORK1.DAT",
           "record_bytes": 86838,
           "sha256": "37084966477dff679282de42974b2077156b1bd68fad92a65d4ea94d8eb64d79"
         },
         {
           "user": 0,
-          "name": "zork1hnt.dat",
+          "name": "ZORK1HNT.DAT",
           "record_bytes": 105264,
           "sha256": "07ba90fc9f214fba9532228a3c0ba1230eeeacf5b8dfad5d9d721762aaa5f9b4"
         },
         {
           "user": 0,
-          "name": "zork2.dat",
+          "name": "ZORK2.DAT",
           "record_bytes": 92524,
           "sha256": "3ae7d5558943e9721f3e4b273c8a7faec1a03a604e1ae4ee1cde472c21cb24ac"
         },
         {
           "user": 0,
-          "name": "zork3.dat",
+          "name": "ZORK3.DAT",
           "record_bytes": 87984,
           "sha256": "b637a242865d059890184164ce8dec28554cc80901dcbf26c740b2d1ed0d4eb8"
         }
       ],
-      "validation": "Exact-size check, stable source/copy SHA-256 match, directory listing and complete file readback; no new gameplay claim.",
-      "matches_existing_collection": "INFOCOM",
-      "original_distribution": "https://github.com/CPMArchives/rcpm-cpmsim/releases/download/software-2026-11-21/INFOCOM-collection.zip",
-      "download": "https://github.com/CPMArchives/rcpm-cpmsim/releases/download/software-2026-11-21/INFOCOM-collection.zip"
+      "previous_id": "INFOCOM",
+      "archive": "INFOCOM-collection.zip",
+      "archive_sha256": "9da4156cfd2e37b356c0131ce37ed01ac0379cafb7cce27c5db5a205df22c520"
     },
     {
-      "id": "MODERNIF",
-      "image": "MODERNIF.dsk",
+      "id": "INTFICT",
+      "image": "INTFICT.dsk",
       "image_bytes": 4177920,
-      "image_sha256": "5033081f97c183e0802561e17c060d0bee39721f3becc61e4566c8a645cb6343",
       "format": "z80pack-hd",
+      "base_image_sha256": "5033081f97c183e0802561e17c060d0bee39721f3becc61e4566c8a645cb6343",
+      "image_sha256": "1bb40d90c5f63d5aee53b1b0649a4e6add6a6e0a3bac3b7f8c640dfca123b93f",
+      "directory_marker": "-INTFICT",
+      "marker_added": true,
+      "existing_files_unchanged": true,
       "files": [
         {
           "user": 0,
-          "name": "adverbum.z5",
+          "name": "-INTFICT",
+          "record_bytes": 1,
+          "sha256": "58f7b0780592032e4d8602a3e8690fb2c701b2e1dd546e703445aabd6469734d"
+        },
+        {
+          "user": 0,
+          "name": "ADVERBUM.Z5",
           "record_bytes": 138240,
           "sha256": "9a2a3899e487f13b1583194c7231d685eb391c8ea0ebfa2ea6f174554b365aff"
         },
         {
           "user": 0,
-          "name": "allroads.z5",
+          "name": "ALLROADS.Z5",
           "record_bytes": 172032,
           "sha256": "f61a758243bb2f115552d2b0404eabbf8f8e02a2f52b71fc2781ca25fc627516"
         },
         {
           "user": 0,
-          "name": "edifice.z5",
+          "name": "EDIFICE.Z5",
           "record_bytes": 181760,
           "sha256": "2803fbef240e62dc6fb259109406c1a228aa41bd2c83ecc8a3f34575463d863f"
         },
         {
           "user": 0,
-          "name": "gosling.z8",
+          "name": "GOSLING.Z8",
           "record_bytes": 288824,
           "sha256": "40fee086d8dadc413f4f196cdc8892680e6ef9d203a2047d68f555aa9a0feece"
         },
         {
           "user": 0,
-          "name": "metamorp.z5",
+          "name": "METAMORP.Z5",
           "record_bytes": 177664,
           "sha256": "47ab698c5b2a8e3fc841410dd3d987e101ab3d77f9cb3c870d0c1439352e3f7a"
         },
         {
           "user": 0,
-          "name": "muse.z5",
+          "name": "MUSE.Z5",
           "record_bytes": 175104,
           "sha256": "b906022951f5797bd18ebc06c9cb15d2e3c4012388e634e837f069b09f9beb55"
         },
         {
           "user": 0,
-          "name": "photopia.z5",
+          "name": "PHOTOPIA.Z5",
           "record_bytes": 239616,
           "sha256": "ba14a14dfdede4b7ad97846c13ca0ea07048334ac767649d9aa84add7fae20a5"
         },
         {
           "user": 0,
-          "name": "readme.txt",
+          "name": "README.TXT",
           "record_bytes": 1136,
           "sha256": "6f786cc6b7c8c333bfe93920623a54f08f102211a1c6197e961254122b7a0a57"
         },
         {
           "user": 0,
-          "name": "sherbet.z5",
+          "name": "SHERBET.Z5",
           "record_bytes": 174592,
           "sha256": "295e476757bd2d9e5bcef160c646185145fa15a77b22d85d0aae75c6a94fc126"
         },
         {
           "user": 0,
-          "name": "spring.z8",
+          "name": "SPRING.Z8",
           "record_bytes": 330240,
           "sha256": "7c3f1af34477641d7d7308264ec8c20f6324b47c2c69652db4b76a7cd8b8c98e"
         },
         {
           "user": 0,
-          "name": "vezza.com",
+          "name": "VEZZA.COM",
           "record_bytes": 14751,
           "sha256": "4b322ea6928be1ee7f2b2fbb57abbccbf9083aed0266e6f298d47b3788c9d9c3"
         },
         {
           "user": 0,
-          "name": "vezza.lic",
+          "name": "VEZZA.LIC",
           "record_bytes": 18088,
           "sha256": "a9d75edc22d7e3d5c5e87b9317ac5b2594e1138ffbdc9ccb584624ca66e4d042"
         },
         {
           "user": 0,
-          "name": "weather.z5",
+          "name": "WEATHER.Z5",
           "record_bytes": 93696,
           "sha256": "9038c8045d4fc53892901315db98ebc2e36df37b5ea468e1723d6cbacec906d2"
         },
         {
           "user": 0,
-          "name": "winter.z5",
+          "name": "WINTER.Z5",
           "record_bytes": 194560,
           "sha256": "6ecc8c6598e1abfc60db9ea3ae4fb43b9580e88a77bf3844317fa8a367971474"
         }
       ],
-      "validation": "Exact-size check, stable source/copy SHA-256 match, directory listing and complete file readback; no new gameplay claim.",
-      "matches_existing_collection": "MODERNIF",
-      "original_distribution": "https://github.com/CPMArchives/rcpm-cpmsim/releases/download/software-2026-11-21/MODERNIF-collection.zip",
-      "download": "https://github.com/CPMArchives/rcpm-cpmsim/releases/download/software-2026-11-21/MODERNIF-collection.zip"
+      "previous_id": "MODERNIF",
+      "archive": "INTFICT-collection.zip",
+      "archive_sha256": "eaa39033144d33b9d07494ea8ba7b22679815f16feb8fff0f19f100d1a63796b"
     },
     {
-      "id": "SCOTT",
-      "image": "SCOTT.dsk",
+      "id": "SADAMS",
+      "image": "SADAMS.dsk",
       "image_bytes": 4177920,
-      "image_sha256": "74b318e74660926ccd6a91af9f4536d64cad3cbe1fe89ef1cbe1e6ac12a7d9c4",
       "format": "z80pack-hd",
+      "base_image_sha256": "74b318e74660926ccd6a91af9f4536d64cad3cbe1fe89ef1cbe1e6ac12a7d9c4",
+      "image_sha256": "c99e8c57869907d9663c4ccfc0b289e340ea6709036bd8bd0f5bde53c18b5884",
+      "directory_marker": "-SADAMS",
+      "marker_added": true,
+      "existing_files_unchanged": true,
       "files": [
         {
           "user": 0,
-          "name": "advent.d0",
+          "name": "-SADAMS",
+          "record_bytes": 1,
+          "sha256": "58f7b0780592032e4d8602a3e8690fb2c701b2e1dd546e703445aabd6469734d"
+        },
+        {
+          "user": 0,
+          "name": "ADVENT.D0",
           "record_bytes": 14464,
           "sha256": "2ed8e1e90b265185d84c2e18db6225b15dc8569c043ba5763f4557a360d91071"
         },
         {
           "user": 0,
-          "name": "advent.d1",
+          "name": "ADVENT.D1",
           "record_bytes": 16768,
           "sha256": "442095b28bef7137b375ec616f2b5936252d60cc6cfd0a622d3ce75236224e72"
         },
         {
           "user": 0,
-          "name": "advent.d2",
+          "name": "ADVENT.D2",
           "record_bytes": 16512,
           "sha256": "50401f78e3bb3f510297a2d4cb176d57d58152eeb936ac3951e57e9b22da23ef"
         },
         {
           "user": 0,
-          "name": "advent.d3",
+          "name": "ADVENT.D3",
           "record_bytes": 15488,
           "sha256": "7cd306788bba7ff859752694f225e5560a966243fe16b296e4fbb8c0ffc44476"
         },
         {
           "user": 0,
-          "name": "advent.d4",
+          "name": "ADVENT.D4",
           "record_bytes": 16768,
           "sha256": "516d87b4f72b2eb6f6a6480249613dc561cd8f7163e1bb811aa37f16441c26dd"
         },
         {
           "user": 0,
-          "name": "advent.d5",
+          "name": "ADVENT.D5",
           "record_bytes": 18048,
           "sha256": "c555eb9c93af13dfa31d462dcc3a00aa6df6d79b2786108574aca65e0d16a9b0"
         },
         {
           "user": 0,
-          "name": "advent.d6",
+          "name": "ADVENT.D6",
           "record_bytes": 17792,
           "sha256": "111da8c14a1188f73a329446bcdc3e03490dfd4715b7412f0c5b22e8cb070ebc"
         },
         {
           "user": 0,
-          "name": "advent.d7",
+          "name": "ADVENT.D7",
           "record_bytes": 17536,
           "sha256": "d10181e9afda36fc4db76322c1febbc9997f60f550bdaad68e631a220077d2a0"
         },
         {
           "user": 0,
-          "name": "advent.d8",
+          "name": "ADVENT.D8",
           "record_bytes": 18048,
           "sha256": "955684691b5b125fd26f996f72d7c6c0fe4482b5c23bf37fcba8eb3fed8a9e95"
         },
         {
           "user": 0,
-          "name": "advent.d9",
+          "name": "ADVENT.D9",
           "record_bytes": 19328,
           "sha256": "3de121d222f8ba634e0d9e6564c1981c1fc91c993f60c31b38202d923a7b9a7f"
         },
         {
           "user": 0,
-          "name": "advent.da",
+          "name": "ADVENT.DA",
           "record_bytes": 19840,
           "sha256": "d9ad0593ad81634d6113eb45513edc17da1aac5e463c02920f59cb3bc8d07d9d"
         },
         {
           "user": 0,
-          "name": "advent.db",
+          "name": "ADVENT.DB",
           "record_bytes": 18560,
           "sha256": "87c3a7ee9cf0ae0fcfa796786ee7eb01b53b574bde4648d68d7ce84c9ee8f15b"
         },
         {
           "user": 0,
-          "name": "advent.dc",
+          "name": "ADVENT.DC",
           "record_bytes": 19328,
           "sha256": "17d4323b894fb1528d7947aea94f09091a99f9cece3c86e677f92220e30a5c25"
         },
         {
           "user": 0,
-          "name": "adventur.com",
+          "name": "ADVENTUR.COM",
           "record_bytes": 6784,
           "sha256": "9cc6e4f3e4cc350d97b575f03be55b6fa97083fa35c06f5fdbfe136d55ced923"
         },
         {
           "user": 0,
-          "name": "notice.txt",
+          "name": "NOTICE.TXT",
           "record_bytes": 559,
           "sha256": "d1629cea7049eb538f8d7746ef88d987e2fc9de808a0bdd9fd58a871312d83f7"
         },
         {
           "user": 0,
-          "name": "readme.txt",
+          "name": "README.TXT",
           "record_bytes": 2004,
           "sha256": "40e0e07a512dd164045d11d38e8131fea48ffa4d633cfdeb5c02a4afe4d11583"
         },
         {
           "user": 0,
-          "name": "scott.com",
+          "name": "SCOTT.COM",
           "record_bytes": 1577,
           "sha256": "13c92740918bec23b43cf53b81ace3852a6a927eeb7b59adee393252b0499126"
         }
       ],
-      "validation": "Exact-size check, stable source/copy SHA-256 match, directory listing and complete file readback; no new gameplay claim.",
-      "matches_existing_collection": "SCOTT",
-      "original_distribution": "https://github.com/CPMArchives/rcpm-cpmsim/releases/download/software-scott-2026-11-22/SCOTT-collection.zip",
-      "download": "https://github.com/CPMArchives/rcpm-cpmsim/releases/download/software-scott-2026-11-22/SCOTT-collection.zip"
+      "previous_id": "SCOTT",
+      "archive": "SADAMS-collection.zip",
+      "archive_sha256": "ecdc786a5044df9454e75b345069a060409801523088ff66543f2ea9140da8ac"
     }
-  ],
-  "notice": "Individual component notices and terms apply. Existing gameplay qualification applies only where image hashes match published collections; BOSKUG/GUIDES have filesystem readback checks only."
+  ]
 }

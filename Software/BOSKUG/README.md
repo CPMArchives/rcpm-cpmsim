@@ -1,10 +1,10 @@
 # BOSKUG archive disk
 
 An optional 4 MB archive image supplied by the maintainer, containing 14
-BOSKG*.ARK archives in user area 0. The image is preserved byte-for-byte;
-archive members have not been unpacked, modified or individually qualified.
+BOSKG*.ARK archives in user area 0. The archive file contents are preserved byte-for-byte; a -BOSKUG marker
+was added to user area 0. Archive members have not been unpacked, modified or individually qualified.
 
-[Download BOSKUG-collection.zip](https://github.com/CPMArchives/rcpm-cpmsim/releases/download/software-images-2026-11-22/BOSKUG-collection.zip)
+[Download BOSKUG-collection.zip](https://github.com/CPMArchives/rcpm-cpmsim/releases/download/software-labels-2026-11-23/BOSKUG-collection.zip)
 
 Stop RCP/M, extract the ZIP, copy volumes/BOSKUG.dsk into your installation's
 disks/library/ folder, then restart. Enter:

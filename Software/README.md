@@ -8,11 +8,11 @@ the [main RCP/M download](https://github.com/CPMArchives/rcpm-cpmsim/releases/ta
 
 | Disk | Contents | Download | Test report |
 | --- | --- | --- | --- |
-| **BOSKUG** | 14 preserved BOSKG ARK archives; user 0 | [BOSKUG-collection.zip](https://github.com/CPMArchives/rcpm-cpmsim/releases/download/software-images-2026-11-22/BOSKUG-collection.zip) | [Inventory and scope](BOSKUG/README.md) |
+| **BOSKUG** | 14 preserved BOSKG ARK archives; user 0 | [BOSKUG-collection.zip](https://github.com/CPMArchives/rcpm-cpmsim/releases/download/software-labels-2026-11-23/BOSKUG-collection.zip) | [Inventory and scope](BOSKUG/README.md) |
 | **GAMES expanded** | 76 tested titles; shared areas, J0 launchers | [GAMES-expanded.zip](https://github.com/CPMArchives/rcpm-cpmsim/releases/download/software-games-2026-11-22/GAMES-expanded.zip) | [Results and exclusions](GAMES/README.md) |
-| **SCOTT** | 12 Scott Adams adventures and sampler; original CP/M interpreter, user 0 | [SCOTT-collection.zip](https://github.com/CPMArchives/rcpm-cpmsim/releases/download/software-scott-2026-11-22/SCOTT-collection.zip) | [Results and controls](SCOTT/README.md) |
-| **INFOCOM** | 27 Infocom games and five InvisiClues hint books; user 0 | [INFOCOM-collection.zip](https://github.com/CPMArchives/rcpm-cpmsim/releases/download/software-2026-11-21/INFOCOM-collection.zip) | [Results and exclusions](https://github.com/CPMArchives/rcpm-cpmsim/releases/download/software-2026-11-21/INFOCOM-REPORT.txt) |
-| **MODERNIF** | 11 selected IFComp games: nine v5 and two v8; user 0 | [MODERNIF-collection.zip](https://github.com/CPMArchives/rcpm-cpmsim/releases/download/software-2026-11-21/MODERNIF-collection.zip) | [Results and exclusions](https://github.com/CPMArchives/rcpm-cpmsim/releases/download/software-2026-11-21/MODERNIF-REPORT.txt) |
+| **SADAMS** | 12 Scott Adams adventures and sampler; original CP/M interpreter, user 0 | [SADAMS-collection.zip](https://github.com/CPMArchives/rcpm-cpmsim/releases/download/software-labels-2026-11-23/SADAMS-collection.zip) | [Results and controls](SCOTT/README.md) |
+| **INFOCOM** | 27 Infocom games and five InvisiClues hint books; user 0 | [INFOCOM-collection.zip](https://github.com/CPMArchives/rcpm-cpmsim/releases/download/software-labels-2026-11-23/INFOCOM-collection.zip) | [Results and exclusions](https://github.com/CPMArchives/rcpm-cpmsim/releases/download/software-2026-11-21/INFOCOM-REPORT.txt) |
+| **INTFICT** | 11 selected IFComp games: nine v5 and two v8; user 0 | [INTFICT-collection.zip](https://github.com/CPMArchives/rcpm-cpmsim/releases/download/software-labels-2026-11-23/INTFICT-collection.zip) | [Results and exclusions](https://github.com/CPMArchives/rcpm-cpmsim/releases/download/software-2026-11-21/MODERNIF-REPORT.txt) |
 | **GUIDES** | Documentation-only disk; README, commands, DIR and LDIR guides | [GUIDES-collection.zip](https://github.com/CPMArchives/rcpm-cpmsim/releases/download/software-images-2026-11-22/GUIDES-collection.zip) | [Contents and checks](GUIDES/README.md) |
 
 [Exact six-image inventory and checksums](Images/README.md). Each image has its own download; choose only the collections you want.
@@ -20,7 +20,7 @@ the [main RCP/M download](https://github.com/CPMArchives/rcpm-cpmsim/releases/ta
 The [expanded GAMES guide](GAMES/README.md) explains its replacement-image installation and limits.
 
 Each collection ZIP contains one `volumes/*.dsk` image, its file manifest, usage notes,
-validation results and accompanying component notices. MODERNIF also
+validation results and accompanying component notices. INTFICT also
 includes Gosling's original distribution with its host-side map and hints.
 
 [Software release](https://github.com/CPMArchives/rcpm-cpmsim/releases/tag/software-2026-11-21) ·
@@ -37,10 +37,10 @@ Requires RCP/M 1.0 or later with the existing J: disk geometry.
    other volumes already in that folder.
 4. Restart RCP/M. At `A0:SYSTEM>` enter `MOUNT /L` to see the available disks.
 
-For SCOTT:
+For SADAMS:
 
 ```text
-MOUNT SCOTT
+MOUNT SADAMS
 J0:SCOTT
 ```
 
@@ -55,11 +55,11 @@ MOUNT INFOCOM
 J0:VEZZA J:ZORK1.DAT
 ```
 
-For MODERNIF:
+For INTFICT:
 
 ```text
 A0:
-MOUNT MODERNIF
+MOUNT INTFICT
 J0:VEZZA J:PHOTOPIA.Z5
 ```
 
@@ -67,7 +67,7 @@ Substitute a filename from the disk's `README.TXT` or `INFOCOM.TXT`. These
 collections use **user 0**. Vezza takes a drive-qualified story name such as
 `J:ZORK1.DAT`; its story argument does not accept `J0:ZORK1.DAT`.
 
-For INFOCOM and MODERNIF, at a save/restore filename prompt, use **`I:NAME.SAV`** for temporary WORK.
+For INFOCOM and INTFICT, at a save/restore filename prompt, use **`I:NAME.SAV`** for temporary WORK.
 WORK is cleared when the call ends, so download a save before logging off if
 you want to keep it. Persistent per-caller storage has not been added.
 
@@ -89,7 +89,7 @@ The larger-memory AMFV, Beyond Zork and Trinity releases, the timed-input game
 Border Zone, and the four graphical v6 titles are excluded. See the report for
 the VT52 CP/M 3 alternative and its remaining qualification gaps.
 
-### MODERNIF
+### INTFICT
 
 | Game | IFComp placement | Format |
 | --- | --- | --- |
@@ -143,3 +143,9 @@ Sources: [Vezza](https://gitlab.com/sijnstra1/vezza),
 New collections belong in this catalog with their own optional release assets,
 installation notes, provenance and test results. Disk binaries stay out of Git
 history and are not added to the base-system packaging inputs.
+
+## Collection names
+
+User area 0 carries the matching extensionless -NAME marker in every collection: -BOSKUG, -GAMES, -GUIDES, -INFOCOM, -INTFICT and -SADAMS. MOUNT chains to NDSCAN so the current J0 name follows the mounted collection. SCOTT.COM remains the Scott Adams launcher inside SADAMS.dsk.
+
+Replace the former SCOTT.dsk and MODERNIF.dsk catalog entries with SADAMS.dsk and INTFICT.dsk while RCP/M is stopped. Do not keep both old and renamed copies in the public catalog.
