@@ -43,3 +43,5 @@ they are separate from the released foreground launcher workflow.
 - [Installed directory layout and migration](installation-layout.md)
 
 - [RCP/M 1.1 release notes](RELEASE-NOTES-1.1.md)
+
+- [RCP/M 1.1.1 release notes](RELEASE-NOTES-1.1.1.md)
