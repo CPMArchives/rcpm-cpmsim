@@ -34,7 +34,7 @@ def create(source, romwbw, runtime, builds, tools, output):
     with tempfile.TemporaryDirectory(prefix='.shared-trial-', dir=output.parent) as temporary:
         work = Path(temporary)
         trial = work / 'instance'
-        for name in ('disks', 'conf', 'runtime', 'volumes', 'upload-staging', 'upload-inbox'):
+        for name in ('disks', 'conf', 'runtime', 'disks/library', 'uploads/staging', 'uploads/inbox'):
             (trial / name).mkdir(parents=True, mode=0o700)
         for kind in ('server', 'client'):
             (trial / f'conf/net_{kind}.conf').write_text('# No legacy network devices.\n')
@@ -78,9 +78,9 @@ def create(source, romwbw, runtime, builds, tools, output):
             fixture = work / name
             fixture.write_bytes(content)
             tool('cpmcp', '-T', 'raw', '-f', 'z80pack-hd', j, fixture, '0:' + name)
-        shutil.copyfile(j, trial / 'volumes/DEMO.dsk')
+        shutil.copyfile(j, trial / 'disks/library/DEMO.dsk')
         j.chmod(0o444)
-        (trial / 'volumes/DEMO.dsk').chmod(0o444)
+        (trial / 'disks/library/DEMO.dsk').chmod(0o444)
         # Empty 512-MiB archive: initialize its directory and leave data sparse.
         with (trial / 'disks/drivep.dsk').open('xb') as disk:
             disk.write(b'\xe5' * (8192 * 32))
@@ -102,14 +102,14 @@ def create(source, romwbw, runtime, builds, tools, output):
             'J: has HELLO.TXT and BINARY.BIN; MOUNT /L lists DEMO.\n'
             'P: is empty, with P0:SIGM and P1:CPMUG names reserved.\n'
             'I0:WORK is cleared at startup and after calls.\n'
-            'Completed uploads/messages stay in upload-inbox on the host.\n'
+            'Completed uploads/messages stay in uploads/inbox on the host.\n'
             'For YMODEM download: YSEND J:HELLO.TXT; upload: UPLOAD /Y.\n'
             'BYE logs a caller off. Locally, Ctrl-C between calls opens the BYE menu;\n'
             'press Return for local CP/M, then B:BYEBYE to stop the trial.\n'
             'B: SYSUTILS is private to local/operator mode; use B:tool explicitly.\n'
             'Caller file access uses AUTH drive/DU permissions; COM loads require R, no W and F4.\n'
             'Boot tools are not caller commands. Local Ctrl-B grants private sysop mode.\n'
-            'offline/BUILD.dsk is not in the caller mount collection.\n'
+            'disks/library/offline/BUILD.dsk is not in the caller mount collection.\n'
             'In tmux, Ctrl-B Ctrl-B sends BYE one literal Ctrl-B for blank/unblank.\n'
             'AUTH in I13: changes live policy in private mode; /SAVE persists it.\n'
             'J:/P: are caller-read-only; private sysop mode can maintain them.\n')

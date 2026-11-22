@@ -49,8 +49,8 @@ def launcher_source():
     text = text.replace('if (lease < 0) io_fail("instance lock");',
                         'if (lease < 0) fail("This installation is already running or its lock is inaccessible.");')
     text = text.replace('initialize(); mount_disk(); driver(mode);',
-        'win_private_directory("state");\n    win_private_directory("upload-staging");\n'
-        '    win_private_directory("upload-inbox");\n    initialize(); mount_disk(); driver(mode);')
+        'win_private_directory("state");\n    win_private_directory("uploads");\n    win_private_directory("uploads/staging");\n'
+        '    win_private_directory("uploads/inbox");\n    initialize(); mount_disk(); driver(mode);')
     text = text.replace('execv(guest[0], guest); io_fail("cpmsim");', 'return win_process(guest, 1);')
     return text
 

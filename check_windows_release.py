@@ -50,14 +50,14 @@ def unpack(archive, output):
             seen.add(key)
         stream.extractall(output)
     package = output / 'RCPM-windows-x64'
-    manifest = json.loads((package / 'MANIFEST.json').read_text())
+    manifest = json.loads((package / 'metadata/MANIFEST.json').read_text())
     if manifest.get('platform') != 'windows-x64':
         raise ValueError('Expected Windows x64 package manifest')
     if set(manifest['common']) & set(manifest['host']):
         raise ValueError('Common and host manifest groups overlap')
     expected = dict(manifest['common'], **manifest['host'])
     actual = {p.relative_to(package).as_posix() for p in package.rglob('*') if p.is_file()}
-    if actual != set(expected) | {'MANIFEST.json'}:
+    if actual != set(expected) | {'metadata/MANIFEST.json'}:
         raise ValueError('Missing or unrecorded package files')
     for name, digest in expected.items():
         if sha(package / name) != digest:
@@ -271,11 +271,11 @@ def worker(package, output):
         blank = output / 'blank.dsk'; tool('mkfs.cpm', '-f', 'ibm-3740', blank)
         tool('cpmls', '-f', 'ibm-3740', blank)
         result['tests']['disk_tool_roundtrip_and_relocation'] = True
-        receipt = json.loads((package / 'DEVELOPMENT-MEDIA.json').read_text())
-        assert sha(package / 'offline/BUILD.dsk') == receipt['build_image_sha256']
+        receipt = json.loads((package / 'metadata/DEVELOPMENT-MEDIA.json').read_text())
+        assert sha(package / 'disks/library/offline/BUILD.dsk') == receipt['build_image_sha256']
         for name, digest in receipt['retained'].items():
             target = output / ('development-' + name)
-            tool('cpmcp', '-f', 'z80pack-hd', package / 'offline/BUILD.dsk', '0:' + name, target)
+            tool('cpmcp', '-f', 'z80pack-hd', package / 'disks/library/offline/BUILD.dsk', '0:' + name, target)
             assert sha(target) == digest
         result['tests']['retained_development_files'] = len(receipt['retained'])
         with socket.socket() as server:

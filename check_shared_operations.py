@@ -64,7 +64,7 @@ def main():
             target.mkdir(exist_ok=True)
         elif item.is_file():
             copy_file(item, target, item.stat().st_mode & 0o777)
-    inbox = fixture / 'upload-inbox/restore-check.bin'
+    inbox = fixture / 'uploads/inbox/restore-check.bin'
     inbox.write_bytes(bytes(range(256)) * 4)
     (fixture / 'rbbs-trial-passwords.json').chmod(0o600)
     saved = backup(fixture, root / 'backup')
@@ -88,7 +88,7 @@ def main():
     manifest_path.write_text(json.dumps(broken))
     rejected(lambda: verify(saved), 'Invalid path')
     manifest_path.write_bytes(original)
-    payload = saved / 'instance/upload-inbox/restore-check.bin'
+    payload = saved / 'instance/uploads/inbox/restore-check.bin'
     intact = payload.read_bytes()
     payload.write_bytes(b'X' + intact[1:])
     rejected(lambda: restore(saved, root / 'corrupt-restore'), 'checksum mismatch')

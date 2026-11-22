@@ -33,7 +33,7 @@ Requires RCP/M 1.0 or later with the existing J: disk geometry.
 
 1. Stop RCP/M cleanly using its normal shutdown procedure.
 2. Extract the collection ZIP somewhere convenient.
-3. Copy its `.dsk` file into your installation's `volumes/` folder. Keep the
+3. Copy its `.dsk` file into your installation's `disks/library/` folder (or `volumes/` on RCP/M 1.0). Keep the
    other volumes already in that folder.
 4. Restart RCP/M. At `A0:SYSTEM>` enter `MOUNT /L` to see the available disks.
 

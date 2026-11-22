@@ -146,7 +146,7 @@ def upper_layout(instance, tools, romwbw, ppip):
         from auth_policy import install as install_auth
         assembler = Path(manifest['source']) / 'z80asm/z80asm'
         install_auth(instance, tools, assembler)
-    # B: is no longer runtime media; original build tools remain offline/BUILD.
+    # B: is no longer runtime media; original build tools remain disks/library/offline/BUILD.
     b.unlink()
     (instance / 'README.txt').write_text(
         'Fresh single-machine RCP/M trial, raw TCP 127.0.0.1:4002.\n'

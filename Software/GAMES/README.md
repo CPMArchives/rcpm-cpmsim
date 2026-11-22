@@ -24,7 +24,7 @@ directory slots free.
 
 ## Install and play
 
-Stop RCP/M cleanly and back up your existing `volumes/GAMES.dsk` before replacing
+Stop RCP/M cleanly and back up your existing `disks/library/GAMES.dsk` before replacing
 it with the supplied image. This edition intentionally removes 46 archive/source/unqualified files;
 all retained game binaries and required data are unchanged. If your installed disk contains further local
 additions, apply the recorded removals and supplied `payload/` to a stopped copy of that disk instead

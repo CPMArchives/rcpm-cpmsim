@@ -31,7 +31,9 @@ def names(tools, image, fmt):
 def separate_development_tools(source, tools, output):
     """Only call on the new, stopped release staging tree, never live media."""
     original = Path(source) / 'cpmsim/disks/library/cpm3-2.dsk'
-    offline = Path(output) / 'offline'
+    (Path(output) / 'metadata').mkdir(parents=True, exist_ok=True)
+    offline = Path(output) / 'disks/library/offline'
+    offline.mkdir(parents=True, exist_ok=True)
     target = offline / 'BUILD.dsk'
     staged = offline / 'BUILD-public.new.dsk'
     source_names = names(tools, original, 'ibm-3740')
@@ -79,19 +81,19 @@ def separate_development_tools(source, tools, output):
                   excluded=excluded, retained=retained,
                   build_image_sha256=hashlib.sha256(target.read_bytes()).hexdigest(),
                   rebuilt_from_fresh_image=True)
-    (Path(output) / 'DEVELOPMENT-MEDIA.json').write_text(json.dumps(report, indent=2) + '\n')
+    (Path(output) / 'metadata/DEVELOPMENT-MEDIA.json').write_text(json.dumps(report, indent=2) + '\n')
     return report
 
 
 def verify_public_development_media(output, tools):
     """Read back release media and reject the unfiltered source-disk copy."""
     output = Path(output)
-    report = json.loads((output / 'DEVELOPMENT-MEDIA.json').read_text())
+    report = json.loads((output / 'metadata/DEVELOPMENT-MEDIA.json').read_text())
     if report['format'] != 'rcpm-development-media-1' or set(report['excluded']) != set(EXTERNAL_FILES):
         raise ValueError('Unsupported development-media separation receipt')
     if (output / STOCK_BUILD_DISK).exists():
         raise ValueError('Unfiltered stock development disk was included in package sources')
-    image = output / 'offline/BUILD.dsk'
+    image = output / 'disks/library/offline/BUILD.dsk'
     if hashlib.sha256(image.read_bytes()).hexdigest() != report['build_image_sha256']:
         raise ValueError('Public BUILD image differs from its receipt')
     actual = names(tools, image, 'z80pack-hd')

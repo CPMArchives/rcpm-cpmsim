@@ -1,0 +1,41 @@
+{
+  "layout": 2,
+  "unit_checks": 23,
+  "fresh_macos_package_build": true,
+  "macos_runtime": {
+    "archive": "/Users/nathanael/.codex/.chatgpt-projects/g-p-6a682f002be881918281554d644daf48/rcpm-layout/build/layout-candidate.zip",
+    "relocated_with_spaces": true,
+    "minimal_system_path": true,
+    "common_and_host_hashes": true,
+    "shipped_disks": [
+      "A",
+      "I",
+      "P"
+    ],
+    "default_port": 4000,
+    "tested_port": 58813,
+    "shipped_caller_help_topics": 9,
+    "direct_boot": true,
+    "caller_login": true,
+    "archive_named_directories": true,
+    "both_public_volumes": true,
+    "documentation_read": true,
+    "rbbs_entry": true,
+    "first_start_private_credentials": true,
+    "duplicate_guest_refused": true,
+    "orderly_shutdown": true,
+    "no_python_tmux_or_homebrew_required": true,
+    "generated_passwords_match_guest_record": true,
+    "public_redistribution": "not assessed by runtime checks; see docs/distribution-review.md"
+  },
+  "swappable_drives": {
+    "independent_mounts_all_16_users_and_chaining": true,
+    "marker_replacement_clears_absent_names_preserves_other_drives": true,
+    "caller_scan_and_unapproved_execution_unchanged": true,
+    "denied_user_area_aborts_scan_without_changing_names": true,
+    "invalid_names_default_restore_other_drive_preserved": true,
+    "scanner_does_not_write_images": true
+  },
+  "windows_x64": "runtime and launcher cross-compiled; live Windows qualification not repeated",
+  "installed_copy": "migration prepared; execution requires local user because installation is outside workspace write permissions"
+}

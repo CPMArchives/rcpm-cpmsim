@@ -22,8 +22,8 @@ class ArchivePublicationTests(unittest.TestCase):
             (self.console / "disks" / f"drive{drive}.dsk").write_bytes(data)
             (self.callers / "disks" / f"drive{drive}.dsk").symlink_to(
                 self.console / "disks" / f"drive{drive}.dsk")
-        (self.callers / "volumes").mkdir()
-        (self.callers / "volumes/DEMO.dsk").write_bytes(b"v" * 2048)
+        (self.callers / "disks/library").mkdir()
+        (self.callers / "disks/library/DEMO.dsk").write_bytes(b"v" * 2048)
         self.sizes = patch.dict(archive_admin.SIZES, {"j": 2048, "p": 2048}, clear=True)
         self.sizes.start()
         self.addCleanup(self.sizes.stop)
@@ -43,16 +43,16 @@ class ArchivePublicationTests(unittest.TestCase):
         self.assertFalse((old / "disks/drivep.dsk").stat().st_mode & 0o222)
         with (old / "disks/drivep.dsk").open("rb") as reader:
             master.write_bytes(b"n" * 2048)
-            (self.console / "volumes/DEMO.dsk").write_bytes(b"w" * 2048)
+            (self.console / "disks/library/DEMO.dsk").write_bytes(b"w" * 2048)
             self.assertEqual((old / "disks/drivep.dsk").read_bytes(), b"p" * 2048)
             second = archive_admin.publish(self.console)
             new = self.session("new")
             self.assertNotEqual(first, second)
             self.assertEqual(reader.read(), b"p" * 2048)
             self.assertEqual((new / "disks/drivep.dsk").read_bytes(), b"n" * 2048)
-            self.assertEqual((old / "volumes/DEMO.dsk").read_bytes(), b"v" * 2048)
-            self.assertEqual((new / "volumes/DEMO.dsk").read_bytes(), b"w" * 2048)
-            self.assertFalse((new / "volumes/DEMO.dsk").stat().st_mode & 0o222)
+            self.assertEqual((old / "disks/library/DEMO.dsk").read_bytes(), b"v" * 2048)
+            self.assertEqual((new / "disks/library/DEMO.dsk").read_bytes(), b"w" * 2048)
+            self.assertFalse((new / "disks/library/DEMO.dsk").stat().st_mode & 0o222)
 
     def test_active_console_blocks_publication(self):
         first = archive_admin.setup(self.console, self.callers)
@@ -63,12 +63,12 @@ class ArchivePublicationTests(unittest.TestCase):
 
     def test_failed_publication_preserves_previous_generation_and_can_retry(self):
         first = archive_admin.setup(self.console, self.callers)
-        (self.console / "volumes/DEMO.dsk").write_bytes(b"bad size")
+        (self.console / "disks/library/DEMO.dsk").write_bytes(b"bad size")
         with self.assertRaisesRegex(ValueError, "geometry"):
             archive_admin.publish(self.console)
         self.assertEqual((self.callers / "published/current").resolve(), first)
         self.assertFalse(list((self.callers / "published").glob(".preparing-*")))
-        (self.console / "volumes/DEMO.dsk").write_bytes(b"r" * 2048)
+        (self.console / "disks/library/DEMO.dsk").write_bytes(b"r" * 2048)
         self.assertNotEqual(archive_admin.publish(self.console), first)
 
 

@@ -28,8 +28,8 @@ Impossible; it is distinct from Richard Altman's MISSION on GAMES.
 
 ## Install and play
 
-Stop RCP/M cleanly and copy volumes/SCOTT.dsk alongside the other optional
-volumes. Restart, enter MOUNT SCOTT, then J0:SCOTT. The launcher prepares
+Stop RCP/M cleanly and copy the extracted volumes/SCOTT.dsk into disks/library/
+(volumes/ on RCP/M 1.0) alongside the other optional images. Restart, enter MOUNT SCOTT, then J0:SCOTT. The launcher prepares
 only named story data in I0:WORK and runs approved J0 code. Initial
 preparation can take a minute or more at 4 MHz; wait for Which Adventure.
 J: stays read-only and WORK remains non-executable.

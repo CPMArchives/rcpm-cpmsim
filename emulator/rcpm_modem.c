@@ -150,12 +150,12 @@ static int rcpm_modem_init(void)
         if (rm_mode == 1) {
             printf("RCP/M is now running on port %ld.\r\n", number);
             printf("Listening address: %s (direct raw TCP).\r\n", host ? host : "127.0.0.1");
-            printf("See INSTALLATION.DOC for information on how to connect\r\n"
+            printf("See docs/INSTALLATION.DOC for information on how to connect\r\n"
                    "from your system (Windows, Linux, macOS).\r\n");
         } else {
             printf("RCP/M is using the virtual modem endpoint %s:%ld (IP232).\r\n",
                    host ? host : "127.0.0.1", number);
-            printf("Callers connect to the virtual modem's caller port; see INSTALLATION.DOC.\r\n");
+            printf("Callers connect to the virtual modem's caller port; see docs/INSTALLATION.DOC.\r\n");
         }
         fflush(stdout);
     }

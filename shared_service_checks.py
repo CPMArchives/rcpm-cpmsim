@@ -58,11 +58,11 @@ def prepare_services(source, tools, work, disk):
             subprocess.run([str(tools / 'cpmrm'), '-f', 'ibm-3740', str(disk), '0:DIR.COM'], check=True)
         subprocess.run([str(tools / 'cpmcp'), '-T', 'raw', '-f', 'ibm-3740', str(disk),
                         str(work / f'{name}.bin'), f'0:{target}.COM'], check=True)
-    for name in ('upload-staging', 'upload-inbox'):
+    for name in ('uploads/staging', 'uploads/inbox'):
         path = work / name
         if path.exists():
             shutil.rmtree(path)
-        path.mkdir(mode=0o700)
+        path.mkdir(mode=0o700, parents=True)
     j = work / 'disks/drivej.dsk'
     j.unlink(missing_ok=True)
     subprocess.run([str(tools / 'mkfs.cpm'), '-f', 'z80pack-hd', str(j)], check=True)
@@ -188,12 +188,12 @@ def partial_upload(caller):
 
 def verify_inbox(work):
     expected = {'XFILE.BIN': XDATA, 'YFILE.BIN': YDATA, 'EMPTY.TXT': b'', 'MESSAGE.TXT': MESSAGE}
-    entries = list((work / 'upload-inbox').iterdir())
+    entries = list((work / 'uploads/inbox').iterdir())
     if len(entries) != len(expected):
         raise RuntimeError(f'Unexpected inbox entries: {[entry.name for entry in entries]}')
     for name, data in expected.items():
         matching = [entry for entry in entries if entry.name.startswith(name + '.')]
         if len(matching) != 1 or matching[0].read_bytes() != data:
             raise RuntimeError(f'Persistent inbox differs for {name}')
-    if list((work / 'upload-staging').iterdir()):
+    if list((work / 'uploads/staging').iterdir()):
         raise RuntimeError('Unfinished upload staging survived call recovery')

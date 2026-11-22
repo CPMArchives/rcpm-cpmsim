@@ -23,15 +23,16 @@ class LinuxPackagingChecks(unittest.TestCase):
     def common(self):
         source = self.root / 'rcpm-common'
         source.mkdir()
-        files = {'README.txt': b'common-payload\n', 'DEVELOPMENT-MEDIA.json': b'{}\n'}
+        (source / 'metadata').mkdir()
+        files = {'README.txt': b'common-payload\n', 'metadata/DEVELOPMENT-MEDIA.json': b'{}\n'}
         for name, data in files.items():
             (source / name).write_bytes(data)
         manifest = {name: hashlib.sha256(data).hexdigest() for name, data in files.items()}
         (source / 'COMMON-MANIFEST.json').write_text(json.dumps(manifest))
         archive = self.root / 'common.zip'
         with zipfile.ZipFile(archive, 'w') as output:
-            for path in source.iterdir():
-                output.write(path, 'rcpm-common/' + path.name)
+            for path in source.rglob("*"):
+                output.write(path, 'rcpm-common/' + path.relative_to(source).as_posix())
         return archive, manifest
 
     def test_common_payload_hashes_detect_changed_content(self):
@@ -52,7 +53,8 @@ class LinuxPackagingChecks(unittest.TestCase):
     def test_linux_tar_preserves_launcher_mode_and_package_root(self):
         package = self.root / 'RCPM-linux-x64'
         package.mkdir()
-        (package / 'MANIFEST.json').write_text('{"platform":"linux-x64"}')
+        (package / 'metadata').mkdir()
+        (package / 'metadata/MANIFEST.json').write_text('{"platform":"linux-x64"}')
         launcher = package / 'Start-RCPM.sh'
         launcher.write_text('#!/bin/sh\nexit 0\n')
         launcher.chmod(0o755)
@@ -97,8 +99,8 @@ class LinuxPackagingChecks(unittest.TestCase):
             build(archive, destination)
         package_archive = destination / 'rcpm-linux-arm64-candidate.tar.gz'
         package = extract_package(package_archive, self.root / 'relocated')
-        metadata = json.loads((package / 'BUILD-HOST.json').read_text())
-        manifest = json.loads((package / 'MANIFEST.json').read_text())
+        metadata = json.loads((package / 'metadata/BUILD-HOST.json').read_text())
+        manifest = json.loads((package / 'metadata/MANIFEST.json').read_text())
         self.assertEqual(metadata['platform'], 'linux-arm64')
         self.assertEqual(manifest['platform'], 'linux-arm64')
         self.assertEqual(manifest['common'], expected)

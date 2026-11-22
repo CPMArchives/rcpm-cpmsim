@@ -176,12 +176,12 @@ static void caller_files(const char *operation, const char *argument) {
     if (!*target || strlen(target) > 8) fail("Invalid image name");
     for (char *p = target; *p; p++) if (!isalnum((unsigned char)*p) && *p != '_') fail("Invalid image name");
     strcpy(prefix, target);
-    if (archive) { snprintf(image, sizeof(image), "archives/%s.dsk", prefix); format = "z80pack-hdb"; }
+    if (archive) { snprintf(image, sizeof(image), "disks/library/archives/%s.dsk", prefix); format = "z80pack-hdb"; }
     else if (!strcmp(prefix, "A")) { strcpy(image, "disks/drivea.dsk"); format = "ibm-3740"; }
     else if (!strcmp(prefix, "P")) { strcpy(image, "disks/drivep.dsk"); format = "z80pack-hdb"; }
     else {
         if (strlen(prefix) == 1) fail("Use A, P, GAMES, or P/ARCHIVE; WORK is not executable");
-        snprintf(image, sizeof(image), "volumes/%s.dsk", prefix); format = "z80pack-hd";
+        snprintf(image, sizeof(image), "disks/library/%s.dsk", prefix); format = "z80pack-hd";
     }
     if (lstat(image, &st) || !S_ISREG(st.st_mode)) fail("Expected an owned regular disk image");
     int lease = open(".console.lock", O_RDWR|O_CREAT, 0600); if (lease < 0) io_fail("instance lock");
@@ -237,7 +237,7 @@ int main(int argc, char **argv) {
         if (!strcmp(argv[k], "--help")) {
             puts("RCP/M [--mode direct|ip232] [--address IPv4] [--port NUMBER] [--check]\n"
                  "RCP/M --caller-allow IMAGE:USER:FILE.COM\nRCP/M --caller-deny IMAGE:USER:FILE.COM\nRCP/M --caller-list IMAGE\nIMAGE: A, P, a J: catalog name, or P/NAME for a P: archive\n"
-                 "IMAGE is A, P, or a catalog name such as GAMES. Stop the guest first.\nDefaults come from RCPM.CONF. See SYSOP-GUIDE.DOC."); return 0;
+                 "IMAGE is A, P, or a catalog name such as GAMES. Stop the guest first.\nDefaults come from RCPM.CONF. See docs/SYSOP-GUIDE.DOC."); return 0;
         }
         if (k+1 >= argc) fail("Missing option value; use --help");
         if (!strcmp(argv[k], "--mode") && strlen(argv[k+1]) < sizeof(mode)) strcpy(mode, argv[k+1]);

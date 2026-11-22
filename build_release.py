@@ -72,14 +72,16 @@ def clean_common(args, output):
     create(args.source, args.romwbw, args.runtime, args.builds, args.tools, output)
     install(output, REPO / 'build/rbbs37/original', args.tools, args.romwbw, output)
     upper_layout(output, args.tools, args.romwbw, REPO / 'build/ppip18')
-    separate_development_tools(args.source, args.tools, output)
+    (output / 'docs').mkdir(exist_ok=True)
+    (output / 'metadata').mkdir(exist_ok=True)
     # Never use operator media. Remove development helpers and generated secrets.
     for path in output.glob('*.command'):
         path.unlink()
     for name in ('runtime/cpmsim', 'runtime/cpmsim.features.json', 'rbbs-trial-passwords.json', 'trial-build.json', 'README.txt'):
         (output / name).unlink(missing_ok=True)
     (output / 'disks/drivej.dsk').unlink()
-    shutil.rmtree(output / 'volumes')
+    (output / 'disks/library/DEMO.dsk').unlink()
+    separate_development_tools(args.source, args.tools, output)
     print('Verifying every P: library against the preserved archive manifest...', flush=True)
     archive_rows = verify_archive(args.archive, args.archive.with_suffix('.sha256'), args.tools)
     target = output / 'disks/drivep.dsk'
@@ -90,17 +92,20 @@ def clean_common(args, output):
     # Directory names travel with the default archive, like other collections.
     for user, name in ((0, '-SIGM'), (1, '-CPMUG')):
         put(args.tools, target, user, name, b'\x1a', fmt='z80pack-hdb')
-    (output / 'archives').mkdir()
-    shutil.copy2(args.archive.with_suffix('.sha256'), output / 'ARCHIVE.sha256')
+    (output / 'disks/library/archives').mkdir()
+    shutil.copy2(args.archive.with_suffix('.sha256'), output / 'metadata/ARCHIVE.sha256')
     launchers = output / 'source/configured/game-launchers'
     build_game_launchers(args.source, args.romwbw, launchers)
     remove_system_launchers(args.tools, output / 'disks/drivea.dsk')
-    rows = build_volumes(args.sigm, args.tools, output / 'volumes',
+    rows = build_volumes(args.sigm, args.tools, output / 'new-volumes',
                          launchers / 'mchansi.bin', launcher_dir=launchers)
+    (output / 'metadata/VOLUMES.json').write_text(json.dumps(rows, indent=2) + '\n')
+    (output / 'new-volumes/volumes.json').unlink()
+    for image in (output / 'new-volumes').iterdir():
+        image.rename(output / 'disks/library' / image.name)
+    (output / 'new-volumes').rmdir()
     from auth_policy import install as install_auth
     install_auth(output, args.tools, args.source / 'z80asm/z80asm')
-    (output / 'VOLUMES.json').write_text(json.dumps(rows, indent=2) + '\n')
-    (output / 'volumes/volumes.json').unlink()
     for name in ('direct', 'ip232'):
         destination = output / 'drivers' / name
         destination.mkdir(parents=True)
@@ -130,7 +135,7 @@ def clean_common(args, output):
         stream.write(seed.ljust(128, b'\x1a'))
     (output / 'state').mkdir(mode=0o700)
     for name in ('INSTALLATION.DOC', 'SYSOP-GUIDE.DOC', 'DISK-IMAGES.DOC'):
-        shutil.copy2(REPO / 'packaging' / name, output / name)
+        shutil.copy2(REPO / 'packaging' / name, output / 'docs' / name)
     (output / 'RCPM.CONF').write_text('MODE=direct\nADDRESS=127.0.0.1\nPORT=4000\n')
     shutil.copy2(REPO / 'build/cpmtools/share/diskdefs', output / 'runtime/diskdefs')
     (output / 'README.txt').write_text(
@@ -141,8 +146,8 @@ def clean_common(args, output):
         'A:, I: and populated P: are included. J: is created on first start.\n'
         'MOUNT GAMES or MOUNT GUIDES selects the supplied J: volumes.\n'
         'Fresh RBBS passwords are generated locally in private SYSOP.DOC.\n'
-        'See INSTALLATION.DOC for setup and SYSOP-GUIDE.DOC for administration.\n'
-        'DISK-IMAGES.DOC covers image formats; see also DISTRIBUTION-STATUS.DOC.\n')
+        'See docs/INSTALLATION.DOC for setup and docs/SYSOP-GUIDE.DOC for administration.\n'
+        'docs/DISK-IMAGES.DOC covers image formats; see also docs/DISTRIBUTION-STATUS.DOC.\n')
     return dict(sigm=310, cpmug=93, verified_libraries=len(archive_rows),
                 archive_sha256=sha(target), j_volumes=['GAMES', 'GUIDES'])
 
@@ -197,8 +202,8 @@ def sources_and_notices(args, output):
         for path in (REPO / 'build' / name).iterdir():
             if path.is_file() and path.suffix.lower() not in ('.log',):
                 shutil.copy2(path, directory / path.name)
-    notices = output / 'NOTICES'
-    notices.mkdir()
+    notices = output / 'docs/NOTICES'
+    notices.mkdir(parents=True, exist_ok=True)
     for original, name in ((args.source / 'LICENSE', 'z80pack-LICENSE.txt'),
                            (args.source / 'z80core/COPYING', 'z80core-COPYING.txt'),
                            (args.cpmtools_source / 'COPYING', 'cpmtools-COPYING.txt'),
@@ -207,10 +212,10 @@ def sources_and_notices(args, output):
                            (args.romwbw / 'Source/Images/d_z3plus/u0/!(C)1988', 'Z3PLUS-original.txt'),
                            (args.bye_reference / 'bye510.asm', 'BYE510-original.asm')):
         shutil.copy2(original, notices / name)
-    (output / 'DISTRIBUTION-STATUS.DOC').write_text(
+    (output / 'docs/DISTRIBUTION-STATUS.DOC').write_text(
         'ENGINEERING CANDIDATE - NOT CLEARED FOR PUBLIC REDISTRIBUTION\n\n'
         'This local artifact tests packaging and operation. No release was published.\n'
-        'Original notices remain in NOTICES/, source/ and preserved library members.\n\n'
+        'Original notices remain in docs/NOTICES/, source/ and preserved library members.\n\n'
         'Specific unresolved notices:\n'
         '- Z3PLUS original notice explicitly prohibits reproduction/distribution.\n'
         '- BYE510 original notice permits distribution unmodified; this driver is patched.\n'
@@ -235,17 +240,17 @@ def sources_and_notices(args, output):
         '  python3 build_raw_cpmtools.py ../upstream/cpmtools-2.23\n'
         'The cpmtools builder applies the documented POSIX raw-image option fix.\n'
         'BYE configured assembly is in configured/bye5; pristine upstream and RBBS\n'
-        'BASIC sources are under upstream/. offline/BUILD.dsk retains the DRI\n'
+        'BASIC sources are under upstream/. disks/library/offline/BUILD.dsk retains the DRI\n'
         'development files; Microsoft M80/L80 and MicroPro WM are excluded.\n'
         'Builders supply the pinned original cpm3-2.dsk outside this package,\n'
         'combining it with the source snapshot in their separate input tree.\n'
-        'Utility sources and hashes are included. DEVELOPMENT-MEDIA.json records\n'
+        'Utility sources and hashes are included. metadata/DEVELOPMENT-MEDIA.json records\n'
         'the separation and hashes of every retained development file.\n'
         'Reference downloads and their exact hashes are listed in rcpm/docs/*.json.\n'
         'Full fresh system generation uses prepare_system_trial.py; consult its\n'
         '--help and docs/zsystem-utilities.md for source/toolchain inputs.\n'
         'RomWBW image inputs come from commit cb887a1a2191072dff952bfa836a8dca201b1450.\n'
-        'The P: image is verified using ARCHIVE.sha256; the original volume bytes\n'
+        'The P: image is verified using metadata/ARCHIVE.sha256; the original volume bytes\n'
         'are preserved inside P:. build_archive.py can rebuild it from the collections.\n'
         'The release builder separates the common payload from native host files.\n'
         'No developer checkout path is used by the running package.\n')
@@ -306,7 +311,7 @@ def main():
     manifest = dict(format='rcpm-release-candidate-1', platform='macos-arm64',
                     status='local-engineering-candidate-redistribution-not-cleared', minimum_macos='11.0',
                     collections=collections, common=common_files, host=native)
-    (payload / 'MANIFEST.json').write_text(json.dumps(manifest, indent=2) + '\n')
+    (payload / 'metadata/MANIFEST.json').write_text(json.dumps(manifest, indent=2) + '\n')
     (common / 'COMMON-MANIFEST.json').write_text(json.dumps(common_files, indent=2) + '\n')
     archive(common, args.output / 'rcpm-common-candidate.zip')
     archive(payload, args.output / 'rcpm-macos-arm64-candidate.zip')

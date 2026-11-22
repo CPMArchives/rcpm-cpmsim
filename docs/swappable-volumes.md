@@ -12,9 +12,9 @@ Listing and failed mount requests never chain.
 | Command | Result |
 | --- | --- |
 | `MOUNT /L` or `MOUNT J: /L` | List J: catalog and current image |
-| `MOUNT GAMES` or `MOUNT J: GAMES` | Mount volumes/GAMES.dsk on J: |
+| `MOUNT GAMES` or `MOUNT J: GAMES` | Mount disks/library/GAMES.dsk on J: |
 | `MOUNT P: /L` | List P: catalog and current image |
-| `MOUNT P: TORONTO` | Mount archives/TORONTO.dsk on P: |
+| `MOUNT P: TORONTO` | Mount disks/library/archives/TORONTO.dsk on P: |
 | `MOUNT J: /DEFAULT` | Restore disks/drivej.dsk |
 | `MOUNT P: /DEFAULT` | Restore disks/drivep.dsk (normally SIG/M and CPMUG) |
 | `NDSCAN P:` | Rebuild only P:'s names from the currently mounted image |
@@ -106,10 +106,10 @@ installation does not provide the new BYE query or enlarge its resident table.
 The native stopped-host approval tools accept `P/NAME` to address a named P:
 image, e.g. `--caller-list P/TORONTO` or
 `--caller-allow P/TORONTO:4:EXAMPLE.COM`. Plain P still means the default image;
-plain GAMES means volumes/GAMES.dsk. Normal live approval uses AUTH against the
+plain GAMES means disks/library/GAMES.dsk. Normal live approval uses AUTH against the
 currently mounted drive. Never edit images with host tools while RCP/M runs.
 
-Copy archives/ with the rest of an installation when backing up. Store private
+Copy disks/library/archives/ with the rest of an installation when backing up. Store private
 media outside both public catalogs. A sysop who grants caller W access accepts
 the possibility of changes to files and markers, just as on J: today.
 

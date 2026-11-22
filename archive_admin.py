@@ -92,14 +92,14 @@ def build_publication(console, callers):
         staging = Path(temporary)
         disks = staging / "disks"
         disks.mkdir()
-        volumes = staging / "volumes"
+        volumes = staging / "disks/library"
         volumes.mkdir()
         for drive, size in SIZES.items():
             source = console / "disks" / f"drive{drive}.dsk"
             if not source.is_file() or source.stat().st_size != size:
                 raise ValueError(f"Unexpected archive geometry: {source}")
             copy_image(source, disks / source.name, 0o444)
-        for source in catalog_images(console / "volumes"):
+        for source in catalog_images(console / "disks/library"):
             if not source.is_file() or source.stat().st_size != SIZES["j"]:
                 raise ValueError(f"Unexpected catalog image geometry: {source}")
             copy_image(source, volumes / source.name, 0o444)
@@ -125,25 +125,25 @@ def setup(console, callers, mount_command=None):
             return (callers / "published/current").resolve(strict=True)
         # Copy the initial catalog into the sysop installation before redirecting
         # the caller catalog to its first immutable publication.
-        volumes = console / "volumes"
+        volumes = console / "disks/library"
         if volumes.is_symlink():
             raise ValueError("The sysop volumes directory must be independent of caller publications")
         if not volumes.exists():
             volumes.mkdir()
-            for source in catalog_images(callers / "volumes"):
+            for source in catalog_images(callers / "disks/library"):
                 copy_image(source, volumes / source.name, 0o644)
         generation = build_publication(console, callers)
         # Redirect both caller slots before making the sysop masters writable.
         for drive in SIZES:
             atomic_link(f"../published/current/disks/drive{drive}.dsk",
                         callers / "disks" / f"drive{drive}.dsk")
-        catalog = callers / "volumes"
+        catalog = callers / "disks/library"
         if catalog.exists() and not catalog.is_symlink():
             backup = callers / "volumes-before-publication"
             if backup.exists():
                 raise ValueError(f"Catalog rollback directory already exists: {backup}")
             catalog.rename(backup)
-        atomic_link("published/current/volumes", catalog)
+        atomic_link("../published/current/disks/library", catalog)
         # Use independent files, including when the old archives had hard links.
         for drive in SIZES:
             destination = console / "disks" / f"drive{drive}.dsk"

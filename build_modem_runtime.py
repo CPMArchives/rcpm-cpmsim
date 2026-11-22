@@ -68,6 +68,7 @@ def integrate(io_text):
     io_text = io_text[:start] + ('#include "rcpm_mount.c"\n\n'
         'static int rcpm_transfer_read(BYTE *, size_t, int);\n'
         'static ssize_t rcpm_transfer_write(const void *, size_t);\n\n') + io_text[end:]
+    io_text = io_text.replace('upload-staging', 'uploads/staging').replace('upload-inbox', 'uploads/inbox')
     return io_text.replace('cpu_state = STOPPED;', 'cpu_state = ST_STOPPED;')
 
 
@@ -123,7 +124,7 @@ def main():
         staged.replace(output)
         output.with_name(output.name + '.features.json').write_text(json.dumps(dict(
             format='rcpm-runtime-features-1', idle_timer_port=74, sysop_writable_catalog=True,
-            mount_protocol=2, swappable_drives=['J', 'P'],
+            mount_protocol=2, swappable_drives=['J', 'P'], installation_layout=2,
             sha256=hashlib.sha256(output.read_bytes()).hexdigest()), indent=2) + '\n')
     print(f'Built {output}')
 

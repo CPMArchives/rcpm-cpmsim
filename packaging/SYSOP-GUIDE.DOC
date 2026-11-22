@@ -1,8 +1,8 @@
 RCP/M - SYSOP'S GUIDE
 
-Read INSTALLATION.DOC for first startup, client connections, listener
+Read docs/INSTALLATION.DOC for first startup, client connections, listener
 configuration and the optional tcpser/IP232 arrangement. This guide covers
-routine administration. DISK-IMAGES.DOC gives raw disk geometries and
+routine administration. docs/DISK-IMAGES.DOC gives raw disk geometries and
 format/edit commands.
 
 SYSOP.DOC is a different, PRIVATE file generated locally at first start.
@@ -488,11 +488,11 @@ provided initialization workflow rather than renaming it with a generic tool.
 UPLOAD filename.ext receives XMODEM/CRC; UPLOAD /Y receives a YMODEM batch.
 Completed files are saved OUTSIDE the CP/M disks in the host directory:
 
-    upload-inbox/
+    uploads/inbox/
 
 In-progress files use:
 
-    upload-staging/
+    uploads/staging/
 
 These directories sit beside disks/, runtime/ and RCPM.CONF in the unpacked
 installation. They are private operator storage, not a mounted CP/M drive.
@@ -508,7 +508,7 @@ later file is interrupted. XMODEM retains record padding; YMODEM retains the
 declared file length. Leave staging and inbox on the same host filesystem,
 because committing a submission uses an atomic hard-link operation.
 
-MESSAGE submissions are also saved in upload-inbox/ when the caller saves
+MESSAGE submissions are also saved in uploads/inbox/ when the caller saves
 the note. Unsaved drafts are discarded at call recovery. Completed uploads
 and saved messages survive disconnect, WORK cleanup and normal restart.
 
@@ -521,11 +521,11 @@ Review procedure:
      belongs; completed uploads are not automatically public publications.
   4. Stop RCP/M and back up the target image before host-side disk editing.
   5. Import reviewed files into a suitable archive image using the bundled
-     cpmtools and exact geometry described in DISK-IMAGES.DOC.
+     cpmtools and exact geometry described in docs/DISK-IMAGES.DOC.
   6. Retain owner-writable image permissions for private sysop maintenance,
      restart, and verify caller access with AUTH and the intended contents.
 
-Do not publish by placing an arbitrary file in volumes/: that catalog contains
+Do not publish by placing an arbitrary file in disks/library/: that catalog contains
 complete, correctly formatted J: disk images. To build a new public volume,
 prepare it outside the catalog, inspect it, then add the finished image under
 an uppercase 1-8 character name such as GAMES.dsk. Never host-edit a mounted
@@ -534,7 +534,7 @@ image while cpmsim is running.
 7. ARCHIVES AND SWAPPABLE VOLUMES
 
 MOUNT /L lists J: images; MOUNT GAMES or MOUNT GUIDES replaces J:.
-MOUNT P: /L lists 512 MiB archives under archives/; MOUNT P: NAME selects one.
+MOUNT P: /L lists 512 MiB archives under disks/library/archives/; MOUNT P: NAME selects one.
 MOUNT J: /DEFAULT and MOUNT P: /DEFAULT restore the startup images.
 J: requires 4177920-byte images; P: requires 536870912-byte images. Wrong
 sizes are rejected before replacing the mounted image. AUTH rules are the same
@@ -580,12 +580,12 @@ Private tools belong in I13:SYSUTLS or offline media.
 AUTH permissions on J: apply to the mounted drive/user slots, not to a catalog
 image name. Replacing GAMES with another image does not reset those permissions.
 Under the default J: read grant, every mounted image is caller-readable unless
-a DU override denies access. Keeping an image under offline/ prevents caller
+a DU override denies access. Keeping an image under disks/library/offline/ prevents caller
 MOUNT from listing it; it does not make its contents private if you mount it
 in a caller-readable J: slot. Restore a suitable image before unblanking.
 
-P: holds the permanent SIGM and CPMUG libraries. ARCHIVE.sha256 records all
-403 file hashes; VOLUMES.json records the curated J: image contents. Preserve
+P: holds the permanent SIGM and CPMUG libraries. metadata/ARCHIVE.sha256 records all
+403 file hashes; metadata/VOLUMES.json records the curated J: image contents. Preserve
 original library/member notices when rebuilding or adding to collections.
 
 8. SHUTDOWN, BACKUP AND RECOVERY
@@ -597,7 +597,7 @@ SYSUTLS:BYEBYE. If already at a private CP/M prompt, the same command stops
 the emulator. Let the shutdown finish before copying images or restarting.
 
 While stopped, copy the whole installation directory to separate storage.
-Include disks/, volumes/, upload-inbox/, state/, RCPM.CONF and private
+Include disks/, disks/library/, uploads/inbox/, state/, RCPM.CONF and private
 SYSOP.DOC. The emulator must remain stopped during the snapshot. An idle
 caller connection or a blanked caller is not the same as a stopped emulator.
 
@@ -616,7 +616,7 @@ against loss of that disk.
 If WORK cleanup reports failure, answering remains disabled. Stop and repair
 the I: image or its host write permissions before trying again. Read-only
 system attributes inside CP/M and read-only host filesystem permissions are
-different mechanisms; consult DISK-IMAGES.DOC when diagnosing either one.
+different mechanisms; consult docs/DISK-IMAGES.DOC when diagnosing either one.
 
 9. UPDATING THIS CANDIDATE
 
@@ -626,12 +626,12 @@ do not replace I: with a fresh image if you intend to retain its accounts.
 Install matching emulator and BYE driver versions together. Select MODE in
 RCPM.CONF and restart to switch direct/IP232; do not change mounted drivers.
 
-Read DISTRIBUTION-STATUS.DOC before redistributing this aggregate. Original
+Read docs/DISTRIBUTION-STATUS.DOC before redistributing this aggregate. Original
 Z3PLUS, BYE5, utility and archive notices have not been replaced with a uniform
 license. This local candidate has not been published as release 1.0.
 
-The package's offline/BUILD.dsk retains the DRI development files. Microsoft
+The package's disks/library/offline/BUILD.dsk retains the DRI development files. Microsoft
 M80/L80 and MicroPro WM (including WM.HLP) are separately supplied build inputs and are omitted
 from that image and from the source bundle's original toolchain-disk copies.
-They are not required to run the system. DEVELOPMENT-MEDIA.json records the
+They are not required to run the system. metadata/DEVELOPMENT-MEDIA.json records the
 separation; source/BUILDING.DOC explains how builders supply their own inputs.

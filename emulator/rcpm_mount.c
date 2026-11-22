@@ -13,7 +13,7 @@ static int volume_character(BYTE c)
     return (c >= 'A' && c <= 'Z') || (c >= '0' && c <= '9') || c == '_';
 }
 static int mount_drive(void) { return mount_slot ? 15 : 9; }
-static const char *mount_folder(void) { return mount_slot ? "archives" : "volumes"; }
+static const char *mount_folder(void) { return mount_slot ? "disks/library/archives" : "disks/library"; }
 static void close_catalog(void)
 {
     if (catalog_dir) closedir(catalog_dir);

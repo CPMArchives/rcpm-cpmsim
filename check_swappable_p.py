@@ -114,7 +114,7 @@ SIGNATURE:DB 'Z3ENV',80H
     put(boot, 'ibm-3740', 0, 'Z3PLUS.LBR', library)
     for user, name in ((0, '-SIGM'), (1, '-CPMUG')):
         put(package / 'disks/drivep.dsk', 'z80pack-hdb', user, name, b'\x1a')
-    archives = package / 'archives'
+    archives = package / 'disks/library/archives'
     archives.mkdir(exist_ok=True)
 
     def image(name, entries):
@@ -130,8 +130,8 @@ SIGNATURE:DB 'Z3ENV',80H
     image('BETA', [(4, '-BETA')])
     image('MULTI', [(0, '-ONE'), (0, '-TWO')])
     image('COLLIDE', [(0, '-SYSTEM')])
-    shutil.copyfile(package / 'volumes/GAMES.dsk', archives / 'SMALL.dsk')
-    with (package / 'volumes/BIG.dsk').open('wb') as stream:
+    shutil.copyfile(package / 'disks/library/GAMES.dsk', archives / 'SMALL.dsk')
+    with (package / 'disks/library/BIG.dsk').open('wb') as stream:
         stream.truncate(536870912)
     # An unapproved local file must remain unapproved after directory scanning.
     put(archives / 'BETA.dsk', 'z80pack-hdb', 4, 'NOEXEC.COM', bytes([0x11,9,1,0x0e,9,0xcd,5,0,0xc9])+b'UNAPPROVED-RAN$')

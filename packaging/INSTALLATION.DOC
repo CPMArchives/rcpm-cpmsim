@@ -20,7 +20,7 @@ The local terminal is the sysop console. On successful listener creation:
 
     RCP/M is now running on port 4000.
     Listening address: 127.0.0.1 (direct raw TCP).
-    See INSTALLATION.DOC for information on how to connect
+    See docs/INSTALLATION.DOC for information on how to connect
     from your system (Windows, Linux, macOS).
 
 Wait for 'RCP/M modem ready.' before connecting. One caller at a time.
@@ -55,15 +55,15 @@ libraries. The first start creates an empty J: mount disk and unique local
 RBBS passwords. SYSOP.DOC contains those PRIVATE generated passwords; it is
 not the general manual and must not be shared with callers.
 
-Read SYSOP-GUIDE.DOC for routine operation, RBBS administration, uploads,
-archive maintenance and backups. DISK-IMAGES.DOC describes the raw image
+Read docs/SYSOP-GUIDE.DOC for routine operation, RBBS administration, uploads,
+archive maintenance and backups. docs/DISK-IMAGES.DOC describes the raw image
 formats and host editing tools. Keep the emulator stopped during host edits.
 
 4. FIRST SHUTDOWN
 
 BYE logs a caller off; it does not stop the server. To stop locally between
 calls, press Ctrl-C, select Return at BYE's menu, wait for the CP/M prompt,
-then enter SYSUTLS:BYEBYE. Full operating instructions are in SYSOP-GUIDE.DOC.
+then enter SYSUTLS:BYEBYE. Full operating instructions are in docs/SYSOP-GUIDE.DOC.
 
 5. OPTIONAL VIRTUAL MODEM (TCPSER / IP232)
 
@@ -109,14 +109,14 @@ not alter RCPM.CONF. './runtime/rcpm --check' reports configuration only.
 
 6. PROVENANCE AND RELEASE STATUS
 
-MANIFEST.json records the common payload and platform binary checksums.
-ARCHIVE.sha256 lists all 403 P: libraries. VOLUMES.json records the curated
+metadata/MANIFEST.json records the common payload and platform binary checksums.
+metadata/ARCHIVE.sha256 lists all 403 P: libraries. metadata/VOLUMES.json records the curated
 J: contents. Sources, patches and build notes are under source/. Original
-notices are retained under NOTICES/ and within the original libraries.
-Read DISTRIBUTION-STATUS.DOC: this engineering candidate is not yet cleared
+notices are retained under docs/NOTICES/ and within the original libraries.
+Read docs/DISTRIBUTION-STATUS.DOC: this engineering candidate is not yet cleared
 for public redistribution. It does not import an operator's live disks.
 
 Microsoft M80/L80 and MicroPro WM (including WM.HLP) are not bundled as development tools.
 Running this package does not require them. Builders supply their original
 pinned toolchain disk separately; see source/BUILDING.DOC and
-DEVELOPMENT-MEDIA.json. The DRI files remain on offline/BUILD.dsk.
+metadata/DEVELOPMENT-MEDIA.json. The DRI files remain on disks/library/offline/BUILD.dsk.

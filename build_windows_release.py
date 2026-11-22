@@ -54,12 +54,12 @@ def build(common_archive, toolchain, output):
         'no Windows version has yet passed runtime qualification for this port.\n'
         'Stop with SYSUTLS:BYEBYE at the local CP/M console. Closing the window\n'
         'forcibly terminates the emulator and is not an orderly shutdown.\n'
-        'See SYSOP-GUIDE.DOC; substitute Start-RCPM.cmd for the historical\n'
+        'See docs/SYSOP-GUIDE.DOC; substitute Start-RCPM.cmd for the historical\n'
         'macOS launcher name. Generated SYSOP.DOC contains private credentials.\n'
         'Legacy Unix auxiliary pipes/TCP serial boards are disabled. The RCP/M\n'
         'modem, transfer and service ports retain their existing implementation.\n'
         'This candidate has only been cross-compiled and statically audited.\n'
-        'It is not cleared for public redistribution. See DISTRIBUTION-STATUS.DOC.\n')
+        'It is not cleared for public redistribution. See docs/DISTRIBUTION-STATUS.DOC.\n')
     host_source = payload / 'source/host-windows'
     host_source.mkdir()
     for name in ('build_windows_release.py', 'build_windows_runtime.py', 'build_windows_tools.py',
@@ -86,7 +86,7 @@ def build(common_archive, toolchain, output):
         minimum_windows='10-1903-provisional-unqualified', filesystem='NTFS-with-private-ACLs',
         guest_service_implementation='existing shared emulator/rcpm_modem.c and rcpm_transfer.c',
         live_qualification='not-run', redistribution='not-cleared')
-    (payload / 'BUILD-HOST.json').write_text(json.dumps(metadata, indent=2) + '\n')
+    (payload / 'metadata/BUILD-HOST.json').write_text(json.dumps(metadata, indent=2) + '\n')
     for name, digest in common_files.items():
         if sha(payload / name) != digest:
             raise ValueError('Windows build changed common payload: ' + name)
@@ -96,7 +96,7 @@ def build(common_archive, toolchain, output):
                     status='cross-compiled-not-runtime-qualified-redistribution-not-cleared',
                     launcher='Start-RCPM.cmd', common=common_files, host=host_files,
                     common_archive_sha256=sha(common_archive))
-    (payload / 'MANIFEST.json').write_text(json.dumps(manifest, indent=2) + '\n')
+    (payload / 'metadata/MANIFEST.json').write_text(json.dumps(manifest, indent=2) + '\n')
     archive = output / 'rcpm-windows-x64-candidate.zip'
     with zipfile.ZipFile(archive, 'w', zipfile.ZIP_DEFLATED) as stream:
         for path in sorted(payload.rglob('*')):
