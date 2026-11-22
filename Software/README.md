@@ -8,10 +8,14 @@ the [main RCP/M download](https://github.com/CPMArchives/rcpm-cpmsim/releases/ta
 
 | Disk | Contents | Download | Test report |
 | --- | --- | --- | --- |
+| **BOSKUG** | 14 preserved BOSKG ARK archives; user 0 | [BOSKUG-collection.zip](https://github.com/CPMArchives/rcpm-cpmsim/releases/download/software-images-2026-11-22/BOSKUG-collection.zip) | [Inventory and scope](BOSKUG/README.md) |
 | **GAMES expanded** | 76 tested titles; shared areas, J0 launchers | [GAMES-expanded.zip](https://github.com/CPMArchives/rcpm-cpmsim/releases/download/software-games-2026-11-22/GAMES-expanded.zip) | [Results and exclusions](GAMES/README.md) |
 | **SCOTT** | 12 Scott Adams adventures and sampler; original CP/M interpreter, user 0 | [SCOTT-collection.zip](https://github.com/CPMArchives/rcpm-cpmsim/releases/download/software-scott-2026-11-22/SCOTT-collection.zip) | [Results and controls](SCOTT/README.md) |
 | **INFOCOM** | 27 Infocom games and five InvisiClues hint books; user 0 | [INFOCOM-collection.zip](https://github.com/CPMArchives/rcpm-cpmsim/releases/download/software-2026-11-21/INFOCOM-collection.zip) | [Results and exclusions](https://github.com/CPMArchives/rcpm-cpmsim/releases/download/software-2026-11-21/INFOCOM-REPORT.txt) |
 | **MODERNIF** | 11 selected IFComp games: nine v5 and two v8; user 0 | [MODERNIF-collection.zip](https://github.com/CPMArchives/rcpm-cpmsim/releases/download/software-2026-11-21/MODERNIF-collection.zip) | [Results and exclusions](https://github.com/CPMArchives/rcpm-cpmsim/releases/download/software-2026-11-21/MODERNIF-REPORT.txt) |
+| **GUIDES** | Documentation-only disk; README, commands, DIR and LDIR guides | [GUIDES-collection.zip](https://github.com/CPMArchives/rcpm-cpmsim/releases/download/software-images-2026-11-22/GUIDES-collection.zip) | [Contents and checks](GUIDES/README.md) |
+
+[Exact six-image inventory and checksums](Images/README.md). Each image has its own download; choose only the collections you want.
 
 The [expanded GAMES guide](GAMES/README.md) explains its replacement-image installation and limits.
 
