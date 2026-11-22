@@ -28,7 +28,7 @@ def prepare(source, tools, instance):
                 tool('cpmcp', '-f', fmt, image, fixture, f'{user}:TYPE.COM')
         if drive in ('j', 'p'):
             image.chmod(0o444)
-    demo = instance / 'volumes/DEMO.dsk'
+    demo = instance / 'disks/library/DEMO.dsk'
     demo.chmod(0o644)
     shutil.copyfile(instance / 'disks/drivej.dsk', demo)
     demo.chmod(0o444)

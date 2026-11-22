@@ -75,7 +75,7 @@ RBBS
 the system ready for the next caller.
 
 You do not need to install Python, a compiler or a separate emulator. The Mac
-tools are unsigned; the included `INSTALLATION.DOC` explains startup and network
+tools are unsigned; the included `docs/INSTALLATION.DOC` explains startup and network
 setup. Start locally, then use that guide to make the system accessible from
 another computer.
 
@@ -95,7 +95,7 @@ It uses [CP/M 3](https://www.cpm.z80.de/source.html),
 on [Udo Munk’s z80pack emulator](https://github.com/udo-munk/z80pack), with tools
 for archive browsing, file transfers and system administration.
 
-The release includes `INSTALLATION.DOC` and `SYSOP-GUIDE.DOC`. For technical
+The release includes `docs/INSTALLATION.DOC` and `docs/SYSOP-GUIDE.DOC`. For technical
 details, source builds, the roadmap and the project’s development history,
 see the **[documentation index](docs/README.md)**.
 

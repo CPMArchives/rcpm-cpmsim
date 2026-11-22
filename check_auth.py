@@ -32,7 +32,7 @@ def run(args):
         (out/(name+'.asm')).write_text(text)
         subprocess.run([str(args.source/'z80asm/z80asm'),'-fb','-x',name+'.asm'],cwd=out,check=True,capture_output=True)
         return (out/(name+'.bin')).read_bytes()
-    a=p/'disks/drivea.dsk';i=p/'disks/drivei.dsk';j=p/'volumes/GAMES.dsk';pd=p/'disks/drivep.dsk'
+    a=p/'disks/drivea.dsk';i=p/'disks/drivei.dsk';j=p/'disks/library/GAMES.dsk';pd=p/'disks/drivep.dsk'
     # Restore all catalog image opens to guest-controlled writable media.
     mount=asm('mount',(REPO/'guest/mount.asm').read_text())
     put(a,'ibm-3740',0,'MOUNT.COM',mount,'4')

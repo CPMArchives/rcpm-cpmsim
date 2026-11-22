@@ -63,10 +63,10 @@ def extract_package(archive, output):
                 if not (entry.isfile() or entry.isdir()):
                     raise ValueError('Unexpected special file in release archive')
             source.extractall(output)
-    manifests = list(output.glob('*/MANIFEST.json'))
+    manifests = list(output.glob('*/metadata/MANIFEST.json'))
     if len(manifests) != 1:
         raise ValueError('Expected one top-level release package manifest')
-    return manifests[0].parent
+    return manifests[0].parent.parent
 
 
 class Guest:
@@ -182,16 +182,16 @@ def main():
     extracted = output / 'Unpacked elsewhere with spaces'
     print('Extracting release archive...', flush=True)
     package = extract_package(args.archive.resolve(), extracted)
-    manifest = json.loads((package / 'MANIFEST.json').read_text())
+    manifest = json.loads((package / 'metadata/MANIFEST.json').read_text())
     print('Verifying packaged file hashes...', flush=True)
     for group in ('common', 'host'):
         for relative, digest in manifest[group].items():
             assert sha(package / relative) == digest, relative
-    assert {path.name for path in (package / 'disks').iterdir()} == {'drivea.dsk', 'drivei.dsk', 'drivep.dsk'}
+    assert {path.name for path in (package / 'disks').iterdir() if path.is_file()} == {'drivea.dsk', 'drivei.dsk', 'drivep.dsk'}
     assert not (package / 'SYSOP.DOC').exists()
     assert not (package / 'state/initialized').exists()
     assert not (package / 'rbbs-trial-passwords.json').exists()
-    if (package / 'DEVELOPMENT-MEDIA.json').is_file():
+    if (package / 'metadata/DEVELOPMENT-MEDIA.json').is_file():
         from release_media import verify_public_development_media
         print('Checking separated development tools...', flush=True)
         verify_public_development_media(package, package / 'runtime')

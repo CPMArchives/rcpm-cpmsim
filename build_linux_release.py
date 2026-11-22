@@ -66,7 +66,7 @@ def verify_common(common):
     for name, digest in expected.items():
         if sha(common / name) != digest:
             raise ValueError('Common payload hash mismatch: ' + name)
-    if not (common / 'DEVELOPMENT-MEDIA.json').is_file():
+    if not (common / 'metadata/DEVELOPMENT-MEDIA.json').is_file():
         raise ValueError('Use the common payload with separated development tools')
     return expected
 
@@ -134,11 +134,11 @@ def build(common_archive, output):
             'The terminal remains the sysop console. Connect a raw TCP terminal\n'
             'client to 127.0.0.1 port 4000 after RCP/M modem ready appears.\n'
             'No Python, tmux, compiler or installed CP/M tools are needed to run.\n'
-            'See SYSOP-GUIDE.DOC for operation; use Start-RCPM.sh where the shared\n'
+            'See docs/SYSOP-GUIDE.DOC for operation; use Start-RCPM.sh where the shared\n'
             'historical macOS installation notes name Start-RCPM.command.\n'
-            'BUILD-HOST.json records the actual build host and dependencies.\n'
+            'metadata/BUILD-HOST.json records the actual build host and dependencies.\n'
             'This archive still requires Linux live qualification and is not\n'
-            'cleared for public redistribution. Read DISTRIBUTION-STATUS.DOC.\n')
+            'cleared for public redistribution. Read docs/DISTRIBUTION-STATUS.DOC.\n')
         # Preserve the actual host build scripts/flags alongside the common
         # upstream sources, without modifying the shared payload's source files.
         host_source = payload / 'source/host-linux'
@@ -157,7 +157,7 @@ def build(common_archive, output):
                         compiler=subprocess.check_output(['cc', '--version'], text=True).splitlines()[0],
                         launcher_flags=['-D_XOPEN_SOURCE=700', '-std=c99', '-O2', '-Wall', '-Wextra', '-Werror'],
                         native=audit, live_qualification='not-run', redistribution='not-cleared')
-        (payload / 'BUILD-HOST.json').write_text(json.dumps(metadata, indent=2) + '\n')
+        (payload / 'metadata/BUILD-HOST.json').write_text(json.dumps(metadata, indent=2) + '\n')
         verify_public_development_media(payload, runtime)
         for name, digest in common_files.items():
             if sha(payload / name) != digest:
@@ -168,7 +168,7 @@ def build(common_archive, output):
                         status='local-engineering-candidate-redistribution-not-cleared',
                         launcher='Start-RCPM.sh', common=common_files, host=host_files,
                         common_archive_sha256=metadata['common_archive_sha256'])
-        (payload / 'MANIFEST.json').write_text(json.dumps(manifest, indent=2) + '\n')
+        (payload / 'metadata/MANIFEST.json').write_text(json.dumps(manifest, indent=2) + '\n')
         destination = output / ('rcpm-' + target + '-candidate.tar.gz')
         with tarfile.open(destination, 'w:gz') as archive:
             archive.add(payload, arcname=payload.name)

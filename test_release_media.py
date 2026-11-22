@@ -27,10 +27,10 @@ class ReleaseMediaChecks(unittest.TestCase):
             if name in EXTERNAL_FILES:
                 self.forbidden.append(data)
         self.output = self.root / 'package'
-        (self.output / 'offline').mkdir(parents=True)
+        (self.output / 'disks/library/offline').mkdir(parents=True)
         # Simulate an old generated image containing the excluded bodies even
         # if directory entries have already been erased.
-        old = self.output / 'offline/BUILD.dsk'
+        old = self.output / 'disks/library/offline/BUILD.dsk'
         old.write_bytes(b'OLD-IMAGE' + b''.join(self.forbidden))
         old.chmod(0o444)
 
@@ -40,7 +40,7 @@ class ReleaseMediaChecks(unittest.TestCase):
     def test_fresh_image_removes_bodies_and_preserves_retained_file(self):
         report = separate_development_tools(self.source, self.tools, self.output)
         self.assertEqual(set(report['retained']), {'KEEP.DOC'})
-        raw = (self.output / 'offline/BUILD.dsk').read_bytes()
+        raw = (self.output / 'disks/library/offline/BUILD.dsk').read_bytes()
         for data in self.forbidden:
             self.assertNotIn(data, raw)
         self.assertEqual(verify_public_development_media(self.output, self.tools), report)

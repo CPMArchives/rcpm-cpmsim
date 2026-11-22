@@ -84,7 +84,7 @@ def build(source, toolchain, output):
     binary_audit = audit(toolchain, runtime, {'kernel32.dll', 'ws2_32.dll', 'msvcrt.dll'})
     receipt = dict(binary_audit=binary_audit, platform='windows-x64', status='cross-compiled-not-runtime-qualified',
                    sha256=hashlib.sha256(runtime.read_bytes()).hexdigest(),
-                   command=command, guest_ports_unchanged=True,
+                   command=command, guest_ports_unchanged=True, installation_layout=2,
                    legacy_unix_devices_disabled=['PIPES', 'NETWORKING', 'TCPASYNC'])
     (output / 'BUILD.json').write_text(json.dumps(receipt, indent=2) + '\n')
     print('Built native Windows RCP/M emulator: ' + str(runtime))

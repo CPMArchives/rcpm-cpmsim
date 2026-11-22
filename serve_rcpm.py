@@ -24,9 +24,9 @@ def prepare_session(template, session):
     conf.mkdir()
     for kind in ("server", "client"):
         (conf / f"net_{kind}.conf").write_text("# TCP is handled by the host launcher.\n")
-    volumes = archives / "volumes"
+    volumes = archives / "disks/library"
     if volumes.is_dir():
-        (session / "volumes").symlink_to(volumes, target_is_directory=True)
+        (session / "disks/library").symlink_to(volumes, target_is_directory=True)
     for drive in "abijp":
         name = f"drive{drive}.dsk"
         source = template / "disks" / name
@@ -81,8 +81,9 @@ def serve_call(client, simulator, template, inbox=None):
         session = Path(temporary)
         prepare_session(template, session)
         if pending is not None:
-            (session / "upload-staging").symlink_to(pending, target_is_directory=True)
-            (session / "upload-inbox").symlink_to(inbox, target_is_directory=True)
+            (session / "uploads").mkdir(mode=0o700)
+            (session / "uploads/staging").symlink_to(pending, target_is_directory=True)
+            (session / "uploads/inbox").symlink_to(inbox, target_is_directory=True)
         receiver = simulator.parent / "srctools/cpmrecv"
         if os.access(receiver, os.X_OK):
             (session / "srctools").mkdir()

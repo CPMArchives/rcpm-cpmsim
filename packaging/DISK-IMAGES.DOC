@@ -89,20 +89,20 @@ finishing maintenance.
 3. CREATE A NEW SWAPPABLE J: IMAGE
 
 Use a NEW name, 1-8 letters/digits/underscores, with the .dsk extension.
-MOUNT recognizes these files under volumes/. All such catalog volumes are
-caller-readable when mounted. Keep private sysop media under offline/, not
-in volumes/. Do not leave private media mounted when returning to callers.
+MOUNT recognizes these files under disks/library/. All such catalog volumes are
+caller-readable when mounted. Keep private sysop media under disks/library/offline/, not
+in disks/library/. Do not leave private media mounted when returning to callers.
 
 Example creating a blank 4177920-byte image on macOS or Linux:
 
     (
     set -e
-    test ! -e volumes/NEW.dsk
-    dd if=/dev/zero of=volumes/NEW.dsk bs=16384 count=0 seek=255
-    ./runtime/mkfs.cpm -f z80pack-hd volumes/NEW.dsk
-    ./runtime/cpmcp -f z80pack-hd volumes/NEW.dsk README.TXT 0:README.TXT
-    ./runtime/cpmls -f z80pack-hd volumes/NEW.dsk '0:*'
-    chmod 444 volumes/NEW.dsk
+    test ! -e disks/library/NEW.dsk
+    dd if=/dev/zero of=disks/library/NEW.dsk bs=16384 count=0 seek=255
+    ./runtime/mkfs.cpm -f z80pack-hd disks/library/NEW.dsk
+    ./runtime/cpmcp -f z80pack-hd disks/library/NEW.dsk README.TXT 0:README.TXT
+    ./runtime/cpmls -f z80pack-hd disks/library/NEW.dsk '0:*'
+    chmod 444 disks/library/NEW.dsk
     )
 
 Run these steps only after the test confirms NEW.dsk does not exist. The
@@ -112,7 +112,7 @@ directory/reserved regions. An undersized image will fail MOUNT's geometry
 validation. Never format an existing image you intend to keep.
 
 Start RCP/M, then type MOUNT /L and MOUNT NEW. The image is opened read-only
-for callers. To modify it later, stop RCP/M, 'chmod u+w volumes/NEW.dsk', make
+for callers. To modify it later, stop RCP/M, 'chmod u+w disks/library/NEW.dsk', make
 your changes with cpmtools and restore 'chmod 444' before starting again.
 
 For a host image editor on Windows, use a raw CP/M image editor configured
@@ -137,7 +137,7 @@ A NEW empty P:-style archive is exactly 536870912 bytes:
 
 This creates an EMPTY archive, not SIGM/CPMUG. Preserve the supplied P: or
 rebuild collections with the supplied source/rcpm/build_archive.py instructions.
-The distributed ARCHIVE.sha256 records all 403 original library checksums.
+The distributed metadata/ARCHIVE.sha256 records all 403 original library checksums.
 
 Formatting a blank 256256-byte ibm-3740 image does NOT make a bootable A:.
 The system tracks, loader, CP/M 3 BIOS/BDOS and startup files must agree.
@@ -156,8 +156,8 @@ compiler, interpreter or game in a caller session.
 
 5. SWAPPABLE P: ARCHIVES AND DIRECTORY MARKERS
 
-Place raw z80pack-hdb images of exactly 536870912 bytes in archives/NAME.dsk.
-Keep the existing 4177920-byte J: images under volumes/. MOUNT rejects images
+Place raw z80pack-hdb images of exactly 536870912 bytes in disks/library/archives/NAME.dsk.
+Keep the existing 4177920-byte J: images under disks/library/. MOUNT rejects images
 with the wrong size for the selected drive, even if they are in the right
 folder. A raw image has no geometry header: matching size is necessary, not
 proof of a correctly prepared filesystem.
@@ -171,4 +171,4 @@ a user area, create an extensionless -NAME file there (up to 7 uppercase
 letters/digits/underscores after the hyphen). Marker contents are irrelevant.
 Create these files with CP/M or matching cpmtools while the image is unmounted.
 Names are not AUTH grants. Run NDSCAN P: independently after marker changes.
-Copy archives/ in backups and keep private media outside public catalogs.
+Copy disks/library/archives/ in backups and keep private media outside public catalogs.

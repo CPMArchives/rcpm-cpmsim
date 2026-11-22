@@ -21,7 +21,7 @@ class WindowsArchiveChecks(unittest.TestCase):
         content = b'unchanged common bytes\r\n\x1a'
         manifest = dict(platform='windows-x64', common={'README.txt': hashlib.sha256(content).hexdigest()}, host={})
         with zipfile.ZipFile(archive, 'w') as stream:
-            stream.writestr('RCPM-windows-x64/MANIFEST.json', json.dumps(manifest))
+            stream.writestr('RCPM-windows-x64/metadata/MANIFEST.json', json.dumps(manifest))
             stream.writestr('RCPM-windows-x64/README.txt', b'corrupted' if corrupt else content)
             for name in extras:
                 stream.writestr(name, b'bad')

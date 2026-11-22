@@ -7,7 +7,7 @@ DIR.TXT, LDIR.TXT and the -GUIDES directory-name marker.
 [Download GUIDES-collection.zip](https://github.com/CPMArchives/rcpm-cpmsim/releases/download/software-images-2026-11-22/GUIDES-collection.zip)
 
 Stop RCP/M, extract the ZIP, copy volumes/GUIDES.dsk into your installation's
-volumes/ folder, then restart. Enter:
+disks/library/ folder, then restart. Enter:
 
 ```text
 MOUNT GUIDES

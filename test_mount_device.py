@@ -51,12 +51,12 @@ int first_byte(int drive) {
         self.previous = os.getcwd()
         os.chdir(self.data.name)
         self.addCleanup(os.chdir, self.previous)
-        for name in ('disks', 'volumes', 'archives'):
-            Path(name).mkdir()
+        for name in ('disks', 'disks/library', 'disks/library/archives'):
+            Path(name).mkdir(parents=True, exist_ok=True)
         self.image('disks/drivej.dsk', 4177920, b'j')
         self.image('disks/drivep.dsk', 536870912, b'p')
-        self.image('volumes/GAMES.dsk', 4177920, b'J')
-        self.image('archives/ALPHA.dsk', 536870912, b'P')
+        self.image('disks/library/GAMES.dsk', 4177920, b'J')
+        self.image('disks/library/archives/ALPHA.dsk', 536870912, b'P')
         self.dev.start()
         self.addCleanup(self.dev.finish)
 
@@ -94,8 +94,8 @@ int first_byte(int drive) {
         self.assertEqual(self.dev.first_byte(9), ord('j'))
 
     def test_wrong_geometries_do_not_replace_either_drive(self):
-        self.image('archives/SMALL.dsk', 4177920, b'x')
-        self.image('volumes/BIG.dsk', 536870912, b'x')
+        self.image('disks/library/archives/SMALL.dsk', 4177920, b'x')
+        self.image('disks/library/BIG.dsk', 536870912, b'x')
         self.assertEqual(self.request(0xfd, 'SMALL'), 3)
         self.assertEqual(self.request(0xff, 'BIG'), 3)
         self.assertEqual(self.dev.first_byte(9), ord('j'))
@@ -108,9 +108,9 @@ int first_byte(int drive) {
     def test_invalid_missing_nonregular_and_truncated_leave_media_unchanged(self):
         self.assertEqual(self.request(0xfd, '../BAD'), 1)
         self.assertEqual(self.request(0xfd, 'MISSING'), 2)
-        Path('archives/DIR.dsk').mkdir()
+        Path('disks/library/archives/DIR.dsk').mkdir()
         self.assertEqual(self.request(0xfd, 'DIR'), 2)
-        self.image('archives/SHORT.dsk', 536870911, b'x')
+        self.image('disks/library/archives/SHORT.dsk', 536870911, b'x')
         self.assertEqual(self.request(0xfd, 'SHORT'), 3)
         self.assertEqual(self.dev.first_byte(15), ord('p'))
         self.assertIn('P: <default>', self.catalog(0xfc))

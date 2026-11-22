@@ -7,7 +7,7 @@ archive members have not been unpacked, modified or individually qualified.
 [Download BOSKUG-collection.zip](https://github.com/CPMArchives/rcpm-cpmsim/releases/download/software-images-2026-11-22/BOSKUG-collection.zip)
 
 Stop RCP/M, extract the ZIP, copy volumes/BOSKUG.dsk into your installation's
-volumes/ folder, then restart. Enter:
+disks/library/ folder, then restart. Enter:
 
 ```text
 MOUNT BOSKUG

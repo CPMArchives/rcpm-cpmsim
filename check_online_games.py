@@ -23,7 +23,7 @@ def run(args, mode):
         return subprocess.check_output([str(p/'runtime/cpmls'), '-f', fmt,
                                         str(image), pattern], env=env).decode().lower().split()
     a0 = listing(p/'disks/drivea.dsk', 'ibm-3740', '0:*')
-    j0 = listing(p/'volumes/GAMES.dsk', 'z80pack-hd', '0:*')
+    j0 = listing(p/'disks/library/GAMES.dsk', 'z80pack-hd', '0:*')
     for name in ('advent.com', 'animals.com', 'mchase.com'):
         assert name not in a0 and name in j0, name
     port = free_port(); public = port; modem = None; log = None
@@ -33,7 +33,7 @@ def run(args, mode):
                                   f'127.0.0.1:{public}', '-s','2400','-S','2400',
                                   '-i','&c1&d2','-l','0'], stdout=log, stderr=log, restore_signals=False)
     g = Guest(p, out/'console', '--mode', mode, '--port', str(port))
-    games_hash = hashlib.sha256((p/'volumes/GAMES.dsk').read_bytes()).digest()
+    games_hash = hashlib.sha256((p/'disks/library/GAMES.dsk').read_bytes()).digest()
     def wait(mark, start, timeout=60):
         return g.wait(mark, remote=True, start=start, timeout=timeout)
     def send(data):
@@ -97,7 +97,7 @@ def run(args, mode):
         reply = g.command('SYSUTLS:PIP')
         assert (b'Directory access denied.' in reply or b'SYSUTLS:PIP?' in reply) and b'*' not in reply, reply
         g.stop()
-        assert hashlib.sha256((p/'volumes/GAMES.dsk').read_bytes()).digest() == games_hash
+        assert hashlib.sha256((p/'disks/library/GAMES.dsk').read_bytes()).digest() == games_hash
         result = dict(mode=mode, cpu_mhz=4, launchers_on_J0=True, no_A0_game_wrappers=True, adventure_play_quit=True,
                       animals_round_exit=True, maze_ansi_play_exit=True,
                       ansi_coordinates_valid=True, local_blank_controls=True,

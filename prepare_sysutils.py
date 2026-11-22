@@ -33,9 +33,9 @@ def prepare_sysutils(source, tools, instance, work):
         tool('cpmcp', '-T', 'raw', '-f', 'ibm-3740',
              source / 'cpmsim/disks/library/cpm3-1.dsk', '0:' + name, extracted)
         tool('cpmcp', '-T', 'raw', '-f', 'ibm-3740', b, extracted, '0:' + name)
-    # BUILD is deliberately outside volumes/: MOUNT cannot discover it.
-    offline = instance / 'offline'
-    offline.mkdir()
+    # BUILD is deliberately outside disks/library/: MOUNT cannot discover it.
+    offline = instance / 'disks/library/offline'
+    offline.mkdir(parents=True, exist_ok=True)
     build = offline / 'BUILD.dsk'
     tool('mkfs.cpm', '-f', 'z80pack-hd', build)
     with build.open('r+b') as disk:
@@ -53,5 +53,5 @@ def prepare_sysutils(source, tools, instance, work):
     (offline / 'README.txt').write_text(
         'BUILD.dsk contains original CP/M 3 development/build files.\n'
         'Keep it offsite in normal operation. It is not in the MOUNT collection.\n'
-        'When needed between calls, copy it into volumes/, mount BUILD on J:,\n'
-        'then restore a public volume and remove BUILD from volumes/.\n')
+        'When needed between calls, copy it into disks/library/, mount BUILD on J:,\n'
+        'then restore a public volume and remove BUILD from disks/library/.\n')

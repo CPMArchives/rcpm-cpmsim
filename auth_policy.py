@@ -38,5 +38,5 @@ def install(instance, tools, assembler):
         for name in policy()['programs']:
             tool('cpmchattr','-f','ibm-3740',a,'4','0:'+name)
     for path in [instance/'disks/drivep.dsk', instance/'disks/drivej.dsk',
-                 *list((instance/'volumes').glob('*.dsk'))]:
+                 *list((instance/'disks/library').glob('*.dsk'))]:
         if path.exists(): path.chmod(0o600)

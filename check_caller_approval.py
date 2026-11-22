@@ -23,7 +23,7 @@ def run(args):
     tools = REPO / 'build/release-tools/bin'
     program = args.output / 'fixture.com'
     program.write_bytes(bytes([0x11, 9, 1, 0x0e, 9, 0xcd, 5, 0, 0xc9]) + MARKER + b'\r\n$')
-    image = p / 'volumes/GAMES.dsk'
+    image = p / 'disks/library/GAMES.dsk'
     image.chmod(0o600)
     def tool(name, *values):
         return subprocess.run([str(tools/name), *map(str, values)], check=True, capture_output=True)

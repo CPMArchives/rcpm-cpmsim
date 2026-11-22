@@ -52,7 +52,7 @@ def build(output):
         'macos-arm64': ROOT / 'build/release-runtime-separated/RCPM-macOS-arm64',
         'windows-x64': ROOT / 'build/windows-x64-final-candidate/RCPM-windows-x64',
     }
-    manifests = {key: json.loads((folder / 'MANIFEST.json').read_text())
+    manifests = {key: json.loads((folder / 'metadata/MANIFEST.json').read_text())
                  for key, folder in bases.items()}
     for key, folder in bases.items():
         verify(folder, manifests[key])
@@ -63,9 +63,9 @@ def build(output):
     copy_tree(ROOT / 'build/release-runtime-separated/rcpm-common', common)
     (common / 'COMMON-MANIFEST.json').unlink()
     refresh_source(common / 'source/rcpm')
-    shutil.copy2(ROOT / 'docs/RELEASE-NOTES-1.0.md', common / 'RELEASE-NOTES.md')
-    shutil.copy2(ROOT / 'docs/distribution-review.md', common / 'NOTICES/RELEASE-DECISIONS.md')
-    (common / 'DISTRIBUTION-STATUS.DOC').write_text(
+    shutil.copy2(ROOT / 'docs/RELEASE-NOTES-1.0.md', common / 'docs/RELEASE-NOTES.md')
+    shutil.copy2(ROOT / 'docs/distribution-review.md', common / 'docs/NOTICES/RELEASE-DECISIONS.md')
+    (common / 'docs/DISTRIBUTION-STATUS.DOC').write_text(
         'RCP/M 1.0 - PREPARED FOR PUBLICATION REVIEW\n\n'
         'Component-specific terms apply; no uniform license is asserted.\n'
         'Original notices and corresponding source remain in this package.\n'
@@ -74,7 +74,7 @@ def build(output):
         'the modified BYE510. This is not a new grant from BYE/ZDE authors.\n'
         'SIG/M and CPMUG collection authorization is the accepted release basis.\n'
         'Preserve all component-specific noncommercial/no-fee conditions.\n'
-        'See NOTICES/RELEASE-DECISIONS.md for evidence and uncertainty.\n'
+        'See docs/NOTICES/RELEASE-DECISIONS.md for evidence and uncertainty.\n'
         'No blanket license has been selected for original project code.\n'
         'Source availability alone does not assert an open-source license.\n')
     common_files = inventory(common)
@@ -99,22 +99,22 @@ def build(output):
                 'No Python, WSL, Cygwin or compiler is needed to run RCP/M.\n'
                 'Required suite PASS: Windows 11 ARM64 build 26300, with x64\n'
                 'executables under Windows emulation. Native x64 hardware and\n'
-                'optional Windows IP232 were not tested. See RELEASE-NOTES.md.\n'
+                'optional Windows IP232 were not tested. See docs/RELEASE-NOTES.md.\n'
                 'Use the local SYSUTLS:BYEBYE procedure for orderly shutdown.\n'
                 'Generated SYSOP.DOC contains private credentials; do not share it.\n')
-            metadata = json.loads((payload / 'BUILD-HOST.json').read_text())
+            metadata = json.loads((payload / 'metadata/BUILD-HOST.json').read_text())
             metadata.update(status='required-suite-passed-windows11-arm64-x64-emulation',
                             live_qualification='docs/performance/windows-runtime-2026-11-21.json',
                             redistribution='maintainer-decisions-and-component-terms-retained')
-            (payload / 'BUILD-HOST.json').write_text(json.dumps(metadata, indent=2) + '\n')
+            (payload / 'metadata/BUILD-HOST.json').write_text(json.dumps(metadata, indent=2) + '\n')
         host_files = {name: digest for name, digest in inventory(payload).items()
-                      if name not in common_files and name != 'MANIFEST.json'}
+                      if name not in common_files and name != 'metadata/MANIFEST.json'}
         manifest = dict(manifests[key], version='1.0',
                         status='prepared-for-publication-review', common=common_files, host=host_files)
         manifest.pop('common_archive_sha256', None)
-        (payload / 'MANIFEST.json').write_text(json.dumps(manifest, indent=2) + '\n')
+        (payload / 'metadata/MANIFEST.json').write_text(json.dumps(manifest, indent=2) + '\n')
         for name, digest in manifests[key]['common'].items():
-            if name.startswith(('disks/', 'drivers/', 'volumes/', 'offline/')):
+            if name.startswith(('disks/', 'drivers/', 'disks/library/', 'disks/library/offline/')):
                 if sha(payload / name) != digest:
                     raise ValueError('Frozen guest media changed: ' + name)
         frozen[key] = {}
@@ -124,7 +124,7 @@ def build(output):
                     raise ValueError('Frozen host runtime changed: ' + name)
                 frozen[key][name] = digest
         verify(payload, manifest)
-        if set(inventory(payload)) != set(common_files) | set(host_files) | {'MANIFEST.json'}:
+        if set(inventory(payload)) != set(common_files) | set(host_files) | {'metadata/MANIFEST.json'}:
             raise ValueError('Unrecorded release files')
         archive(payload, output / ('rcpm-v1.0-' + key + '.zip'))
     (common / 'COMMON-MANIFEST.json').write_text(json.dumps(common_files, indent=2) + '\n')
