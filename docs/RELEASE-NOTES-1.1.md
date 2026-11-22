@@ -23,7 +23,13 @@ a local sysop console. Direct raw TCP defaults to 127.0.0.1:4000 at 4 MHz.
 - A cleaner installation layout groups images, documents, metadata and uploads.
   README.txt and private SYSOP.DOC remain at the top level.
 - Optional collections remain independent downloads in the Software catalog,
-  including BOSKUG, GAMES, GUIDES, INFOCOM, MODERNIF and SCOTT.
+  including BOSKUG, GAMES, GUIDES, INFOCOM, INTFICT and SADAMS.
+  INTFICT replaces the MODERNIF image name; SADAMS replaces SCOTT. Matching
+  extensionless -NAME markers identify user area 0; original launchers retain
+  their program names.
+
+The welcome screen now carries HUMONGOUS RCP/M branding and a compact caller
+command reference.
 
 ## Directory layout
 

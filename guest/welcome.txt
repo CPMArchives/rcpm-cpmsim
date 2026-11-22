@@ -1,17 +1,18 @@
 
-                      R C P / M
-               CP/M 3 - Z3PLUS - BYE5
+                 * H U M O N G O U S *   R C P / M
+                       CP/M 3 - Z3PLUS - BYE5
 
-Type commands at the CP/M prompt. Upper or lower case is fine.
 
-DIR / SDZ - directory       HELP - system help     LT - read text
-LDIR - library contents     MOUNT - mount disks   RBBS - enter BBS
-YSEND - download files      UPLOAD - upload files BYE - log off
-MESSAGE - leave a message for the sysop
+                  RBBS - Enter the bulletin board
 
-MOUNT /L lists disks. DIR HELP: lists help topics.
-LT also reads LBR members: LT J:LIBRARY README.TXT
-MOUNT GAMES, then J0:ADVENT / J0:ANIMALS / J0:MCHASE to play.
 
-I0:WORK is temporary; its files are cleared when the call ends.
+Some commands:
+
+  DIR / SDZ - directory    HELP - system help        LT - read text file
+  MOUNT - mount disks      DIR HELP: - help topics   LDIR - library contents
+  UPLOAD - upload files    MESSAGE - msg to sysop    BYE - log off
+  YSEND - download files
+
+
+I0:WORK is temporary workspace; it is cleared when the call ends.
 

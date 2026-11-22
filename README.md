@@ -83,7 +83,7 @@ another computer.
 ## Software
 
 Add more games with the **[optional software disks](Software/README.md)**.
-INFOCOM and MODERNIF are separate downloads: install the collections you want
+INFOCOM and INTFICT are separate downloads: install the collections you want
 alongside your existing volumes. The Software section includes contents,
 installation instructions and test results.
 

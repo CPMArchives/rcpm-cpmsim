@@ -99,7 +99,7 @@ def run(root, tools):
         if b'454400k' not in outputs['DIR P:'].encode():raise AssertionError('Large archive free-space total wrong')
         command('LDIR J:TOOLS',b'README')
         command('LDIR VOLUME:TOOLS',b'README')
-        assert b'R C P / M' in remote and b'MOUNT /L lists disks.' in remote
+        assert b'H U M O N G O U S' in remote and b'I0:WORK is temporary workspace;' in remote
         command('SDZ HELP:',b'HELP')
         command('LT VOLUME:TOOLS README.TXT',b'CALLER-LIBRARY-TEXT-OK')
         command('LT J:HELLO.TXT',b'Hello from the shared')

@@ -1,9 +1,9 @@
 # Scott Adams adventures for RCP/M
 
-An optional dedicated SCOTT disk, using the original CP/M ADVENTUR.COM 8.4c
+An optional dedicated SADAMS disk, using the original CP/M ADVENTUR.COM 8.4c
 interpreter and unchanged story files from IF Archive. All files use user 0.
 
-[Download SCOTT-collection.zip](https://github.com/CPMArchives/rcpm-cpmsim/releases/download/software-scott-2026-11-22/SCOTT-collection.zip) ·
+[Download SADAMS-collection.zip](https://github.com/CPMArchives/rcpm-cpmsim/releases/download/software-labels-2026-11-23/SADAMS-collection.zip) ·
 [Test report](https://github.com/CPMArchives/rcpm-cpmsim/releases/download/software-scott-2026-11-22/SCOTT-REPORT.txt)
 
 | Selection | Adventure |
@@ -28,8 +28,8 @@ Impossible; it is distinct from Richard Altman's MISSION on GAMES.
 
 ## Install and play
 
-Stop RCP/M cleanly and copy the extracted volumes/SCOTT.dsk into disks/library/
-(volumes/ on RCP/M 1.0) alongside the other optional images. Restart, enter MOUNT SCOTT, then J0:SCOTT. The launcher prepares
+Stop RCP/M cleanly and copy the extracted volumes/SADAMS.dsk into disks/library/
+(volumes/ on RCP/M 1.0) alongside the other optional images. Restart, enter MOUNT SADAMS, then J0:SCOTT. The launcher prepares
 only named story data in I0:WORK and runs approved J0 code. Initial
 preparation can take a minute or more at 4 MHz; wait for Which Adventure.
 J: stays read-only and WORK remains non-executable.
@@ -75,5 +75,7 @@ shareware notice and archive hashes accompany the ZIP.
 The image contains games, the launcher and guides. The R-register test
 utility is retained only in the host-side original archive. build_image.py
 and the checked payload reproduce the disk byte-identically with RCP/M's
-packaged cpmtools. No existing GAMES, INFOCOM, MODERNIF or v1.0 release
+packaged cpmtools. No existing GAMES, INFOCOM, INTFICT or v1.0 release
 asset is replaced.
+
+The current SADAMS image adds only the -SADAMS user-0 marker to the qualified original baseline. Its packaged payload includes that marker and the updated manifest; the existing reproduction script reproduces the updated image exactly.
