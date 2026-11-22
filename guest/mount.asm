@@ -73,6 +73,12 @@ LISTCH:	LD	E,A
 	JR	LISTNX
 
 REQUEST:
+	; Complete writes to the old image before the host replaces its handle.
+	LD	C,48
+	LD	E,0
+	CALL	BDOS
+	OR	A
+	JR	NZ,FLUSHERR
 	XOR	A
 	OUT	(MOUNTP),A
 	IN	A,(MOUNTP)
@@ -99,6 +105,8 @@ REQUEST:
 	JR	PRINT
 USAGE:	LD	DE,USEMSG
 	JR	PRINT
+FLUSHERR:	LD	DE,FLUSHMSG
+	JR	PRINT
 FAILED:	LD	DE,FAILMSG
 PRINT:	LD	C,9
 	CALL	BDOS
@@ -106,6 +114,7 @@ PRINT:	LD	C,9
 
 USEMSG:	DB	'Usage: MOUNT /L or MOUNT name (1-8 letters, digits, or underscores)',13,10,'$'
 LISTERR:	DB	'Mount catalog unavailable. Update the cpmsim mount patch.',13,10,'$'
+FLUSHMSG:	DB	'Flush failed. J: unchanged.',13,10,'$'
 FAILMSG:	DB	'Volume unavailable. J: unchanged.',13,10,'$'
 OKMSG:	DB	'Volume mounted on J:.',13,10,'$'
 	END

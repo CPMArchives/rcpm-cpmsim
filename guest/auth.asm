@@ -120,9 +120,7 @@ SETPERM:
 HAVEINDEX:ADD HL,DE
  POP AF
  LD (HL),A
- LD A,1
- CALL API
- JP NZ,PRIVATE
+ CALL APPLY
  LD DE,CHANGED
  JP PRINTEXIT
 SINGLEMAP:LD A,1
@@ -532,9 +530,7 @@ CHECKNEXT:INC HL
  LD DE,TABLE
  LD BC,272
  LDIR
- LD A,1
- CALL API
- JP NZ,PRIVATE
+ CALL APPLY
  CALL IOEND
  LD DE,LOADED
  CALL PRINT
@@ -713,6 +709,15 @@ RENAME:
  LD DE,RENFCB
  LD C,23
  JP BDOS
+ ; Flush while the old access policy is still active. Use the same path for
+ ; direct edits and /LOAD, including inherited permissions and whole drives.
+APPLY:
+ CALL FLUSH
+ JP NZ,FLUSHERROR
+ LD A,1
+ CALL API
+ JP NZ,PRIVATE
+ RET
 FLUSH:LD C,48
  LD E,0
  CALL BDOS
@@ -997,6 +1002,8 @@ HELP:LD DE,HELPMSG
  JP PRINTEXIT
 PRIVATE:LD DE,PRIVMSG
  JP FAILMSG
+FLUSHERROR:LD DE,FLUSHMSG
+ JP FAILMSG
 IOERROR:LD DE,ERRMSG
  JP FAILMSG
 INVALIDPOLICY:LD DE,INVALIDMSG
@@ -1100,6 +1107,7 @@ TEMPMSG:DB 'Staging file already exists (temporary extension); review it before 
 RSVMSG:DB 'Policy save extensions .BAK and the temporary extension are reserved.',13,10,'$'
 CANCELMSG:DB 'Cancelled; no policy file changed.',13,10,'$'
 NFMSG:DB ' not found.',13,10,'$'
+FLUSHMSG:DB 'Flush failed; live permissions unchanged.',13,10,'$'
 CHANGED:DB 'Caller permissions changed in memory. AUTH /SAVE persists them.',13,10,'$'
 APPROVED:DB 'Executable F4 updated; other attributes preserved.',13,10,'$'
 SAVED:DB 'Policy saved to $'
