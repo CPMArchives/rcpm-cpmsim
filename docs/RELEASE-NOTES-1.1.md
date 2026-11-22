@@ -8,12 +8,15 @@ a local sysop console. Direct raw TCP defaults to 127.0.0.1:4000 at 4 MHz.
 ## New in 1.1
 
 - P: now supports named, swappable 512 MiB archive images, independently of
-  the 4 MB J: collections. Use MOUNT P: /L and MOUNT P: NAME.
+  the 4 MB J: collections. MOUNT /L lists both catalogs; MOUNT NAME selects
+  the drive by exact image size. Explicit J:/P: commands remain available;
+  duplicate names require a drive qualifier. Success names the volume and drive.
 - MOUNT validates exact image geometry before replacing either drive, flushes
   buffered writes, and can restore each drive's startup image with /DEFAULT.
 - New caller-accessible NDSCAN.COM scans all 16 user areas of a selected drive
   and refreshes its named directories from extensionless -NAME marker files.
-  MOUNT chains to NDSCAN after successful swaps. NDSCAN preserves AUTH policy
+  MOUNT chains to NDSCAN /Q after successful swaps, suppressing scanner success
+  chatter while keeping errors visible. NDSCAN preserves AUTH policy
   and executable approvals; it does not write the disk image.
 - J: and P: retain the same AUTH rules: callers are read-only by default, with
   deliberate sysop overrides supported.

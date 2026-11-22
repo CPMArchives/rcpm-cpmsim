@@ -1,7 +1,6 @@
 # Swappable J: and P: volumes
 
-Status: J:/P: swapping shipped in 1.1. The automatic-drive syntax below
-is the next update; published 1.1 downloads still use the earlier syntax.
+Status: included in the RCP/M 1.1 packages.
 
 MOUNT handles media and CP/M disk relogging. After a successful replacement,
 it uses CP/M 3 BDOS function 47 to chain to `A0:NDSCAN drive: /Q`. NDSCAN is a
