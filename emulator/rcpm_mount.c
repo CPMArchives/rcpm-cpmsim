@@ -1,10 +1,11 @@
 /* RCP/M J:/P: mount port 60. Fixed geometry, no guest-supplied host paths.
  * FF/FE retain legacy J: start/list. FD/FC are P: start/list; FB probes
- * capabilities (A2); F9/FA restore the J:/P: startup image. */
+ * legacy capabilities (A2); F9/FA restore startup images.
+ * F8 auto-selects by image size (success 10/11 = J/P); F7 probes A3. */
 static char volume_name[9], mounted_volume[2][10];
 static size_t volume_length, catalog_offset;
 static BYTE mount_status = 1;
-static int invalid_volume_name, listing, mount_slot;
+static int invalid_volume_name, listing, mount_slot, auto_mount;
 static DIR *catalog_dir;
 static char catalog_line[40];
 
@@ -48,6 +49,37 @@ static void adopt_volume(int original)
     strcpy(mounted_volume[mount_slot], original ? "<default>" : volume_name);
     mount_status = 0;
 }
+/* Search both namespaces, then select geometry from the opened file. A name
+ * present in both catalogs is ambiguous, even if one copy has bad geometry. */
+static void adopt_auto_volume(void)
+{
+    const char *folders[] = {"disks/library", "disks/library/archives"};
+    char path[2][256];
+    struct stat st;
+    int present[2], fd, slot;
+    for (slot = 0; slot < 2; ++slot) {
+        snprintf(path[slot], sizeof(path[slot]), "%s/%s.dsk", folders[slot], volume_name);
+        present[slot] = !stat(path[slot], &st);
+    }
+    if (present[0] && present[1]) { mount_status = 4; return; }
+    if (!present[0] && !present[1]) { mount_status = 2; return; }
+    slot = present[1] ? 1 : 0;
+    fd = open(path[slot], O_RDWR | O_NONBLOCK);
+    if (fd < 0) fd = open(path[slot], O_RDONLY | O_NONBLOCK);
+    if (fd < 0) { mount_status = 2; return; }
+    if (fstat(fd, &st) || !S_ISREG(st.st_mode)) {
+        close(fd); mount_status = 2; return;
+    }
+    if (st.st_size == (off_t)4177920) slot = 0;
+    else if (st.st_size == (off_t)536870912) slot = 1;
+    else { close(fd); mount_status = 3; return; }
+    if (!disks[slot ? 15 : 9].fd) { close(fd); mount_status = 2; return; }
+    mount_slot = slot;
+    close(*disks[mount_drive()].fd);
+    *disks[mount_drive()].fd = fd;
+    strcpy(mounted_volume[slot], volume_name);
+    mount_status = (BYTE)(0x10 + slot);
+}
 static BYTE mount_in(void)
 {
     struct dirent *entry;
@@ -75,8 +107,12 @@ static BYTE mount_in(void)
 }
 static void mount_out(BYTE data)
 {
-    if (data >= 0xf9) {
-        close_catalog(); listing = 0;
+    if (data >= 0xf7) {
+        close_catalog(); listing = 0; auto_mount = 0;
+        if (data == 0xf7) { mount_status = 0xa3; return; }
+        if (data == 0xf8) {
+            auto_mount = 1; volume_length = 0; invalid_volume_name = 0; mount_status = 1; return;
+        }
         if (data == 0xfb) { mount_status = 0xa2; return; }
         mount_slot = (data == 0xfd || data == 0xfc || data == 0xfa);
         if (data == 0xfe || data == 0xfc) {
@@ -96,5 +132,6 @@ static void mount_out(BYTE data)
     }
     if (invalid_volume_name || !volume_length) { mount_status = 1; return; }
     volume_name[volume_length] = 0;
-    adopt_volume(0);
+    if (auto_mount) adopt_auto_volume();
+    else adopt_volume(0);
 }

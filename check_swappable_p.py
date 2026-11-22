@@ -133,6 +133,9 @@ SIGNATURE:DB 'Z3ENV',80H
     shutil.copyfile(package / 'disks/library/GAMES.dsk', archives / 'SMALL.dsk')
     with (package / 'disks/library/BIG.dsk').open('wb') as stream:
         stream.truncate(536870912)
+    shutil.copyfile(package / 'disks/library/GAMES.dsk', package / 'disks/library/DUP.dsk')
+    with (archives / 'DUP.dsk').open('wb') as stream:
+        stream.truncate(536870912)
     # An unapproved local file must remain unapproved after directory scanning.
     put(archives / 'BETA.dsk', 'z80pack-hdb', 4, 'NOEXEC.COM', bytes([0x11,9,1,0x0e,9,0xcd,5,0,0xc9])+b'UNAPPROVED-RAN$')
     immutable = {p: hashlib.sha256(p.read_bytes()).hexdigest() for p in
@@ -149,22 +152,28 @@ SIGNATURE:DB 'Z3ENV',80H
         port = int(guest.process.args[-1])
         guest.connect(port)
         command('NDSCAN P:', b'NDSCAN P: names updated.')
-        command('MOUNT P: /L', b'P: <default>')
+        listing = command('MOUNT /L', b'J: <default>')
+        assert b'P: <default>' in listing and listing.index(b'J:') < listing.index(b'P:')
+        command('MOUNT DUP', b'Ambiguous volume name')
         command('MOUNT P: SMALL', b'Wrong image geometry')
         command('MOUNT P: /L', b'P: <default>')
-        command('MOUNT BIG', b'Wrong image geometry')
-        command('MOUNT P: ALPHA', b'NDSCAN P: names updated.')
+        command('MOUNT J: BIG', b'Wrong image geometry')
+        mounted = command('MOUNT ALPHA', b'Volume ALPHA mounted on P:')
+        assert b'names updated' not in mounted and b'Usage:' not in mounted
         view = command('NDVIEW', b'PF:ARC15')
         assert all(('P'+format(u,'X')+':ARC'+str(u)).encode() in view for u in range(16))
         assert b'ID:SYSUTLS' in view and b'IE:HELP' in view and b'IF:RBBS' in view
         command('DIR ARC15:', b'-ARC15')
         # Named-directory command resolution proves the rebuilt NDR is usable.
         command('DIR P15:*.*', b'-ARC15')
-        command('MOUNT GAMES', b'NDSCAN J: names updated.')
+        mounted = command('MOUNT GAMES', b'Volume GAMES mounted on J:')
+        assert b'names updated' not in mounted and b'Usage:' not in mounted
         command('MOUNT P: /L', b'P: ALPHA')
         command('MOUNT /L', b'J: GAMES')
         result['independent_mounts_all_16_users_and_chaining'] = True
-        command('MOUNT P: BETA', b'NDSCAN P: names updated.')
+        result['unqualified_names_select_drive_by_size_and_list_both'] = True
+        result['mount_success_suppresses_scanner_chatter'] = True
+        command('MOUNT P: BETA', b'Volume BETA mounted on P:')
         command('DIR BETA:', b'NOEXEC')
         view = command('NDVIEW', b'P4:BETA')
         assert b'ARC' not in view
@@ -178,7 +187,7 @@ SIGNATURE:DB 'Z3ENV',80H
         command('MOUNT P: MULTI', b'Multiple -NAME markers')
         # Rejected metadata leaves the old table, but the media swap is reported.
         command('MOUNT P: COLLIDE', b'Duplicate directory name')
-        command('MOUNT P: /DEFAULT', b'NDSCAN P: names updated.')
+        command('MOUNT P: /DEFAULT', b'Volume <default> mounted on P:')
         command('DIR SIGM:SIGMV001.LBR', b'SIGMV001')
         command('DIR CPMUG:CPMUG093.LBR', b'CPMUG093')
         command('MOUNT /L', b'J: GAMES')

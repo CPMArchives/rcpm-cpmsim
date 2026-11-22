@@ -1,0 +1,27 @@
+{
+  "unit_checks_passed": 20,
+  "macos_live": {
+    "independent_mounts_all_16_users_and_chaining": true,
+    "unqualified_names_select_drive_by_size_and_list_both": true,
+    "mount_success_suppresses_scanner_chatter": true,
+    "marker_replacement_clears_absent_names_preserves_other_drives": true,
+    "caller_scan_and_unapproved_execution_unchanged": true,
+    "denied_user_area_aborts_scan_without_changing_names": true,
+    "invalid_names_default_restore_other_drive_preserved": true,
+    "scanner_does_not_write_images": true
+  },
+  "guest_duplicate_name_refusal_preserves_both_mounts": true,
+  "guest_malformed_quiet_option_rejected": true,
+  "macos_candidate_zip_integrity_and_manifest": true,
+  "windows": "cross-compiled and audited; live VM qualification not repeated",
+  "mount_tools": {
+    "MOUNT.COM": {
+      "bytes": 1335,
+      "sha256": "23946082f0a2755b1e7f68be2b36ff23d4b79fcc9f36a9b724b3335d1425d130"
+    },
+    "NDSCAN.COM": {
+      "bytes": 3018,
+      "sha256": "73d5f651f743d8beb30e24f2e811bda893bbb14ff8a93af98334585011ff848b"
+    }
+  }
+}

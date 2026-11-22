@@ -1,9 +1,11 @@
 ;
 SWAPPABLE VOLUMES
 
-MOUNT /L lists J: volumes. MOUNT GAMES or MOUNT GUIDES selects one.
-MOUNT P: /L lists large archive collections on P:.
-MOUNT P: name selects an archive. MOUNT P: /DEFAULT restores SIG/M-CPMUG.
+MOUNT /L lists both J: collections and P: archives.
+MOUNT name chooses J: or P: from the image size. Example: MOUNT WALNUT
+MOUNT J: /L or MOUNT P: /L lists only the selected catalog.
+Use MOUNT J: name or MOUNT P: name if both catalogs share a name.
+MOUNT P: /DEFAULT restores SIG/M-CPMUG.
 MOUNT J: /DEFAULT restores the startup J: image.
 DIR J1: lists J: user area 1. DIR P: lists P: user area 0.
 

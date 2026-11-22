@@ -5,7 +5,7 @@ Type HELP followed by a topic, for example: HELP GAMES
 DIR HELP: lists the topic files. Upper or lower case is fine.
 
 COMMANDS   Basic commands and named directories
-MOUNT      Select a swappable J: volume
+MOUNT      Select a J: collection or P: archive
 LIBRARY    Browse archive libraries and read their members
 TRANSFER   Download files or submit an upload
 RBBS       Enter the bulletin board

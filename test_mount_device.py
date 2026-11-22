@@ -93,6 +93,31 @@ int first_byte(int drive) {
         self.assertEqual(self.request(0xf9), 0)
         self.assertEqual(self.dev.first_byte(9), ord('j'))
 
+    def test_auto_geometry_and_legacy_capability(self):
+        self.assertEqual(self.request(0xf7), 0xa3)
+        self.assertEqual(self.request(0xfb), 0xa2)
+        self.assertEqual(self.request(0xf8, 'ALPHA'), 0x11)
+        self.assertEqual(self.request(0xf8, 'GAMES'), 0x10)
+        self.assertEqual(self.dev.first_byte(15), ord('P'))
+        self.assertEqual(self.dev.first_byte(9), ord('J'))
+        self.assertIn('P: ALPHA', self.catalog(0xfc))
+        self.assertIn('J: GAMES', self.catalog(0xfe))
+        # Geometry, rather than folder location, selects the drive for auto mode.
+        self.image('disks/library/LARGE.dsk', 536870912, b'L')
+        self.assertEqual(self.request(0xf8, 'LARGE'), 0x11)
+        self.assertEqual(self.dev.first_byte(15), ord('L'))
+        self.assertEqual(self.dev.first_byte(9), ord('J'))
+
+    def test_auto_ambiguous_bad_geometry_and_missing_preserve_both_drives(self):
+        self.image('disks/library/DUP.dsk', 4177920, b'x')
+        self.image('disks/library/archives/DUP.dsk', 536870912, b'y')
+        self.image('disks/library/BAD.dsk', 100, b'z')
+        self.assertEqual(self.request(0xf8, 'DUP'), 4)
+        self.assertEqual(self.request(0xf8, 'BAD'), 3)
+        self.assertEqual(self.request(0xf8, 'MISSING'), 2)
+        self.assertEqual(self.dev.first_byte(9), ord('j'))
+        self.assertEqual(self.dev.first_byte(15), ord('p'))
+
     def test_wrong_geometries_do_not_replace_either_drive(self):
         self.image('disks/library/archives/SMALL.dsk', 4177920, b'x')
         self.image('disks/library/BIG.dsk', 536870912, b'x')

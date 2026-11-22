@@ -4,7 +4,7 @@ BASIC COMMANDS
 DIR or SDZ lists files. Examples: DIR P:   DIR HELP:   DIR J1:
 LT reads text. Example: LT A0:WELCOME.TXT
 HELP topic displays instructions. Example: HELP MOUNT
-MOUNT /L lists J: volumes. MOUNT P: /L lists P: archives.
+MOUNT /L lists both catalogs. MOUNT name selects J: or P: by image size.
 NDSCAN drive: refreshes names from extensionless -NAME marker files.
 RBBS enters the bulletin board. BYE ends your call.
 

@@ -1,9 +1,9 @@
 # Swappable J: and P: volumes
 
-Status: implemented in development builds; not included in the published 1.0 ZIPs.
+Status: included in the RCP/M 1.1 packages.
 
 MOUNT handles media and CP/M disk relogging. After a successful replacement,
-it uses CP/M 3 BDOS function 47 to chain to `A0:NDSCAN drive:`. NDSCAN is a
+it uses CP/M 3 BDOS function 47 to chain to `A0:NDSCAN drive: /Q`. NDSCAN is a
 separate, caller-accessible command; MOUNT does not duplicate its name logic.
 Listing and failed mount requests never chain.
 
@@ -11,13 +11,24 @@ Listing and failed mount requests never chain.
 
 | Command | Result |
 | --- | --- |
-| `MOUNT /L` or `MOUNT J: /L` | List J: catalog and current image |
-| `MOUNT GAMES` or `MOUNT J: GAMES` | Mount disks/library/GAMES.dsk on J: |
+| `MOUNT /L` | List J: and P: catalogs and their current images |
+| `MOUNT J: /L` | List only J: |
+| `MOUNT NAME` | Find NAME in both catalogs and select J: or P: by exact image size |
+| `MOUNT J: GAMES` | Explicitly mount disks/library/GAMES.dsk on J: |
 | `MOUNT P: /L` | List P: catalog and current image |
-| `MOUNT P: TORONTO` | Mount disks/library/archives/TORONTO.dsk on P: |
+| `MOUNT TORONTO` or `MOUNT P: TORONTO` | Mount disks/library/archives/TORONTO.dsk on P: |
 | `MOUNT J: /DEFAULT` | Restore disks/drivej.dsk |
 | `MOUNT P: /DEFAULT` | Restore disks/drivep.dsk (normally SIG/M and CPMUG) |
 | `NDSCAN P:` | Rebuild only P:'s names from the currently mounted image |
+
+Successful mounts report `Volume NAME mounted on J:` or `Volume NAME mounted
+on P:`. MOUNT uses NDSCAN /Q to suppress only its success message; scan errors
+remain visible. Standalone NDSCAN retains its normal success message, with /Q
+available explicitly.
+
+If the same filename exists in both folders, an unqualified mount is refused
+without replacing either drive. Use an explicit J: or P: command to choose.
+`MOUNT /DEFAULT` continues to restore J:; qualify P: when restoring P:.
 
 Names are 1-8 uppercase letters, digits or underscores. They are catalog IDs,
 not host paths. Each drive keeps its own mounted-image identity. A process
@@ -89,6 +100,8 @@ table remains intact. Correct the markers/access/capacity and rerun NDSCAN, or
 restore /DEFAULT. Do not assume old aliases describe the newly mounted image
 when an error was reported. Missing A0:NDSCAN.COM is detected before swapping.
 
+The updated MOUNT needs the automatic-selection runtime and matching NDSCAN /Q;
+older MOUNT programs keep their existing protocol and explicit-drive behavior.
 New MOUNT requires the new mount protocol; an old emulator reports that it must
 be updated and leaves media unchanged. Old J-only MOUNT programs remain
 supported by the new emulator, but do not automatically scan names.
