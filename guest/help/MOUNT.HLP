@@ -1,13 +1,17 @@
 ;
 SWAPPABLE VOLUMES
 
-MOUNT /L lists the available volumes.
-MOUNT GAMES selects the GAMES volume on J:.
-MOUNT GUIDES selects the documentation volume on J:.
-DIR J: lists files in user area 0 of the selected volume.
-DIR J1: lists user area 1. Other sets can occupy other user areas.
+MOUNT /L lists J: volumes. MOUNT GAMES or MOUNT GUIDES selects one.
+MOUNT P: /L lists large archive collections on P:.
+MOUNT P: name selects an archive. MOUNT P: /DEFAULT restores SIG/M-CPMUG.
+MOUNT J: /DEFAULT restores the startup J: image.
+DIR J1: lists J: user area 1. DIR P: lists P: user area 0.
 
-Mount a volume at the CP/M prompt before reading or running its files.
-Selecting another volume changes J: for this shared CP/M session.
-The permanent SIG/M and CPMUG collections remain available on P:.
+After swapping, MOUNT chains to NDSCAN to refresh directory names.
+NDSCAN P: also runs independently. Names come from extensionless -NAME
+files in user areas 0-15; areas without markers lose their old names.
+Other drives' names and AUTH permissions stay unchanged.
+If scanning reports an error, the image is mounted but old names remain.
+Use drive/user addresses until the names are corrected or default restored.
+Callers need read access to every user area of a drive to scan its names.
 Use HELP LIBRARY for archive browsing or HELP GAMES for online play.

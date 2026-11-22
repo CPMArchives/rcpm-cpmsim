@@ -30,9 +30,9 @@ Names are limited to seven characters to leave room for `-NAME` marker files.
 Fresh builds install authored HELPC plain-text topics from `guest/help/` via
 `caller_help.py`, including the default HELP.HLP index. Topics cover commands,
 mounting, libraries, transfers, RBBS, games, WORK and logoff.
-The default Z3PLUS descriptor already reserves 14 names. The eight selected
-names fit that allocation; the builder expands the library's NDR member to
-two records and checks it against the configured memory capacity.
+The prepared Z3PLUS descriptor reserves 42 names (768 bytes), covering all
+J:/P: user areas plus system names. The builder expands and zero-fills the
+NDR member to match. See [swappable volumes and NDSCAN](swappable-volumes.md).
 
 ## Private tools
 

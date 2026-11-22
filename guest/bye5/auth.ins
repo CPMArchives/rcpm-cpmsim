@@ -219,3 +219,45 @@ WXADUS:
         DB 0FFH,0FFH,0FFH,0FFH,0FFH,0FFH,0FFH,0FFH,0FFH,0FFH,0FFH,0FFH,0FFH,0FFH,0FFH,0FFH
         DB 0FFH,0FFH,0FFH,0FFH,0FFH,0FFH,0FFH,0FFH,0FFH,0FFH,0FFH,0FFH,0FFH,0FFH,0FFH,0FFH
 WXALBUF:DS 384
+
+; BDOS 201: read-only NDSCAN preflight. E=drive (0-15).
+; HL=A118h, A=0 if private sysop or all 16 DUs have caller R permission.
+; Otherwise HL=FFFFh,A=FFh. No resident address or policy table is returned.
+WXNSCAN:PUSH B
+        PUSH D
+        PUSH H
+        MOV A,E
+        CPI 16
+        JNC WXBDEN
+        STA WXNSDRV
+        CALL WXGET
+        ORA A
+        JZ WXNSPUB
+        LDA MDMOFF
+        ORA A
+        JNZ WXNSOK
+        CALL MDCARCK
+        ORA A
+        JZ WXNSOK
+WXNSPUB:XRA A
+        STA WXNSUSR
+WXNSLOOP:LDA WXNSDRV
+        STA WXATDR
+        LDA WXNSUSR
+        STA WXATUS
+        CALL WXALOOK
+        ANI 1
+        JZ WXBDEN
+        LDA WXNSUSR
+        INR A
+        STA WXNSUSR
+        CPI 16
+        JC WXNSLOOP
+WXNSOK: POP H
+        POP D
+        POP B
+        LXI H,0A118H
+        XRA A
+        RET
+WXNSDRV:DB 0
+WXNSUSR:DB 0

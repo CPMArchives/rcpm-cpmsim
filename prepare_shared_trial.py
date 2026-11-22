@@ -55,7 +55,7 @@ def create(source, romwbw, runtime, builds, tools, output):
         tool('cpmrm', '-T', 'raw', '-f', 'ibm-3740', a, '0:BYE.COM')
         for name in ('BYE.COM', 'BYEDRIV.COM', 'BYEBYE.COM'):
             tool('cpmcp', '-T', 'raw', '-f', 'ibm-3740', a, builds / 'direct' / name, '0:' + name)
-        for name in ('upload', 'message', 'ysend', 'mount'):
+        for name in ('upload', 'message', 'ysend', 'mount', 'ndscan'):
             shutil.copyfile(repository / f'guest/{name}.asm', work / f'{name}.asm')
             subprocess.run([str(source / 'z80asm/z80asm'), '-fb', '-x', f'{name}.asm'],
                            cwd=work, check=True, stdout=subprocess.DEVNULL)

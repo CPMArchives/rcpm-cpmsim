@@ -1,0 +1,107 @@
+{
+  "scope": "Swappable J:/P: and caller-accessible NDSCAN in disposable CP/M 3/Z3PLUS media; published 1.0 is unchanged.",
+  "guest": {
+    "independent_mounts_all_16_users_and_chaining": true,
+    "marker_replacement_clears_absent_names_preserves_other_drives": true,
+    "caller_scan_and_unapproved_execution_unchanged": true,
+    "denied_user_area_aborts_scan_without_changing_names": true,
+    "invalid_names_default_restore_other_drive_preserved": true,
+    "scanner_does_not_write_images": true
+  },
+  "selection": {
+    "standalone_restores_drive_user": true,
+    "chain_restores_drive_user": true
+  },
+  "capacity": {
+    "capacity_overflow_preserves_entire_table": true
+  },
+  "permissions_and_host_tool": {
+    "p_write_denied_by_default": true,
+    "sysop_granted_du_write_works": true,
+    "ndscan_does_not_change_write_grant": true,
+    "removing_grant_restores_readonly": true,
+    "named_p_host_approval_list": true
+  },
+  "flush_failures": {
+    "failed_edit_and_load_preserve_live_policy": true,
+    "normal_policy_transitions": true,
+    "failed_flush_preserves_mounted_volume": true,
+    "normal_swap_and_relog": true,
+    "caller_mount_with_default_readonly_policy": true
+  },
+  "package_check": {
+    "archive": "/Users/nathanael/.codex/.chatgpt-projects/g-p-6a682f002be881918281554d644daf48/rcpm-swappable-p/build/p-candidate/rcpm-macos-arm64-candidate.zip",
+    "relocated_with_spaces": true,
+    "minimal_system_path": true,
+    "common_and_host_hashes": true,
+    "shipped_disks": [
+      "A",
+      "I",
+      "P"
+    ],
+    "default_port": 4000,
+    "tested_port": 58503,
+    "shipped_caller_help_topics": 9,
+    "direct_boot": true,
+    "caller_login": true,
+    "archive_named_directories": true,
+    "both_public_volumes": true,
+    "documentation_read": true,
+    "rbbs_entry": true,
+    "first_start_private_credentials": true,
+    "duplicate_guest_refused": true,
+    "orderly_shutdown": true,
+    "no_python_tmux_or_homebrew_required": true,
+    "generated_passwords_match_guest_record": true,
+    "public_redistribution": "not assessed by runtime checks; see docs/distribution-review.md"
+  },
+  "host_device_tests": {
+    "count": 3,
+    "method": "Compile actual emulator/rcpm_mount.c with strict warnings and sparse image fixtures; exercise legacy J and new P protocol, independent default restoration, wrong sizes, invalid/missing/nonregular/truncated images and catalog filtering."
+  },
+  "builds": {
+    "guest_programs": {
+      "MOUNT.COM": {
+        "bytes": 1132,
+        "sha256": "9254bd2279e86a02836f4cbe26121499c9094c907a5de7e28a692441c204f7c2"
+      },
+      "NDSCAN.COM": {
+        "bytes": 2979,
+        "sha256": "202db78e83957403b57500e0d747661835e0980a88226c30e3c60f2711103f40"
+      }
+    },
+    "macos_runtime": {
+      "sha256": "c940957f463a503e4f03d06ea29795b6ef36d8312274c65b405dd885d5a0f375",
+      "minimum_os": "11.0",
+      "runtime_host": "macOS ARM64"
+    },
+    "windows_runtime": {
+      "sha256": "6f465dd3f128ddd5b045a2cec15434b6cae2c1d559bc39292308dfd8207ab3ba",
+      "status": "cross-compiled and system-DLL audited; new runtime not executed in Windows"
+    },
+    "bye_drivers": {
+      "direct": "2d29fd4097b0c9cf46b9f1543bccb4d5320417bb13cc8f6d9c03d852ab98e198",
+      "ip232": "a559bb92cc00889b8d3e08777e08677a35efe91b1560d0fa7d86c0c097c5400f"
+    }
+  },
+  "methods": {
+    "ndview": "Test-only approved guest viewer reads and prints the actual resident NDR, verifying all 16 P: names, stale-name removal, default restoration and preservation of non-P: entries.",
+    "capacity": "Test-only guest commands temporarily reduce ENV NDR capacity to 8 and restore 42. Overflowing scan leaves the entire table unchanged, compared after capacity restoration.",
+    "permission_write": "Test-only approved program attempts MAKE/WRITE/CLOSE/FLUSH on P4:NEWFILE.TXT. Default denies, private AUTH P4:RW allows after unblanking, NDSCAN preserves the grant, and revocation denies again. Data verified with stopped-host cpmtools.",
+    "flush_fault": "Test AUTH/MOUNT binaries intercept only BDOS 48, returning FF; all other calls reach real CP/M."
+  },
+  "source_sha256": {
+    "guest/mount.asm": "78650f9549e0874ed4d29dda4fb3ea4e22fc7945b8245af6845b56022f9cd34e",
+    "guest/ndscan.asm": "613e2149494e042da1e3ce7f4d7720f3e0d869f7f8ded77f288354260affdc6a",
+    "emulator/rcpm_mount.c": "36bc6b9f878ce4e32c8704a28358c0b1f3ad3e28f1b7936e69344e9d11527eea",
+    "guest/bye5/auth.ins": "88aaceaaf85bb67245541135cd65aad577e72393f0827e324549dd61f40304c7",
+    "guest/bye5/privateb.ins": "7e78ade5abaca948023dc51fd5cb317a26968cade603c92cc807a345ef9b95ec",
+    "prepare_z3plus.py": "f7d98ff30b3cd9d6f39117ff598b0c903060a363830ffdd3b6a8993ce3ea8642"
+  },
+  "limits": [
+    "No induced physical disk failure or power loss.",
+    "Raw image size validation does not prove filesystem validity.",
+    "Mount succeeds before the separately chained NDSCAN; scan errors preserve old names while new media remains mounted.",
+    "Windows binaries compiled/audited only; do not carry forward the old 1.0 Windows runtime qualification to this feature."
+  ]
+}

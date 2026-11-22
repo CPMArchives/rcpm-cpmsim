@@ -87,6 +87,10 @@ def clean_common(args, output):
     copy_file(args.archive, target, 0o600)
     if sha(target) != sha(args.archive):
         raise ValueError('P: image copy verification failed')
+    # Directory names travel with the default archive, like other collections.
+    for user, name in ((0, '-SIGM'), (1, '-CPMUG')):
+        put(args.tools, target, user, name, b'\x1a', fmt='z80pack-hdb')
+    (output / 'archives').mkdir()
     shutil.copy2(args.archive.with_suffix('.sha256'), output / 'ARCHIVE.sha256')
     launchers = output / 'source/configured/game-launchers'
     build_game_launchers(args.source, args.romwbw, launchers)

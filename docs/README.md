@@ -14,6 +14,7 @@ specific features and engineering details.
 - [Caller permissions and program approval](caller-execution.md)
 - [System utilities and named directories](zsystem-utilities.md)
 - [Online games](online-games.md)
+- [Swappable volumes and NDSCAN](swappable-volumes.md)
 - [System disk layout](system-disk-layout.md)
 - [Security boundary](security-boundary.md)
 - [Component notices and release decisions](distribution-review.md)

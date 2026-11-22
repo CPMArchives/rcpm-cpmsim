@@ -158,3 +158,11 @@ The native commands and default WHL behavior are described in the original
 sections 3.2.1 and 3.2.3. BDOS function 59 is documented in Digital Research's
 [CP/M 3 Programmer's Guide](https://www.mrynet.com/FTP/os/CPM/manuals/cpm3-pgr.pdf).
 The tests verify the selected binaries rather than relying on the manuals alone.
+
+## Caller-accessible name scanning
+
+NDSCAN reads extensionless -NAME markers and updates only the selected drive's
+resident named directories. It does not change this permission map or F4.
+BYE's separate read-only BDOS 201 query checks that a caller can read all user
+areas before scanning; the private AUTH API (BDOS 200) remains inaccessible.
+Private sysops can scan any available drive. See [swappable volumes](swappable-volumes.md).
