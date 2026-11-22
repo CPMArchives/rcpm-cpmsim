@@ -11,6 +11,12 @@ Every other DU is private, including I13:SYSUTLS and I15:RBBS data.
 Selecting a DU does not grant file access: Z3PLUS changes user before drive,
 so intermediate selections are allowed and file operations enforce the policy.
 
+Before replacing the live permission map, AUTH flushes pending CP/M disk
+buffers while the previous policy remains active. This applies to direct
+drive/DU edits and validated /LOAD operations, including changes to inherited
+permissions. A flush error aborts the update and leaves the resident map
+unchanged. This is a precaution; no background-write race is assumed.
+
 ## Executable approval
 
 Caller BDOS 59 loads require effective R access, no effective W access, and

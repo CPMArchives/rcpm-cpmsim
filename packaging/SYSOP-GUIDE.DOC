@@ -329,6 +329,10 @@ its command processor/automation tools. A status query reporting that an
 existing COM is not executable is a successful query; a missing file is an
 error. Run scripts that administer policy only in private sysop mode.
 
+AUTH flushes pending CP/M disk buffers before changing live DU permissions,
+including /LOAD. If flushing fails, the live permissions remain unchanged.
+There is no added delay or restriction on sysop permission choices.
+
 4.8 Worked policy workflows
 
 Restore the normal public system directory and temporary workspace:
@@ -530,6 +534,9 @@ image while cpmsim is running.
 7. ARCHIVES AND SWAPPABLE VOLUMES
 
 MOUNT /L lists public images; MOUNT GAMES or MOUNT GUIDES replaces J:.
+Before replacing the mounted image, MOUNT flushes pending CP/M disk buffers.
+If flushing fails, it leaves the existing image mounted. Catalog listing alone
+does not flush or change media. After a successful swap, MOUNT resets/relogs J:.
 DIR J: lists files; LT J:README.TXT reads a volume guide. LDIR lists LBR members
 and LT reads text members. YSEND downloads through guest BDOS using YMODEM.
 

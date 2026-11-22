@@ -1,0 +1,19 @@
+{
+  "checks": {
+    "failed_edit_and_load_preserve_live_policy": true,
+    "normal_policy_transitions": true,
+    "failed_flush_preserves_mounted_volume": true,
+    "normal_swap_and_relog": true,
+    "caller_mount_with_default_readonly_policy": true
+  },
+  "method": "Disposable macOS release-package copy running real CP/M 3 and the existing BYE driver. Fault-only AUTH/MOUNT builds intercept BDOS 48 and return FF; all other calls reach the real BDOS. Normal source builds exercise success and caller paths. No released archive or running operator media changed.",
+  "source_sha256": {
+    "guest/auth.asm": "357fca8214f245be0936b96f0e67dae105d21419d2df47e423a13564dcd2a01c",
+    "guest/mount.asm": "ee303153af92c979f36be7e69108eca5d3dd6b20bfd5d02d33699fd3dc745f92"
+  },
+  "guest_binary_sha256": {
+    "AUTH.bin": "59e91878bfd6395a309dc26abc6cb2c20f7af239946e11a964338bf8b02c9386",
+    "MOUNT.bin": "e63fafef46f3f838a67549ff0b84291da17cf713312d2b29a580a362e30ecdf7"
+  },
+  "not_covered": "No real disk fault or power failure induced; pending writes are not claimed to occur on the shipped geometry."
+}

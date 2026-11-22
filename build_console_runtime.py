@@ -42,8 +42,7 @@ def main():
             parser.error("Unexpected MOUNT drive-reset sequence")
         mount_source = mount_source.replace(readonly, "").replace(
             "Volume mounted read-only on J:.", "Volume mounted read-write on J:.")
-        mount_source = mount_source.replace("REQUEST:\n", "REQUEST:\n"
-            "\tLD\tC,48\n\tLD\tE,0\n\tCALL\tBDOS\n\tOR\tA\n\tJR\tNZ,FAILED\n")
+        # The shared MOUNT source already flushes before replacing media.
         (guest / "mount.asm").write_text(mount_source)
         shutil.copyfile(Path(__file__).resolve().parent / "guest/sysbye.asm", guest / "sysbye.asm")
         subprocess.run([str(source / "z80asm/z80asm"), "-fb", "-x", "mount.asm"],
