@@ -101,6 +101,40 @@
       "minimum_rcpm": "1.0",
       "free_kib": 3796,
       "qualification": "All 13: startup/input/save/restore/quit; changed-location/inventory restoration; carrier recovery/WORK cleanup; master preservation; byte-identical rebuild"
+    },
+    {
+      "id": "BOSKUG",
+      "release_tag": "software-images-2026-11-22",
+      "release_url": "https://github.com/CPMArchives/rcpm-cpmsim/releases/tag/software-images-2026-11-22",
+      "archive": "BOSKUG-collection.zip",
+      "download": "https://github.com/CPMArchives/rcpm-cpmsim/releases/download/software-images-2026-11-22/BOSKUG-collection.zip",
+      "report": "https://github.com/CPMArchives/rcpm-cpmsim/blob/software-images-2026-11-22/Software/BOSKUG/README.md",
+      "archive_sha256": "2228bdc5a5c1711952a8bf9451698b19650b5ff73422d487218feb9fd0593955",
+      "image": "BOSKUG.dsk",
+      "image_sha256": "be746ddbdaba3e37528e94f6673e9a88baca13c4d471f535baa5f4abb0fe2a7f",
+      "image_bytes": 4177920,
+      "format": "z80pack-hd",
+      "user": 0,
+      "files": 14,
+      "minimum_rcpm": "1.0",
+      "qualification": "Exact-size check, stable source/copy SHA-256 match, directory listing and complete file readback; no new gameplay claim."
+    },
+    {
+      "id": "GUIDES",
+      "release_tag": "software-images-2026-11-22",
+      "release_url": "https://github.com/CPMArchives/rcpm-cpmsim/releases/tag/software-images-2026-11-22",
+      "archive": "GUIDES-collection.zip",
+      "download": "https://github.com/CPMArchives/rcpm-cpmsim/releases/download/software-images-2026-11-22/GUIDES-collection.zip",
+      "report": "https://github.com/CPMArchives/rcpm-cpmsim/blob/software-images-2026-11-22/Software/GUIDES/README.md",
+      "archive_sha256": "80372972315ba59f4be67d52102cf7abf8790b813cc7134d9b143e4323a8aeb7",
+      "image": "GUIDES.dsk",
+      "image_sha256": "c766d32f4d36552153ed86c745076c6e7128e9f4e690f5a5656fd77fb7ebf70e",
+      "image_bytes": 4177920,
+      "format": "z80pack-hd",
+      "user": 0,
+      "files": 5,
+      "minimum_rcpm": "1.0",
+      "qualification": "Exact-size check, stable source/copy SHA-256 match, directory listing and complete file readback; no new gameplay claim."
     }
   ]
 }
