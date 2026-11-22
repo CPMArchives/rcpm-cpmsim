@@ -555,7 +555,8 @@ before: correct the problem and rerun NDSCAN or restore /DEFAULT. Use explicit
 drive/user addresses while names are stale. SYSOP permissions remain unchanged.
 Before replacing the mounted image, MOUNT flushes pending CP/M disk buffers.
 If flushing fails, it leaves the existing image mounted. Catalog listing alone
-does not flush or change media. After a successful swap, MOUNT resets/relogs J:.
+does not flush or change media. After a successful swap, MOUNT resets/relogs
+the selected drive.
 DIR J: lists files; LT J:README.TXT reads a volume guide. LDIR lists LBR members
 and LT reads text members. YSEND downloads through guest BDOS using YMODEM.
 
