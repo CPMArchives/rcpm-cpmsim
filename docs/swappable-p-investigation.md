@@ -1,7 +1,9 @@
 # Swappable P: investigation
 
-Status: investigated; proposed implementation, not implemented. The buffer-flush
-precaution is separately prepared in PR #18. Published 1.0 assets are unchanged.
+Historical investigation: the implementation and agreed marker-based NDSCAN
+design are now described in [swappable volumes](swappable-volumes.md). That
+design supersedes the options below for collection-specific names. The buffer-
+flush precaution from PR #18 is retained. Published 1.0 assets are unchanged.
 
 ## Scope and established decisions
 

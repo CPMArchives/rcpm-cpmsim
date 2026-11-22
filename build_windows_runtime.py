@@ -34,7 +34,7 @@ def build(source, toolchain, output):
     prepare_service_source(work)
     io = sim / 'simio.c'
     io.write_text(integrate(io.read_text()))
-    for name in ('rcpm_modem.c', 'rcpm_transfer.c'):
+    for name in ('rcpm_modem.c', 'rcpm_transfer.c', 'rcpm_mount.c'):
         shutil.copy2(REPO / 'emulator' / name, sim / name)
     shutil.copytree(REPO / 'windows', work / 'windows')
     # Preserve API names used by the CPU; only the implementation is host-specific.

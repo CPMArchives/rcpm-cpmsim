@@ -3,6 +3,8 @@
 import argparse
 import hashlib
 import json
+import os
+import sys
 from pathlib import Path
 import re
 import shutil
@@ -60,10 +62,12 @@ def integrate(io_text):
         'static int rcpm_transfer_read(BYTE *, size_t, int);\n'
         'static ssize_t rcpm_transfer_write(const void *, size_t);\n\n'
         + services + io_text[end:])
-    old = 'fd = open(path, O_RDONLY | O_NONBLOCK);'
-    if io_text.count(old) != 1:
-        raise ValueError('Unexpected catalog open point')
-    io_text = io_text.replace(old, 'fd = open(path, O_RDWR | O_NONBLOCK);\n\tif (fd == -1) fd = open(path, O_RDONLY | O_NONBLOCK);')
+    # Apply legacy service patches first; replace their J-only device afterward.
+    start = io_text.index('/* RCP/M mount port, scoped')
+    end = io_text.index('/* Persistent uploads on guest port 61,', start)
+    io_text = io_text[:start] + ('#include "rcpm_mount.c"\n\n'
+        'static int rcpm_transfer_read(BYTE *, size_t, int);\n'
+        'static ssize_t rcpm_transfer_write(const void *, size_t);\n\n') + io_text[end:]
     return io_text.replace('cpu_state = STOPPED;', 'cpu_state = ST_STOPPED;')
 
 
@@ -107,13 +111,19 @@ def main():
             parser.error(str(error))
         shutil.copyfile(Path(__file__).parent / 'emulator/rcpm_modem.c', sim / 'rcpm_modem.c')
         shutil.copyfile(Path(__file__).parent / 'emulator/rcpm_transfer.c', sim / 'rcpm_transfer.c')
-        subprocess.run(['make', '-j4', 'all', f'SIM={root / "cpmsim-modem"}'], cwd=sim, check=True)
+        shutil.copyfile(Path(__file__).parent / 'emulator/rcpm_mount.c', sim / 'rcpm_mount.c')
+        environment = dict(os.environ)
+        if sys.platform == 'darwin':
+            environment.setdefault('MACOSX_DEPLOYMENT_TARGET', '11.0')
+        subprocess.run(['make', '-j4', 'all', f'SIM={root / "cpmsim-modem"}'],
+                       cwd=sim, env=environment, check=True)
         output.parent.mkdir(parents=True, exist_ok=True)
         staged = output.with_name(output.name + '.new')
         shutil.copy2(root / 'cpmsim-modem', staged)
         staged.replace(output)
         output.with_name(output.name + '.features.json').write_text(json.dumps(dict(
             format='rcpm-runtime-features-1', idle_timer_port=74, sysop_writable_catalog=True,
+            mount_protocol=2, swappable_drives=['J', 'P'],
             sha256=hashlib.sha256(output.read_bytes()).hexdigest()), indent=2) + '\n')
     print(f'Built {output}')
 

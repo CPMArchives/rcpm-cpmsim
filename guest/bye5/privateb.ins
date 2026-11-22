@@ -1,6 +1,8 @@
 ; Shared caller policy: R=1 W=2; DU overrides drive, FF inherits.
 ; The same gate serves every drive. Private local wheel bypasses caller ACLs.
 WXBCHK: MOV A,C
+        CPI 201
+        JZ WXNSCAN
         CPI 200
         JZ WXAAPI
         CPI 13

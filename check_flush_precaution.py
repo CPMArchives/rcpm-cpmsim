@@ -94,7 +94,7 @@ def run(args):
         assert permissions() == readonly
         result['normal_policy_transitions'] = True
         local('MOUNT GUIDES', b'Volume mounted on J:.')
-        local('MNTFAIL GAMES', b'Flush failed. J: unchanged.')
+        local('MNTFAIL GAMES', b'Flush failed. Mounted image unchanged.')
         local('MOUNT /L', b'J: GUIDES')
         result['failed_flush_preserves_mounted_volume'] = True
         local('MOUNT GAMES', b'Volume mounted on J:.')

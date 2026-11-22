@@ -153,3 +153,22 @@ copied to WORK do not become executable. P: and swappable J: archive images
 are also host read-only. Removing a SYS attribute does not grant execution
 or directory access. Do not remove the release guards to run an unreviewed
 compiler, interpreter or game in a caller session.
+
+5. SWAPPABLE P: ARCHIVES AND DIRECTORY MARKERS
+
+Place raw z80pack-hdb images of exactly 536870912 bytes in archives/NAME.dsk.
+Keep the existing 4177920-byte J: images under volumes/. MOUNT rejects images
+with the wrong size for the selected drive, even if they are in the right
+folder. A raw image has no geometry header: matching size is necessary, not
+proof of a correctly prepared filesystem.
+
+MOUNT P: /L lists compatible archive images. MOUNT P: NAME swaps P:.
+MOUNT P: /DEFAULT restores disks/drivep.dsk. J: remains independently mounted.
+Default mounts return when the emulator process restarts, not at each logoff.
+
+NDSCAN refreshes the selected drive's names after a successful swap. To name
+a user area, create an extensionless -NAME file there (up to 7 uppercase
+letters/digits/underscores after the hyphen). Marker contents are irrelevant.
+Create these files with CP/M or matching cpmtools while the image is unmounted.
+Names are not AUTH grants. Run NDSCAN P: independently after marker changes.
+Copy archives/ in backups and keep private media outside public catalogs.

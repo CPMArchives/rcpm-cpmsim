@@ -61,6 +61,16 @@ def configure_library(source, archive_names=("ARCHIVE",), extra_directories=()):
             config_offset = int.from_bytes(library[config_record + 12:config_record + 14], 'little') * 128
             config_size = int.from_bytes(library[config_record + 14:config_record + 16], 'little') * 128
             descriptor = library[config_offset:config_offset + config_size].decode('ascii')
+            # 42 entries (768 bytes) cover all J:/P: users plus system names.
+            descriptor, changed = re.subn(r'(?m)^(Z3NDIRS\s*=\s*)14(\s*;)',
+                                          r'\g<1>42\2', descriptor)
+            if changed != 1:
+                raise ValueError('Unexpected pristine Z3PLUS named-directory capacity')
+            configured = descriptor.encode('ascii')
+            if len(configured) != config_size:
+                raise ValueError('Z3PLUS descriptor size changed')
+            library[config_offset:config_offset + config_size] = configured
+            library[config_record + 16:config_record + 18] = crc_hqx(configured, 0).to_bytes(2, 'little')
             capacity = re.search(r'(?m)^Z3NDIRS\s*=\s*(\d+)\s*;', descriptor)
             break
     else:
@@ -68,14 +78,15 @@ def configure_library(source, archive_names=("ARCHIVE",), extra_directories=()):
     if not capacity or len(directories) > int(capacity[1]):
         raise ValueError('Names exceed the configured Z3PLUS NDR memory allocation')
     for drive, user, name in directories:
-        if not 1 <= len(name) <= 7 or not name.isascii() or not name.isalnum():
-            raise ValueError("Directory names must be 1 to 7 ASCII letters or digits")
+        if not 1 <= len(name) <= 7 or not name.isascii() or not all(c.isalnum() or c == '_' for c in name):
+            raise ValueError("Directory names must be 1 to 7 ASCII letters, digits or underscores")
         names.extend(bytes((drive, user)) + name.upper().encode().ljust(8) + b" " * 8)
-    if len(names) > size:
+    required = ((int(capacity[1]) * 18 + 127) // 128) * 128
+    if required > size:
         # Allocate whole records at EOF without moving any other member.
-        # DEFAULT.Z3P already reserves 14 entries (256 bytes). Never exceed
+        # The configured DEFAULT.Z3P reserves 42 entries (768 bytes). Never exceed
         # that allocation merely by growing the file loaded into it.
-        size = ((len(names) + 127) // 128) * 128
+        size = required
         offset = ((len(library) + 127) // 128) * 128
         library.extend(b'\0' * (offset + size - len(library)))
         library[entry + 12:entry + 14] = (offset // 128).to_bytes(2, 'little')

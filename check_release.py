@@ -249,7 +249,7 @@ def main():
         listing = guest.command('DIR J1:ADV.COM')
         assert b'ADV' in listing and b'COM' in listing
         text = guest.command('TYPE J:README.TXT [NO PAGE]')
-        assert b'unpacked games' in text and b'WORK remains non-executable.' in text
+        assert b'RCP/M GAMES' in text and b'WORK remains non-executable.' in text
         guest.command('MOUNT GUIDES')
         listing = guest.command('DIR J:')
         assert b'README' in listing and b'LDIR' in listing
