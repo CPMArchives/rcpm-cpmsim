@@ -25,6 +25,7 @@ specific features and engineering details.
 - [Windows host build](windows-host-build.md)
 - [Linux host build status](linux-host-build.md)
 - [Modem interface](modem-interface.md)
+- [Swappable P: investigation](swappable-p-investigation.md)
 - [BYE510 build](bye5-build.md)
 - [Post-1.0 roadmap](roadmap.md)
 
