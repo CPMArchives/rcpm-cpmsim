@@ -45,9 +45,9 @@ def check(a):
                 data.extend(part)
                 if marker and marker in data:return bytes(data)
         raise RuntimeError('Waiting for %r: %r'%(marker,data[-2000:]))
-    def send(value,marker):
+    def send(value,marker,key=False):
         print('Sending '+('password' if value==password else value),flush=True)
-        for b in value.encode('ascii')+b'\r':
+        for b in value.encode('ascii')+(b'' if key else b'\r'):
             caller.sendall(bytes([b]));time.sleep(.025)
         return read(marker)
     password=json.loads((a.instance/'TEST-CREDENTIALS.json').read_text())['sysop_password']
@@ -65,43 +65,48 @@ def check(a):
         send('SYSOP',b'Password:')
         send(password,b'Command:')
         result['public_entry_from_work']=True
-        listing=send('F',b'Forum number:')
+        listing=send('F',b'Forum number:',key=True)
         assert all(x in listing for x in (b'PERSONAL',b'GENERAL',b'CPM',b'TEST'))
-        send('-1',b'Forum number:')
-        send('9',b'Forum number:')
-        send('4',b'Command:')
+        send('9',b'Forum number:',key=True)
+        send('9',b'Forum number:',key=True)
+        send('4',b'Command:',key=True)
         result['forum_selection_and_invalid_input']=True
-        send('E',b'To:')
+        send('E',b'To:',key=True)
         send('',b'Subject:')
         send('TEST AREA MESSAGE',b' 1>')
         send('PERSISTENT TEST AREA CONTENT',b' 2>')
         send('.',b'Choice:')
-        send('S',b'Command:')
-        send('F',b'Forum number:')
-        send('2',b'Command:')
-        general=send('m',b'Command:')
+        send('S',b'Command:',key=True)
+        send('F',b'Forum number:',key=True)
+        send('2',b'Command:',key=True)
+        general=send('m',b'Command:',key=True)
         assert b'Active messages:  0' in general
-        send('F',b'Forum number:')
-        send('4',b'Command:')
-        send('R',b'Message Number:')
+        send('F',b'Forum number:',key=True)
+        send('4',b'Command:',key=True)
+        send('R',b'Message Number:',key=True)
         body=send('1',b'Command:')
         assert b'PERSISTENT TEST AREA CONTENT' in body
         result['forum_separation_and_readback']=True
-        send('C',b'A0:SYSTEM>')
+        send('X',b'Command:',key=True)
+        shortcut=send('R;1',b'Command:')
+        assert b'PERSISTENT TEST AREA CONTENT' in shortcut
+        send('X',b'Command:')
+        result['single_key_menus_and_expert_command_lines']=True
+        send('C',b'A0:SYSTEM>',key=True)
         denied=send('TYPE I15:USERS.CCC',b'A0:SYSTEM>')
         assert b'SYSOP' not in denied
         result['cpm_return_revokes_private_access']=True
         send('RBBS',b'Enter your name:')
         send('SYSOP',b'Password:')
         send(password,b'Command:')
-        send('F',b'Forum number:')
-        send('4',b'Command:')
-        send('R',b'Message Number:')
+        send('F',b'Forum number:',key=True)
+        send('4',b'Command:',key=True)
+        send('R',b'Message Number:',key=True)
         body=send('1',b'Command:')
         assert b'PERSISTENT TEST AREA CONTENT' in body
         result['message_persists_after_board_reentry']=True
-        send('G',b'Confirm')
-        for byte in b'Y\r': caller.sendall(bytes([byte]));time.sleep(.025)
+        send('G',b'Confirm',key=True)
+        for byte in b'Y': caller.sendall(bytes([byte]));time.sleep(.025)
         read(None,disconnect=True)
         result['g_disconnect']=True
         caller.close()

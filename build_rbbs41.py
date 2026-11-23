@@ -14,6 +14,7 @@ import time
 import tty
 import zipfile
 from rbbs41_menus import configure_menus
+from rbbs41_keys import configure_keys
 
 
 class Machine:
@@ -124,7 +125,7 @@ def configure(files):
 }
 /***************************************************************/
 ''' + files['RBBSFN.C'][end:]
-    return configure_menus(files)
+    return configure_keys(configure_menus(files))
 
 
 def build(args):

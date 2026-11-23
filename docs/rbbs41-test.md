@@ -80,3 +80,25 @@ and verifies hashes of account, caller, forum-directory and message files.
 Before replacing the staged A:/I: images it backs up the existing images.
 The original trial-02 installation has this update. Its MENU-UPDATE.json
 records the backup path and unchanged data hashes. Credentials are unchanged.
+
+## Single-key input
+
+Normal-mode main commands, draft options, forum selection and Y/N prompts
+now respond immediately to a valid key. The maintenance menu and its forum
+selection also use immediate keys, independently of any edited user's expert
+preference. Return and LF are ignored at immediate-choice prompts; Y/N
+requires an explicit answer. Names, passwords, message numbers, forum names
+and message text retain their existing line editor and Return handling.
+
+Expert mode retains Return-based menu input, including semicolon commands
+such as R;1. Pending command tokens are consumed through the existing parser.
+Input still passes through the BIOS console hooks used by BYE; no direct
+modem reads, timing guesses or changes to session permissions are introduced.
+
+Build: build/rbbs41-keys-01. Local checks in build/keys-local-01 passed
+registration with single-key confirmations, normal/expert toggling, draft
+entry and storage, forum selection, private mail and immediate maintenance
+exit. Raw TCP checks in build/keys-remote-01 passed immediate menu and forum
+keys, expert R;1, posting/readback, private-data revocation, G logout and
+carrier-loss recovery. The original trial-02 installation has this update;
+account, forum-directory and message hashes were verified unchanged.

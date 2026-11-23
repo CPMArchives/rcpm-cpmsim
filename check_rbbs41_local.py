@@ -25,12 +25,21 @@ def check(a):
     guest=Machine(root,runtime,root/'local.log')
     password=json.loads((a.instance/'TEST-CREDENTIALS.json').read_text())['sysop_password']
     result={}
-    def send(value,marker):
+    expert=False
+    modes={}
+    def send(value,marker,key=None):
+        nonlocal expert
+        if key is None:
+            key=not expert and len(value)==1 and value.upper() in 'CEFGKRSNBMPTUWX?YN'
         print('Sending '+('password' if value in (password,'TRIAL1','TRIAL2') else value),flush=True)
-        for byte in value.encode('ascii')+b'\r':
+        for byte in value.encode('ascii')+(b'' if key else b'\r'):
             os.write(guest.master,bytes([byte]));time.sleep(.01)
-        return guest.read(marker,20)
+        data=guest.read(marker,20)
+        if value.upper()=='X': expert=not expert
+        return data
     def login(name,pwd,new=False):
+        nonlocal expert
+        expert=modes.get(name,False)
         send('I:RBBS41',b'Enter your name:')
         if not new:
             send(name,b'Password:')
@@ -42,9 +51,10 @@ def check(a):
         send(pwd,b'Enter the new password again:')
         send(pwd,b'Command:')
         send('X',b'Command:')
+        modes[name]=True
     def forum(n):
         listing=send('F',b'Forum number:')
-        return listing,send(str(n),b'Command:')
+        return listing,send(str(n),b'Command:',key=not expert)
     def post(subject,body,to=''):
         send('E',b'To:')
         send(to,b'Subject:')
@@ -68,7 +78,7 @@ def check(a):
         result['sysop_login']=True
         listing=send('F',b'Forum number:')
         assert all(x in listing for x in (b'PERSONAL',b'GENERAL',b'CPM',b'TEST'))
-        send('-1',b'Forum number:');send('9',b'Forum number:');send('4',b'Command:')
+        send('9',b'Forum number:',key=True);send('4',b'Command:',key=True)
         result['forums_and_invalid_selection']=True
         post('TEST AREA MESSAGE','PERSISTENT TEST AREA CONTENT')
         forum(2)
@@ -102,7 +112,7 @@ def check(a):
         result['account_and_message_persistence']=True
         maintenance=send('I:RBUTIL41',b'Choice:')
         assert all(x in maintenance for x in (b'MESSAGES',b'FORUMS',b'USERS',b'RESET DATABASE'))
-        send('9',b'A>')
+        send('9',b'A>',key=True)
         result['maintenance_utility_starts']=True
     finally:
         guest.close()
