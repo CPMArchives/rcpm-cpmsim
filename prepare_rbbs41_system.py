@@ -13,6 +13,29 @@ import tempfile
 from build_bye5 import run as build_bye
 
 
+def write_sysop_doc(instance):
+    credentials=json.loads((instance/'TEST-CREDENTIALS.json').read_text())
+    doc=instance/'SYSOP.DOC'
+    doc.write_text(
+        'PRIVATE RBBS 4.1.02 TEST SYSTEM SYSOP INFORMATION\n\n'
+        'These instructions apply only to this RBBS41-Test folder.\n'
+        'RBBS 3.7 SYSOP.DOC passwords and FIRST/LAST Name instructions do not apply.\n\n'
+        'At Enter your name: enter '+credentials['sysop_name']+'\n'
+        'At Password: enter '+credentials['sysop_password']+'\n\n'
+        'Passwords are case-sensitive and contain up to six characters.\n'
+        'The displayed 123456 counts typed password characters; it is not the password.\n'
+        'New callers can post without validation in this test configuration.\n'
+        'C returns to CP/M; G disconnects.\n\n'
+        'For maintenance, exit RBBS with C, then use the server local console.\n'
+        'With a caller connected, Ctrl-B blanks the caller and enables private operation.\n'
+        'Run SYSUTLS:RBUTIL41. Option 4 selects an area; 5 adds an area; 6 manages users.\n'
+        'Option 9 quits. Ctrl-B restores caller access after maintenance.\n'
+        'Option 3 resets the account database; it is not a normal maintenance command.\n\n'
+        'Back up the whole test folder while stopped. Do not reset or recreate databases\n'
+        'to fix a login problem. This file records the original generated password.\n')
+    doc.chmod(0o600)
+
+
 def prepare(a):
     repo = Path(__file__).resolve().parent
     work = a.output.resolve()
@@ -117,6 +140,7 @@ def prepare(a):
     start.chmod(0o755)
     (instance/'TEST-CREDENTIALS.json').write_text(json.dumps({'sysop_name':'SYSOP','sysop_password':password})+'\n')
     (instance/'TEST-CREDENTIALS.json').chmod(0o600)
+    write_sysop_doc(instance)
     (instance/'README.txt').write_text(
         'HUMONGOUS RCP/M - RBBS 4.1.02 isolated test system\n\n'
         'Run Start-RBBS41.command. Connect SyncTERM using Raw TCP, 127.0.0.1 port 4002.\n'
