@@ -1,10 +1,10 @@
 
-                 * H U M O N G O U S *   R C P / M
-                       CP/M 3 - Z3PLUS - BYE5
+                     =======================================
+                       *  H U M O N G O U S  *   R C P / M
+                     =======================================
+                             CP/M 3 - Z3PLUS - BYE5
 
-
-                  RBBS - Enter the bulletin board
-
+                   RBBS - Enter the bulletin board
 
 Some commands:
 
@@ -13,6 +13,4 @@ Some commands:
   UPLOAD - upload files    MESSAGE - msg to sysop    BYE - log off
   YSEND - download files
 
-
 I0:WORK is temporary workspace; it is cleared when the call ends.
-

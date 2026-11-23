@@ -82,6 +82,8 @@ def run(source, runtime, cpmtools, sources, output):
                 if any(error in result.upper() for error in
                        (b'ERROR', b'NO FILE', b'NOT FOUND', b'UNDEFINED')):
                     raise RuntimeError(result.decode(errors='replace'))
+                if command.startswith('B:LINK ') and re.search(rb'CODE SIZE\s+0000', result):
+                    raise RuntimeError('LINK produced an empty executable: ' + command)
     finally:
         guest.terminate()
         try:
