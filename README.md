@@ -49,9 +49,9 @@ this is a way to experience the software in its working environment.
 
 ## Get started
 
-**[Download RCP/M 1.1.1](https://github.com/CPMArchives/rcpm-cpmsim/releases/tag/v1.1.1)**
+**[Download RCP/M 1.2](https://github.com/CPMArchives/rcpm-cpmsim/releases/tag/v1.2)**
 
-Choose **macOS ARM64** for an Apple Silicon Mac. The **Windows x64** 1.1.1
+Choose **macOS ARM64** for an Apple Silicon Mac. The **Windows x64** 1.2
 download is a test build; its rebuilt runtime has not repeated Windows live validation.
 Each platform ZIP contains the complete system; you do not need the separate
 common archive to run it.
@@ -101,6 +101,6 @@ details, source builds, the roadmap and the project’s development history,
 see the **[documentation index](docs/README.md)**.
 
 RCP/M preserves software from many authors and user groups. Their individual
-notices and terms remain applicable; see the [release notes](docs/RELEASE-NOTES-1.1.1.md)
+notices and terms remain applicable; see the [release notes](docs/RELEASE-NOTES-1.2.md)
 and [component review](docs/distribution-review.md). The project is maintained
 by **CPMArchives**.

@@ -227,13 +227,12 @@ static int win_process(char *const args[], int guest) {
 static void run(char *const args[]) { (void)win_process(args, 0); }
 static void password(char result[25], char prefix) {
     unsigned char bytes[12];
-    const char *hex = "0123456789ABCDEF";
+    const char *alphabet = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
     if (BCryptGenRandom(NULL, bytes, sizeof(bytes), BCRYPT_USE_SYSTEM_PREFERRED_RNG) != 0)
         fail("System randomness unavailable");
-    for (size_t k = 0; k < sizeof(bytes); k++) {
-        result[k * 2] = hex[bytes[k] >> 4]; result[k * 2 + 1] = hex[bytes[k] & 15];
-    }
-    result[0] = prefix; result[24] = 0;
+    (void)prefix;
+    for (size_t k = 0; k < 6; k++) result[k] = alphabet[bytes[k] & 31];
+    result[6] = 0;
     SecureZeroMemory(bytes, sizeof(bytes));
 }
 static void location(const char *unused) {

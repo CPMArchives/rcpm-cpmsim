@@ -14,8 +14,8 @@ def copy_tree(source, target):
                     ignore=shutil.ignore_patterns('__pycache__', '*.pyc'))
 
 
-def build(common_base, mac_base, windows_base, runtime, output, version="1.1"):
-    if version not in ("1.1", "1.1.1"):
+def build(common_base, mac_base, windows_base, runtime, output, version="1.1", prepare_common=None, windows_launcher=None):
+    if version not in ("1.1", "1.1.1", "1.2"):
         raise ValueError("Unsupported release version")
     bases = {'macos-arm64': mac_base, 'windows-x64': windows_base}
     manifests = {}
@@ -46,6 +46,8 @@ def build(common_base, mac_base, windows_base, runtime, output, version="1.1"):
         'assert a new permission grant from their original authors.\n'
         'Preserve component-specific noncommercial/no-fee conditions.\n'
         'See docs/NOTICES/RELEASE-DECISIONS.md and docs/RELEASE-NOTES.md.\n')
+    if prepare_common:
+        prepare_common(common)
     common_files = inventory(common)
     receipt = dict(version=version, installation_layout=2, platforms={})
     for platform, base in bases.items():
@@ -60,8 +62,10 @@ def build(common_base, mac_base, windows_base, runtime, output, version="1.1"):
         if platform == 'macos-arm64':
             for name in ('rcpm', 'cpmsim', 'cpmsim.features.json'):
                 shutil.copy2(runtime / name, payload / 'runtime' / name)
-            qualification = 'macos-live-suite-and-swappable-drive-checks-passed'
+            qualification = 'macos-rbbs41-local-direct-and-native-initializer-passed' if version == '1.2' else 'macos-live-suite-and-swappable-drive-checks-passed'
         else:
+            if windows_launcher:
+                shutil.copy2(windows_launcher, payload / 'runtime/rcpm.exe')
             qualification = 'cross-compiled-audited-live-windows-' + version + '-not-repeated'
             extra = payload / 'WINDOWS-README.txt'
             extra.unlink(missing_ok=True)

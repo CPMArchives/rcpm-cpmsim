@@ -451,37 +451,37 @@ Save reports a staging file already exists:
 The optional host --caller-allow/deny/list helper is for stopped-image
 maintenance. Normal live administration uses AUTH inside CP/M.
 
-5. RBBS ADMINISTRATION
+5. RBBS 4.1 ADMINISTRATION
 
-The download contains fresh users, messages and counters. First start writes
-unique passwords to private SYSOP.DOC and installs matching values in the
-board's I15: lowercase pwds file. Restarting or switching transports preserves
-them. Back up both the disk and private credential file. Do not delete the
-state/initialized marker as a password-reset procedure.
+Fresh packages contain empty PERSONAL, GENERAL, CPM and TEST areas and only
+one SYSOP seed account. First start generates a unique six-character password
+in private SYSOP.DOC. Enter SYSOP at "Enter your name", then that password.
+Passwords are case-sensitive. The displayed 123456 is a character counter.
+New callers can register and post without validation.
 
-To administer the board, use the local console privately. Run RBBS, enter
-SYSOP at FIRST Name, and enter the RBBS sysop password from SYSOP.DOC at LAST
-Name. That LAST Name prompt is the legacy administrative login mechanism,
-not a request for your personal surname. Type slowly; pasted bursts can be
-lost by the period input routines.
+Normal menus act on a single key. Text and message numbers still use Return.
+Expert mode retains line commands and semicolon sequences (R;1, R;1+).
+End message text with a period on its own line, then S to save.
+F selects a forum; R reads; S summarizes; K deletes an authorized message.
+N reads new messages. C returns to CP/M; G disconnects.
 
-At the SYSOP command prompt, P enters the password/member-validation path.
-Supply the member's first and last names. At "Change <P>assword or
-<V>alidate this user", choose V; enter the validation authorization password
-from SYSOP.DOC, then choose V for an ordinary validated member. A blank
-FIRST Name returns from user selection. This is separate from the sysop-login
-password. An unverified new member does not automatically acquire posting
-privileges. Exit with J to return to CP/M before restoring caller access.
+Use the local console for maintenance. Ctrl-B blanks a connected caller and
+permits private operation. Run SYSUTLS:RBUTIL41, then use its numbered menu:
+4 selects a forum; 5 adds a forum; 6 manages users; 9 quits.
+Option 3 RESETS THE ACCOUNT DATABASE. It is not routine maintenance.
+Forum names have at most eight characters; capacity is eight areas total,
+including PERSONAL. Back up before adding areas or changing user privileges.
+Restore caller access with Ctrl-B after maintenance.
 
-The board's on-screen menu can still label functions 'verified users only'
-while you are in administration mode. That text alone does not establish
-that the sysop lacks privileges. User management must use the actual sysop
-command path rather than changing the global Z-System wheel for a caller.
+The protected program is A15:RBBS41.COM. The users, callers, subject list,
+message files and display files are on I15:. SYSUTLS:RBUTIL41 is private.
+Stop the system before host-side editing. Back up the entire installation,
+including SYSOP.DOC, state/ and disks/. Do not remove state/initialized to
+reset credentials. SYSOP.DOC records the original generated password.
 
-Static RBBS files are on A15:. The board database is on I15:. Customize
-BOOTPWD/display files only while stopped or in controlled local private
-maintenance. Preserve RBBS's lowercase pwds filename and file layout; use the
-provided initialization workflow rather than renaming it with a generic tool.
+RBBS 4.1 uses different data files from 3.7. Fresh release disks are not an
+in-place migration and must not replace a running board's account/message
+files. Keep existing installations and backups separately.
 
 6. UPLOADS, STAGING AND REVIEW
 

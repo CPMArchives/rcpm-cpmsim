@@ -8,7 +8,7 @@ not on every macOS release. Unpack the ZIP into a writable
 folder, then open Start-RCPM.command. Keep all files together. No Python,
 tmux, compiler, Homebrew or separately installed CP/M tools are required.
 The program uses macOS system libraries. About 550 MB is needed after
-unpacking. The first start creates unique RBBS passwords in SYSOP.DOC;
+unpacking. The first start creates a unique six-character RBBS SYSOP password in SYSOP.DOC;
 keep that file private. No historical users or messages are supplied.
 
 This is an unsigned engineering candidate. macOS download security policy
@@ -52,7 +52,7 @@ Connect clients to that LAN address. Raw TCP provides no encryption.
 
 The package supplies A:, I: and P:. P: includes all 310 SIGM and 93 CPMUG
 libraries. The first start creates an empty J: mount disk and unique local
-RBBS passwords. SYSOP.DOC contains those PRIVATE generated passwords; it is
+RBBS SYSOP password. SYSOP.DOC contains that PRIVATE generated password; it is
 not the general manual and must not be shared with callers.
 
 Read docs/SYSOP-GUIDE.DOC for routine operation, RBBS administration, uploads,

@@ -51,7 +51,7 @@ def launcher_source():
     text = text.replace('initialize(); mount_disk(); driver(mode);',
         'win_private_directory("state");\n    win_private_directory("uploads");\n    win_private_directory("uploads/staging");\n'
         '    win_private_directory("uploads/inbox");\n    initialize(); mount_disk(); driver(mode);')
-    text = text.replace('execv(guest[0], guest); io_fail("cpmsim");', 'return win_process(guest, 1);')
+    text = text.replace('execv(guest[0], guest); io_fail("cpmsim"); return 1;', 'return win_process(guest, 1);')
     return text
 
 

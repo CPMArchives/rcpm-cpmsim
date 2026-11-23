@@ -54,15 +54,16 @@ static void atomic_text(const char *path, const char *text) {
     if (rename(temporary, path)) io_fail(path);
 }
 static void password(char result[25], char prefix) {
-    unsigned char bytes[12]; size_t got = 0; const char *hex = "0123456789ABCDEF";
+    unsigned char bytes[12]; size_t got = 0; const char *alphabet = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
     int fd = open("/dev/urandom", O_RDONLY); if (fd < 0) io_fail("random source");
     while (got < sizeof(bytes)) { ssize_t n = read(fd, bytes + got, sizeof(bytes) - got);
         if (n < 0 && errno == EINTR) continue;
         if (n <= 0) io_fail("random source");
         got += (size_t)n; }
     close(fd);
-    for (size_t k = 0; k < sizeof(bytes); k++) { result[k*2] = hex[bytes[k]>>4]; result[k*2+1] = hex[bytes[k]&15]; }
-    result[0] = prefix; result[24] = 0;
+    (void)prefix;
+    for (size_t k = 0; k < 6; k++) result[k] = alphabet[bytes[k] & 31];
+    result[6] = 0;
 }
 static void initialize(void) {
     struct stat st;
@@ -71,39 +72,47 @@ static void initialize(void) {
         return;
     }
     if (errno != ENOENT) io_fail("state/initialized");
-    char direct[25], sysop[25], validation[25], contents[128], doc[1800];
-    unsigned char directory[32768], record[128]; int found = 0; unsigned block = 0;
-    password(direct, 'D'); password(sysop, 'S'); password(validation, 'V');
-    snprintf(contents, sizeof(contents), "%s,%s,NOPASS,CPM,%s,N\r\n10,24,1,0,0,1,1,0\r\n\032", direct, sysop, validation);
-    memset(record, 0x1a, sizeof(record)); memcpy(record, contents, strlen(contents));
+    char sysop[25], doc[1800];
+    unsigned char directory[32768], records[256]; int found = 0; unsigned block = 0;
+    password(sysop, 'S');
     copy("disks/drivei.dsk", "state/drivei.new.dsk");
     int fd = open("state/drivei.new.dsk", O_RDWR); if (fd < 0) io_fail("I: initialization");
     if (read(fd, directory, sizeof(directory)) != sizeof(directory)) fail("Unexpected I: geometry");
     for (size_t k = 0; k < sizeof(directory); k += 32) {
-        if (directory[k] == 15 && !memcmp(directory+k+1, "pwds       ", 11)) {
-            if (directory[k+12] || directory[k+14] || directory[k+15] != 1) fail("Unexpected RBBS password extent");
+        unsigned char name[11];
+        for (size_t n = 0; n < 11; n++) name[n] = directory[k+1+n] & 127;
+        if (directory[k] == 15 && !memcmp(name, "USERS   CCC", 11)) {
+            if (directory[k+12] || directory[k+14] || directory[k+15] != 2) fail("Expected fresh RBBS 4.1 users extent");
             block = directory[k+16] | ((unsigned)directory[k+17] << 8); found++;
         }
     }
-    if (found != 1 || block < 16 || block >= 2040) fail("Cannot locate fresh RBBS password record");
-    if (lseek(fd, (off_t)block * 2048, SEEK_SET) < 0) io_fail("I: password seek");
-    write_all(fd, record, sizeof(record)); if (fsync(fd)) io_fail("I: sync"); close(fd);
+    if (found != 1 || block < 16 || block >= 2040) fail("Cannot locate fresh RBBS 4.1 users");
+    if (lseek(fd, (off_t)block * 2048, SEEK_SET) < 0 || read(fd, records, sizeof(records)) != sizeof(records)) io_fail("I: users read");
+    if (memcmp(records, "MAX REC:   1\0", 13) || memcmp(records+128, "SYSOP\0", 6) ||
+        records[128+31] != '!' || memcmp(records+128+37, "UNINIT\0", 7))
+        fail("RBBS database already contains operator state; restore SYSOP.DOC and state/ from backup");
+    memcpy(records+128+37, sysop, 7);
+    if (lseek(fd, (off_t)block * 2048, SEEK_SET) < 0) io_fail("I: users seek");
+    write_all(fd, records, sizeof(records)); if (fsync(fd)) io_fail("I: sync"); close(fd);
     snprintf(doc, sizeof(doc),
-        "PRIVATE RCP/M SYSOP INFORMATION\n\nGenerated for this installation on first start. Keep this file private.\n\n"
-        "RBBS sysop password: %s\nRBBS validation password: %s\nRBBS direct-CP/M password: %s\n\n"
-        "Use the local console. With a caller connected, Ctrl-B blanks the caller\n"
-        "and enables private sysop operation. Enter RBBS, then enter SYSOP at\n"
-        "FIRST Name and the sysop password at LAST Name. Type slowly rather than\n"
-        "pasting a burst. At SYSOP? Your Command, P validates a member: supply\n"
-        "their first/last names and the validation password when requested.\n"
-        "Leave RBBS with J before unblanking the caller.\n\n"
+        "PRIVATE RCP/M SYSOP INFORMATION\n\nRBBS 4.1.02 - generated on first start. Keep this file private.\n\n"
+        "RBBS sysop name: SYSOP\nRBBS sysop password: %s\n\n"
+        "At Enter your name: enter SYSOP. At Password: enter the password above.\n"
+        "Passwords are case-sensitive, at most six characters. The displayed\n"
+        "123456 counts characters; it is not the password. New users may post.\n"
+        "C returns to CP/M; G disconnects. Normal menus respond to single keys.\n"
+        "Expert mode retains Return and semicolon command sequences.\n\n"
+        "For maintenance use the local console. Ctrl-B blanks a connected caller\n"
+        "and enables private operation. Run SYSUTLS:RBUTIL41.\n"
+        "4 selects an area; 5 adds an area; 6 manages users; 9 quits.\n"
+        "3 RESETS THE ACCOUNT DATABASE. Back up before maintenance.\n"
+        "Restore caller access with Ctrl-B after maintenance.\n\n"
         "Do not delete state/initialized to reset passwords. Back up this whole\n"
-        "directory while stopped, including SYSOP.DOC, state/ and disks/.\n",
-        sysop, validation, direct);
+        "directory while stopped, including SYSOP.DOC, state/ and disks/.\n", sysop);
     atomic_text("SYSOP.DOC", doc);
     if (rename("state/drivei.new.dsk", "disks/drivei.dsk")) io_fail("install initialized I:");
-    atomic_text("state/initialized", "RCP/M initialized\n");
-    puts("Fresh RBBS passwords have been saved in private SYSOP.DOC.");
+    atomic_text("state/initialized", "RCP/M 1.2 RBBS 4.1 initialized\n");
+    puts("Fresh RBBS SYSOP password saved in private SYSOP.DOC.");
 }
 static void mount_disk(void) {
     struct stat st;
@@ -259,5 +268,5 @@ int main(int argc, char **argv) {
     if (setenv("RCPM_MODEM", mode, 1) || setenv("RCPM_MODEM_HOST", address, 1) ||
         setenv("RCPM_MODEM_PORT", port, 1) || setenv("RCPM_ANNOUNCE", "1", 1)) io_fail("runtime environment");
     fflush(NULL);
-    char *guest[] = {"runtime/cpmsim", "-f", "4", NULL}; execv(guest[0], guest); io_fail("cpmsim");
+    char *guest[] = {"runtime/cpmsim", "-f", "4", NULL}; execv(guest[0], guest); io_fail("cpmsim"); return 1;
 }
