@@ -1,0 +1,38 @@
+{
+  "status": "validated",
+  "image": "WALNUT.dsk",
+  "image_sha256": "b7921b101e814313c7dc944c9c95f0d54e5e964702f7ccb97e4409650887c222",
+  "source_archive_unchanged": true,
+  "original_payloads_sha256_verified": 24402,
+  "libraries": 664,
+  "sigm_volume_libraries": 302,
+  "index_names": [
+    "IDX-000.TXT",
+    "IDX-100.TXT",
+    "IDX-200.TXT",
+    "IDX-300.TXT"
+  ],
+  "free_bytes": 25886720,
+  "runtime_validation_passed": true,
+  "limitations": [
+    "Caller extraction follows the existing download-and-unpack workflow."
+  ],
+  "automatic_name_refresh_verified": true,
+  "named_directory": "P13:BBS",
+  "allowed_directory_names": "1-7 ASCII letters/digits",
+  "bbs_alias_and_exact_marker_filter_verified": true,
+  "unsupported_directory_names_rejected": true,
+  "fresh_publication_readback": {
+    "original_payloads_verified": 24402,
+    "generated_libraries_verified": 664,
+    "all_original_sha256_match": true,
+    "all_generated_member_and_directory_crcs_match": true,
+    "all_library_bounds_and_padding_valid": true,
+    "disk_files": 631,
+    "directory_entries": 4179,
+    "allocated_bytes_including_directory": 510984192,
+    "free_bytes": 25886720,
+    "no_overlapping_allocations": true,
+    "no_extra_files": true
+  }
+}

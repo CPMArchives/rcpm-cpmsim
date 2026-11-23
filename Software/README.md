@@ -14,8 +14,9 @@ the [main RCP/M download](https://github.com/CPMArchives/rcpm-cpmsim/releases/ta
 | **INFOCOM** | 27 Infocom games and five InvisiClues hint books; user 0 | [INFOCOM-collection.zip](https://github.com/CPMArchives/rcpm-cpmsim/releases/download/software-labels-2026-11-23/INFOCOM-collection.zip) | [Results and exclusions](https://github.com/CPMArchives/rcpm-cpmsim/releases/download/software-2026-11-21/INFOCOM-REPORT.txt) |
 | **INTFICT** | 11 selected IFComp games: nine v5 and two v8; user 0 | [INTFICT-collection.zip](https://github.com/CPMArchives/rcpm-cpmsim/releases/download/software-labels-2026-11-23/INTFICT-collection.zip) | [Results and exclusions](https://github.com/CPMArchives/rcpm-cpmsim/releases/download/software-2026-11-21/MODERNIF-REPORT.txt) |
 | **GUIDES** | Documentation-only disk; README, commands, DIR and LDIR guides | [GUIDES-collection.zip](https://github.com/CPMArchives/rcpm-cpmsim/releases/download/software-images-2026-11-22/GUIDES-collection.zip) | [Contents and checks](GUIDES/README.md) |
+| **WALNUT** | Complete Walnut Creek CP/M archive; 24,402 original files, 512 MiB P: image | [WALNUT-collection.zip](https://github.com/CPMArchives/rcpm-cpmsim/releases/download/software-walnut-2026-11-23/WALNUT-collection.zip) | [Installation, layout and validation](WALNUT/README.md) |
 
-[Exact six-image inventory and checksums](Images/README.md). Each image has its own download; choose only the collections you want.
+[Image inventory and checksums](Images/README.md). Each image has its own download; choose only the collections you want.
 
 The [expanded GAMES guide](GAMES/README.md) explains its replacement-image installation and limits.
 
@@ -29,7 +30,7 @@ includes Gosling's original distribution with its host-side map and hints.
 
 ## Install a disk
 
-Requires RCP/M 1.0 or later with the existing J: disk geometry.
+The J: collections below require RCP/M 1.0 or later. **WALNUT uses the 512 MiB P: format and requires RCP/M 1.1.1**; follow its [separate installation instructions](WALNUT/README.md).
 
 1. Stop RCP/M cleanly using its normal shutdown procedure.
 2. Extract the collection ZIP somewhere convenient.
@@ -71,7 +72,7 @@ For INFOCOM and INTFICT, at a save/restore filename prompt, use **`I:NAME.SAV`**
 WORK is cleared when the call ends, so download a save before logging off if
 you want to keep it. Persistent per-caller storage has not been added.
 
-The images retain the existing J: format: raw `z80pack-hd`, 4,177,920 bytes.
+The J: images retain the existing format: raw `z80pack-hd`, 4,177,920 bytes.
 `VEZZA.COM` carries the existing per-file caller approval marker. J: remains
 read-only to callers; these downloads do not require changing DU permissions,
 replacing GAMES, or altering the released system disks.

@@ -157,6 +157,27 @@
       "minimum_rcpm": "1.0",
       "qualification": "Exact-size check, stable source/copy SHA-256 match, directory listing and complete file readback; no new gameplay claim.",
       "directory_marker": "-GUIDES"
+    },
+    {
+      "id": "WALNUT",
+      "release_tag": "software-walnut-2026-11-23",
+      "release_url": "https://github.com/CPMArchives/rcpm-cpmsim/releases/tag/software-walnut-2026-11-23",
+      "archive": "WALNUT-collection.zip",
+      "download": "https://github.com/CPMArchives/rcpm-cpmsim/releases/download/software-walnut-2026-11-23/WALNUT-collection.zip",
+      "report": "https://github.com/CPMArchives/rcpm-cpmsim/releases/download/software-walnut-2026-11-23/WALNUT-REPORT.txt",
+      "archive_sha256": "beb55ce197a280887b40b2938a355452b82351ecc47ab69cbbe2fb73943f7a60",
+      "image": "WALNUT.dsk",
+      "image_sha256": "b7921b101e814313c7dc944c9c95f0d54e5e964702f7ccb97e4409650887c222",
+      "image_bytes": 536870912,
+      "format": "z80pack-hdb",
+      "drive": "P",
+      "install_directory": "disks/library/archives",
+      "minimum_rcpm": "1.1.1",
+      "directory_marker": "-WALNUT",
+      "original_files": 24402,
+      "generated_libraries": 664,
+      "free_bytes": 25886720,
+      "qualification": "All original payload SHA-256 values and generated LBR CRCs verified from raw image; native mount/name refresh, archive listing, text viewing, transfer and nested extraction checks. No general program execution qualification."
     }
   ]
 }

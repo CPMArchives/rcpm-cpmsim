@@ -10,9 +10,12 @@ Each collection remains independently downloadable from the [Software catalog](.
 | INFOCOM.dsk | `-INFOCOM` | [Collection ZIP](https://github.com/CPMArchives/rcpm-cpmsim/releases/download/software-labels-2026-11-23/INFOCOM-collection.zip) | `0295b1cad9fc51d19898058e8460de5a258edccda7b192b5d5fb7e6d8793d4c4` |
 | INTFICT.dsk | `-INTFICT` | [Collection ZIP](https://github.com/CPMArchives/rcpm-cpmsim/releases/download/software-labels-2026-11-23/INTFICT-collection.zip) | `1bb40d90c5f63d5aee53b1b0649a4e6add6a6e0a3bac3b7f8c640dfca123b93f` |
 | SADAMS.dsk | `-SADAMS` | [Collection ZIP](https://github.com/CPMArchives/rcpm-cpmsim/releases/download/software-labels-2026-11-23/SADAMS-collection.zip) | `c99e8c57869907d9663c4ccfc0b289e340ea6709036bd8bd0f5bde53c18b5884` |
+| WALNUT.dsk | `-WALNUT` | [Collection ZIP](https://github.com/CPMArchives/rcpm-cpmsim/releases/download/software-walnut-2026-11-23/WALNUT-collection.zip) | `b7921b101e814313c7dc944c9c95f0d54e5e964702f7ccb97e4409650887c222` |
 
 SCOTT.dsk is now SADAMS.dsk; MODERNIF.dsk is now INTFICT.dsk. Their programs and launchers retain their original names. Only missing extensionless marker files were added; GAMES and GUIDES already had theirs.
 
-All six images retain exact 4,177,920-byte z80pack-hd geometry. Every pre-existing file was read back and verified unchanged. The SADAMS image also reproduces byte-for-byte from its packaged payload.
+The six J: images retain exact 4,177,920-byte z80pack-hd geometry. Every pre-existing file was read back and verified unchanged. The SADAMS image also reproduces byte-for-byte from its packaged payload.
 
 [Full per-file inventory](manifest.json). Original qualification reports remain evidence for the unchanged program/data baseline; the new label receipt records the updated image hashes.
+
+WALNUT uses the existing 536,870,912-byte z80pack-hdb P: geometry. See its [installation and preservation report](../WALNUT/README.md), [validation](../WALNUT/VALIDATION.json), and [checksums](../WALNUT/SHA256SUMS). Its full original-file and library inventories are bundled in the ZIP.
