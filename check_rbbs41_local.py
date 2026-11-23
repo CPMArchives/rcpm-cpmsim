@@ -34,39 +34,46 @@ def check(a):
         send('I:RBBS41',b'Enter your name:')
         if not new:
             send(name,b'Password:')
-            return send(pwd,b'COMMAND:')
+            return send(pwd,b'Command:')
         send(name,b'Is the name correct')
         send('Y',b'Enter your City, State:')
         send('TAIWAN',b'Is the name,')
         send('Y',b'Enter new password')
         send(pwd,b'Enter the new password again:')
-        send(pwd,b'COMMAND:')
-        send('X',b'COMMAND:')
+        send(pwd,b'Command:')
+        send('X',b'Command:')
     def forum(n):
-        listing=send('F',b'File number:')
-        return listing,send(str(n),b'COMMAND:')
+        listing=send('F',b'Forum number:')
+        return listing,send(str(n),b'Command:')
     def post(subject,body,to=''):
         send('E',b'To:')
         send(to,b'Subject:')
         send(subject,b' 1>:')
         send(body,b' 2>:')
-        send('.',b'SELECT:')
-        return send('S',b'COMMAND:')
+        send('.',b'Choice:')
+        return send('S',b'Command:')
     def readmsg():
         send('R',b'Message Number:')
-        return send('1',b'COMMAND:')
+        return send('1',b'Command:')
     try:
         guest.read(b'A>')
-        login('SYSOP',password)
+        initial=login('SYSOP',password)
+        assert all(x in initial for x in (b'MESSAGES',b'INFORMATION',b'SESSION'))
+        helptext=send('?',b'Command:')
+        assert all(x in helptext for x in (b'R;123',b'R;1+',b'R;1*',b'UPLOAD'))
+        expert=send('X',b'Command:')
+        assert b'GENERAL Command:' in expert and b'INFORMATION' not in expert
+        send('X',b'Command:')
+        result['compact_menus_help_and_expert_prompt']=True
         result['sysop_login']=True
-        listing=send('F',b'File number:')
+        listing=send('F',b'Forum number:')
         assert all(x in listing for x in (b'PERSONAL',b'GENERAL',b'CPM',b'TEST'))
-        send('-1',b'File number:');send('9',b'File number:');send('4',b'COMMAND:')
+        send('-1',b'Forum number:');send('9',b'Forum number:');send('4',b'Command:')
         result['forums_and_invalid_selection']=True
         post('TEST AREA MESSAGE','PERSISTENT TEST AREA CONTENT')
         forum(2)
-        general=send('m',b'COMMAND:')
-        assert b'No. of Active Msgs:   0' in general
+        general=send('m',b'Command:')
+        assert b'Active messages:  0' in general
         forum(4)
         assert b'PERSISTENT TEST AREA CONTENT' in readmsg()
         result['posting_readback_and_forum_separation']=True
@@ -86,14 +93,15 @@ def check(a):
         _,personal=forum(1)
         assert b'PRIVATE FOR TEST ONE' not in personal
         send('R',b'Message Number:')
-        private=send('1',b'COMMAND:')
+        private=send('1',b'Command:')
         assert b'PRIVATE FOR TEST ONE' not in private
         result['registration_and_private_mail_visibility']=True
         forum(4)
         assert b'PERSISTENT TEST AREA CONTENT' in readmsg()
         send('C',b'A>')
         result['account_and_message_persistence']=True
-        send('I:RBUTIL41',b'Enter choice:')
+        maintenance=send('I:RBUTIL41',b'Choice:')
+        assert all(x in maintenance for x in (b'MESSAGES',b'FORUMS',b'USERS',b'RESET DATABASE'))
         send('9',b'A>')
         result['maintenance_utility_starts']=True
     finally:

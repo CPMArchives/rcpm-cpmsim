@@ -13,6 +13,7 @@ import subprocess
 import time
 import tty
 import zipfile
+from rbbs41_menus import configure_menus
 
 
 class Machine:
@@ -123,7 +124,7 @@ def configure(files):
 }
 /***************************************************************/
 ''' + files['RBBSFN.C'][end:]
-    return files
+    return configure_menus(files)
 
 
 def build(args):

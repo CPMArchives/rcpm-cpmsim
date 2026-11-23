@@ -63,28 +63,28 @@ def check(a):
         send('WORK:',b'I0:WORK>')
         send('RBBS',b'Enter your name:')
         send('SYSOP',b'Password:')
-        send(password,b'COMMAND:')
+        send(password,b'Command:')
         result['public_entry_from_work']=True
-        listing=send('F',b'File number:')
+        listing=send('F',b'Forum number:')
         assert all(x in listing for x in (b'PERSONAL',b'GENERAL',b'CPM',b'TEST'))
-        send('-1',b'File number:')
-        send('9',b'File number:')
-        send('4',b'COMMAND:')
+        send('-1',b'Forum number:')
+        send('9',b'Forum number:')
+        send('4',b'Command:')
         result['forum_selection_and_invalid_input']=True
         send('E',b'To:')
         send('',b'Subject:')
         send('TEST AREA MESSAGE',b' 1>')
         send('PERSISTENT TEST AREA CONTENT',b' 2>')
-        send('.',b'SELECT:')
-        send('S',b'COMMAND:')
-        send('F',b'File number:')
-        send('2',b'COMMAND:')
-        general=send('m',b'COMMAND:')
-        assert b'No. of Active Msgs:   0' in general
-        send('F',b'File number:')
-        send('4',b'COMMAND:')
+        send('.',b'Choice:')
+        send('S',b'Command:')
+        send('F',b'Forum number:')
+        send('2',b'Command:')
+        general=send('m',b'Command:')
+        assert b'Active messages:  0' in general
+        send('F',b'Forum number:')
+        send('4',b'Command:')
         send('R',b'Message Number:')
-        body=send('1',b'COMMAND:')
+        body=send('1',b'Command:')
         assert b'PERSISTENT TEST AREA CONTENT' in body
         result['forum_separation_and_readback']=True
         send('C',b'A0:SYSTEM>')
@@ -93,11 +93,11 @@ def check(a):
         result['cpm_return_revokes_private_access']=True
         send('RBBS',b'Enter your name:')
         send('SYSOP',b'Password:')
-        send(password,b'COMMAND:')
-        send('F',b'File number:')
-        send('4',b'COMMAND:')
+        send(password,b'Command:')
+        send('F',b'Forum number:')
+        send('4',b'Command:')
         send('R',b'Message Number:')
-        body=send('1',b'COMMAND:')
+        body=send('1',b'Command:')
         assert b'PERSISTENT TEST AREA CONTENT' in body
         result['message_persists_after_board_reentry']=True
         send('G',b'Confirm')
