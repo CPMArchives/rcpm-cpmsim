@@ -15,7 +15,7 @@ def copy_tree(source, target):
 
 
 def build(common_base, mac_base, windows_base, runtime, output, version="1.1", prepare_common=None, windows_launcher=None):
-    if version not in ("1.1", "1.1.1", "1.2"):
+    if version not in ("1.1", "1.1.1", "1.2", "1.2.1"):
         raise ValueError("Unsupported release version")
     bases = {'macos-arm64': mac_base, 'windows-x64': windows_base}
     manifests = {}
@@ -62,7 +62,9 @@ def build(common_base, mac_base, windows_base, runtime, output, version="1.1", p
         if platform == 'macos-arm64':
             for name in ('rcpm', 'cpmsim', 'cpmsim.features.json'):
                 shutil.copy2(runtime / name, payload / 'runtime' / name)
-            qualification = 'macos-rbbs41-local-direct-and-native-initializer-passed' if version == '1.2' else 'macos-live-suite-and-swappable-drive-checks-passed'
+            qualification = ('macos-split-chat-direct-tcp-passed-host-binaries-retained-from-1.2'
+                if version == '1.2.1' else 'macos-rbbs41-local-direct-and-native-initializer-passed'
+                if version == '1.2' else 'macos-live-suite-and-swappable-drive-checks-passed')
         else:
             if windows_launcher:
                 shutil.copy2(windows_launcher, payload / 'runtime/rcpm.exe')

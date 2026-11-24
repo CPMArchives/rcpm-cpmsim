@@ -83,6 +83,17 @@ These are BYE controls, not editor commands. Leave private editors before
 unblanking. A private directory must not become caller-readable merely
 because the sysop selected it.
 
+Live chat: a caller types CHAT at the CP/M prompt (leave RBBS with C first).
+Answer with Escape on the local console. Both terminals need 80x24 ANSI/VT100:
+SYSOP uses the upper pane; CALLER uses the lower pane. Each pane wraps and
+scrolls independently. Backspace erases on the current line; Tab adds spaces.
+Ctrl-R redraws both panes; Ctrl-C or Ctrl-X from either keyboard ends chat.
+CHAT /S retains the plain scrolling display for simpler terminals.
+Local Ctrl-B ends split chat and enters private-console mode. Subsequent
+private input is not stored in chat buffers. Ctrl-G toggles BYE's page bell
+and paging availability. An unanswered page returns to CP/M. HELP CHAT gives
+caller instructions. See CHAT46.md for build details and validation.
+
 If using your own tmux wrapper, Ctrl-B Ctrl-B passes one Ctrl-B through tmux.
 The distributed launcher itself uses no tmux and takes a single Ctrl-B.
 
