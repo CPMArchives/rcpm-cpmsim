@@ -77,6 +77,8 @@ def install(instance, build, tools):
             backup=instance/'backups'/datetime.datetime.now().strftime('before-chat46-%Y%m%d-%H%M%S-%f')
             backup.mkdir(parents=True)
             for d in 'ai':shutil.copy2(instance/f'disks/drive{d}.dsk',backup/f'drive{d}.dsk')
+            validation=instance/'metadata/CHAT46-VALIDATION.json'
+            if validation.exists():shutil.copy2(validation,backup/validation.name)
             # Publish help first. Restore both disks if either replacement fails.
             try:
                 for d in 'ia':os.replace(disks[d],instance/f'disks/drive{d}.dsk')
@@ -92,6 +94,8 @@ def install(instance, build, tools):
         (instance/'metadata').mkdir(exist_ok=True)
         (instance/'metadata/CHAT46.json').write_text(json.dumps(dict(
             build=identity,backup=str(backup),unrelated_files_preserved=True),indent=2)+'\n')
+        # A previous executable's qualification must not describe a new build.
+        validation.unlink(missing_ok=True)
     print('Installed A0:CHAT.COM and HELP CHAT. Backup: '+str(backup))
 
 

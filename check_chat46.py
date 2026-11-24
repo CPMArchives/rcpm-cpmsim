@@ -84,7 +84,7 @@ def check(a):
     def answer():
         start=len(remote)
         send(b'\x1b',True)
-        wait(b'Operator is available',remote,start)
+        wait(b'CHAT CONNECTED',remote,start)
     try:
         wait(b'RCP/M modem ready.',local)
         login()
@@ -108,7 +108,7 @@ def check(a):
         start=len(remote);send(b'\x03');wait(b'A0:SYSTEM>',remote,start)
         result['caller_ctrl_c_cancels_page']=True
         start=time.monotonic();command('CHAT',b'Ringing:')
-        wait(b'operator is not available',remote,len(remote),timeout=45)
+        wait(b'The sysop is not available',remote,len(remote),timeout=45)
         wait(b'A0:SYSTEM>',remote,len(remote)-1000)
         elapsed=time.monotonic()-start
         assert 5 < elapsed < 45, elapsed
@@ -116,7 +116,7 @@ def check(a):
         # Honor the existing local ^G page-availability toggle.
         send(b'\x07',True)
         text=command('CHAT')
-        assert b'operator is not available' in text and b'Ringing:' not in text
+        assert b'The sysop is not available' in text and b'Ringing:' not in text
         result['bye_bell_disabled_rejects_paging']=True
         send(b'\x07',True)
         command('WORK:',b'I0:WORK>')

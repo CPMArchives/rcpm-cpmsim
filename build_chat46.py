@@ -16,12 +16,40 @@ SOURCE_SHA256 = 'a24acfd30bd2ad67d050b8bf22a1e7c410cc451db03fa1b8aa053db5a2e827a
 def configure(text):
     # RBBS is optional; CHAT must work at the ordinary CP/M prompt.
     options = dict(NONE='YES', MBBS='NO', GETCALR='NO', BYBELL='YES',
-                   LMBELL='NO', COMMENT='NO', TIMEON='NO')
+                   LMBELL='NO', COMMENT='NO', TIMEON='NO', TGUIDE='NO')
     for name, value in options.items():
         text, n = re.subn(r'(?m)^(' + name + r'\s+EQU\s+)\S+',
                          lambda m: m[1] + value, text)
         if n != 1:
             raise ValueError('Unexpected CHAT option: ' + name)
+    def change(old, new):
+        nonlocal text
+        if text.count(old) != 1:
+            raise ValueError('Unexpected CHAT display context: '+old[:50])
+        text = text.replace(old, new)
+    start = text.index('CHAT:\tCALL\tILPRT')
+    end = text.index(';\n', start)
+    text = text[:start] + """CHAT:   CALL ILPRT
+        DB CR,LF
+        DB '+--------------------------------------------------------+',CR,LF
+        DB '|                 HUMONGOUS RCP/M CHAT                   |',CR,LF
+        DB '+--------------------------------------------------------+',CR,LF,LF,0
+""" + text[end:]
+    change("\tDB\t'will page the operator (abort with ^C or ^X)',CR,LF\n\tDB\tCR,LF,LF,0",
+           "        DB 'Paging the sysop. Please wait...',CR,LF\n"
+           "        DB 'Cancel: Ctrl-C or Ctrl-X',CR,LF\n"
+           "        DB 'Sysop: press Esc on the local console to answer.',CR,LF,LF,0")
+    change("\tDB\tCR,LF,LF,'Sorry, operator is not available.',0",
+           "        DB CR,LF,LF,'The sysop is not available. Try again later.',CR,LF,0")
+    change("\tDB\tCR,LF,LF,'Back to CP/M...',0", "        DB CR,LF,0")
+    change("\tDB\t'Operator is available, please go ahead...',CR,LF\n"
+           "\tDB\t'(Use ^C or ^X to exit and return to CP/M)',CR,LF\n\tDB\tLF,0",
+           "        DB '+-------------------- CHAT CONNECTED --------------------+',CR,LF\n"
+           "        DB 'Take turns typing. Ctrl-C or Ctrl-X ends the conversation.',CR,LF\n"
+           "        DB '----------------------------------------------------------',CR,LF,0")
+    change('EXIT1:\n', "EXIT1: CALL ILPRT\n"
+           "        DB CR,LF,'----------------------------------------------------------',CR,LF\n"
+           "        DB 'Returning to CP/M.',CR,LF,0\n")
     # M80 needs an absolute segment for this ORG 100h transient.
     return '\tASEG\n' + text
 

@@ -44,7 +44,7 @@ TAB	EQU	9		; Horizontal tab
 ;
 CLOCK	EQU	4		; Set to your CPU clock speed in MHz
 PGTIME	EQU	30		; Number of seconds to page for sysop
-TGUIDE	EQU	YES		; Yes, print a guide bar for estimated time
+TGUIDE	EQU	NO		; Yes, print a guide bar for estimated time
 				;   of summoning sysop prior to abort
 ;
 IMHERE	EQU	ESC		; Hit this key to answer page and chat
@@ -287,12 +287,11 @@ TIME:
 ;
 ; Print program name, version number and date message
 ;
-CHAT:	CALL	ILPRT
-	DB	CR,LF,'CHAT v'
-	DB	VERSION+'0',MODLEV+'0','  '
-	DB	MONTH/10+'0',MONTH MOD 10+'0','/'
-	DB	DAY/10+'0',DAY MOD 10+'0','/'
-	DB	YEAR/10+'0',YEAR MOD 10+'0',CR,LF,0
+CHAT:   CALL ILPRT
+        DB CR,LF
+        DB '+--------------------------------------------------------+',CR,LF
+        DB '|                 HUMONGOUS RCP/M CHAT                   |',CR,LF
+        DB '+--------------------------------------------------------+',CR,LF,LF,0
 ;
 	 IF	BYEBDOS	AND (NOT B3RTC)	AND TIMEON
 	MVI	E,255
@@ -512,8 +511,9 @@ CHAT2:	CALL	ILPRT
 	DB	CR,LF,LF
 	 ENDIF			; ASKNAM AND NOT GETCALR
 ;
-	DB	'will page the operator (abort with ^C or ^X)',CR,LF
-	DB	CR,LF,LF,0
+        DB 'Paging the sysop. Please wait...',CR,LF
+        DB 'Cancel: Ctrl-C or Ctrl-X',CR,LF
+        DB 'Sysop: press Esc on the local console to answer.',CR,LF,LF,0
 ;
 	 IF	TGUIDE
 	CALL	ILPRT
@@ -545,7 +545,7 @@ START1:	CALL	ILPRT		; Print period <BEEP> and space
 ; Operator did not answer
 ;
 NOHERE:	CALL	ILPRT
-	DB	CR,LF,LF,'Sorry, operator is not available.',0
+        DB CR,LF,LF,'The sysop is not available. Try again later.',CR,LF,0
 ;
 NOHOME:	CALL	ILPRT
 ;
@@ -563,7 +563,7 @@ NOHOME:	CALL	ILPRT
 	 ENDIF			; MBBS AND COMMENT
 ;
 	 IF	NONE
-	DB	CR,LF,LF,'Back to CP/M...',0
+        DB CR,LF,0
 	 ENDIF			; NONE
 ;
 	 IF	NOT NONE
@@ -721,9 +721,9 @@ KEYCHK:	CALL	CKABT		; Check for abort
 	LXI	SP,STACK	; Fix stack
 	CALL	ILPRT
 	DB	CR,LF,LF
-	DB	'Operator is available, please go ahead...',CR,LF
-	DB	'(Use ^C or ^X to exit and return to CP/M)',CR,LF
-	DB	LF,0
+        DB '+-------------------- CHAT CONNECTED --------------------+',CR,LF
+        DB 'Take turns typing. Ctrl-C or Ctrl-X ends the conversation.',CR,LF
+        DB '----------------------------------------------------------',CR,LF,0
 	JMP	CRLF		; Now in chat mode
 ;
 EXIT:	 IF	MBBS AND COMMENT
@@ -731,7 +731,9 @@ EXIT:	 IF	MBBS AND COMMENT
 	DB	'No',CR,LF,0
 	 ENDIF			; MBBS AND COMMENT
 ;
-EXIT1:
+EXIT1: CALL ILPRT
+        DB CR,LF,'----------------------------------------------------------',CR,LF
+        DB 'Returning to CP/M.',CR,LF,0
 	 IF	(BYEBDOS OR B3RTC) AND TIMEON
 	CALL	RESMXT		; Reset max time to pre-chat value
 	 ENDIF

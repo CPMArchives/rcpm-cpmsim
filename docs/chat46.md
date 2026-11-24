@@ -17,7 +17,7 @@ ordinary shared input character, not proof that the sysop answered.
 
 `build_chat46.py` verifies the preserved source against its existing reference
 SHA-256, retains it unchanged, configures direct CP/M use, and builds with
-M80/L80 in an isolated stock CP/M 3 guest. The current executable is 768 bytes.
+M80/L80 in an isolated stock CP/M 3 guest. The display update is 1152 bytes.
 NONE=YES, MBBS=NO, GETCALR=NO and COMMENT=NO remove MBBS assumptions. BYBELL=YES
 and LMBELL=NO use BYE BDOS 78. TIMEON=NO matches our driver (CLOCK=NO and
 TIMEON=NO); no low-memory clock or time-limit writes are compiled in.
@@ -46,6 +46,18 @@ The terminal-run two-way tests passed: paging and local answer, text from both
 keyboards, both exits, cancellation, bell-off behavior, WORK/PATH use, and
 carrier-loss recovery during conversation and paging. An unanswered page took
 22.92 seconds at the configured speed. Installation completed at 17:58 local
-time; readback of installed A0:CHAT.COM matches the build SHA-256.
+time; readback of installed A0:CHAT.COM matches that original build SHA-256.
 The repeat-run setup now removes an existing CHAT only on the disposable copy
 before copying the candidate; cpmcp otherwise refuses to overwrite it.
+
+## Display update
+
+The new plain ASCII display adds a HUMONGOUS RCP/M CHAT banner, paging/answer
+instructions, a connected heading, and a return message. The estimated-time
+bar and upstream date banner are removed. Conversation I/O and BYE handling
+are unchanged. Native assembly/link and BYE-absent return passed; the live
+results above apply to the original display build, not this new executable.
+Update-CHAT-Display.command installs into the stopped native ~/CPM/RCPM by
+default; it also accepts an explicit installation directory. It backs up
+the images and any prior validation receipt. Full validation remains available
+via Test-and-Install-CHAT.command with the updated screen markers.
