@@ -42,5 +42,10 @@ and writes local/caller logs plus result.json. It never boots the original
 installation. Copy from stopped media for a consistent test snapshot.
 
 November 24, 2026: native build and the BYE-absent abort/return to CP/M passed.
-Two-way tests are pending: this execution session denies localhost bind/connect.
-The supplied terminal command runs those tests before allowing installation.
+The terminal-run two-way tests passed: paging and local answer, text from both
+keyboards, both exits, cancellation, bell-off behavior, WORK/PATH use, and
+carrier-loss recovery during conversation and paging. An unanswered page took
+22.92 seconds at the configured speed. Installation completed at 17:58 local
+time; readback of installed A0:CHAT.COM matches the build SHA-256.
+The repeat-run setup now removes an existing CHAT only on the disposable copy
+before copying the candidate; cpmcp otherwise refuses to overwrite it.

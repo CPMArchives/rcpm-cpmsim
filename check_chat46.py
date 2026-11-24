@@ -21,8 +21,15 @@ def check(a):
     for drive in 'aijp':
         shutil.copyfile(a.instance/f'disks/drive{drive}.dsk', root/f'disks/drive{drive}.dsk')
     def tool(name, *args):
-        return subprocess.run([str(root/'runtime'/name), *map(str,args)], check=True, capture_output=True)
+        command = [str(root/'runtime'/name), *map(str,args)]
+        result = subprocess.run(command, capture_output=True)
+        if result.returncode:
+            raise RuntimeError(name+': '+result.stderr.decode(errors='replace').strip())
+        return result
     image = root/'disks/drivea.dsk'
+    # A previously installed instance already contains CHAT. Replace it only
+    # on this disposable copy, just as the stopped-media installer does.
+    tool('cpmrm', '-f', 'ibm-3740', image, '0:CHAT.COM')
     tool('cpmcp', '-f', 'ibm-3740', image, a.chat, '0:CHAT.COM')
     tool('cpmchattr', '-f', 'ibm-3740', image, '4', '0:CHAT.COM')
     with socket.socket() as probe:
