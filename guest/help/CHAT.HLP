@@ -6,9 +6,12 @@ In RBBS, use C to return to CP/M first, then type CHAT.
 Wait for the operator to answer. An unanswered page returns to CP/M.
 Ctrl-C or Ctrl-X cancels the page or ends the conversation.
 
-Both keyboards share the same text area. Take turns typing.
+CHAT uses an 80x24 ANSI/VT100 split screen.
+SYSOP types in the upper pane; CALLER types in the lower pane.
+Each pane wraps and scrolls independently. Backspace erases text.
+Ctrl-R redraws the screen. CHAT /S uses the plain scrolling display.
 The sysop answers a page with Escape on the local keyboard.
 Local Ctrl-G toggles BYE's page bell and paging availability.
-Local Ctrl-B is private-console mode, not chat mode.
+Local Ctrl-B ends split chat and enters BYE's private-console mode.
 
 For a message the sysop can read later, use MESSAGE or RBBS instead.

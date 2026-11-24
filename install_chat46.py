@@ -17,6 +17,11 @@ def install(instance, build, tools):
     identity = json.loads((build/'BUILD.json').read_text())
     if hashlib.sha256(chat).hexdigest() != identity['executable_sha256']:
         raise ValueError('CHAT executable changed since build')
+    qualification=None
+    if (build/'VALIDATION.json').exists():
+        qualification=json.loads((build/'VALIDATION.json').read_text())
+        if qualification['executable_sha256']!=identity['executable_sha256']:
+            raise ValueError('Validation describes a different CHAT executable')
     with (instance/'.console.lock').open('a+b') as lease:
         try: fcntl.flock(lease, fcntl.LOCK_EX|fcntl.LOCK_NB)
         except BlockingIOError:
@@ -95,7 +100,8 @@ def install(instance, build, tools):
         (instance/'metadata/CHAT46.json').write_text(json.dumps(dict(
             build=identity,backup=str(backup),unrelated_files_preserved=True),indent=2)+'\n')
         # A previous executable's qualification must not describe a new build.
-        validation.unlink(missing_ok=True)
+        if qualification is None:validation.unlink(missing_ok=True)
+        else:validation.write_text(json.dumps(qualification,indent=2)+'\n')
     print('Installed A0:CHAT.COM and HELP CHAT. Backup: '+str(backup))
 
 

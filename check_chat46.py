@@ -4,12 +4,41 @@ import argparse
 import json
 import os
 from pathlib import Path
+import re
 import select
 import shutil
 import socket
 import subprocess
 import time
 from build_rbbs41 import Machine
+
+
+def screen(data):
+    """Interpret the small VT100 subset used by CHAT for screen assertions."""
+    cells=[[' ']*80 for _ in range(24)]
+    row=col=0
+    i=0
+    while i<len(data):
+        if data[i:i+2]==b'\x1b[':
+            m=re.match(rb'\x1b\[([0-9;]*)([A-Za-z])',data[i:])
+            if not m:break
+            args=[int(n) if n else 0 for n in m[1].split(b';')]
+            if m[2]==b'H':
+                row=max(0,min(23,(args[0] or 1)-1))
+                col=max(0,min(79,((args[1] if len(args)>1 else 1) or 1)-1))
+            elif m[2]==b'J' and args[0]==2:cells=[[' ']*80 for _ in range(24)]
+            elif m[2]==b'K' and args[0]==2:cells[row]=[' ']*80
+            i+=len(m[0]);continue
+        ch=data[i];i+=1
+        if ch==13:col=0
+        elif ch==10:
+            row+=1
+            if row==24:cells.pop(0);cells.append([' ']*80);row=23
+        elif ch==8:col=max(0,col-1)
+        elif 32<=ch<127:
+            cells[row][col]=chr(ch);col+=1
+            if col==80:col=0;row=min(23,row+1)
+    return [''.join(line) for line in cells]
 
 
 def check(a):
@@ -21,7 +50,8 @@ def check(a):
     for drive in 'aijp':
         shutil.copyfile(a.instance/f'disks/drive{drive}.dsk', root/f'disks/drive{drive}.dsk')
     def tool(name, *args):
-        command = [str(root/'runtime'/name), *map(str,args)]
+        # Reuse already approved host executables; only media is disposable.
+        command = [str(a.instance/'runtime'/name), *map(str,args)]
         result = subprocess.run(command, capture_output=True)
         if result.returncode:
             raise RuntimeError(name+': '+result.stderr.decode(errors='replace').strip())
@@ -35,7 +65,7 @@ def check(a):
     with socket.socket() as probe:
         probe.bind(('127.0.0.1',0))
         port = probe.getsockname()[1]
-    guest = Machine(root,root/'runtime/cpmsim',root/'local.log',
+    guest = Machine(root,a.instance/'runtime/cpmsim',root/'local.log',
         dict(RCPM_MODEM='direct', RCPM_MODEM_HOST='127.0.0.1', RCPM_MODEM_PORT=str(port)),speed='4')
     caller = None
     local, remote = bytearray(), bytearray()
@@ -85,6 +115,15 @@ def check(a):
         start=len(remote)
         send(b'\x1b',True)
         wait(b'CHAT CONNECTED',remote,start)
+        wait(b'CALLER',remote,start)
+    def pane_text(value,who,stream=remote,timeout=15):
+        end=time.monotonic()+timeout
+        while True:
+            lines=screen(bytes(stream))
+            pane=lines[3:11] if who=='sysop' else lines[13:21]
+            if value in '\n'.join(pane):return lines
+            if time.monotonic()>end:raise RuntimeError('Pane text missing: '+value+'\n'+'\n'.join(lines))
+            collect()
     try:
         wait(b'RCP/M modem ready.',local)
         login()
@@ -92,13 +131,39 @@ def check(a):
         result['page_local_bell_and_local_escape_answer']=True
         startl,startr=len(local),len(remote)
         send(b'CALLER TO SYSOP\r')
-        wait(b'CALLER TO SYSOP',local,startl)
-        wait(b'CALLER TO SYSOP',remote,startr)
+        pane_text('CALLER TO SYSOP','caller',local)
+        pane_text('CALLER TO SYSOP','caller')
         startl,startr=len(local),len(remote)
         send(b'SYSOP TO CALLER\r',True)
-        wait(b'SYSOP TO CALLER',local,startl)
-        wait(b'SYSOP TO CALLER',remote,startr)
+        pane_text('SYSOP TO CALLER','sysop',local)
+        pane_text('SYSOP TO CALLER','sysop')
         result['two_way_text_visible_on_both_consoles']=True
+        for stream in (local,remote):
+            lines=screen(bytes(stream))
+            assert 'CALLER TO SYSOP' not in '\n'.join(lines[3:11])
+            assert 'SYSOP TO CALLER' not in '\n'.join(lines[13:21])
+        result['separate_sysop_and_caller_panes']=True
+        # Queue both sources together rather than waiting for either echo.
+        caller.sendall(b'REMOTE AT ONCE\r')
+        os.write(guest.master,b'LOCAL AT ONCE\r')
+        pane_text('REMOTE AT ONCE','caller')
+        pane_text('LOCAL AT ONCE','sysop')
+        send(b'\x12')
+        pane_text('LOCAL AT ONCE','sysop')
+        send(b'A\tB\r')
+        pane_text('A       B','caller')
+        result['concurrent_input_redraw_and_tab']=True
+        send(b'FIXZ\x08!\r')
+        pane_text('FIX!','caller')
+        # More than a paneful scrolls only the originating participant.
+        for n in range(12):send(('REMOTE LINE %02d\r'%n).encode())
+        lines=pane_text('REMOTE LINE 11','caller')
+        assert 'REMOTE LINE 00' not in '\n'.join(lines[13:21])
+        assert 'SYSOP TO CALLER' in '\n'.join(lines[3:11])
+        send(b'W'*80+b'\r',True)
+        pane_text('W'*76,'sysop')
+        pane_text('W'*4,'sysop')
+        result['backspace_wrap_and_independent_scrolling']=True
         start=len(remote);send(b'\x18');wait(b'A0:SYSTEM>',remote,start)
         result['caller_ctrl_x_returns_to_cpm']=True
         page();answer()
@@ -124,6 +189,26 @@ def check(a):
         start=len(remote);send(b'\x18');wait(b'I0:WORK>',remote,start)
         result['chat_on_path_and_preserves_work_directory']=True
         command('A0:',b'A0:SYSTEM>')
+        start=len(remote)
+        command('CHAT /S',b'Ringing:')
+        send(b'\x1b',True);wait(b'CHAT CONNECTED',remote,start)
+        send(b'SCROLLING FALLBACK\r')
+        wait(b'SCROLLING FALLBACK',remote,start)
+        assert b'\x1b[2J' not in remote[start:]
+        end=len(remote);send(b'\x18');wait(b'A0:SYSTEM>',remote,end)
+        result['scrolling_fallback']=True
+        page();answer()
+        start=len(remote)
+        send(b'\x02',True)
+        wait(b'Returning to CP/M.',local,len(local)-500)
+        collect(.2)
+        assert b'Returning to CP/M.' not in remote[start:]
+        send(b'\x02',True)
+        collect(.1)
+        # The returned private prompt is in I13; restore caller A0 explicitly.
+        send(b'A0:\r',True)
+        wait(b'A0:SYSTEM>',remote,len(remote)-500)
+        result['private_blank_ends_chat_without_remote_private_output']=True
         page();answer()
         caller.close();caller=None
         wait(b'RCP/M modem ready.',local,len(local),timeout=20)

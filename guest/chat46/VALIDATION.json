@@ -1,0 +1,20 @@
+{
+  "executable_sha256": "9c7eb6c0351e5910ce9e9a750f35ed05a441941d40e9b626bec23ca4877a4afa",
+  "checks": {
+    "page_local_bell_and_local_escape_answer": true,
+    "two_way_text_visible_on_both_consoles": true,
+    "separate_sysop_and_caller_panes": true,
+    "concurrent_input_redraw_and_tab": true,
+    "backspace_wrap_and_independent_scrolling": true,
+    "caller_ctrl_x_returns_to_cpm": true,
+    "sysop_ctrl_x_returns_to_cpm": true,
+    "caller_ctrl_c_cancels_page": true,
+    "unanswered_page_seconds": 22.85,
+    "bye_bell_disabled_rejects_paging": true,
+    "chat_on_path_and_preserves_work_directory": true,
+    "scrolling_fallback": true,
+    "private_blank_ends_chat_without_remote_private_output": true,
+    "carrier_loss_in_conversation_and_reconnect": true,
+    "carrier_loss_during_paging_and_reconnect": true
+  }
+}

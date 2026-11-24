@@ -50,6 +50,30 @@ def configure(text):
     change('EXIT1:\n', "EXIT1: CALL ILPRT\n"
            "        DB CR,LF,'----------------------------------------------------------',CR,LF\n"
            "        DB 'Returning to CP/M.',CR,LF,0\n")
+    change('; Initialize jumps to CBIOS for direct I/O',
+           '        CALL SPMODEI\n; Initialize jumps to CBIOS for direct I/O')
+    change('\tJMP\tCRLF\t\t; Now in chat mode',
+           '        JMP SPENTER\t; Choose split or scrolling conversation')
+    change('\tJMP\tCRLF\t\t; Now go chat', '        JMP SPENTER')
+    change('EXIT1: CALL ILPRT', 'EXIT1: CALL SPQUIT\n        CALL ILPRT')
+    extension = (Path(__file__).parent/'guest/chat-split.asm').read_text()
+    extension += '''
+SPMODEI:LDA FCB+1
+        CPI '/'
+        RNZ
+        LDA FCB+2
+        CPI 'S'
+        RNZ
+        XRA A
+        STA SPMODE
+        RET
+SPENTER:LDA SPMODE
+        ORA A
+        JZ CRLF
+        JMP SPINIT
+'''
+    change('\tDS\t64\t\t; Room for 32 level stack',
+           extension+'\n        DS 128\t; Split-screen rendering call stack')
     # M80 needs an absolute segment for this ORG 100h transient.
     return '\tASEG\n' + text
 
@@ -91,7 +115,8 @@ def build(a):
     tool('cpmcp', '-f', 'z80pack-hd', image, '0:CHAT.COM', a.output/'CHAT.COM')
     (a.output/'BUILD.json').write_text(json.dumps(dict(
         reference_sha256=SOURCE_SHA256, clock_mhz=4, page_seconds=30,
-        time_limit=False, bell='BYE BDOS 78',
+        time_limit=False, bell='BYE BDOS 78', split_screen=True,
+        screen_columns=80, screen_rows=24, scrolling_option='/S',
         configured_sha256=hashlib.sha256(mac.read_bytes()).hexdigest(),
         executable_sha256=hashlib.sha256((a.output/'CHAT.COM').read_bytes()).hexdigest(),
         executable_bytes=(a.output/'CHAT.COM').stat().st_size), indent=2)+'\n')

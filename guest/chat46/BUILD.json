@@ -4,7 +4,11 @@
   "page_seconds": 30,
   "time_limit": false,
   "bell": "BYE BDOS 78",
-  "configured_sha256": "b5aa51bd3369f572478b4e0016e71b82bdc27fbf8b50774130a504f85f8d4e24",
-  "executable_sha256": "63c0d04476ba2548d9076d44d0a0a5fbf3106e91b8daf667867d938291710e4e",
-  "executable_bytes": 1152
+  "split_screen": true,
+  "screen_columns": 80,
+  "screen_rows": 24,
+  "scrolling_option": "/S",
+  "configured_sha256": "07c44d9431d1915b0d8c9c5227b1f5e060777c55d3e61aa3421fa850a0e127e5",
+  "executable_sha256": "9c7eb6c0351e5910ce9e9a750f35ed05a441941d40e9b626bec23ca4877a4afa",
+  "executable_bytes": 3328
 }

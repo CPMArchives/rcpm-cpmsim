@@ -1,63 +1,68 @@
 # CHAT46 for HUMONGOUS RCP/M
 
-CHAT runs at the CP/M prompt alongside the existing resident BYE510 driver.
-It is a separate transient, not an RBBS module. In RBBS, C returns to CP/M;
-then CHAT pages the operator. A later RBBS integration can chain to CHAT,
-but returning to the board with the same login needs separate design.
+CHAT runs at the CP/M prompt with the existing BYE510 RSX. It is a transient,
+not an RBBS module. Leave RBBS with C before running CHAT. RBBS chaining and
+returning with the same login remain separate integration work.
 
-The local operator answers with Escape. Either keyboard can use Ctrl-C or
-Ctrl-X to exit. Both participants share one text area and should take turns.
-An unanswered page returns to CP/M. Local Ctrl-G toggles BYE's bell/availability
-flag; CHAT honors it. Local Ctrl-B enables private operation rather than chat.
-The original CHAT C option enters conversation directly without paging;
-it is not an authentication or privilege mechanism. Escape is likewise an
-ordinary shared input character, not proof that the sysop answered.
+## Operation
 
-## Build
+CHAT pages the sysop, who answers with Escape on the local console. The default
+conversation display requires an 80-column, 24-row ANSI/VT100 terminal at both
+ends. SYSOP has eight rows in the upper pane; CALLER has eight in the lower
+pane. The panes maintain independent insertion positions, wrapping and scroll
+history. Both people can type without interleaving their text. Backspace/Delete
+erases the preceding character on the current line; Tab adds spaces. Arrow-key
+editing and terminal resizing are not supported. Ctrl-R redraws both panes.
 
-`build_chat46.py` verifies the preserved source against its existing reference
-SHA-256, retains it unchanged, configures direct CP/M use, and builds with
-M80/L80 in an isolated stock CP/M 3 guest. The display update is 1152 bytes.
-NONE=YES, MBBS=NO, GETCALR=NO and COMMENT=NO remove MBBS assumptions. BYBELL=YES
-and LMBELL=NO use BYE BDOS 78. TIMEON=NO matches our driver (CLOCK=NO and
-TIMEON=NO); no low-memory clock or time-limit writes are compiled in.
-The original 4 MHz and PGTIME=30 constants are retained. Paging uses CPU
-delay loops; its actual elapsed time must be measured, not assumed.
+Ctrl-C or Ctrl-X from either keyboard returns to CP/M. CHAT /S retains the
+plain scrolling conversation for terminals without ANSI cursor positioning.
+It still uses the plain paging banner, answer key and exit controls.
 
-## Installation and validation
+Local Ctrl-G toggles BYE's bell/paging availability. BYE's existing local
+function keys remain active. Local Ctrl-B ends split chat and enters BYE's
+private-console mode; subsequent private input is never stored in chat buffers.
+If another BYE control prints over the display, Ctrl-R restores the panes.
+CHAT C retains the historical direct-entry option. Paging still accepts Escape
+as shared input; it is not an identity check or privilege mechanism.
 
-`install_chat46.py` requires a stopped instance and takes its console lock.
-It stages A:/I:, installs A0:CHAT.COM with the F4 caller approval attribute,
-adds a welcome hint and I14:CHAT.HLP, and verifies readback. It verifies that
-all other existing files and their displayed attributes are unchanged,
-backs up both images, then replaces them. The resident BYE driver is unchanged;
-its load policy checks the actual F4 attribute. No new resident memory is used.
-Source, build identity, documentation and a receipt are retained in the instance.
+## Implementation
 
-`check_chat46.py` copies installation media into a new test directory, installs
-CHAT there, and exercises paging, text from both keyboards, both exits, page
-cancellation/timeout, bell-off behavior, PATH use from WORK, and disconnect
-recovery during conversation and paging. It uses loopback TCP on a free port
-and writes local/caller logs plus result.json. It never boots the original
-installation. Copy from stopped media for a consistent test snapshot.
+build_chat46.py verifies the preserved reference SHA-256, configures the source,
+and builds with native M80/L80 under CP/M 3. guest/chat-split.asm supplies the
+extension; the generated CHAT.MAC includes it in full. The transient is 3328
+bytes and adds no resident memory. NONE=YES, MBBS=NO, GETCALR=NO and COMMENT=NO
+remove MBBS assumptions; BYBELL=YES uses BYE BDOS 78. TIMEON=NO matches the
+resident driver. The original 4 MHz and PGTIME=30 constants are retained;
+measured unanswered paging is about 23 seconds, not an exact 30-second clock.
 
-November 24, 2026: native build and the BYE-absent abort/return to CP/M passed.
-The terminal-run two-way tests passed: paging and local answer, text from both
-keyboards, both exits, cancellation, bell-off behavior, WORK/PATH use, and
-carrier-loss recovery during conversation and paging. An unanswered page took
-22.92 seconds at the configured speed. Installation completed at 17:58 local
-time; readback of installed A0:CHAT.COM matches that original build SHA-256.
-The repeat-run setup now removes an existing CHAT only on the disposable copy
-before copying the candidate; cpmcp otherwise refuses to overwrite it.
+Split input polls BYE's combined BIOS status path for carrier/idle handling,
+then consumes at most one local and one remote byte per pass through existing
+BDOS 66/67 and 61/64. Local input retains BYE's control-key processing. Local
+private state is checked through BDOS 77 before input enters a pane. Screen
+output continues through BYE's normal combined output and carrier checks.
+The driver and emulator are unchanged. The renderer uses cursor positioning
+and explicit pane buffers, with no alternate screen, scroll margins, colors,
+or hidden cursor that a carrier-loss exit could leave enabled.
 
-## Display update
+## Build, installation and tests
 
-The new plain ASCII display adds a HUMONGOUS RCP/M CHAT banner, paging/answer
-instructions, a connected heading, and a return message. The estimated-time
-bar and upstream date banner are removed. Conversation I/O and BYE handling
-are unchanged. Native assembly/link and BYE-absent return passed; the live
-results above apply to the original display build, not this new executable.
-Update-CHAT-Display.command installs into the stopped native ~/CPM/RCPM by
-default; it also accepts an explicit installation directory. It backs up
-the images and any prior validation receipt. Full validation remains available
-via Test-and-Install-CHAT.command with the updated screen markers.
+install_chat46.py locks a stopped instance, stages A:/I:, installs approved
+A0:CHAT.COM plus HELP CHAT and a welcome hint, and reads back the changes.
+It verifies other files and attributes are unchanged, backs up both images
+and the previous validation receipt, then replaces the images. Source,
+documentation, build identity and matching validation are retained.
+Update-CHAT-Split.command defaults explicitly to native ~/CPM/RCPM and accepts
+another installation directory as its first argument. It does not update a
+Docker container. Stop with local Ctrl-C, Return, then SYSUTLS:BYEBYE first.
+
+check_chat46.py tests disposable media over loopback TCP. It interprets the
+ANSI output into screen cells to verify participant separation, backspace,
+wrapping and independent scrolling, in addition to paging, local answer, both
+exits, cancellation/timeout, bell-off behavior, PATH from WORK, CHAT /S,
+private blanking and carrier-loss recovery during chat and paging. Test tools
+and the emulator run from their existing host paths to avoid asking macOS to
+approve fresh copies. All media writes go to the disposable directory.
+
+The original scrolling version passed its live checks and was installed on
+November 24, 2026. The split build's executable hash and check results are
+recorded together in guest/chat46/VALIDATION.json after qualification.
