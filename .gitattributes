@@ -1,0 +1,4 @@
+# Preserve the reference hash and CP/M assembler line endings byte-for-byte.
+guest/chat46/*.asm -text whitespace=cr-at-eol
+guest/chat46/*.MAC -text whitespace=cr-at-eol
+guest/chat46/*.COM -text

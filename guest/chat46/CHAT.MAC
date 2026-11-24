@@ -1,0 +1,892 @@
+	ASEG
+;				CHAT.ASM v46
+;				 revised by
+;			       Murray Simsolo
+;				  07/13/86
+;
+;
+;	CHAT is an RCP/M utility which allows a remote user to "chat"
+;		       with the local system operator.
+;
+; ===========================
+;
+; NOTE -- A complete CHAT library consists of these files:
+;
+;	  CHAT46.ASM	- Current assembly file
+;	  CHAT.HIS	- All revisions, current and past
+;	  CHAT.HLP	- General set-up help
+;	  CHAT.INF	- General information and sysop operation
+;
+; ===========================
+;
+VERSION	EQU	4
+MODLEV	EQU	6
+MONTH	EQU	7
+DAY	EQU	13
+YEAR	EQU	86
+;
+NO	EQU	0
+YES	EQU	NOT NO
+;
+; Define ASCII characters used
+;
+BS	EQU	8		; Backspace
+BELL	EQU	7		; Bell
+CR	EQU	0DH		; Carriage return
+DEL	EQU	7FH		; Delete
+ESC	EQU	1BH		; Escape character
+LF	EQU	0AH		; Line feed
+TAB	EQU	9		; Horizontal tab
+;
+; =============================================================
+; Conditional equates - set to suit your system, then assemble.
+; =============================================================
+;
+CLOCK	EQU	4		; Set to your CPU clock speed in MHz
+PGTIME	EQU	30		; Number of seconds to page for sysop
+TGUIDE	EQU	YES		; Yes, print a guide bar for estimated time
+				;   of summoning sysop prior to abort
+;
+IMHERE	EQU	ESC		; Hit this key to answer page and chat
+QKMSG	EQU	'{'		; Hit this key to drop user into the
+				; MBBS comment mode, instantly.
+QUICK	EQU	'C'		; Quick chat character (i.e. CHAT C will
+				;   bypass the paging routine).
+;
+MPM	EQU	NO		; Yes, MP/M program relocatable format
+;
+; ---------------------------
+;
+; Set for your terminal requirements
+;
+MXLINE	EQU	79		; Maximum line length (normally 0 to 79)
+WRAP	EQU	70		; Location to perform wrap
+;
+; ---------------------------
+;
+; Set one equate YES according to which BBS system you operate:
+;
+NONE	EQU	YES		; Yes if none of the below systems are used
+;
+CBBS	EQU	NO		; Yes if CBBS system
+DATA	EQU	NO		; Yes if DataTech system
+MBBS	EQU	NO		; Yes if MBBS system
+METAL	EQU	NO		; Yes if METAL system
+MINCBBS	EQU	NO		; Yes if MINICBBS system
+OXGATE	EQU	NO		; Yes if OxGate system
+RBBS	EQU	NO		; Yes if RBBS system
+SIGNON	EQU	NO		; Yes if Signon
+SIMMS	EQU	NO		; Yes if SiMMS sytem
+;
+; ---------------------------
+;
+; Set only ONE or neither of these two equates to YES, not both:
+;
+ASKNAM	EQU	NO		; Yes if ask user's name before paging
+GETCALR	EQU	NO		; Yes to get name from LASTCALR.DAT
+LCNAME	EQU	11		; Column # where the caller's name starts
+				;   in LASTCALR.  Normally 0, but MBBS
+				;   starts in column 11.
+;
+; Drive and user area to find LASTCALR file if GETCALR is set to YES
+;
+LASTDRV	EQU	'A'		; Drive of LASTCALR file
+LASTUSR	EQU	14		; User area of LASTCALR
+;
+; Set only one bell equate (BYEBELL or LMBELL), depending on your system.
+;
+BYBELL	EQU	YES		; Yes, if using BYE's internal bell flag
+LMBELL	EQU	NO		; Yes, if using low memory bell flag (KILBEL)
+KILBEL	EQU	3BH		; Byte for low memory bell flag if LMBELL is
+				;   set YES (0 = bell on, 0FFH = bell off)
+BELOFF	EQU	20		; Number of bytes from COLDBOOT: to BELLON
+				; flag (BYE5 uses 20, NUBYE uses 27) if BYBELL
+				; is YES and BYEBDOS is NO
+;
+COMMENT	EQU	NO		; Yes, allow leaving comment when the
+				;   sysop isn't available (MBBS only)
+;
+; Set B3RTC to YES if you are running a BYE3 or MBYE version which
+; supports a real-time clock (RTCBUF).	Set BYEBDOS to YES if you are
+; running a BYE3, BYE5, MBYE, or NUBYE version which supports the BYEBDOS
+; extended BDOS calls (do not set both B3RTC and BYEBDOS to YES).
+; Set TIMEON to YES if BYEBDOS is YES and CLOCK and TIMEON in BYE5/NUBYE
+; are yes or if RTC and TIMEUP in MBYE are YES (prevents BYE from hanging
+; up during chats).
+;
+BYEBDOS	EQU	YES		; Yes, using extended BDOS calls  (BYE5/NUBYE)
+TIMEON	EQU	NO		; Yes, limiting time on system (all BYEs)
+B3RTC	EQU	NO		; If YES, your clock is setup in BYE3 (or MBYE)
+B3COFF	EQU	25		; OFFSET from COLDBOOT: to RTCBUF address
+B3MXO	EQU	24		; OFFSET from COLDBOOT: to MXML address
+;
+; ---------------------------
+;
+RESCHAT	EQU	NO		; Yes, restrict sysop paging to pre-
+				;   determined hours
+;
+; Hours (24-hour mode) during which sysop paging will be possible, when
+; RESCHAT is YES. (Example: 16 = 4 pm  and  21 = 9 pm)
+;
+CHATON	EQU	18		; Start of CHAT period
+CHATOFF	EQU	22		; End of CHAT period
+;
+; Set the following bytes to correspond to the areas used by your system
+; for time storage, if RESCHAT is YES and B3RTC and BYEBDOS are NO.
+;
+HOUR	EQU	50H		; Location of hour
+MIN	EQU	51H		; Location of minute
+;
+;
+; end of normal user definable equates
+; ====================================
+;
+; BDOS equates
+;
+BASE	EQU	0		; Start of CP/M memory area
+BDOS	EQU	5		; BDOS call address
+FCB	EQU	5CH		; CCP file control block
+DMAADR	EQU	80H		; Default DMA buffer address
+;
+; BDOS functions
+;
+PRINT	EQU	9		; Print string function
+SELDSK	EQU	14		; Select disk
+FOPEN	EQU	15		; File open
+FREAD	EQU	20		; File read
+RTNDSK	EQU	25		; Return current disk
+SETDMA	EQU	26		; Set DMA address
+SETUSR	EQU	32		; Get/set user number
+;
+; -------------------
+;
+	 IF	MPM
+	ORG	BASE
+	 ENDIF
+;
+	 IF	NOT MPM
+	ORG	BASE+100H
+	 ENDIF
+;
+; ===================
+; Program starts here
+; ===================
+;
+START:	LXI	H,0
+	DAD	SP		; Get old stack pointer
+	SHLD	STACK		; Save it
+	LXI	SP,STACK	; Set new stack pointer
+;
+; Initialize jumps to CBIOS for direct I/O
+;
+	LHLD	BASE+1		; Get pointer to CBIOS
+	LXI	D,3		; Ready for address
+	DAD	D		; HL = constat vector
+	SHLD	CSTAT+1		; Modify jump
+	DAD	D		; HL = CONIN vector
+	SHLD	CONIN+1		; Modify jump
+	DAD	D		; HL = CONOUT vector
+	SHLD	CONOUT+1	; Modify jump
+;
+; Check to see if BYE is available, first.
+;
+	 IF	BYEBDOS
+	MVI	C,32
+	MVI	E,241
+	CALL	BDOS
+	CPI	77		; Is it there?
+	JZ	TIME		; Yes, so get time if used
+	 ENDIF			; BYEBDOS
+;
+	 IF	NOT BYEBDOS
+	LHLD	1		; Point to warm boot
+	DCX	H		; If BYE active,
+	MOV	D,M		; Pick up pointer to BYE variables
+	DCX	H
+	MOV	E,M
+	LXI	H,15		; Calculate address of BYE variables
+	DAD	D		; Where ptr to orig BIOS vector stored
+	MOV	E,M		; Load that address
+	INX	H
+	MOV	D,M
+	INX	H
+	MOV	A,M		; Get letter
+	ANI	5FH		; Convert to upper case if needed
+	CPI	'B'		; Try to match 'BYE'
+	JNZ	NOBYE		; Out if BYE not active
+	INX	H
+	MOV	A,M		; Keep checking
+	ANI	5FH
+	CPI	'Y'
+	JNZ	NOBYE
+	INX	H
+	MOV	A,M
+	ANI	5FH
+	CPI	'E'
+	JZ	TIME		; Found it, yes it is running
+;
+NOBYE:
+	 ENDIF			; NOT BYEBDOS
+;
+	CALL	ILPRT
+	DB	CR,LF
+	DB	'BYE unavailable...aborting...',CR,LF,7,0
+	JMP	EXIT2
+;
+; Get RTC data from BYE or other areas
+;
+TIME:
+	 IF	RESCHAT	AND BYEBDOS AND	(NOT B3RTC)
+	PUSH	B		; Hour was safely moved to highmem
+	PUSH	D		; In newer versions of BYE
+	MVI	C,79		; Get RTC buffer addr
+	CALL	BDOS
+	LXI	D,9		; Offset to current hour (binary)
+	DAD	D
+	MOV	A,M		; Move to A
+	STA	CHOUR		; Store it
+	INX	H		; Increment to current minute (binary)
+	MOV	A,M		; Move to A
+	STA	CMIN		; Store it
+	POP	D
+	POP	B
+	 ENDIF
+;
+; Get address of RTCBUF in BYE3 or MBYE
+;
+	 IF	RESCHAT	AND B3RTC AND (NOT BYEBDOS)
+	LHLD	0001H		; Get COLDBOOT addr
+	DCX	H		; (just before JMP WBOOT)
+	MOV	D,M		; And stuff in DE
+	DCX	H
+	MOV	E,M
+	LXI	H,B3COFF	; Add offset to RTCBUF address
+	DAD	D		; (in HL)
+	MOV	E,M		; Get RTCBUF address
+	INX	H		; And
+	MOV	D,M		; Stuff in DE
+	XCHG			; Swap into HL
+	MOV	A,M		; Get hours on system
+	CALL	BCDBIN		; Convert BCD value to binary
+	STA	CHOUR		; Save hr
+	INX	H		; Point to minute
+	MOV	A,M		; Get min
+	CALL	BCDBIN		; Convert BCD to binary
+	STA	CMIN		; Save min
+	 ENDIF
+;
+	 IF	RESCHAT	AND NOT	(B3RTC OR BYEBDOS)
+	LDA	HOUR		; Get current hour
+	STA	CHOUR
+	LDA	MIN		; Get current minute
+	STA	CMIN
+	 ENDIF
+;
+; End of time routines
+; --------------------
+;
+; Print program name, version number and date message
+;
+CHAT:	CALL	ILPRT
+	DB	CR,LF,'CHAT v'
+	DB	VERSION+'0',MODLEV+'0','  '
+	DB	MONTH/10+'0',MONTH MOD 10+'0','/'
+	DB	DAY/10+'0',DAY MOD 10+'0','/'
+	DB	YEAR/10+'0',YEAR MOD 10+'0',CR,LF,0
+;
+	 IF	BYEBDOS	AND (NOT B3RTC)	AND TIMEON
+	MVI	E,255
+	MVI	C,81
+	CALL	BDOS		; Get MXTIME from BYE
+	STA	TLIMIT		; And store it
+	MVI	E,0
+	MVI	C,81
+	CALL	BDOS		; Stop time check for now
+	 ENDIF
+;
+	 IF	B3RTC AND (NOT BYEBDOS)	AND TIMEON
+	LHLD	0001H		; Get JMP COLDBOOT
+	DCX	H
+	MOV	D,M
+	DCX	H
+	MOV	E,M
+	LXI	H,B3MXO		; + B3MXO offset to MXML
+	DAD	D
+	MOV	A,M		; = max time allowed on system
+	STA	TLIMIT		; Store max time
+	XRA	A
+	MOV	M,A		; Stop max time check for now
+	 ENDIF
+;
+	 IF	RESCHAT
+	LXI	H,CHOUR		; Point at current hour
+	MVI	A,CHATON	; Start of chat period
+	DCR	A
+	CMP	M		; Time to allow paging?
+	JNC	NOCHAT		; Carry = continue
+	MVI	A,CHATOFF	; End of chat period
+	DCR	A
+	CMP	M		; Time to end paging?
+	JNC	TSTBEL		; Carry = no chatting now
+NOCHAT:	CALL	ILPRT
+	DB	CR,LF
+	DB	'The Sysop is available between '
+	DB	CHATON/10+'0',CHATON MOD 10+'0',':00 and '
+	DB	CHATOFF/10+'0',CHATOFF MOD 10+'0',':00 hours, only.',0
+	JMP	NOHOME
+	 ENDIF			; RESCHAT
+;
+TSTBEL:
+	 IF	BYBELL AND (NOT	LMBELL)	AND BYEBDOS
+	MVI	E,255
+	MVI	C,78		; BDOS function call
+	CALL	BDOS
+	CPI	0FFH		; And check
+	JNZ	NOHERE
+	 ENDIF
+;
+	 IF	BYBELL AND (NOT	LMBELL)	AND (NOT BYEBDOS)
+	LHLD	1		; Point to bye's cold boot vector
+	DCX	H		; Point to vector high byte
+	MOV	D,M		; Get high byte into D
+	DCX	H		; Point to vector low byte
+	MOV	E,M		; Get low byte into E
+	LXI	H,BELOFF	; Load HL with no bytes to add to cold boot
+	DAD	D		; Cold boot + no bytes = HL has address of bell
+	MOV	A,M		; Move the bell toggle byte to A
+	ORA	A		; 0?
+	JZ	NOHERE		; Yes, so Sysop is not here
+	 ENDIF
+;
+	 IF	LMBELL AND (NOT	BYBELL)
+	LDA	KILBEL		; Get status
+	ORA	A		; 0?
+	JNZ	NOHERE		; No, so Sysop is not here
+	 ENDIF
+;
+;Get caller's name from LASTCALR, user or not at all
+;
+WHO:	 IF	GETCALR	AND (NOT ASKNAM)
+	MVI	E,0FFH		; Get current user #
+	MVI	C,SETUSR
+	CALL	BDOS
+	STA	CURUSR		; Save current user
+	MVI	E,LASTUSR
+	MVI	C,SETUSR	; Set user of LASTCALR
+	CALL	BDOS
+	MVI	C,RTNDSK	; Get current disk
+	CALL	BDOS
+	STA	CURDSK
+	MVI	E,LASTDRV-'A'	; Set drive of LASTCALR
+	MVI	C,SELDSK
+	CALL	BDOS
+	LXI	D,LFCB		; Open LASTCALR
+	MVI	C,FOPEN
+	CALL	BDOS
+	INR	A		; Check if file not found (0FFH)
+	JZ	UNDO		; Not found, don't complain, Zflag set
+	LXI	D,DMAADR
+	MVI	C,SETDMA	; Make sure DMA is default address
+	CALL	BDOS
+	LXI	D,LFCB
+	MVI	C,FREAD		; Fill default buffer
+	CALL	BDOS
+	ORI	0FFH		; Make sure the Zflag is clear
+	 ENDIF			; GETCALR AND NOT ASKNAM
+;
+; If the file open was not successful, the Z-flag is set.  We still need
+; to return to the current disk and user
+;
+UNDO:	 IF	GETCALR	AND (NOT ASKNAM)
+	PUSH	PSW		; Save it for for later
+	LDA	CURUSR		; Restore current user
+	MOV	E,A
+	MVI	C,SETUSR
+	CALL	BDOS
+	LDA	CURDSK		; Restore current disk
+	MOV	E,A
+	MVI	C,SELDSK
+	CALL	BDOS
+	POP	PSW		; Was the file open successful?...
+	JZ	QCHAT		; No, so skip the rest of this stuff
+	 ENDIF			; GETCALR AND NOT ASKNAM
+;
+	 IF	GETCALR	AND (NOT ASKNAM)
+	LXI	H,DMAADR+LCNAME
+	 ENDIF
+;
+; CLOOP is a bit more complex because of SIGNON.  The SIGNON* system
+; places additional information into LASTCALR, which need not be
+; presented to the caller. (OxGate, too)
+;
+	 IF	GETCALR	AND (NOT ASKNAM)
+	CALL	ILPRT
+	DB	CR,LF,'Hold on, ',0
+;
+CLOOP:	MOV	A,M
+	CPI	CR
+	JZ	CLOOPE		; Found end of file
+	CPI	','
+	JNZ	NOCO
+	 ENDIF			; GETCALR AND NOT ASKNAM
+;
+	 IF	(MBBS OR OXGATE	OR RBBS	OR SIGNON) AND GETCALR AND (NOT	ASKNAM)
+	LDA	SECND
+	ORA	A
+	JNZ	CLOOPE		; MBBS & OxGate need to stop at the 2nd ','
+	MVI	A,1
+	STA	SECND
+	 ENDIF			; MBBS OR OXGATE OR RBBS OR SIGNON
+;
+	 IF	GETCALR	AND (NOT ASKNAM)
+	MVI	A,' '
+;
+NOCO:	PUSH	H
+	MOV	C,A
+	CALL	CONOUT
+	POP	H
+	INX	H
+	JMP	CLOOP
+;
+CLOOPE:	CALL	ILPRT
+	DB	' -- ',0
+	 ENDIF			; GETCALR AND NOT ASKNAM
+;
+QCHAT:	LDA	FCB+1
+	CPI	QUICK		; Quick chat requested?
+	JZ	QCHAT1		; Yes, so get to it
+	JMP	CHAT1		; ...else, continue with paging message
+;
+QCHAT1:	CALL	ILPRT		; Turn up a new line
+	DB	CR,LF,0
+	JMP	CRLF		; Now go chat
+;
+	 IF	GETCALR	AND (NOT ASKNAM)
+LFCB:	DB	0
+	 ENDIF			; GETCALR AND (NOT ASKNAM)
+;
+	 IF	(NOT MBBS) AND (NOT OXGATE) AND	GETCALR	AND (NOT ASKNAM)
+	DB	'LASTCALR   '	; File containing name of last caller
+	 ENDIF			; NOT MBBS AND NOT OXGATE
+;
+	 IF	MBBS AND GETCALR AND (NOT ASKNAM)
+	DB	'LASTCALRBBS'
+	 ENDIF			; MBBS
+;
+	 IF	OXGATE AND GETCALR AND (NOT ASKNAM)
+	DB	'LASTCALRDAT'
+	 ENDIF			; OXGATE
+;
+	 IF	GETCALR	AND (NOT ASKNAM)
+	DB	0,0,0,0,0,0
+	DB	0,0,0,0,0,0
+	DB	0,0,0,0,0,0
+	DB	0,0,0,0,0,0
+SECND:	DB	0
+CURDSK:	DB	0
+CURUSR:	DB	0
+	 ENDIF			; GETCALR AND NOT ASKNAM
+;
+; ===========================
+;
+CHAT1:	 IF	ASKNAM AND (NOT	GETCALR)
+	CALL	ILPRT
+	DB	CR,LF,'Your name, please? (optional): ',0
+;
+GLOOP:	CALL	CKABT		; Check for abort
+	CPI	CR
+	JZ	CHAT2		; CR, end of name
+	CPI	' '
+	JC	GLOOP		; CTRL-character, ignore it
+	MOV	C,A
+	CALL	CONOUT		; Else echo it
+	LDA	LCNT
+	INR	A		; Increment line count
+	STA	LCNT
+	JMP	GLOOP		; Keep looping
+	 ENDIF			; ASKNAM AND NOT GETCALR
+;
+CHAT2:	CALL	ILPRT
+;
+	 IF	ASKNAM AND (NOT	GETCALR)
+	DB	CR,LF,LF
+	 ENDIF			; ASKNAM AND NOT GETCALR
+;
+	DB	'will page the operator (abort with ^C or ^X)',CR,LF
+	DB	CR,LF,LF,0
+;
+	 IF	TGUIDE
+	CALL	ILPRT
+	DB	'        |',0
+;
+BARS1:	CALL	ILPRT		; Print bar and space
+	DB	'-',0
+	LDA	BCNT		; Get bar counter
+	DCR	A		; Done with bars?
+	STA	BCNT		; Save new count
+	JNZ	BARS1		; Not done, do it again
+	CALL	ILPRT
+	DB	'|',CR,LF,0
+	 ENDIF			; TGUIDE
+;
+	CALL	ILPRT
+	DB	'Ringing: ',0
+;
+; Attempt to alert operator
+;
+START1:	CALL	ILPRT		; Print period <BEEP> and space
+	DB	'.',BELL,0
+	CALL	TIMER
+	LDA	CNT		; Get attempt counter
+	DCR	A		; Decrement alert counter
+	STA	CNT		; Save new count
+	JNZ	START1		; Not done with attempts, do more
+;
+; Operator did not answer
+;
+NOHERE:	CALL	ILPRT
+	DB	CR,LF,LF,'Sorry, operator is not available.',0
+;
+NOHOME:	CALL	ILPRT
+;
+	 IF	MBBS AND COMMENT
+	DB	CR,LF
+	DB	'Would you like to leave a private message? <N> '
+	DB	0
+	CALL	CONIN		; Get response
+	ANI	5FH		; Convert to upper case
+	CPI	'Y'		; Yes?
+	JNZ	EXIT		; No, so exit
+	CALL	ILPRT
+	DB	'Yes',CR,LF,0
+	JMP	LDCOM		; Yes, so load the .COM file
+	 ENDIF			; MBBS AND COMMENT
+;
+	 IF	NONE
+	DB	CR,LF,LF,'Back to CP/M...',0
+	 ENDIF			; NONE
+;
+	 IF	NOT NONE
+	DB	CR,LF,'Please leave a message in the '
+	 ENDIF			; NOT NONE
+;
+	 IF	CBBS
+	DB	'CBBS'
+	 ENDIF			; CBBS
+;
+	 IF	DATA
+	DB	'DataTech'
+	 ENDIF			; DATATECH
+;
+	 IF	MBBS AND (NOT COMMENT)
+	DB	'MBBS'
+	 ENDIF			; MBBS AND NOT COMMENT
+;
+	 IF	METAL
+	DB	'METAL'
+	 ENDIF			; METAL
+;
+	 IF	MINCBBS
+	DB	'MINICBBS'
+	 ENDIF			; MINICBBS
+;
+	 IF	OXGATE
+	DB	'OxGate'
+	 ENDIF			; OXGATE
+;
+	 IF	RBBS
+	DB	'RBBS'
+	 ENDIF			; RBBS
+;
+	 IF	SIGNON
+	DB	'comments section when exiting the system...',0
+	 ENDIF			; SIGNON
+;
+	 IF	SIMMS
+	DB	'SiMMS'
+	 ENDIF			; SIMMS
+;
+	 IF	(NOT NONE) AND (NOT SIGNON)
+	DB	' message system...',0
+	 ENDIF			; NONE
+;
+	JMP	EXIT1		; Exit to CP/M
+;
+; ===================
+; Routines start here
+; ===================
+;
+; Backspaces one column, first erasing the current character
+;
+BACKIT:	LDA	LCNT		; Get character count
+	ORA	A		; Column 0, yet?
+	RZ			; Yes, so forget it
+	DCR	A		; Subtract one because of backspace
+	STA	LCNT		; Save new count
+	CALL	ILPRT		; Print
+	DB	BS,' ',BS,0
+	RET			; Continue looping
+;
+; Conversation routine - uses direct CBIOS I/O to prevent control char-
+; acters from being echoed.
+;
+CONT:	CALL	CKABT		; Check for abort
+	CPI	TAB		; Tab?
+	JZ	SNDTAB		; Yes, send it
+	CPI	CR		; Carriage return?
+	JZ	CRLF		; Yes, send CRLF
+	CPI	' '		; Space or above? if not,
+	JC	CONT		; It's a CTRL-character, continue looping
+	MOV	C,A		; Else, save char. in C (also for CBIOS)
+	LDA	LCNT		; Check count
+	CPI	WRAP		; Time to wrap?
+	JC	CHROK		; No, character is ok
+	MOV	A,C		; Get character
+	CPI	' '		; Space?
+	JZ	CRLF		; Yes, then word wrap
+	LDA	LCNT		; No, check line count again
+	CPI	MXLINE		; At end of line?
+	JNZ	CHROK		; Not at end of line, character is ok
+	MVI	C,BELL
+	CALL	CONOUT		; Else ignore charactr and beep
+	JMP	CONT		; And continue
+;
+CHROK:	CALL	CONOUT		; Send character to console
+	LDA	LCNT		; Get character count
+	INR	A		; Increment counter
+	JMP	CRLF1		; Continue looping
+;
+CRLF:	CALL	ILPRT
+	DB	CR,LF,0
+	XRA	A		; Zero character counter
+CRLF1:	STA	LCNT		; Save new count
+	JMP	CONT		; Continue looping
+;
+SNDTAB:	LDA	LCNT		; Get line count in A
+	ADI	8		; Add tab count
+	MOV	C,A		; Save in C
+	CPI	MXLINE		; Still <MXLINE?
+	JNC	CRLF		; No, so start new line
+	MOV	A,C		; ...else get LCNT back
+	STA	LCNT		; save new count
+	CALL	ILPRT
+	DB	'        ',0	; Send 8 spaces for a tab
+	JMP	CONT		; Continue looping
+;
+; CBIOS routines for console status, get character and show character
+;
+CSTAT:	JMP	$-$		; Modified at init
+CONIN:	JMP	$-$		; Modified at init
+CONOUT:	JMP	$-$		; Modified at init
+;
+; =======================================================================
+;
+; Timer routine for paging sysop PGTIME seconds
+;
+TIMER:	LXI	H,18*PGTIME	; Initialize # secs to page for sysop
+	SHLD	CNTDWN		; Save it
+;
+TIMER1:	CALL	CSTAT		; Get console status
+	ORA	A		; Incoming character?
+	CNZ	KEYCHK		; Yes, so check it
+;
+TIMER2:	CALL	DELAY		; Wait 1ms
+	PUSH	H
+	LHLD	CNTDWN		; Decrement countdown timer
+	DCX	H
+	SHLD	CNTDWN
+	MOV	A,H
+	ORA	L
+	POP	H
+	JNZ	TIMER1		; Loop until time is up
+;
+; 1ms delay routine
+;
+DELAY:	PUSH	B
+	LXI	B,42*CLOCK	; Timing constant x clock (MHz)
+;
+DELAY1:	DCX	B
+	MOV	A,B
+	ORA	C
+	JNZ	DELAY1
+	POP	B
+	RET
+;
+KEYCHK:	CALL	CKABT		; Check for abort
+	CPI	IMHERE		; Sysop ready to chat?
+	RNZ			; No, so keep paging
+;
+; The sysop is ready to chat...
+;
+	LXI	SP,STACK	; Fix stack
+	CALL	ILPRT
+	DB	CR,LF,LF
+	DB	'Operator is available, please go ahead...',CR,LF
+	DB	'(Use ^C or ^X to exit and return to CP/M)',CR,LF
+	DB	LF,0
+	JMP	CRLF		; Now in chat mode
+;
+EXIT:	 IF	MBBS AND COMMENT
+	CALL	ILPRT		; No comment - return to CP/M
+	DB	'No',CR,LF,0
+	 ENDIF			; MBBS AND COMMENT
+;
+EXIT1:
+	 IF	(BYEBDOS OR B3RTC) AND TIMEON
+	CALL	RESMXT		; Reset max time to pre-chat value
+	 ENDIF
+;
+EXIT2:	CALL	ILPRT
+	DB	CR,LF,0
+	LHLD	STACK		; Get old CP/M (or MP/M) stack
+	SPHL			; Restore old stack pointer
+	RET			; To CP/M
+;
+;  Load routine
+;
+LDCOM:
+	 IF	MBBS AND COMMENT AND (BYEBDOS OR B3RTC)	AND TIMEON
+	CALL	RESMXT		; Get back max time
+	 ENDIF
+;
+	 IF	MBBS AND COMMENT
+	LHLD	STACK		; Get old stack
+	SPHL			; Restore it
+	CALL	ILPRT
+	DB	CR,LF,LF
+	DB	'Loading for COMMENT...please stand by...'
+	DB	CR,LF,LF,0
+	MVI	A,'P'
+	STA	80H		; 80H=0 if public, "P" if private
+	LXI	D,82H		; Our buffer starts at 82H
+	MVI	C,0		; C=# of characters (stuff at 81H)
+	LXI	H,COMHDR	; Subject heading
+LDCOM1:	MOV	A,M
+	ORA	A
+	JZ	LDCOM2
+	CALL	PUTHDR
+	INX	H
+	JMP	LDCOM1
+;
+LDCOM2:	MOV	A,C
+	STA	81H		; Save # of chars in 81H
+	MVI	A,0CAH		; Stuff 0CAH (JZ) in location 0
+	STA	0		; for MBYE/BYE5/NUBYE handling
+	XRA	A		; Make sure Z flag set so JZ will jump
+	JMP	0
+;
+; COMHDR is loaded as the message subject
+;
+COMHDR:	DB	'General (COMMENT)',0
+;
+PUTHDR:	STAX	D
+	INX	D
+	INR	C
+	RET
+	 ENDIF			; MBBS AND COMMENT
+;
+; Convert BCD value in A to binary in A
+;
+	 IF	RESCHAT	AND B3RTC AND (NOT BYEBDOS)
+BCDBIN:	PUSH	PSW		; Save A
+	ANI	0F0H		; Mask high nibble
+	RRC			; Move to low nibble
+	RRC
+	RRC
+	RRC
+	MOV	C,A		; And stuff in C (C=A)
+	MVI	B,9		; X10 (*9)
+;
+BCDBL:	ADD	C		; Add orig value to A
+	DCR	B		; Decrement B
+	JNZ	BCDBL		; Loop nine times (A+(C*9)=A*10)
+	MOV	B,A		; Save result in B
+	POP	PSW		; Get original value
+	ANI	0FH		; Mask low nibble
+	ADD	B		; +B gives binary value of BCD digit A
+	RET			; Return
+	 ENDIF
+;
+RESMXT:
+	 IF	BYEBDOS	AND (NOT B3RTC)	AND TIMEON
+	LDA	TLIMIT		; Get MXTIME back
+	MOV	E,A		; Store it
+	MVI	C,81
+	CALL	BDOS		; Restore MXTIME to pre-chat status
+	XRA	A		; Clear carry flag
+	RET			; And return
+	 ENDIF
+;
+	 IF	B3RTC AND (NOT BYEBDOS)	AND TIMEON
+	LHLD	0001H		; Get JMP COLDBOOT
+	DCX	H
+	MOV	D,M
+	DCX	H
+	MOV	E,M
+	LXI	H,B3MXO		; + B3MXO offset to MXML
+	DAD	D
+	LDA	TLIMIT		; Get max time back
+	MOV	M,A		; Restore to pre-chat status
+	RET
+	 ENDIF
+;
+; Inline print routine
+;
+ILPRT:	XTHL			; Save HL, generate message
+;
+ILPLP:	MOV	C,M		; Get character
+	PUSH	H
+	CALL	CONOUT		; Output it
+	POP	H
+	INX	H		; Point to next character
+	MOV	A,M		; Test
+	ORA	A		; For end
+	JNZ	ILPLP
+	XTHL			; Restore HL, return address
+	RET			; Return past message string
+;
+; Check for abort request
+;
+CKABT:	CALL	CONIN		; Get a character
+	CPI	'C'-40H		; CTRL-C?
+	JZ	EXIT1		; Yes, so exit chat
+	CPI	'X'-40H		; CTRL-X?
+	JZ	EXIT1		; Yes
+;
+	 IF	MBBS AND COMMENT
+	CPI	QKMSG		; Sysop requesting fast msg entry?
+	JZ	LDCOM		; Yes, so do it
+	 ENDIF			; MBBS AND COMMENT
+;
+	CPI	DEL		; Delete?
+	JZ	BACKIT		; Yes
+	CPI	BS		; Backspace?
+	JZ	BACKIT		; Yes, so treat as delete
+	RET			; ...else return
+;
+;			end of routines
+;=======================================================================
+;
+	DS	64		; Room for 32 level stack
+STACK:	DS	2		; Old CP/M (or MP/M) stack saved here
+;
+BCNT:	DB	PGTIME		; Bar counter
+CNT:	DB	PGTIME		; Alert counter
+CNTDWN:	DS	2		; Countdown Timer
+LCNT:	DB	0		; Line position counter
+;
+	 IF	(BYEBDOS OR B3RTC) AND TIMEON
+TLIMIT:	DB	0		; Storage byte for MXTIME
+	 ENDIF
+;
+	 IF	RESCHAT
+CHOUR:	DS	1		; Current hour
+CMIN:	DS	1		; Current minute
+	 ENDIF
+;
+	 IF	MPM
+	DB	0		; Force allocation of storage space
+	 ENDIF
+;
+	END
+

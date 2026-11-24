@@ -6,7 +6,7 @@ LT reads text. Example: LT A0:WELCOME.TXT
 HELP topic displays instructions. Example: HELP MOUNT
 MOUNT /L lists both catalogs. MOUNT name selects J: or P: by image size.
 NDSCAN drive: refreshes names from extensionless -NAME marker files.
-RBBS enters the bulletin board. BYE ends your call.
+RBBS enters the bulletin board. CHAT pages the sysop. BYE ends your call.
 
 A0:SYSTEM contains caller commands. I0:WORK is temporary workspace.
 I14:HELP contains these topics. J: is the selected swappable volume.

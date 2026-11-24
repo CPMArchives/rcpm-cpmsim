@@ -1,0 +1,10 @@
+{
+  "reference_sha256": "a24acfd30bd2ad67d050b8bf22a1e7c410cc451db03fa1b8aa053db5a2e827a2",
+  "clock_mhz": 4,
+  "page_seconds": 30,
+  "time_limit": false,
+  "bell": "BYE BDOS 78",
+  "configured_sha256": "c65f9f9c944c5fb0a2452397c3154fad52e132f86377b7337687c7af3465410b",
+  "executable_sha256": "d661f8626771ffbd1da50386a04b7604e2a4ba1d2401a9a2fbe5952d32d55064",
+  "executable_bytes": 768
+}

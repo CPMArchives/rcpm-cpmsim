@@ -1,0 +1,14 @@
+;
+CHAT WITH THE SYSOP
+
+Type CHAT at the CP/M prompt to page the operator.
+In RBBS, use C to return to CP/M first, then type CHAT.
+Wait for the operator to answer. An unanswered page returns to CP/M.
+Ctrl-C or Ctrl-X cancels the page or ends the conversation.
+
+Both keyboards share the same text area. Take turns typing.
+The sysop answers a page with Escape on the local keyboard.
+Local Ctrl-G toggles BYE's page bell and paging availability.
+Local Ctrl-B is private-console mode, not chat mode.
+
+For a message the sysop can read later, use MESSAGE or RBBS instead.
