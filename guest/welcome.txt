@@ -4,13 +4,13 @@
                      =======================================
                              CP/M 3 - Z3PLUS - BYE5
 
-                   RBBS - Enter the bulletin board
+                        RBBS - Enter the bulletin board
 
-Some commands:
+                                Some commands:
 
   DIR / SDZ - directory    HELP - system help        LT - read text file
   MOUNT - mount disks      DIR HELP: - help topics   LDIR - library contents
   UPLOAD - upload files    MESSAGE - msg to sysop    BYE - log off
-  YSEND - download files
+  YSEND - download files   CHAT - live chat w/sysop
 
-I0:WORK is temporary workspace; it is cleared when the call ends.
+        I0:WORK is temporary workspace; it is cleared when the call ends.
