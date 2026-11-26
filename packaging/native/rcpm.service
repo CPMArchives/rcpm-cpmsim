@@ -1,0 +1,31 @@
+[Unit]
+Description=Humongous RCP/M with private tcpser modem
+After=network.target
+
+[Service]
+Type=notify
+NotifyAccess=main
+User=rcpm
+Group=rcpm
+RuntimeDirectory=rcpm
+RuntimeDirectoryMode=0700
+RuntimeDirectoryPreserve=yes
+EnvironmentFile=/etc/rcpm/service.conf
+ExecStart=/usr/bin/python3 /usr/local/lib/rcpm/rcpm_service.py run --instance /var/lib/rcpm/instance --tcpser /var/lib/rcpm/instance/runtime/tcpser --address ${CALLER_ADDRESS} --port ${CALLER_PORT}
+ExecStop=/usr/bin/python3 /usr/local/lib/rcpm/rcpm_service.py systemd-stop --instance /var/lib/rcpm/instance
+TimeoutStartSec=150
+TimeoutStopSec=300
+KillMode=mixed
+SendSIGKILL=no
+Restart=on-failure
+RestartSec=10
+UMask=0077
+NoNewPrivileges=yes
+ProtectSystem=strict
+ProtectHome=yes
+PrivateTmp=yes
+ReadWritePaths=/var/lib/rcpm /var/backups/rcpm /run/rcpm
+RestrictAddressFamilies=AF_UNIX AF_INET
+
+[Install]
+WantedBy=multi-user.target

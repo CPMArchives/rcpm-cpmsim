@@ -89,6 +89,15 @@ tools are unsigned; the included `docs/INSTALLATION.DOC` explains startup and ne
 setup. Start locally, then use that guide to make the system accessible from
 another computer.
 
+## Native Debian service prerelease
+
+[v1.2.2-rc1](https://github.com/CPMArchives/rcpm-cpmsim/releases/tag/v1.2.2-rc1)
+adds a bundled tcpser/IP232 modem, private persistent console, systemd operation
+and verified stopped backups. Debian 12 ARM64 VM checks passed; x64 systemd VM
+qualification, sustained operation and public-VPS readiness remain pending.
+See the [prerelease notes](docs/RELEASE-NOTES-1.2.2-rc1.md) and
+[installation instructions](docs/INSTALLATION-NATIVE-SERVICE.md).
+
 ## Software
 
 Add more games with the **[optional software disks](Software/README.md)**.

@@ -1,0 +1,241 @@
+{
+  "date": "2026-11-26",
+  "status": "PASS: local Debian 12 ARM64 VM lifecycle qualification; not public-VPS qualification",
+  "environment": {
+    "debian_version": "12.15",
+    "pid1": "systemd",
+    "architecture": "aarch64",
+    "kernel": "6.1.0-54-cloud-arm64",
+    "systemd": "systemd 252 (252.39-1~deb12u2)",
+    "python": "3.11.2",
+    "libc": [
+      "glibc",
+      "2.36"
+    ],
+    "cpus": 2,
+    "memory_total_kib": "MemTotal:        2032848 kB",
+    "compiler_available": false,
+    "timezone": "Asia/Taipei",
+    "service_properties": "Type=notify\nTimeoutStopUSec=5min\nMemoryCurrent=15142912\nUser=rcpm\nGroup=rcpm\nProtectHome=yes\nProtectSystem=strict\nNoNewPrivileges=yes\nRuntimeDirectoryPreserve=yes\n",
+    "timeout_test_override_removed": true
+  },
+  "hypervisor": {
+    "tool": "Lima 2.3.0 with Apple Virtualization.framework",
+    "cpus": 2,
+    "memory_gib": 2,
+    "disk_gib": 12,
+    "shared_host_folders": false,
+    "rcpm_application_forwarding_disabled": true
+  },
+  "image": {
+    "url": "https://cloud.debian.org/images/cloud/bookworm/20261026-2643/debian-12-genericcloud-arm64-20261026-2643.qcow2",
+    "sha512": "f42866fe22b4baf9f0ed4f81d620064f2a4b86b18b92bfe3aaaa40babf6819d39cbf0caaaad13f4ae3e7c9f82cbd78b0c8cabadd8bc737ce13578e61fa86970c"
+  },
+  "integrated_case_groups_passed": 12,
+  "linux_safety_tests_passed": 10,
+  "cases": {
+    "installer": {
+      "preflight_read_only": true,
+      "fresh_install": true,
+      "user": {
+        "uid": 999,
+        "gid": 994,
+        "shell": "/usr/sbin/nologin"
+      },
+      "initially_stopped_disabled": true,
+      "root_owned_helpers": true,
+      "unit_verification": true,
+      "repeat_install_refused_without_data_change": true,
+      "systemd_verify_stderr": ""
+    },
+    "startup-shutdown": {
+      "real_systemd_notify_start": true,
+      "caller_HELP_bytes": 906,
+      "loopback_listeners": true,
+      "idle_stop_clean_no_child_processes": true,
+      "private_console_reattach": true,
+      "active_call_drains_without_interruption": true,
+      "new_calls_refused_during_stop": true,
+      "enabled_for_reboot": true
+    },
+    "reboot": {
+      "changed_kernel_boot_id": true,
+      "automatic_systemd_start": true,
+      "caller_HELP": true,
+      "credentials_preserved": true
+    },
+    "cold-boot": {
+      "changed_kernel_boot_id": true,
+      "automatic_systemd_start": true,
+      "caller_HELP": true,
+      "credentials_preserved": true
+    },
+    "idle-hard-reset": {
+      "changed_kernel_boot_id": true,
+      "automatic_systemd_start": true,
+      "caller_HELP": true,
+      "credentials_preserved": true
+    },
+    "backup-restore": {
+      "real_systemd_backup_unit": true,
+      "verified_snapshot": true,
+      "automatic_restart_after_backup": true,
+      "restored_disk_hash": true,
+      "restored_credentials": true,
+      "restored_systemd_boot_and_caller": true
+    },
+    "failed-backup": {
+      "backup_error_reported": true,
+      "service_remained_stopped": true,
+      "no_false_unit_failure_or_restart": true,
+      "last_good_snapshot_unchanged_and_valid": true,
+      "credentials_preserved": true
+    },
+    "persistent-timer": {
+      "real_shipped_calendar_timer": true,
+      "missed_run_caught_up": true,
+      "verified_snapshot": true,
+      "service_restarted_cleanly": true
+    },
+    "recovery-tcpser": {
+      "killed_only_disposable_component": "tcpser",
+      "automatic_systemd_restart": true,
+      "no_old_child_processes": true,
+      "credentials_preserved": true,
+      "caller_HELP": true
+    },
+    "recovery-guest": {
+      "killed_only_disposable_component": "guest",
+      "automatic_systemd_restart": true,
+      "no_old_child_processes": true,
+      "credentials_preserved": true,
+      "caller_HELP": true
+    },
+    "recovery-supervisor": {
+      "killed_only_disposable_component": "supervisor",
+      "automatic_systemd_restart": true,
+      "no_old_child_processes": true,
+      "credentials_preserved": true,
+      "caller_HELP": true
+    },
+    "stop-timeout": {
+      "shortened_timeout_fault_injection": true,
+      "no_forced_guest_termination": true,
+      "caller_continued": true,
+      "private_control_preserved": true,
+      "drained_later_and_restarted": true
+    }
+  },
+  "timeout_fault_injection": {
+    "systemd_stop_timeout_seconds": 5,
+    "shipped_default_seconds": 300,
+    "scope": "Manager timeout shortened only for fault injection; normal lifecycle tested with the shipped default. Full default-duration timeout was not waited out."
+  },
+  "fixes": [
+    {
+      "problem": "Successful stopped backup produced a false ExecStop failure and failure-policy restart",
+      "change": "Idempotent systemd-stop verifies the disk lock is free when the control endpoint has already exited"
+    },
+    {
+      "problem": "SIGKILL of supervisor left emulator and tcpser alive, blocking restart",
+      "change": "Linux parent-death signals terminate children if the supervisor dies; restart verified under actual systemd sandbox"
+    },
+    {
+      "problem": "Stop timeout removed the private control directory while processes/caller remained alive",
+      "change": "RuntimeDirectoryPreserve=yes retains operator status/control access"
+    },
+    {
+      "problem": "Failed control requests emitted unclosed-socket resource warnings",
+      "change": "Close control sockets in all request exit/error paths"
+    }
+  ],
+  "payload_identity": {
+    "installed_matches_delivered": {
+      "helper": "2e9dde8fc03fba0765f192bbe2ef4e352525e48a86f5d5c581e3db184f3848df",
+      "unit": "84526b608e74aadebc428f404ca4180670548d558cbf8fed2eaedba1ff9cf922",
+      "backup_unit": "9f9d43690e32533cd64d827c63a1145816a1214854fe5902de3ce9a136ec4cfc",
+      "timer_unit": "187af2d905c6aee209f2f8181be9be1aa241c417721484ce5e22392131a47f7e",
+      "control_wrapper": "ced1407ab64254813614765cff2faa977253c2aae66b6a34992f131fdee60aea",
+      "config": "ad0eee5c33f862957f3af60feb9b9c5db02929cc886a701aa053e545e1f1d412",
+      "qualification_harness": "9652dad4f08425ca5f09b65a5407213b20250dac264c15d70adb32d9cda4e7f4"
+    },
+    "native_runtime_matches": true,
+    "installer_and_preflight_unchanged_from_fresh_install": true,
+    "fresh_install_archive_sha256": "fa4ccac5a1d8144b423865a0bf5bff8d2fee1f3b0c059127adebc5ebe5bd33c7",
+    "delivered_archive_sha256": "0760949a7d2f5d5d8a70935d0b4fcf4844468523a419c78aecc3728795ae3b1e",
+    "note": "After fresh installation, only qualification-harness and documentation refinements changed; production helper/unit/runtime and installer remain byte-identical."
+  },
+  "artifacts": {
+    "arm64": {
+      "path": "build/native-service-kit-vm/arm64/rcpm-service-linux-arm64-candidate.tar.gz",
+      "sha256": "0760949a7d2f5d5d8a70935d0b4fcf4844468523a419c78aecc3728795ae3b1e",
+      "bytes": 45111017,
+      "manifests_verified": true,
+      "real_systemd_VM_tested": true,
+      "native_runtime_unchanged": {
+        "runtime/cpmchattr": "36a9f516df047e5b2589d55ca404befd7dfd5d07e289e64a012d04b8d2b3dd23",
+        "runtime/mkfs.cpm": "c63672b4bb5482b0f6cea51bfd6ddf5660968b6abfacf6c90b1b4fcf7f231faf",
+        "runtime/tcpser": "73fd3221fd611155ac07e0baf5df602721eaec4c5bf8d9ad679a06af31e7d080",
+        "runtime/cpmrm": "0d7c14fe5a12240146f8cf66e44b8ce8874dcea4f28168c852c875ac1000587f",
+        "runtime/cpmcp": "86a43b6a8f7a94e6eb83e956087c05a0e12175547c920b97e857b3b03e740a6e",
+        "runtime/cpmls": "417deb7b2cf2f30cb10ed1aa89ef6eeccfd1b1b85055b49f0e53edcc37fc7a31",
+        "runtime/diskdefs": "154dc3267cce4fac8aec7ff6245b4f62ad5b17972db29ac5075cfed5d4c4c2c7",
+        "runtime/cpmsim.features.json": "7d3c2ba9ed04cd31b67148bc602dc228ef05958d4cde062c2f131e1a575f7a5c",
+        "runtime/cpmsim": "af007afc3e021d4e228b47baef76a46d57a0bf42349122c442ec509a7a0ab132",
+        "runtime/rcpm": "05b219f5895b4f7a14ead4a14b9ad953c0e92465cf09195998cc391381c08b1a"
+      }
+    },
+    "x64": {
+      "path": "build/native-service-kit-vm/x64/rcpm-service-linux-x64-candidate.tar.gz",
+      "sha256": "1bdae49d62568f494bde3af6fd4d30e52d2e33db6229594fc66c0391f769e9fb",
+      "bytes": 45130225,
+      "manifests_verified": true,
+      "real_systemd_VM_tested": false,
+      "native_runtime_unchanged": {
+        "runtime/cpmchattr": "1f5b50ead80d4c6ea4ee57bd7aa20a1b37bc104230a07f77c15f41f01a2f5d12",
+        "runtime/mkfs.cpm": "06c5648a3308a71634ea101812fddae4f8997e22db58c8deb2edb248f061caa1",
+        "runtime/tcpser": "5d46d05f675e4d08a8e3681c02e4ab4772f30d4503179e548ed26f5f66806411",
+        "runtime/cpmrm": "11f385f42d4d799f6a9743ba2895d69f4b7cec0f17ee59573e581b6b67271c26",
+        "runtime/cpmcp": "633efa567f21071695a7982aae6aefa9ce61765ebe1e8f3c850f76dda7382fca",
+        "runtime/cpmls": "1b234a838dd7d9721b263b2978c237dced0817826eaaa067d224f960d4339862",
+        "runtime/diskdefs": "154dc3267cce4fac8aec7ff6245b4f62ad5b17972db29ac5075cfed5d4c4c2c7",
+        "runtime/cpmsim.features.json": "c9a4bff9db87b54ed697ace5a5cf283daffdb75ad3b2417bee8bf65e3c9140af",
+        "runtime/cpmsim": "9be2b5f0fa88ebc670ec8610fbf09709aa63ba493688180676a5f23e826bc130",
+        "runtime/rcpm": "460fd9baee1a22eedb5f5d864ba9cb48f45b98719d886719e51724eb4eae4d6d"
+      }
+    }
+  },
+  "source_sha256": {
+    "packaging/native/Install-Service.sh": "f22f25e724bbbef490ccd0f13fce2128c70c2d8630d19258c154c7f32e374d5a",
+    "packaging/native/TCPSER-COPYING": "231f7edcc7352d7734a96eef0b8030f77982678c516876fcb81e25b32d68564c",
+    "packaging/native/preflight.py": "278821874edcbdb279bceb0c24a3d00f3051c06328374ef2850f71da3011d97e",
+    "packaging/native/rcpm-backup.service": "9f9d43690e32533cd64d827c63a1145816a1214854fe5902de3ce9a136ec4cfc",
+    "packaging/native/rcpm-backup.timer": "187af2d905c6aee209f2f8181be9be1aa241c417721484ce5e22392131a47f7e",
+    "packaging/native/rcpm.service": "84526b608e74aadebc428f404ca4180670548d558cbf8fed2eaedba1ff9cf922",
+    "packaging/native/rcpm_service.py": "2e9dde8fc03fba0765f192bbe2ef4e352525e48a86f5d5c581e3db184f3848df",
+    "packaging/native/rcpmctl": "ced1407ab64254813614765cff2faa977253c2aae66b6a34992f131fdee60aea",
+    "packaging/native/service.conf": "ad0eee5c33f862957f3af60feb9b9c5db02929cc886a701aa053e545e1f1d412",
+    "check_debian_vm.py": "9652dad4f08425ca5f09b65a5407213b20250dac264c15d70adb32d9cda4e7f4",
+    "test_native_service.py": "9107b4a8d6767ecaec116c38187dd7db6f3e0dc4b32b3c3f80268424079873c3",
+    "build_native_service_kit.py": "aa956f117e29a167d310f46046013569ee2e06ba3bc252a418e8a91abb49a284"
+  },
+  "abrupt_reset_proof": {
+    "hypervisor_SIGKILL_used": true,
+    "previous_boot_has_start_without_clean_service_stop": true,
+    "idle_only": true
+  },
+  "snapshots_after_reset": {
+    "all_snapshots_verified": true
+  },
+  "vm_destroyed_after_evidence_export": true,
+  "vps_deployed": false,
+  "cpmnet_started": false,
+  "limits": [
+    "Real-systemd VM qualification is ARM64 only; x64 kit updated but no x64 VM or native x64 hardware test",
+    "Abrupt VM stop was at idle, not during active RBBS/database writes",
+    "No off-host backup transport/retention/disaster-site restore",
+    "No 72-hour soak, VPS-provider kernel/network qualification or public exposure",
+    "No full guest-program/BYE AUTH adversarial regression rerun in this VM"
+  ],
+  "evidence": "build/debian-vm-qualification/evidence: sanitized final results and initial failure evidence; no disk images or credentials"
+}

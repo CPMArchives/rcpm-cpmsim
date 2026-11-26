@@ -298,5 +298,82 @@ unsigned char device_idle_read(void) { return rcpm_idle_read(); }
             self.assertTrue(self.dev.device_status() & 8)
 
 
+    @unittest.skipUnless(os.environ.get('RCPM_TEST_TCPSER'), 'Set RCPM_TEST_TCPSER to test real tcpser')
+    def test_real_tcpser_outbound_binary_hangup_failed_dial_and_inbound_recovery(self):
+        modem_port, call_port = free_port(), free_port()
+        with tempfile.TemporaryFile() as log, socket.socket() as hub:
+            hub.bind(('127.0.0.1', 0))
+            hub.listen(1)
+            hub.settimeout(5)
+            proc = subprocess.Popen([os.environ['RCPM_TEST_TCPSER'], '-v', f'127.0.0.1:{modem_port}',
+                '-p', f'127.0.0.1:{call_port}', '-s', '38400', '-i', 'e0v1&c1&d2', '-l', '0'],
+                stdout=log, stderr=log)
+            def stop():
+                proc.terminate()
+                try:
+                    proc.wait(timeout=3)
+                except subprocess.TimeoutExpired:
+                    proc.kill()
+                    proc.wait()
+            self.addCleanup(stop)
+            self.start('ip232', modem_port)
+            self.wait(lambda s: s & 8)
+            self.dev.device_control(1)
+            def response(marker):
+                data = bytearray()
+                end = time.monotonic() + 10
+                while marker not in data and time.monotonic() < end:
+                    if self.dev.device_status() & 1:
+                        data.append(self.dev.device_read())
+                    else:
+                        time.sleep(.002)
+                self.assertIn(marker, data)
+                return data
+            self.send(b'ATE0V1&C1&D2S0=0\r')
+            response(b'OK\r\n')
+            # tcpser samples control lines every 100 ms. Honor modem DTR
+            # settling time so a complete short call cannot hide the high edge.
+            time.sleep(.25)
+            self.send(f'ATD127.0.0.1:{hub.getsockname()[1]}\r'.encode())
+            peer, _ = hub.accept()
+            self.addCleanup(peer.close)
+            peer.settimeout(5)
+            response(b'CONNECT 38400\r\n')
+            self.wait(lambda s: s & 4)
+            payload = bytes(range(256)) * 4
+            peer.sendall(payload)
+            self.assertEqual(self.receive(len(payload)), payload)
+            self.send(payload)
+            incoming = bytearray()
+            while len(incoming) < len(payload):
+                block = peer.recv(len(payload) - len(incoming))
+                self.assertTrue(block)
+                incoming.extend(block)
+            self.assertEqual(incoming, payload)
+            self.dev.device_control(0)
+            self.wait(lambda s: not s & 4)
+            self.wait_closed(peer)
+            response(b'NO CARRIER\r\n')
+            self.dev.device_control(1)
+            time.sleep(.25)
+            # A closed loopback port is a controlled failed destination, no external dialing.
+            with socket.socket() as reserved:
+                reserved.bind(('127.0.0.1', 0))
+                failed_port = reserved.getsockname()[1]
+            self.send(f'ATD127.0.0.1:{failed_port}\r'.encode())
+            response(b'NO CARRIER\r\n')
+            self.assertFalse(self.dev.device_status() & 4)
+            self.send(b'ATS0=1\r')
+            response(b'OK\r\n')
+            caller = self.peer(call_port)
+            response(b'CONNECT 38400\r\n')
+            self.wait(lambda s: s & 4)
+            caller.sendall(b'inbound-after-outbound')
+            self.assertEqual(self.receive(len(b'inbound-after-outbound')), b'inbound-after-outbound')
+            self.dev.device_control(0)
+            self.wait(lambda s: not s & 4)
+            self.wait_closed(caller)
+
+
 if __name__ == '__main__':
     unittest.main()

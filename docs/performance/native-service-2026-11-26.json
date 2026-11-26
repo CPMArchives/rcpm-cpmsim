@@ -1,0 +1,153 @@
+{
+  "date": "2026-11-26",
+  "status": "local-engineering-candidate; not VPS-qualified",
+  "deployment_performed": false,
+  "installer_executed": false,
+  "published_ports": false,
+  "CPMNet_implemented": false,
+  "test_environment": {
+    "userspace": "Debian 12 containers, network none, loopback fixtures only",
+    "arm64": "native ISA on ARM64 Linux VM on macOS ARM64",
+    "x64": "QEMU CPU emulation on ARM64; native x64 hardware not tested"
+  },
+  "local_regression_tests_passed": 30,
+  "tcpser": {
+    "upstream_revision": "fe7feff4862406b277e009d14c219f5d16cf1222",
+    "source_archive_sha256": "b70e9b222e7dbdcc2fb0395caf444f1ddd329f5d9958b5895a5e921fed2bbc68",
+    "fixes": [
+      "Failed ATD restores command mode/on-hook state before NO CARRIER",
+      "Control-pipe batches process buf[i], preserving queued DTR-down events"
+    ],
+    "DTR_settling_seconds": 0.25
+  },
+  "source_sha256": {
+    "build_native_service_kit.py": "71b09ffd81915162207a398973b4092c5fa0a3386ec4dcf26f44042280387c13",
+    "check_native_service.py": "812d3a8ff26bb285fd51f14308f869d7fb931025842b16defa2424d8b180bb1c",
+    "check_board_outbound.py": "286387c02240c675bbfa6d9eda4387774ab617aea6a11ebf5802051f1ca9c012",
+    "check_outbound_modem.py": "bf29066f05673c948580ce29cfb09e2dad0350f0684a5fc014bb38147a0cd7ff",
+    "test_native_service.py": "a12ac8879270fe4e0d1c0576958cf78166f313b65cc1f101931ec1ec8ad1cd9e",
+    "test_modem_device.py": "1395331ef200750e140250e63c8d7cea70ea9089a82f85df620db93caad5a059",
+    "guest/dialprobe.asm": "eb3dd544b6f1384706dad51435cd216138ca52c39e06835fd60e2b676e41bbde",
+    "packaging/native/Install-Service.sh": "f22f25e724bbbef490ccd0f13fce2128c70c2d8630d19258c154c7f32e374d5a",
+    "packaging/native/TCPSER-COPYING": "231f7edcc7352d7734a96eef0b8030f77982678c516876fcb81e25b32d68564c",
+    "packaging/native/preflight.py": "278821874edcbdb279bceb0c24a3d00f3051c06328374ef2850f71da3011d97e",
+    "packaging/native/rcpm-backup.service": "9f9d43690e32533cd64d827c63a1145816a1214854fe5902de3ce9a136ec4cfc",
+    "packaging/native/rcpm-backup.timer": "187af2d905c6aee209f2f8181be9be1aa241c417721484ce5e22392131a47f7e",
+    "packaging/native/rcpm.service": "f947ab88f9cd720096a73be76f7f4c41f401ebff13030b45a3d325cff23eb362",
+    "packaging/native/rcpm_service.py": "e081680fc26f08adc85b7ada394a39c22a9acad789425c03a1c9830a157b61d7",
+    "packaging/native/rcpmctl": "ced1407ab64254813614765cff2faa977253c2aae66b6a34992f131fdee60aea",
+    "packaging/native/service.conf": "ad0eee5c33f862957f3af60feb9b9c5db02929cc886a701aa053e545e1f1d412"
+  },
+  "architectures": {
+    "arm64": {
+      "archive": "arm64/rcpm-service-linux-arm64-candidate.tar.gz",
+      "sha256": "94e7dd1ececa4f9d90cfc60a79e5a89c79b894f6281342a1ef27da7cd891a7ff",
+      "bytes": 45103053,
+      "manifest_preflight": "passed",
+      "unit_tests_passed": 17,
+      "repeated_dial_failure_inbound_recovery_cycles": 5,
+      "service_checks": {
+        "unattended_boot_IP232": true,
+        "systemd_READY_notification": true,
+        "duplicate_service_refused": true,
+        "console_reattach": true,
+        "caller_HELP_via_tcpser": true,
+        "private_data_and_remote_shutdown_denied": true,
+        "drain_rejects_new_calls_waits_for_existing": true,
+        "graceful_shutdown_and_verified_snapshot": true,
+        "restored_boot_login_credentials_and_disk_hash": true,
+        "tcpser_failure_reported_pair_restart_preserves_credentials": true
+      },
+      "board_outbound": {
+        "release_board_outbound_ATD": true,
+        "loopback_only": true,
+        "binary_echo_bytes": 1024,
+        "DTR_hangup": true,
+        "returned_to_BYE": true,
+        "subsequent_inbound_HELP": true,
+        "disposable_test_program_only": true
+      },
+      "tcpser_receipt": {
+        "revision": "fe7feff4862406b277e009d14c219f5d16cf1222",
+        "patches": [
+          "failed-dial-command-mode-recovery",
+          "coalesced-control-event-index"
+        ],
+        "source_archive_sha256": "b70e9b222e7dbdcc2fb0395caf444f1ddd329f5d9958b5895a5e921fed2bbc68",
+        "sha256": "73fd3221fd611155ac07e0baf5df602721eaec4c5bf8d9ad679a06af31e7d080",
+        "native": {
+          "dependencies": [
+            "\tlinux-vdso.so.1 (0x0000ef0ec1fb4000)",
+            "\tlibc.so.6 => /lib/aarch64-linux-gnu/libc.so.6 (0x0000ef0ec1d90000)",
+            "\t/lib/ld-linux-aarch64.so.1 (0x0000ef0ec1f70000)"
+          ],
+          "required_glibc_symbols_through": "2.34"
+        },
+        "license": "GPL-2.0-or-later; original notices in source/tcpser",
+        "source_url": "https://github.com/go4retro/tcpser/tree/fe7feff4862406b277e009d14c219f5d16cf1222"
+      },
+      "base_archive_sha256": "39b94ff2a835f6e13d5079d3e78a02123f817711043d986d3cf2326df3783a0b"
+    },
+    "x64": {
+      "archive": "x64/rcpm-service-linux-x64-candidate.tar.gz",
+      "sha256": "7e96ca005a6f53acdc62a9a021b030a6c65bbdf5921dea300cc9149337356322",
+      "bytes": 45122193,
+      "manifest_preflight": "passed",
+      "unit_tests_passed": 17,
+      "repeated_dial_failure_inbound_recovery_cycles": 5,
+      "service_checks": {
+        "unattended_boot_IP232": true,
+        "systemd_READY_notification": true,
+        "duplicate_service_refused": true,
+        "console_reattach": true,
+        "caller_HELP_via_tcpser": true,
+        "private_data_and_remote_shutdown_denied": true,
+        "drain_rejects_new_calls_waits_for_existing": true,
+        "graceful_shutdown_and_verified_snapshot": true,
+        "restored_boot_login_credentials_and_disk_hash": true,
+        "tcpser_failure_reported_pair_restart_preserves_credentials": true
+      },
+      "board_outbound": {
+        "release_board_outbound_ATD": true,
+        "loopback_only": true,
+        "binary_echo_bytes": 1024,
+        "DTR_hangup": true,
+        "returned_to_BYE": true,
+        "subsequent_inbound_HELP": true,
+        "disposable_test_program_only": true
+      },
+      "tcpser_receipt": {
+        "revision": "fe7feff4862406b277e009d14c219f5d16cf1222",
+        "patches": [
+          "failed-dial-command-mode-recovery",
+          "coalesced-control-event-index"
+        ],
+        "source_archive_sha256": "b70e9b222e7dbdcc2fb0395caf444f1ddd329f5d9958b5895a5e921fed2bbc68",
+        "sha256": "5d46d05f675e4d08a8e3681c02e4ab4772f30d4503179e548ed26f5f66806411",
+        "native": {
+          "dependencies": [
+            "\tlibc.so.6 => /lib/x86_64-linux-gnu/libc.so.6 (0x0000004002854000)",
+            "\t/lib64/ld-linux-x86-64.so.2 (0x0000004000000000)"
+          ],
+          "required_glibc_symbols_through": "2.34"
+        },
+        "license": "GPL-2.0-or-later; original notices in source/tcpser",
+        "source_url": "https://github.com/go4retro/tcpser/tree/fe7feff4862406b277e009d14c219f5d16cf1222"
+      },
+      "base_archive_sha256": "34a12c2e7fde6dbc48a63a27fa138cb138d771395431821a1847317fce80b3dd"
+    }
+  },
+  "unverified": [
+    "Actual systemd installation, service sandbox and reboot behavior",
+    "Native x64 hardware",
+    "Off-host backup transport, retention and restore",
+    "72-hour soak and target VPS CPU/RAM measurements",
+    "Power-loss/full-disk crash consistency",
+    "Full BYE/AUTH adversarial suite not repeated; private-read and remote-shutdown subset passed",
+    "Public network and encrypted access configuration"
+  ],
+  "build_environment_notes": [
+    "An earlier x64 compile suffered a GCC internal segmentation fault under QEMU; a clean retry succeeded.",
+    "One first corrected x64 unit run timed out on a two-second inbound receive. The complete suite passed on repeat and five subsequent outbound/recovery cycles passed. Native x64 timing remains unqualified."
+  ]
+}

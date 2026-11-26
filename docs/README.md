@@ -48,3 +48,10 @@ they are separate from the released foreground launcher workflow.
 - [RCP/M 1.1.1 release notes](RELEASE-NOTES-1.1.1.md)
 
 - [RCP/M 1.2 release notes](RELEASE-NOTES-1.2.md)
+
+- [Native Debian service kit, tcpser, stopped backups and qualification](native-service.md)
+
+- [Debian VM installer, systemd and recovery qualification](debian-vm-validation.md)
+
+- [v1.2.2-rc1 native Debian service prerelease](RELEASE-NOTES-1.2.2-rc1.md)
+- [Native service prerelease installation](INSTALLATION-NATIVE-SERVICE.md)

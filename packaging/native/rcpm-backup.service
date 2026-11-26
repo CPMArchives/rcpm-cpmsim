@@ -1,0 +1,13 @@
+[Unit]
+Description=Stopped and verified RCP/M snapshot
+Wants=rcpm.service
+After=rcpm.service
+
+[Service]
+Type=oneshot
+User=rcpm
+Group=rcpm
+UMask=0077
+ExecStart=/bin/sh -c '/usr/local/bin/rcpmctl backup --output /var/backups/rcpm/snapshot-$(date -u +%%Y%%m%%dT%%H%%M%%SZ)'
+ExecStartPost=+/bin/systemctl --no-block start rcpm.service
+TimeoutStartSec=600
