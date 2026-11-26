@@ -40,7 +40,10 @@ replace `-p 127.0.0.1:4000:4000` with `-p 127.0.0.1:5000:4000` in the startup
 command. Connect your terminal to `127.0.0.1:5000`. Startup still reports 4000,
 because it reports the internal listening port.
 
-To use port 5000 both inside and outside the container, run:
+Generally, you should not need to change the container's internal port.
+If you want to change it, change the second **port number** in the mapping
+(`HOST_PORT:CONTAINER_PORT`) and set `--port` to match. For example, to use
+port 5000 both externally and internally:
 
 ```sh
 docker run --name rcpm -it \
