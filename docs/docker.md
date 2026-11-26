@@ -117,6 +117,21 @@ ARM64 host; native x64 hardware was not tested. Results and tested archive
 hashes are recorded in the [validation report](https://github.com/CPMArchives/rcpm-cpmsim/blob/main/docs/performance/LINUX-DOCKER-VALIDATION.json),
 also attached to the release as `LINUX-DOCKER-VALIDATION.json`.
 
+### Mixed ARM64 and x64 validation
+
+A mixed pair also passed on 26 November 2026: one released ARM64 instance on
+port 4000 and one released x64 instance on port 5000, running simultaneously
+with separate data volumes and independent credentials. Both callers logged
+in; the ARM64 caller entered RBBS while the x64 caller used CP/M HELP.
+After the ARM64 instance shut down, the x64 caller remained connected and
+successfully used HELP again. Both instances reported their correct startup
+ports and shut down cleanly.
+
+This test used ports 4000 and 5000 inside an isolated Docker network, without
+publishing the occupied host ports. ARM64 ran natively and x64 ran under QEMU
+CPU emulation on the ARM64 Docker host. See the linked validation report above
+for results and tested archive hashes.
+
 ## SYSOP TERMINAL
 
 The attached Docker terminal is the local sysop console. To detach from the console without closing stdin, press Docker's Ctrl-P, Ctrl-Q sequence; to reattach, run `docker attach rcpm`.

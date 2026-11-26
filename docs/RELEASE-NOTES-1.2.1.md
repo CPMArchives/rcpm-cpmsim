@@ -60,3 +60,13 @@ credentials. Stopping one instance left the other caller connected and able to
 use HELP. Startup reported the correct ports and both instances shut down cleanly.
 Host publication of both occupied ports was not tested in this pass; x64 used
 QEMU CPU emulation on ARM64. See performance/LINUX-DOCKER-VALIDATION.json.
+
+### Mixed ARM64/x64 Docker pair — 26 November 2026
+
+One released ARM64 instance on port 4000 and one released x64 instance on port
+5000 passed simultaneous caller checks, with independent RBBS and CP/M HELP
+sessions, separate volumes and credentials, correct startup port reports and
+clean shutdowns. The x64 caller stayed connected and used HELP after ARM64
+shut down. Test networking was isolated; occupied host ports were not published.
+x64 used QEMU emulation on ARM64. Results and archive hashes are in the
+consolidated Linux/Docker validation report.

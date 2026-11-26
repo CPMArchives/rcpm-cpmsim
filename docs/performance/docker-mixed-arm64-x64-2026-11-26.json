@@ -1,0 +1,31 @@
+{
+  "instances": [
+    {
+      "image": "cpmarchives/rcpm:1.2.1-arm64",
+      "port": 4000,
+      "archive": "rcpm-v1.2.1-docker-arm64.tar.gz",
+      "archive_sha256": "9cb3db7b60b47599eecd19eafdb3a79398c73cfb0f739c4fcfdf0ff192240d09"
+    },
+    {
+      "image": "cpmarchives/rcpm:1.2.1-x64",
+      "port": 5000,
+      "archive": "rcpm-v1.2.1-docker-x64.tar.gz",
+      "archive_sha256": "3014d65f645322c345bf3dc1b7db113c11b6b7517eba16d871e36839f3582098"
+    }
+  ],
+  "ports": [
+    4000,
+    5000
+  ],
+  "network_scope": "isolated Docker network; occupied host ports not published",
+  "simultaneous_callers": true,
+  "independent_RBBS_and_CPM_sessions": true,
+  "startup_ports_correct": true,
+  "separate_volumes": true,
+  "independent_credentials": true,
+  "second_survives_first_shutdown": true,
+  "orderly_shutdown": true,
+  "date": "2026-11-26",
+  "host": "Docker Linux containers on macOS ARM64",
+  "x64_execution": "QEMU CPU emulation; native x64 hardware not tested"
+}
