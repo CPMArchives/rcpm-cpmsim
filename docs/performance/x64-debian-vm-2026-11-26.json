@@ -1,0 +1,189 @@
+{
+  "date": "2026-11-26",
+  "status": "PASS: published v1.2.2-rc1 x64 kit, local Debian 12 x86_64 VM lifecycle qualification",
+  "artifact": {
+    "release_url": "https://github.com/CPMArchives/rcpm-cpmsim/releases/tag/v1.2.2-rc1",
+    "release_id": 459606316,
+    "tag": "v1.2.2-rc1",
+    "source_commit": "36bfc1322a27974d095b09ee582182359a4ec4d6",
+    "asset": "rcpm-v1.2.2-rc1-linux-x64-service.tar.gz",
+    "size": 45130225,
+    "sha256": "1bdae49d62568f494bde3af6fd4d30e52d2e33db6229594fc66c0391f769e9fb",
+    "published_checksums_match": true,
+    "github_asset_digest_matches": true
+  },
+  "environment": {
+    "debian_version": "12.15",
+    "pid1": "systemd",
+    "architecture": "x86_64",
+    "kernel": "6.1.0-54-cloud-amd64",
+    "systemd": "systemd 252 (252.39-1~deb12u2)",
+    "python": "3.11.2",
+    "libc": [
+      "glibc",
+      "2.36"
+    ],
+    "cpus": 2,
+    "memory_total_kib": "MemTotal:        2021684 kB",
+    "compiler_available": false,
+    "timezone": "Asia/Taipei",
+    "service_properties": "Type=notify\nTimeoutStopUSec=5min\nMemoryCurrent=12480512\nUser=rcpm\nGroup=rcpm\nProtectHome=yes\nProtectSystem=strict\nNoNewPrivileges=yes\nRuntimeDirectoryPreserve=yes\n",
+    "timeout_test_override_removed": true
+  },
+  "hypervisor": {
+    "tool": "Lima 2.3.0 / QEMU 11.1.3 TCG",
+    "host_arch": "aarch64",
+    "guest_arch": "x86_64",
+    "cpu_emulation": true,
+    "cpus": 2,
+    "memory_gib": 2,
+    "disk_gib": 16,
+    "shared_host_folders": false,
+    "application_traffic": "guest loopback only",
+    "application_forwarding_disabled": true
+  },
+  "image": {
+    "url": "https://cloud.debian.org/images/cloud/bookworm/20261026-2643/debian-12-genericcloud-amd64-20261026-2643.qcow2",
+    "sha512": "0464b5d4ae3aa4f658468d88da83af7857b71548b30d46dcb6282770955a747fb95a983476db90d25afd0653af607224c7ebd05122ab71faa106fd712aaad652",
+    "checksum_verified": true
+  },
+  "integrated_case_groups_passed": 12,
+  "linux_safety_tests_passed": 10,
+  "cases": {
+    "installer": {
+      "preflight_read_only": true,
+      "fresh_install": true,
+      "user": {
+        "uid": 999,
+        "gid": 994,
+        "shell": "/usr/sbin/nologin"
+      },
+      "initially_stopped_disabled": true,
+      "root_owned_helpers": true,
+      "unit_verification": true,
+      "repeat_install_refused_without_data_change": true,
+      "systemd_verify_stderr": ""
+    },
+    "startup-shutdown": {
+      "real_systemd_notify_start": true,
+      "caller_HELP_bytes": 906,
+      "loopback_listeners": true,
+      "idle_stop_clean_no_child_processes": true,
+      "private_console_reattach": true,
+      "active_call_drains_without_interruption": true,
+      "new_calls_refused_during_stop": true,
+      "enabled_for_reboot": true
+    },
+    "reboot": {
+      "changed_kernel_boot_id": true,
+      "automatic_systemd_start": true,
+      "caller_HELP": true,
+      "credentials_preserved": true
+    },
+    "backup-restore": {
+      "real_systemd_backup_unit": true,
+      "verified_snapshot": true,
+      "automatic_restart_after_backup": true,
+      "restored_disk_hash": true,
+      "restored_credentials": true,
+      "restored_systemd_boot_and_caller": true
+    },
+    "failed-backup": {
+      "backup_error_reported": true,
+      "service_remained_stopped": true,
+      "no_false_unit_failure_or_restart": true,
+      "last_good_snapshot_unchanged_and_valid": true,
+      "credentials_preserved": true
+    },
+    "persistent-timer": {
+      "real_shipped_calendar_timer": true,
+      "missed_run_caught_up": true,
+      "verified_snapshot": true,
+      "service_restarted_cleanly": true
+    },
+    "recovery-tcpser": {
+      "killed_only_disposable_component": "tcpser",
+      "automatic_systemd_restart": true,
+      "no_old_child_processes": true,
+      "credentials_preserved": true,
+      "caller_HELP": true
+    },
+    "recovery-guest": {
+      "killed_only_disposable_component": "guest",
+      "automatic_systemd_restart": true,
+      "no_old_child_processes": true,
+      "credentials_preserved": true,
+      "caller_HELP": true
+    },
+    "recovery-supervisor": {
+      "killed_only_disposable_component": "supervisor",
+      "automatic_systemd_restart": true,
+      "no_old_child_processes": true,
+      "credentials_preserved": true,
+      "caller_HELP": true
+    },
+    "stop-timeout": {
+      "shortened_timeout_fault_injection": true,
+      "no_forced_guest_termination": true,
+      "caller_continued": true,
+      "private_control_preserved": true,
+      "drained_later_and_restarted": true
+    },
+    "cold-boot": {
+      "changed_kernel_boot_id": true,
+      "automatic_systemd_start": true,
+      "caller_HELP": true,
+      "credentials_preserved": true
+    },
+    "idle-hard-reset": {
+      "changed_kernel_boot_id": true,
+      "automatic_systemd_start": true,
+      "caller_HELP": true,
+      "credentials_preserved": true
+    }
+  },
+  "payload_identity": {
+    "installed_matches_delivered": {
+      "helper": "2e9dde8fc03fba0765f192bbe2ef4e352525e48a86f5d5c581e3db184f3848df",
+      "unit": "84526b608e74aadebc428f404ca4180670548d558cbf8fed2eaedba1ff9cf922",
+      "backup_unit": "9f9d43690e32533cd64d827c63a1145816a1214854fe5902de3ce9a136ec4cfc",
+      "timer_unit": "187af2d905c6aee209f2f8181be9be1aa241c417721484ce5e22392131a47f7e",
+      "control_wrapper": "ced1407ab64254813614765cff2faa977253c2aae66b6a34992f131fdee60aea",
+      "config": "ad0eee5c33f862957f3af60feb9b9c5db02929cc886a701aa053e545e1f1d412",
+      "qualification_harness": "9652dad4f08425ca5f09b65a5407213b20250dac264c15d70adb32d9cda4e7f4"
+    },
+    "native_runtime_matches": true,
+    "installer_and_preflight_unchanged_from_fresh_install": true,
+    "fresh_install_archive_sha256": "1bdae49d62568f494bde3af6fd4d30e52d2e33db6229594fc66c0391f769e9fb",
+    "delivered_archive_sha256": "1bdae49d62568f494bde3af6fd4d30e52d2e33db6229594fc66c0391f769e9fb",
+    "note": "Fresh installation and all qualification phases used the published x64 archive without payload or harness changes."
+  },
+  "abrupt_reset_proof": {
+    "hypervisor_SIGKILL_used": true,
+    "previous_boot_has_start_without_clean_service_stop": true,
+    "idle_only": true
+  },
+  "post_reset_snapshots": {
+    "all_snapshots_verified": true
+  },
+  "harness": "Unmodified published source/host-linux/check_debian_vm.py; default timing budgets",
+  "limits": [
+    "CPU emulation; native x64 hardware and performance not qualified.",
+    "Five-second stop-timeout fault injection; shipped 300-second timeout restored, full duration not waited out.",
+    "Abrupt reset at idle only; active-write crash consistency not established.",
+    "No long-duration soak, load, Internet exposure, VPS deployment, or new security/BYE AUTH audit.",
+    "No outbound dialing rerun in this VM; inbound tcpser/IP232 exercised by lifecycle caller tests.",
+    "No CPMNet or CP/M mail utility built or tested.",
+    "No changes to published release, kits, source commit, or tag."
+  ],
+  "evidence_directory": "build/x64-vm-qualification/evidence/final",
+  "cleanup": {
+    "vm_deleted": true,
+    "isolated_lima_home_and_private_keys_removed": true,
+    "downloaded_debian_image_removed": true,
+    "no_vps_deployment": true,
+    "no_cpmnet_work": true
+  },
+  "test_date_local": "2026-11-26",
+  "report_finalized_date_local": "2026-11-27"
+}
