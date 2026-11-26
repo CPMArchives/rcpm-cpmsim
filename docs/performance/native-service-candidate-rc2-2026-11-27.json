@@ -1,0 +1,120 @@
+{
+  "version": "v1.2.2-rc2",
+  "date": "2026-11-27",
+  "timezone": "Asia/Taipei",
+  "status": "PASS: rebuilt candidate package verification on both architectures",
+  "published": false,
+  "architectures": {
+    "arm64": {
+      "archive": "rcpm-v1.2.2-rc2-linux-arm64-service.tar.gz",
+      "sha256": "c18d846d651af6ba4bae18ed1e6b3d80e0430ae39b049962c5f73ef97829a9fb",
+      "bytes": 45154094,
+      "all_file_hashes_verified": true,
+      "package_files": 762,
+      "native_ELF_architecture_verified": true,
+      "native_ELF_files": [
+        "runtime/cpmchattr",
+        "runtime/cpmcp",
+        "runtime/cpmls",
+        "runtime/cpmrm",
+        "runtime/cpmsim",
+        "runtime/mkfs.cpm",
+        "runtime/rcpm",
+        "runtime/tcpser"
+      ],
+      "source_overlays_match_checkout": true,
+      "unchanged_native_media_driver_files": 19,
+      "base_archive_sha256": "0760949a7d2f5d5d8a70935d0b4fcf4844468523a419c78aecc3728795ae3b1e",
+      "helper_sha256": "9b4a8bc2dac36be7d0fd0ba86b1d83b745501419e01249918e15387d84f92503",
+      "environment": {
+        "arch": "aarch64",
+        "debian": "12.15",
+        "kernel": "6.1.0-54-cloud-arm64",
+        "python": "3.11.2",
+        "libc": [
+          "glibc",
+          "2.36"
+        ],
+        "pid1": "systemd",
+        "systemd": "systemd 252 (252.39-1~deb12u2)",
+        "virtualization": "apple"
+      },
+      "preflight": true,
+      "post_test_manifest_preflight": true,
+      "linux_service_unit_tests_passed": 11,
+      "service_integration": {
+        "unattended_boot_IP232": true,
+        "systemd_READY_notification": true,
+        "duplicate_service_refused": true,
+        "console_reattach": true,
+        "caller_HELP_via_tcpser": true,
+        "private_data_and_remote_shutdown_denied": true,
+        "drain_rejects_new_calls_waits_for_existing": true,
+        "graceful_shutdown_and_verified_snapshot": true,
+        "restored_boot_login_credentials_and_disk_hash": true,
+        "tcpser_failure_reported_pair_restart_preserves_credentials": true
+      }
+    },
+    "x64": {
+      "archive": "rcpm-v1.2.2-rc2-linux-x64-service.tar.gz",
+      "sha256": "f62aff5be5768269859438f25f3a60030d1b1b0e6db3e6bc523d4db261805890",
+      "bytes": 45174254,
+      "all_file_hashes_verified": true,
+      "package_files": 762,
+      "native_ELF_architecture_verified": true,
+      "native_ELF_files": [
+        "runtime/cpmchattr",
+        "runtime/cpmcp",
+        "runtime/cpmls",
+        "runtime/cpmrm",
+        "runtime/cpmsim",
+        "runtime/mkfs.cpm",
+        "runtime/rcpm",
+        "runtime/tcpser"
+      ],
+      "source_overlays_match_checkout": true,
+      "unchanged_native_media_driver_files": 19,
+      "base_archive_sha256": "1bdae49d62568f494bde3af6fd4d30e52d2e33db6229594fc66c0391f769e9fb",
+      "helper_sha256": "9b4a8bc2dac36be7d0fd0ba86b1d83b745501419e01249918e15387d84f92503",
+      "environment": {
+        "arch": "x86_64",
+        "debian": "12.15",
+        "kernel": "6.1.0-54-cloud-amd64",
+        "python": "3.11.2",
+        "libc": [
+          "glibc",
+          "2.36"
+        ],
+        "pid1": "systemd",
+        "systemd": "systemd 252 (252.39-1~deb12u2)",
+        "virtualization": "qemu"
+      },
+      "preflight": true,
+      "post_test_manifest_preflight": true,
+      "linux_service_unit_tests_passed": 11,
+      "service_integration": {
+        "unattended_boot_IP232": true,
+        "systemd_READY_notification": true,
+        "duplicate_service_refused": true,
+        "console_reattach": true,
+        "caller_HELP_via_tcpser": true,
+        "private_data_and_remote_shutdown_denied": true,
+        "drain_rejects_new_calls_waits_for_existing": true,
+        "graceful_shutdown_and_verified_snapshot": true,
+        "restored_boot_login_credentials_and_disk_hash": true,
+        "tcpser_failure_reported_pair_restart_preserves_credentials": true
+      }
+    }
+  },
+  "integration_scope": "Disposable supervisor instances with readiness notification, not a repeat of all systemd-unit lifecycle/fault tests.",
+  "limitations": [
+    "x64 used QEMU TCG on an ARM64 Mac, not native x64 hardware.",
+    "Eight-group installed caller regression was ARM64; it was not repeated on x64.",
+    "Full rc2 real-unit lifecycle, reboot and fault qualification was not repeated.",
+    "No 72-hour soak, public-listener qualification, operational alert tests or off-host recovery.",
+    "No deployment, tag creation, push or release publication."
+  ],
+  "resolved_initial_test_failure": "The first x64 candidate run found a /proc read race in the child-exit test. Final packaged test accepts FileNotFoundError/ProcessLookupError; all 11 tests pass on both architectures. Initial failure log retained.",
+  "caller_regression_evidence_sha256": "d30eeaf2dbb6cf351f8b0efe6751c4966419eed9bbd6b1e3a418dae5440e9e52",
+  "new_x64_vm_shutdown": "Guest systemd poweroff requested; QEMU exited successfully after evidence export."
+}

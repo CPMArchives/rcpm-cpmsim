@@ -10,6 +10,7 @@ import sys
 import tempfile
 import time
 import unittest
+from unittest.mock import patch
 
 SCRIPT = Path(__file__).parent / 'packaging/native/rcpm_service.py'
 spec = importlib.util.spec_from_file_location('rcpm_service', SCRIPT)
@@ -74,6 +75,25 @@ class SnapshotTests(unittest.TestCase):
 
 
 class SupervisorTests(unittest.TestCase):
+    def test_final_systemd_signal_during_cleanup_is_not_startup_failure(self):
+        for stopping in (True,False):
+            with self.subTest(stopping=stopping):
+                handlers={}
+                class FakeSupervisor:
+                    def __init__(self,*args):
+                        self.ready=False
+                        self.stopping=stopping
+                    def run(self):
+                        handlers[signal.SIGTERM](signal.SIGTERM,None)
+                argv=['service','run','--instance','/unused','--tcpser','/unused']
+                with patch.object(sys,'argv',argv),patch.object(service,'Supervisor',FakeSupervisor), \
+                     patch.object(service.signal,'signal',side_effect=lambda sig,fn:handlers.__setitem__(sig,fn)):
+                    if stopping:
+                        service.main()
+                    else:
+                        with self.assertRaisesRegex(RuntimeError,'stopped during startup'):
+                            service.main()
+
     def test_systemd_stop_is_idempotent_when_guest_has_exited(self):
         with tempfile.TemporaryDirectory(dir='/tmp') as temporary:
             root = Path(temporary)
@@ -113,7 +133,12 @@ class SupervisorTests(unittest.TestCase):
                 deadline=time.monotonic()+5
                 while time.monotonic()<deadline:
                     stat=Path('/proc')/str(child)/'stat'
-                    if not stat.exists() or stat.read_text().rsplit(') ',1)[1].split()[0]=='Z':
+                    try:
+                        state=stat.read_text()
+                    except (FileNotFoundError, ProcessLookupError):
+                        # Successful exit can remove /proc between lookup/read.
+                        break
+                    if state.rsplit(') ',1)[1].split()[0]=='Z':
                         break
                     time.sleep(.02)
                 else:

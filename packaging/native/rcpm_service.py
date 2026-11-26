@@ -520,6 +520,11 @@ def main():
         def shutdown(signum, frame):
             # Run normal control path off the main thread; repeated signals do not
             # turn a blocked graceful stop into a misleading successful exit.
+            # ExecStop has already acknowledged a successful stop. systemd may
+            # deliver its final SIGTERM while run() is clearing readiness and
+            # reaping the modem. That is cleanup, not an interrupted startup.
+            if service.stopping:
+                return
             if not service.ready:
                 raise RuntimeError('Service stopped during startup; no consistent snapshot claimed')
             if not service.draining:

@@ -271,7 +271,7 @@ DONE: DB 'ACL-PROBE-{letter}-DONE','$'
         # ordinary file commands; finish it through the normal carrier boundary.
         start=len(g.remote)
         for c in b'RBBS\r':g.caller.sendall(bytes([c]));g.collect(.01)
-        g.wait(b'Enter your FIRST Name:',remote=True,start=start)
+        g.wait(getattr(args,'rbbs_prompt',b'Enter your FIRST Name:'),remote=True,start=start)
         g.caller.close();g.caller=None
         g.wait(b'RCP/M modem ready.',start=len(g.local),timeout=60)
         results['RBBS_scoped_private_data']=True

@@ -1,9 +1,12 @@
-# Native Debian service installation — v1.2.2-rc1
+# Native Debian service installation — v1.2.2-rc2
 
 This is a **prerelease**, not a production-readiness claim. The complete ARM64
 service kit passed installer and lifecycle tests in a disposable Debian 12.15
-ARM64 VM running real systemd. The x64 kit contains the same host-service fixes,
-but **x64 systemd VM and native x64 hardware testing remain pending**.
+ARM64 VM running real systemd. The preceding rc1 x64 kit also passed Debian
+12.15 systemd VM tests under QEMU CPU emulation. rc2 retains those native
+binaries and updates the architecture-independent service helper. Native x64
+hardware qualification remains pending. See the rc2 verification report for
+the exact checks performed on the rebuilt archives.
 
 These are fresh-installation kits around the unchanged v1.2.1 CP/M guest media.
 Do not unpack either archive over an existing board. The installer refuses
@@ -12,8 +15,8 @@ There is no CPMNet implementation or scheduled outbound mail polling.
 
 ## Choose and verify the download
 
-- ARM64: `rcpm-v1.2.2-rc1-linux-arm64-service.tar.gz`
-- x64: `rcpm-v1.2.2-rc1-linux-x64-service.tar.gz`
+- ARM64: `rcpm-v1.2.2-rc2-linux-arm64-service.tar.gz`
+- x64: `rcpm-v1.2.2-rc2-linux-x64-service.tar.gz`
 
 Both contain the complete system, bundled IP232-capable tcpser, corresponding
 source and service helpers. The separate common archive is not required.

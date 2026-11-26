@@ -41,32 +41,36 @@ def screen(data):
     return [''.join(line) for line in cells]
 
 
-def check(a):
+def check(a, installed=None):
     root = a.output
     root.mkdir(parents=True, exist_ok=False)
-    for name in ('conf', 'runtime', 'drivers'):
-        shutil.copytree(a.instance/name, root/name)
-    (root/'disks').mkdir()
-    for drive in 'aijp':
-        shutil.copyfile(a.instance/f'disks/drive{drive}.dsk', root/f'disks/drive{drive}.dsk')
-    def tool(name, *args):
-        # Reuse already approved host executables; only media is disposable.
-        command = [str(a.instance/'runtime'/name), *map(str,args)]
-        result = subprocess.run(command, capture_output=True)
-        if result.returncode:
-            raise RuntimeError(name+': '+result.stderr.decode(errors='replace').strip())
-        return result
-    image = root/'disks/drivea.dsk'
-    # A previously installed instance already contains CHAT. Replace it only
-    # on this disposable copy, just as the stopped-media installer does.
-    tool('cpmrm', '-f', 'ibm-3740', image, '0:CHAT.COM')
-    tool('cpmcp', '-f', 'ibm-3740', image, a.chat, '0:CHAT.COM')
-    tool('cpmchattr', '-f', 'ibm-3740', image, '4', '0:CHAT.COM')
-    with socket.socket() as probe:
-        probe.bind(('127.0.0.1',0))
-        port = probe.getsockname()[1]
-    guest = Machine(root,a.instance/'runtime/cpmsim',root/'local.log',
-        dict(RCPM_MODEM='direct', RCPM_MODEM_HOST='127.0.0.1', RCPM_MODEM_PORT=str(port)),speed='4')
+    if installed is None:
+        for name in ('conf', 'runtime', 'drivers'):
+            shutil.copytree(a.instance/name, root/name)
+        (root/'disks').mkdir()
+        for drive in 'aijp':
+            shutil.copyfile(a.instance/f'disks/drive{drive}.dsk', root/f'disks/drive{drive}.dsk')
+        def tool(name, *args):
+            # Reuse already approved host executables; only media is disposable.
+            command = [str(a.instance/'runtime'/name), *map(str,args)]
+            result = subprocess.run(command, capture_output=True)
+            if result.returncode:
+                raise RuntimeError(name+': '+result.stderr.decode(errors='replace').strip())
+            return result
+        image = root/'disks/drivea.dsk'
+        # A previously installed instance already contains CHAT. Replace it only
+        # on this disposable copy, just as the stopped-media installer does.
+        tool('cpmrm', '-f', 'ibm-3740', image, '0:CHAT.COM')
+        tool('cpmcp', '-f', 'ibm-3740', image, a.chat, '0:CHAT.COM')
+        tool('cpmchattr', '-f', 'ibm-3740', image, '4', '0:CHAT.COM')
+        with socket.socket() as probe:
+            probe.bind(('127.0.0.1',0))
+            port = probe.getsockname()[1]
+        guest = Machine(root,a.instance/'runtime/cpmsim',root/'local.log',
+            dict(RCPM_MODEM='direct', RCPM_MODEM_HOST='127.0.0.1', RCPM_MODEM_PORT=str(port)),speed='4')
+    else:
+        port = 4000
+        guest = installed(root / "operator")
     caller = None
     local, remote = bytearray(), bytearray()
     result = {}
@@ -105,7 +109,11 @@ def check(a):
         end=time.monotonic()+25
         while b'A0:SYSTEM>' not in remote[start:]:
             if time.monotonic()>end:raise RuntimeError('Login timeout')
-            send(b'\r');collect(.3)
+            # Direct transport needs an initial character; the installed
+            # tcpser/IP232 path answers through Hayes carrier negotiation.
+            if installed is None:
+                send(b'\r')
+            collect(.3)
     def page():
         start=len(local)
         command('CHAT',b'Ringing:')
@@ -125,7 +133,8 @@ def check(a):
             if time.monotonic()>end:raise RuntimeError('Pane text missing: '+value+'\n'+'\n'.join(lines))
             collect()
     try:
-        wait(b'RCP/M modem ready.',local)
+        if installed is None:
+            wait(b'RCP/M modem ready.',local)
         login()
         page();answer()
         result['page_local_bell_and_local_escape_answer']=True
@@ -211,12 +220,12 @@ def check(a):
         result['private_blank_ends_chat_without_remote_private_output']=True
         page();answer()
         caller.close();caller=None
-        wait(b'RCP/M modem ready.',local,len(local),timeout=20)
+        wait(b'RCP/M modem ready.' if installed is None else b'ATE0Q0V0S0=0M0S10=25X1H0',local,len(local),timeout=30)
         login()
         result['carrier_loss_in_conversation_and_reconnect']=True
         page()
         caller.close();caller=None
-        wait(b'RCP/M modem ready.',local,len(local),timeout=20)
+        wait(b'RCP/M modem ready.' if installed is None else b'ATE0Q0V0S0=0M0S10=25X1H0',local,len(local),timeout=30)
         login()
         result['carrier_loss_during_paging_and_reconnect']=True
     finally:

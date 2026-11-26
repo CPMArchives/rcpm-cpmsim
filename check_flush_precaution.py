@@ -93,18 +93,18 @@ def run(args):
         local('SYSUTLS:AUTH /LOAD=I13:READONLY.DAT', b'Policy loaded')
         assert permissions() == readonly
         result['normal_policy_transitions'] = True
-        local('MOUNT GUIDES', b'Volume mounted on J:.')
+        local('MOUNT GUIDES', b'Volume GUIDES mounted on J:')
         local('MNTFAIL GAMES', b'Flush failed. Mounted image unchanged.')
         local('MOUNT /L', b'J: GUIDES')
         result['failed_flush_preserves_mounted_volume'] = True
-        local('MOUNT GAMES', b'Volume mounted on J:.')
+        local('MOUNT GAMES', b'Volume GAMES mounted on J:')
         local('MOUNT /L', b'J: GAMES')
         local('DIR J1:ADV.COM', b'ADV')
         result['normal_swap_and_relog'] = True
         start = len(guest.local)
         os.write(guest.master, b'\x02')
         guest.wait(b'[Remote on]', start=start)
-        assert b'Volume mounted on J:.' in guest.command('MOUNT GUIDES')
+        assert b'Volume GUIDES mounted on J:' in guest.command('MOUNT GUIDES')
         assert b'J: GUIDES' in guest.command('MOUNT /L')
         result['caller_mount_with_default_readonly_policy'] = True
         guest.stop()

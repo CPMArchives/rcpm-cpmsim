@@ -128,8 +128,11 @@ caller-accessible general dialer. The disposable guest probe is test media only.
 
 Run native package and service tests on the selected Debian VPS architecture;
 verify SSH detach, systemd reboot startup, service restrictions and stop-timeout
-behavior; perform an off-host restore; repeat BYE/AUTH negative tests through
-IP232; test transfers and CHAT; measure resources and complete a 72-hour soak.
+behavior; perform an off-host restore; measure resources and complete a 72-hour soak.
+The [installed-service caller regression](debian-caller-regression.md) passed
+the local Debian ARM64 BYE/AUTH, XMODEM/YMODEM and CHAT checks through IP232.
+The rc2 service kits incorporate the recorded helper fix. Repeat applicable
+acceptance checks on the intended deployment architecture.
 Disposable VM tests cover real systemd and reboot behavior; they do not
 establish active-write power-loss consistency or public-network resilience. Keep 4 MHz until timing-sensitive behavior is qualified.
 

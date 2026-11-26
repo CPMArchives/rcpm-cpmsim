@@ -1,0 +1,210 @@
+{
+  "date": "2026-11-27",
+  "timezone": "Asia/Taipei",
+  "status": "PASS: eight local installed-service caller regression groups",
+  "scope": "Disposable Debian ARM64 VM; not production or public-VPS qualification",
+  "environment": {
+    "debian": "12.15",
+    "kernel": "6.1.0-54-cloud-arm64",
+    "arch": "aarch64",
+    "pid1": "systemd",
+    "python": "3.11.2",
+    "systemd": "systemd 252 (252.39-1~deb12u2)",
+    "cpus": 2,
+    "virtualization": "apple",
+    "service_properties": "User=rcpm\nPrivateTmp=yes\nProtectHome=yes\nProtectSystem=strict\nNoNewPrivileges=yes\nRestrictAddressFamilies=AF_INET AF_UNIX\n"
+  },
+  "payload_identity": {
+    "helper": "9b4a8bc2dac36be7d0fd0ba86b1d83b745501419e01249918e15387d84f92503",
+    "unit": "84526b608e74aadebc428f404ca4180670548d558cbf8fed2eaedba1ff9cf922",
+    "backup_unit": "9f9d43690e32533cd64d827c63a1145816a1214854fe5902de3ce9a136ec4cfc",
+    "timer": "187af2d905c6aee209f2f8181be9be1aa241c417721484ce5e22392131a47f7e",
+    "config": "ad0eee5c33f862957f3af60feb9b9c5db02929cc886a701aa053e545e1f1d412",
+    "ctl": "ced1407ab64254813614765cff2faa977253c2aae66b6a34992f131fdee60aea",
+    "original_helper_sha256": "2e9dde8fc03fba0765f192bbe2ef4e352525e48a86f5d5c581e3db184f3848df",
+    "only_production_change": "Ignore final systemd stop signals after successful shutdown while cleanup is in progress",
+    "runtime_and_drivers_match": true,
+    "baseline_guest_programs_match": {
+      "AUTH": "59e91878bfd6395a309dc26abc6cb2c20f7af239946e11a964338bf8b02c9386",
+      "CHAT": "9c7eb6c0351e5910ce9e9a750f35ed05a441941d40e9b626bec23ca4877a4afa",
+      "MOUNT": "23946082f0a2755b1e7f68be2b36ff23d4b79fcc9f36a9b724b3335d1425d130",
+      "RBBS41": "a5ea4ac4e258b90236a44b6eaea11bca6da344cde1bc46883aa18cf435d62e8d"
+    },
+    "kit_sha256": "0760949a7d2f5d5d8a70935d0b4fcf4844468523a419c78aecc3728795ae3b1e"
+  },
+  "results": {
+    "auth": {
+      "status": "recorded_pass",
+      "passed": true,
+      "failure_log_present": true,
+      "result": {
+        "passed": true,
+        "checks": {
+          "caller_writes_denied_A_J_P": true,
+          "caller_WORK_writes_allowed": true,
+          "write_only_create_write_close_and_read_denial": true,
+          "read_only_close_and_NONE_denial": true,
+          "F4_only_approval_all_drives": true,
+          "private_J_P_writes_allowed": true,
+          "live_grant_revoke": true,
+          "DU_overrides_drive": true,
+          "inheritance": true,
+          "writable_DU_non_executable": true,
+          "save_reload": true,
+          "RBBS_scoped_private_data": true,
+          "restart_persistence": true
+        }
+      }
+    },
+    "auth-cli": {
+      "status": "recorded_pass",
+      "passed": true,
+      "failure_log_present": true,
+      "result": {
+        "passed": true,
+        "checks": {
+          "queries_and_permission_spellings": true,
+          "effective_file_status": true,
+          "named_policy_save_load": true,
+          "no_prompt_overwrite_guard": true,
+          "overwrite_backup": true,
+          "invalid_load_preserves_live_map": true,
+          "interactive_names_and_cancel": true,
+          "startup_filename_unchanged": true
+        }
+      }
+    },
+    "flush": {
+      "status": "recorded_pass",
+      "passed": true,
+      "failure_log_present": true,
+      "result": {
+        "passed": true,
+        "checks": {
+          "failed_edit_and_load_preserve_live_policy": true,
+          "normal_policy_transitions": true,
+          "failed_flush_preserves_mounted_volume": true,
+          "normal_swap_and_relog": true,
+          "caller_mount_with_default_readonly_policy": true
+        }
+      }
+    },
+    "boundary": {
+      "status": "recorded_pass",
+      "passed": true,
+      "failure_log_present": true,
+      "result": {
+        "passed": true,
+        "checks": {
+          "private_reads_denied": true,
+          "operator_commands_and_remote_shutdown_denied": true,
+          "resident_memory_and_boot_commands_denied": true,
+          "unapproved_explicit_loads_denied": true,
+          "forged_F4_denied_and_DMA_preserved": true,
+          "private_BDOS_read_write_metadata_loads_denied": true,
+          "raw_BDOS_wildcard_executable_load_denied": true,
+          "native_host_file_channel_denied": true,
+          "invalid_FDC_drives_16_through_255_rejected": true,
+          "local_private_positive_controls": true,
+          "blanked_remote_input_and_output_isolated": true,
+          "private_DU_unblank_restores_caller_permissions": true,
+          "previous_local_transient_not_executable": true,
+          "caller_memory_and_command_disk_probe": true,
+          "RBBS_sysop_login_and_CPM_return_do_not_grant_wheel": true,
+          "real_RBBS_carrier_loss_clears_private_context": true
+        }
+      }
+    },
+    "invalid-policy": {
+      "status": "recorded_pass",
+      "passed": true,
+      "failure_log_present": false,
+      "result": {
+        "passed": true,
+        "checks": {
+          "invalid_startup_policy_fail_closed": true,
+          "private_recovery_without_restart": true
+        }
+      }
+    },
+    "transfers": {
+      "status": "recorded_pass",
+      "passed": true,
+      "failure_log_present": false,
+      "result": {
+        "passed": true,
+        "checks": {
+          "XMODEM_upload_CRC_retry_duplicate": true,
+          "YMODEM_batch_upload_exact_length_empty_file": true,
+          "YMODEM_download_all_byte_values": true,
+          "uploads_quarantined_exact_bytes": true,
+          "uploaded_approved_basename_cannot_replace_or_execute": true,
+          "private_download_and_upload_path_traversal_denied": true,
+          "partial_upload_carrier_loss_cleanup_and_reconnect": true
+        }
+      }
+    },
+    "chat": {
+      "status": "recorded_pass",
+      "passed": true,
+      "failure_log_present": true,
+      "result": {
+        "passed": true,
+        "checks": {
+          "page_local_bell_and_local_escape_answer": true,
+          "two_way_text_visible_on_both_consoles": true,
+          "separate_sysop_and_caller_panes": true,
+          "concurrent_input_redraw_and_tab": true,
+          "backspace_wrap_and_independent_scrolling": true,
+          "caller_ctrl_x_returns_to_cpm": true,
+          "sysop_ctrl_x_returns_to_cpm": true,
+          "caller_ctrl_c_cancels_page": true,
+          "unanswered_page_seconds": 22.43,
+          "bye_bell_disabled_rejects_paging": true,
+          "chat_on_path_and_preserves_work_directory": true,
+          "scrolling_fallback": true,
+          "private_blank_ends_chat_without_remote_private_output": true,
+          "carrier_loss_in_conversation_and_reconnect": true,
+          "carrier_loss_during_paging_and_reconnect": true
+        }
+      }
+    },
+    "idle": {
+      "status": "recorded_pass",
+      "passed": true,
+      "failure_log_present": false,
+      "result": {
+        "passed": true,
+        "checks": {
+          "cpu_mhz": 4,
+          "activity_reset": true,
+          "seconds_after_last_activity": 59.853,
+          "idle_expiry_and_reconnect": true
+        }
+      }
+    }
+  },
+  "evidence_archive": "build/security-vm-qualification/security-evidence-final.tar.gz",
+  "evidence_archive_sha256": "d30eeaf2dbb6cf351f8b0efe6751c4966419eed9bbd6b1e3a418dae5440e9e52",
+  "verified_manifest_entries": 265,
+  "final_service_state": {
+    "ActiveState": "inactive",
+    "SubState": "dead",
+    "Result": "success",
+    "MainPID": 0
+  },
+  "service_unit_tests": {
+    "passed": 11,
+    "source": "security-native-tests.log",
+    "performed_in": "earlier recovered run"
+  },
+  "published_or_deployed": false,
+  "limitations": [
+    "Approved native code remains trusted; not arbitrary-program isolation.",
+    "Blanking checks do not establish complete discard of buffered remote bytes on unblank.",
+    "Transfer coverage is XMODEM/YMODEM; no separate ZMODEM/Kermit qualification.",
+    "Flush cases contain rebuilt and fault-injected test programs.",
+    "Service helper fix is not yet published.",
+    "No native x64 hardware qualification, 72-hour soak, operational-alert qualification, off-host restore or public-listener qualification."
+  ]
+}
