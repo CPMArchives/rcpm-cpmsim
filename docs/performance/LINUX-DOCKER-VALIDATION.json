@@ -1,0 +1,124 @@
+{
+  "version": "1.2.1",
+  "date": "2026-11-26",
+  "host": "Docker Linux containers on macOS ARM64",
+  "userspace": "Debian 12",
+  "x64_execution": "QEMU CPU emulation; native x64 hardware not tested",
+  "optional_ip232": "not tested",
+  "common_archive_sha256": "6c0de13f7f28e59fb4be0265b3134b4335e9d4f36013ab6211bc2a5f340ac917",
+  "packaging_tests_passed": 9,
+  "reports": {
+    "linux-arm64-2026-11-26": {
+      "archive": "/work/build/fixed-arm64/rcpm-linux-arm64-candidate.tar.gz",
+      "relocated_with_spaces": true,
+      "minimal_system_path": true,
+      "common_and_host_hashes": true,
+      "shipped_disks": [
+        "A",
+        "I",
+        "P"
+      ],
+      "default_port": 4000,
+      "tested_port": 4000,
+      "shipped_caller_help_topics": 10,
+      "direct_boot": true,
+      "caller_login": true,
+      "archive_named_directories": true,
+      "both_public_volumes": true,
+      "documentation_read": true,
+      "rbbs_entry": true,
+      "first_start_private_credentials": true,
+      "duplicate_guest_refused": true,
+      "orderly_shutdown": true,
+      "no_python_tmux_or_homebrew_required": true,
+      "generated_passwords_match_guest_record": true,
+      "public_redistribution": "not assessed by runtime checks; see docs/distribution-review.md"
+    },
+    "linux-x64-2026-11-26": {
+      "archive": "/work/build/fixed-x64/rcpm-linux-x64-candidate.tar.gz",
+      "relocated_with_spaces": true,
+      "minimal_system_path": true,
+      "common_and_host_hashes": true,
+      "shipped_disks": [
+        "A",
+        "I",
+        "P"
+      ],
+      "default_port": 4000,
+      "tested_port": 4000,
+      "shipped_caller_help_topics": 10,
+      "direct_boot": true,
+      "caller_login": true,
+      "archive_named_directories": true,
+      "both_public_volumes": true,
+      "documentation_read": true,
+      "rbbs_entry": true,
+      "first_start_private_credentials": true,
+      "duplicate_guest_refused": true,
+      "orderly_shutdown": true,
+      "no_python_tmux_or_homebrew_required": true,
+      "generated_passwords_match_guest_record": true,
+      "public_redistribution": "not assessed by runtime checks; see docs/distribution-review.md"
+    },
+    "docker-arm64-2026-11-26": {
+      "image": "cpmarchives/rcpm:1.2.1-arm64",
+      "published_tcp_login": true,
+      "caller_help": true,
+      "rbbs_entry": true,
+      "orderly_shutdown": true,
+      "container_replacement_preserves_credentials": true,
+      "persistent_volume": true
+    },
+    "docker-x64-2026-11-26": {
+      "image": "cpmarchives/rcpm:1.2.1-x64",
+      "published_tcp_login": true,
+      "caller_help": true,
+      "rbbs_entry": true,
+      "orderly_shutdown": true,
+      "container_replacement_preserves_credentials": true,
+      "persistent_volume": true
+    },
+    "docker-simultaneous-arm64-2026-11-26": {
+      "image": "cpmarchives/rcpm:1.2.1-arm64",
+      "ports": [
+        4000,
+        5000
+      ],
+      "network_scope": "isolated Docker network; occupied host ports not published",
+      "simultaneous_callers": true,
+      "independent_RBBS_and_CPM_sessions": true,
+      "startup_ports_correct": true,
+      "separate_volumes": true,
+      "independent_credentials": true,
+      "second_survives_first_shutdown": true,
+      "orderly_shutdown": true,
+      "date": "2026-11-26",
+      "archive": "rcpm-v1.2.1-docker-arm64.tar.gz",
+      "archive_sha256": "9cb3db7b60b47599eecd19eafdb3a79398c73cfb0f739c4fcfdf0ff192240d09",
+      "host": "Docker Linux containers on macOS ARM64",
+      "x64_execution": "native ARM64"
+    },
+    "docker-simultaneous-x64-2026-11-26": {
+      "image": "cpmarchives/rcpm:1.2.1-x64",
+      "ports": [
+        4000,
+        5000
+      ],
+      "network_scope": "isolated Docker network; occupied host ports not published",
+      "simultaneous_callers": true,
+      "independent_RBBS_and_CPM_sessions": true,
+      "startup_ports_correct": true,
+      "separate_volumes": true,
+      "independent_credentials": true,
+      "second_survives_first_shutdown": true,
+      "orderly_shutdown": true,
+      "date": "2026-11-26",
+      "archive": "rcpm-v1.2.1-docker-x64.tar.gz",
+      "archive_sha256": "3014d65f645322c345bf3dc1b7db113c11b6b7517eba16d871e36839f3582098",
+      "host": "Docker Linux containers on macOS ARM64",
+      "x64_execution": "QEMU CPU emulation; native x64 hardware not tested"
+    }
+  },
+  "source_commit": "783ca375750585fd6afce2245703958d8a50089a",
+  "simultaneous_instance_scope": "Two instances per architecture, using separate volumes and internal TCP ports 4000 and 5000 on an isolated Docker network. Occupied host ports were not published in this test."
+}

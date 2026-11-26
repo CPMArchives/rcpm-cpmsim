@@ -101,6 +101,22 @@ restart an existing container with `docker start -ai rcpm-one` or
 recreating its container; keep the volumes separate and back them up while
 the corresponding RCP/M system is stopped.
 
+### Simultaneous-instance validation
+
+Both released Docker packages (ARM64 and x64) passed a two-instance test on
+26 November 2026. Two callers connected simultaneously to ports 4000 and 5000.
+One caller entered RBBS while the other used CP/M HELP. Each instance reported
+its correct startup port and used a separate data volume and independently
+generated credentials. After the first instance shut down, the second caller
+remained connected and successfully used HELP again. Both shut down cleanly.
+
+These checks used ports 4000 and 5000 inside an isolated Docker network because
+the host ports were occupied; simultaneous publication of those host ports was
+not tested in this pass. The x64 package ran under QEMU CPU emulation on an
+ARM64 host; native x64 hardware was not tested. Results and tested archive
+hashes are recorded in the [validation report](https://github.com/CPMArchives/rcpm-cpmsim/blob/main/docs/performance/LINUX-DOCKER-VALIDATION.json),
+also attached to the release as `LINUX-DOCKER-VALIDATION.json`.
+
 ## SYSOP TERMINAL
 
 The attached Docker terminal is the local sysop console. To detach from the console without closing stdin, press Docker's Ctrl-P, Ctrl-Q sequence; to reattach, run `docker attach rcpm`.

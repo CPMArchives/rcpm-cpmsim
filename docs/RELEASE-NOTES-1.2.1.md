@@ -50,3 +50,13 @@ release checker now validates the current RBBS 4.1 prompt and account format.
 
 See docker.md for loading image archives and preserving the system in a
 named volume. These are downloads, not claims of published registry images.
+
+### Simultaneous Docker instances — 26 November 2026
+
+Both released Docker packages passed two-instance checks with callers connected
+simultaneously on ports 4000 and 5000 inside an isolated Docker network. RBBS
+and CP/M HELP sessions operated independently, with separate data volumes and
+credentials. Stopping one instance left the other caller connected and able to
+use HELP. Startup reported the correct ports and both instances shut down cleanly.
+Host publication of both occupied ports was not tested in this pass; x64 used
+QEMU CPU emulation on ARM64. See performance/LINUX-DOCKER-VALIDATION.json.
