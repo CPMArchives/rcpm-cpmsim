@@ -62,6 +62,45 @@ already exists, shut down RCP/M cleanly, remove the stopped container with
 `docker rm rcpm`, and recreate it using the revised command and the same
 `rcpm-data` volume. Keep the volume to preserve your installation.
 
+## MULTIPLE INSTANCES
+
+You can run multiple independent RCP/M systems on the same computer. Give each
+instance a unique container name, an unused host port, and its own data volume.
+Each instance supports one caller at a time and has its own sysop console,
+credentials, disks, caller data and uploads. Never share a data volume between
+running instances.
+
+Start the first instance in one terminal:
+
+```sh
+docker run --name rcpm-one -it \
+  -p 127.0.0.1:4000:4000 \
+  -v rcpm-one-data:/data \
+  cpmarchives/rcpm:1.2.1-arm64
+```
+
+Start the second instance in another terminal:
+
+```sh
+docker run --name rcpm-two -it \
+  -p 127.0.0.1:5000:5000 \
+  -v rcpm-two-data:/data \
+  cpmarchives/rcpm:1.2.1-arm64 --port 5000
+```
+
+For x64, use `cpmarchives/rcpm:1.2.1-x64` in both commands.
+Wait for each instance's ready message, then connect raw TCP callers to
+`127.0.0.1:4000` and `127.0.0.1:5000`, respectively. These examples publish
+only on your computer's loopback address. Each startup reports its own
+internal listening port, matching the host port in these examples.
+
+Detach from either sysop console with Ctrl-P, Ctrl-Q. Reattach using
+`docker attach rcpm-one` or `docker attach rcpm-two`. After a clean shutdown,
+restart an existing container with `docker start -ai rcpm-one` or
+`docker start -ai rcpm-two`. Reuse each instance's original volume when
+recreating its container; keep the volumes separate and back them up while
+the corresponding RCP/M system is stopped.
+
 ## SYSOP TERMINAL
 
 The attached Docker terminal is the local sysop console. To detach from the console without closing stdin, press Docker's Ctrl-P, Ctrl-Q sequence; to reattach, run `docker attach rcpm`.
