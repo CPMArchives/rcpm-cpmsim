@@ -1,0 +1,26 @@
+{
+  "archive": "/work/build/fixed-arm64/rcpm-linux-arm64-candidate.tar.gz",
+  "relocated_with_spaces": true,
+  "minimal_system_path": true,
+  "common_and_host_hashes": true,
+  "shipped_disks": [
+    "A",
+    "I",
+    "P"
+  ],
+  "default_port": 4000,
+  "tested_port": 4000,
+  "shipped_caller_help_topics": 10,
+  "direct_boot": true,
+  "caller_login": true,
+  "archive_named_directories": true,
+  "both_public_volumes": true,
+  "documentation_read": true,
+  "rbbs_entry": true,
+  "first_start_private_credentials": true,
+  "duplicate_guest_refused": true,
+  "orderly_shutdown": true,
+  "no_python_tmux_or_homebrew_required": true,
+  "generated_passwords_match_guest_record": true,
+  "public_redistribution": "not assessed by runtime checks; see docs/distribution-review.md"
+}

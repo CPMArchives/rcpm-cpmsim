@@ -1,10 +1,11 @@
 # Linux x64 and ARM64 host packaging
 
-Status: both native architecture paths and transferable kits are prepared.
-Neither native compilation nor Linux live qualification has been completed.
-The maintainer approved using the existing Debian 13 KDE ARM64 guest for the
-ARM64 target. UTM confirms the guest is running as aarch64. The x64 target
-remains separately pending; ARM64 evidence must not be reported as x64 evidence.
+Status: Linux ARM64 and x64 release packages are now built and qualified for
+direct TCP. Both ran the extracted-package release checks in Debian 12 Docker
+containers on an ARM64 host. x64 compilation and execution used CPU emulation;
+native x64 hardware and optional IP232 were not tested. Reports and downloads
+are attached to release v1.2.1. Docker startup and persistence instructions are
+in [docker.md](docker.md).
 
 The Linux builder consumes the unchanged, verified common ZIP from
 `build/release-runtime-separated/rcpm-common-candidate.zip`. It builds only the
@@ -53,14 +54,14 @@ The resulting `rcpm-linux-x64-build-kit.tar.gz` includes that exact common ZIP,
 native build sources/patches, the portable checker, instructions and a file-hash
 manifest. Transfer it to Linux x64, unpack it, and follow its README. The kit
 contains build inputs; the native runtime archive is created on the Linux host.
-Public redistribution remains subject to the unresolved component review.
+Component-specific terms and prior release decisions remain applicable.
 
 For ARM64, pass `--kit-architecture arm64` with `--prepare-kit`. The kit includes
 Build-and-Check.sh: one native build and direct-TCP qualification pass, with
 progress and logs under a fresh ~/rcpm-release-builds/run.* directory. Set
 RCPM_TCPSER to an existing compatible executable to include optional IP232.
 
-## Existing Debian guest handoff
+## Historical Debian guest handoff (superseded by Docker qualification)
 
 `build/rcpm-linux-arm64-build.iso`, labeled RCPMBUILD, was attached to the
 running Debian guest's previously empty CD/DVD drive. It contains the ARM64 kit
@@ -75,7 +76,7 @@ the available UI interface. Attaching the ISO is verified; guest execution and
 native build/check results remain pending. No VM restart, permission change or
 security-setting change was made.
 
-## Checks completed here
+## Earlier packaging checks
 
 Six focused checks cover common-file integrity, rejection of unrecorded files,
 Linux tar launcher permissions/root discovery, and archive path rejection.

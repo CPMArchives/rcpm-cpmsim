@@ -1,0 +1,11 @@
+services:
+  rcpm:
+    image: cpmarchives/rcpm:1.2.1-arm64
+    stdin_open: true
+    tty: true
+    ports:
+      - "127.0.0.1:4000:4000"
+    volumes:
+      - rcpm-data:/data
+volumes:
+  rcpm-data:

@@ -58,6 +58,13 @@ download is a test build; its rebuilt runtime has not repeated Windows live vali
 Each platform ZIP contains the complete system; you do not need the separate
 common archive to run it.
 
+**Linux ARM64 and x64** packages and **Docker image archives** are also available
+on the release page. Linux: extract the matching `.tar.gz` and run
+`./Start-RCPM.sh` in a terminal. For Docker, follow the
+[load, startup and persistent-volume instructions](docs/docker.md).
+Linux/Docker direct-TCP checks passed on Debian 12 containers; x64 was tested
+under CPU emulation on ARM64, not native x64 hardware.
+
 1. Extract the whole ZIP into a writable folder.
 2. Start `Start-RCPM.command` on Mac or `Start-RCPM.cmd` on Windows.
 3. When the local console says `RCP/M modem ready.`, connect with a raw TCP

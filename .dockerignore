@@ -1,0 +1,5 @@
+.git
+release-input
+build/*
+!build/publish-linux/
+build/publish-linux/*.tar.gz

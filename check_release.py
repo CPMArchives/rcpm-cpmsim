@@ -259,7 +259,7 @@ def main():
         print('Checking RBBS entry...', flush=True)
         for char in b'RBBS\r':
             guest.caller.sendall(bytes([char])); guest.collect(.04)
-        guest.wait(b'Enter your FIRST Name:', remote=True, start=start)
+        guest.wait(b'Enter your name:', remote=True, start=start)
         assert b'RCPM RBBS 3.7 Trial' not in guest.remote[start:]
         guest.stop()
         result.update(direct_boot=True, caller_login=True, archive_named_directories=True,
@@ -272,15 +272,14 @@ def main():
     print('Direct TCP checks passed; verifying private credential records...', flush=True)
     directory = (package / 'disks/drivei.dsk').read_bytes()[:32768]
     entries = [directory[n:n+32] for n in range(0, 32768, 32)
-               if directory[n:n+12] == b'\x0fpwds       ']
+               if directory[n] == 15 and bytes(c & 127 for c in directory[n+1:n+12]) == b'USERS   CCC']
     assert len(entries) == 1
     block = int.from_bytes(entries[0][16:18], 'little')
     with (package / 'disks/drivei.dsk').open('rb') as stream:
         stream.seek(block * 2048)
-        password_record = stream.read(128)
-    for kind in (b'sysop', b'validation', b'direct-CP/M'):
-        value = re.search(b'RBBS ' + kind + b' password: ([A-Z0-9]+)', secrets).group(1)
-        assert value in password_record
+        users = stream.read(256)
+    value = re.search(b'RBBS sysop password: ([A-Z0-9]+)', secrets).group(1)
+    assert users[165:172] == value + b'\0'
     result['generated_passwords_match_guest_record'] = True
     (output / 'first-start-credential-sha256.txt').write_text(hashlib.sha256(secrets).hexdigest() + '\n')
     if args.tcpser:

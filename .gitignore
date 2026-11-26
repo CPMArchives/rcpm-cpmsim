@@ -6,3 +6,5 @@ __pycache__/
 /rcpm-cpm3-caller/
 /.rcpm-init-*/
 /build/
+
+/release-input/

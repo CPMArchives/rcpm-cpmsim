@@ -31,3 +31,22 @@ Do not replace an existing installation's data disks with fresh release disks.
 This release does not migrate a running Docker deployment.
 
 The component-specific notices and prior distribution decisions are retained.
+
+## Linux and Docker packages — 26 November 2026
+
+Added Linux ARM64/x64 runtime archives and Docker image archives. Both Linux
+architectures pass extracted-package direct-TCP qualification: boot, caller
+login, all ten HELP topics, SIG/M and CPMUG browsing, GAMES/GUIDES mounts,
+RBBS 4.1 entry, duplicate-instance refusal, private credential consistency and
+orderly shutdown. Docker checks cover published-port login, HELP, RBBS entry,
+orderly shutdown and credential preservation across container replacement.
+
+Test host: ARM64 Docker on macOS; Debian 12 userspace for both architectures.
+x64 compilation/execution uses CPU emulation, not native x64 hardware.
+Optional IP232 and broader distribution compatibility were not tested.
+Shared media is unchanged from the published 1.2.1 common archive.
+Linux disk tools now honor package-local DISKDEFS after relocation. The
+release checker now validates the current RBBS 4.1 prompt and account format.
+
+See docker.md for loading image archives and preserving the system in a
+named volume. These are downloads, not claims of published registry images.

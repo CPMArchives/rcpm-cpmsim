@@ -29,6 +29,15 @@ def main():
         # Existing project commands explicitly select raw images with -T raw.
         driver.write_text(text.replace(old,
             'if (deviceOpts != NULL && strcmp(deviceOpts, "raw") != 0)'))
+        # Honor the launcher's package-local definitions after relocation.
+        fs = work / 'cpmfs.c'
+        fs_text = fs.read_text()
+        old_defs = 'if ((fp=fopen("diskdefs","r"))==(FILE*)0 && (fp=fopen(DISKDEFS,"r"))==(FILE*)0)'
+        if fs_text.count(old_defs) != 1:
+            parser.error('Unexpected cpmfs.c disk definition lookup')
+        fs.write_text(fs_text.replace(old_defs,
+            'const char *definitions = getenv("DISKDEFS");\n'
+            '  if ((fp=fopen(definitions ? definitions : "diskdefs","r"))==(FILE*)0 && (fp=fopen(DISKDEFS,"r"))==(FILE*)0)'))
         # cpmtools 2.23 selects POSIX by default. --without-libdsk incorrectly
         # treats "no" as a library path, so omit that option entirely.
         subprocess.run(["/bin/sh", "./configure", f"--prefix={output}"],

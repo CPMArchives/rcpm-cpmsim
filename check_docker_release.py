@@ -1,0 +1,65 @@
+#!/usr/bin/env python3
+"""Exercise a loaded Docker image through its published TCP port and persisted data."""
+import argparse
+import hashlib
+import json
+import re
+from pathlib import Path
+import shutil
+import subprocess
+import tempfile
+from check_release import Guest
+
+
+def check(image, output, docker):
+    output.mkdir(parents=True, exist_ok=False)
+    suffix = image.rsplit(':', 1)[-1].replace('.', '-')
+    name, volume = 'rcpm-check-' + suffix, 'rcpm-check-data-' + suffix
+    def run(*args):
+        return subprocess.check_output([docker, *args])
+    run('volume', 'create', volume)
+    try:
+        with tempfile.TemporaryDirectory() as temporary:
+            package = Path(temporary)
+            launcher = package / 'Start-RCPM.sh'
+            launcher.write_text('#!/bin/sh\nexec ' + docker + ' run --rm -it --name ' + name +
+                ' -p 127.0.0.1:14000:4000 -v ' + volume + ':/data ' + image + '\n')
+            launcher.chmod(0o755)
+            prior = None
+            for attempt in range(2):
+                guest = Guest(package, output / ('run-' + str(attempt)))
+                try:
+                    guest.wait(b'RCP/M modem ready.', timeout=120)
+                    guest.connect(14000)
+                    assert b'CHAT -' in guest.remote
+                    assert b'HELP' in re.sub(rb'\x1b\[[0-9;]*m', b'', guest.command('DIR')).upper()
+                    assert b'CHAT' in guest.command('HELP CHAT')
+                    start = len(guest.remote)
+                    for char in b'RBBS\r':
+                        guest.caller.sendall(bytes([char])); guest.collect(.04)
+                    guest.wait(b'Enter your name:', remote=True, start=start)
+                    target = output / ('SYSOP-' + str(attempt) + '.private')
+                    run('cp', name + ':/data/SYSOP.DOC', str(target))
+                    digest = hashlib.sha256(target.read_bytes()).hexdigest()
+                    target.unlink()
+                    if prior: assert prior == digest
+                    prior = digest
+                    guest.stop()
+                finally:
+                    guest.close()
+                    subprocess.run([docker, 'rm', '-f', name], capture_output=True)
+            result = dict(image=image, published_tcp_login=True, caller_help=True,
+                          rbbs_entry=True, orderly_shutdown=True,
+                          container_replacement_preserves_credentials=True,
+                          persistent_volume=True)
+            (output / 'result.json').write_text(json.dumps(result, indent=2) + '\n')
+            print(json.dumps(result))
+    finally:
+        run('volume', 'rm', volume)
+
+
+if __name__ == '__main__':
+    p=argparse.ArgumentParser()
+    p.add_argument('image'); p.add_argument('--output', type=Path, required=True)
+    p.add_argument('--docker', default=shutil.which('docker'))
+    a=p.parse_args();check(a.image,a.output.resolve(),a.docker)
