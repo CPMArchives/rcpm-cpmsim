@@ -58,12 +58,38 @@ It enables stdin and a terminal and retains a named volume.
 ## REBUILD
 
 Build the Linux package using `build_linux_release.py`, run `check_release.py`,
-then finalize it with `finalize_linux_release.py`. From the repository root:
+then finalize it with `finalize_linux_release.py`.
+
+Before running the commands below:
+
+- Run from the repository root in Bash on Linux or macOS, with Python 3,
+  Docker Engine (or Docker Desktop), and the Docker Buildx plugin available.
+  The checker does not run directly in native Windows Python; use a Linux
+  environment such as WSL with Docker integration instead.
+- The matching finalized Linux package must already exist at
+  `build/publish-linux/RCPM-linux-arm64` or
+  `build/publish-linux/RCPM-linux-x64`. The Dockerfile copies those existing
+  binaries; selecting a platform does not compile or convert them.
+- When building or checking an architecture different from your Docker host,
+  configure support for running that architecture, such as CPU emulation.
+- Each check output directory must be new. For a repeat run, choose another
+  `--output` path rather than overwriting an earlier report.
+- Run the ARM64 and x64 checks sequentially, with host port `14000` free.
+  Both checks use that port.
+- Each Bash block enables `set -euo pipefail` so a failed build, check, or
+  image export stops the sequence, including failures within the gzip pipeline.
+
+The explicit platform selects the image architecture; the tag alone does not.
+Docker calls x64 `amd64`. `--load` loads each image into the local Docker image
+store so the checker and `docker save` can use it.
 
 ### ARM64
 
-```sh
-docker build --build-arg PACKAGE=build/publish-linux/RCPM-linux-arm64 \
+```bash
+set -euo pipefail
+
+docker buildx build --platform linux/arm64 --load \
+  --build-arg PACKAGE=build/publish-linux/RCPM-linux-arm64 \
   -f packaging/docker/Dockerfile -t cpmarchives/rcpm:1.2.1-arm64 .
 python3 check_docker_release.py cpmarchives/rcpm:1.2.1-arm64 \
   --output build/docker-check-arm64
@@ -72,8 +98,11 @@ docker save cpmarchives/rcpm:1.2.1-arm64 | gzip > rcpm-v1.2.1-docker-arm64.tar.g
 
 ### X64
 
-```sh
-docker build --build-arg PACKAGE=build/publish-linux/RCPM-linux-x64 \
+```bash
+set -euo pipefail
+
+docker buildx build --platform linux/amd64 --load \
+  --build-arg PACKAGE=build/publish-linux/RCPM-linux-x64 \
   -f packaging/docker/Dockerfile -t cpmarchives/rcpm:1.2.1-x64 .
 python3 check_docker_release.py cpmarchives/rcpm:1.2.1-x64 \
   --output build/docker-check-x64
