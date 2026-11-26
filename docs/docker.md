@@ -32,6 +32,33 @@ Wait until you see the message `RCP/M modem ready.`. The system is now ready to 
 
 You can now connect a raw TCP terminal to `127.0.0.1:4000`.
 
+### Change the port
+
+Docker port mappings use `HOST_ADDRESS:HOST_PORT:CONTAINER_PORT`. To accept
+connections on host port 5000 while keeping RCP/M's internal port at 4000,
+replace `-p 127.0.0.1:4000:4000` with `-p 127.0.0.1:5000:4000` in the startup
+command. Connect your terminal to `127.0.0.1:5000`. Startup still reports 4000,
+because it reports the internal listening port.
+
+To use port 5000 both inside and outside the container, run:
+
+```sh
+docker run --name rcpm -it \
+  -p 127.0.0.1:5000:5000 \
+  -v rcpm-data:/data \
+  cpmarchives/rcpm:1.2.1-arm64 --port 5000
+```
+
+For x64, replace the image tag with `cpmarchives/rcpm:1.2.1-x64`.
+The `--port 5000` option must follow the image name. Startup then reports
+`RCP/M is now running on port 5000.`; connect to `127.0.0.1:5000`.
+Choose an unused host port.
+
+Port mappings are set when creating a container. If a container named `rcpm`
+already exists, shut down RCP/M cleanly, remove the stopped container with
+`docker rm rcpm`, and recreate it using the revised command and the same
+`rcpm-data` volume. Keep the volume to preserve your installation.
+
 ## SYSOP TERMINAL
 
 The attached Docker terminal is the local sysop console. To detach from the console without closing stdin, press Docker's Ctrl-P, Ctrl-Q sequence; to reattach, run `docker attach rcpm`.
