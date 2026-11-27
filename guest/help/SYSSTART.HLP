@@ -20,9 +20,9 @@ community you build is up to you.
 
 This guide assumes you know your way around CP/M and a host command line. If
 you would like a refresher on the caller's side of the system, see the
-companion User's Guide. It deals with the peculiarities of running this
+online User's Guide (HELP USER). It deals with running this
 particular RCP/M. For exact disk geometry and host-side image tools, keep the
-Disk Images reference handy. The Installation notes cover platform-specific
+DISK-IMAGES.DOC reference handy. INSTALLATION.DOC covers platform-specific
 startup matters.
 
 Under the bonnet is a customized version of Udo Munk's cpmsim, from the
