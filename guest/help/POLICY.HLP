@@ -1,0 +1,154 @@
+;
+SAVING AND LOADING PERMISSIONS
+
+A - Live settings, saved files and startup
+B - Scripts, explicit filenames and overwrite authorization
+C - Worked policy workflows
+D - Backups, failed saves and recovery
+
+:A
+LIVE SETTINGS, SAVED FILES AND STARTUP
+
+BYE reads I13:AUTH.DAT into memory when its resident policy is initialized.
+File checks use that memory table. AUTH's drive/DU commands update only that
+table; they do not silently rewrite the startup file.
+
+    /SAVE    Write the live drive/DU map to a chosen policy file.
+    /LOAD    Validate a chosen policy file and replace the live map.
+
+Saved files include drive settings and DU overrides. They do not contain
+COM-file F4 approvals, accounts, passwords or disk images. Startup always uses
+I13:AUTH.DAT; loading an alternate file does not change that startup filename.
+Each interactive prompt still defaults to I13:AUTH.DAT, not the last-used
+file. SAVE/LOAD always handle the entire map, not only the last drive you
+queried. Policy files are binary; manage them with AUTH rather than a text
+editor. Changing a saved file alone does not change the resident map until
+LOAD or startup.
+
+Bare forms prompt:
+
+    AUTH /SAVE
+    Save policy to [I13:AUTH.DAT]:
+
+    AUTH /LOAD
+    Load policy from [I13:AUTH.DAT]:
+
+Press Return to select I13:AUTH.DAT, or enter an alternate filename. Saving
+interactively asks before overwriting an existing file; answer Y to proceed or
+N/Return to cancel. Cancelling leaves the destination unchanged.
+
+Unqualified filenames use I13:, even if you started AUTH in another directory.
+A drive-only prefix uses the current user area when AUTH starts; an explicit
+DU selects that area. Scripts should use explicit DU filenames for clarity.
+Names use exact CP/M 8.3 format and do not accept wildcards. These are CP/M
+disk filenames, not host operating-system paths.
+
+:B
+SCRIPTS, EXPLICIT FILENAMES AND OVERWRITE AUTHORIZATION
+
+    AUTH /SAVE=I13:PUBLIC.DAT
+    AUTH /SAVE=I13:PUBLIC.DAT /Y
+    AUTH /LOAD=I13:PUBLIC.DAT
+
+With =filename these commands run without filename or overwrite prompts.
+/SAVE=filename creates a new destination, but if it already exists the command
+fails with "File exists; use /Y to overwrite." It does not wait for input.
+Adding /Y authorizes overwrite and rotation of the prior same-basename backup.
+/Y does not bypass private-mode checks, read-only media or file errors. It is
+a SAVE option, not a LOAD option.
+
+For normal startup-policy maintenance, a complete scripted save is:
+
+    AUTH /SAVE=I13:AUTH.DAT /Y
+
+AUTH reports success/failure and sets CP/M 3's program return code: 0000h on
+success, FF01h on error or cancellation. How a batch file reacts depends on
+its command processor/automation tools. A status query reporting that an
+existing COM is not executable is a successful query; a missing file is an
+error. Run scripts that administer policy only in private sysop mode.
+
+AUTH flushes pending CP/M disk buffers before changing live DU permissions,
+including /LOAD. If flushing fails, the live permissions remain unchanged.
+There is no added delay or restriction on sysop permission choices.
+
+:C
+WORKED POLICY WORKFLOWS
+
+Restore the normal public system directory and temporary workspace:
+
+    AUTH A0: /R
+    AUTH I0: RW
+    AUTH /SAVE=I13:AUTH.DAT /Y
+
+Try a temporary change without making it the startup policy:
+
+    AUTH G3: RW
+    AUTH G3:
+    AUTH /LOAD=I13:AUTH.DAT
+
+The load restores the saved map, discarding unsaved DU changes such as G3:. It
+does not reset per-file F4 flags.
+
+Keep an alternate policy and select it later:
+
+    AUTH /SAVE=I13:PUBLIC.DAT
+    AUTH J3: --
+    AUTH /SAVE=I13:LIMITED.DAT
+    AUTH /LOAD=I13:PUBLIC.DAT
+    AUTH /LOAD=I13:LIMITED.DAT
+
+The first two saves above assume unused filenames. Add /Y if deliberately
+overwriting an existing version. Loading LIMITED.DAT changes the running map
+only. To use that live map after restart as well:
+
+    AUTH /SAVE=I13:AUTH.DAT /Y
+
+Approve Adventure, with GAMES already selected on J:
+
+    AUTH J1:ADV.COM
+    AUTH J1:ADV.COM +X
+    AUTH J1:ADV.COM
+
+No remount or BYE rebuild is required. Restoring caller mode applies the
+normal DU/F4 checks. A writable game-data workspace does not require making J:
+writable to the caller. Games that insist on writes to J: remain
+download/local-play software, not online games we must accommodate.
+
+:D
+BACKUPS, FAILED SAVES AND RECOVERY
+
+For a destination such as PUBLIC.DAT, SAVE first writes a complete PUBLIC.$$$
+in the same DU. It closes and flushes that file, renames an existing
+destination to PUBLIC.BAK (replacing the older backup), then installs the new
+PUBLIC.DAT. The ordinary AUTH.DAT backup is AUTH.BAK. This backup is a
+policy-file backup, not a backup of the board or its disk images.
+
+.BAK and .$$$ are reserved SAVE extensions. LOAD can read such files if their
+contents are a valid policy. An existing temporary file is not silently
+erased, even with /Y. After an I/O error retain all temporary/backup files for
+inspection. If installing the new destination fails, AUTH attempts to rename
+the backup back into place. Failure of that recovery or a power loss can still
+leave a missing startup file; keep whole-installation backups as described in
+HELP BACKUP.
+
+LOAD validates the signature, complete required records and every permission
+byte before changing the resident table. An invalid, incomplete or missing
+file leaves the current live map unchanged. If BYE cannot load a valid startup
+policy, caller file access stays denied and a local diagnostic is displayed.
+BYE does not automatically select AUTH.BAK or another alternate policy.
+
+Recover a valid backup through private AUTH, without restarting:
+
+    AUTH /LOAD=I13:AUTH.BAK
+    AUTH /SAVE=I13:RESCUE.DAT
+    AUTH /SAVE=I13:AUTH.DAT /Y
+
+Use an unused name for RESCUE.DAT. Preserve that good copy before overwriting
+AUTH.DAT: the final save rotates the old (possibly corrupt) AUTH.DAT into
+AUTH.BAK, replacing the backup you just loaded. If a leftover AUTH.$$$
+prevents saving, first secure a valid policy under a different basename, then
+inspect and clear only the stale staging file using private maintenance tools.
+
+If no valid policy file remains, use private AUTH to rebuild the desired drive
+and DU grants, inspect /MAP, then save them as I13:AUTH.DAT. The defaults
+table in HELP AUTH, section D, is a reference, not an automatic reset command.

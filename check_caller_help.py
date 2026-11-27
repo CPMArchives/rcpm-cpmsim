@@ -25,7 +25,7 @@ def run(args):
             name = Path(filename).stem
             expected = (Path(__file__).parent/'guest/help'/filename).read_text().splitlines()[1].encode()
             command = 'HELP' if name == 'HELP' else 'HELP '+name
-            reply = guest.command(command)
+            reply = guest.help_topic(command, expected)
             assert expected in reply, (command, reply)
             outputs[command] = reply.decode('ascii', errors='replace')
             print(command+' PASS', flush=True)

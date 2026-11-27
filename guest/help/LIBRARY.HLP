@@ -1,15 +1,47 @@
 ;
-READING ARCHIVES
+EXPLORING THE SOFTWARE COLLECTION
 
-DIR P0: lists SIG/M libraries; DIR P1: lists CPMUG libraries.
-LDIR lists the members of an LBR without extracting it.
-Example: LDIR P0:SIGMV011
+A - Exploring the software collection
 
-LT reads plain text and supported compressed text, including LBR members.
-Example: LT P0:SIGMV011 ABSTRACT.011
-Use the names shown by LDIR when selecting a member.
+:A
+EXPLORING THE SOFTWARE COLLECTION
 
-A library may contain programs, source, documentation and supporting data.
-Archive availability does not imply caller execution approval.
-Download files with YSEND for use on your own CP/M system.
-Use HELP TRANSFER for transfer instructions.
+The standard P: disk contains the 310 SIG/M and 93 CPMUG volumes. These were
+assembled by the CP/M user groups and circulated amongst enthusiasts. They
+contain an extraordinary variety of material: programming tools, source code,
+games, technical notes, correspondence and programs written for particular
+makes of computer.
+
+The individual volumes are supplied as LBR files. An LBR is a library
+containing a number of separate files. The individual members may themselves
+be compressed.
+
+    DIR SIGM:
+    DIR CPMUG:
+
+A directory of numbered libraries doesn't tell you much about their contents.
+You can look inside one without downloading it:
+
+    LDIR P0:SIGMV011
+
+LDIR lists the members of the library. To read a text member, supply both the
+library name and the member name to LT:
+
+    LT P0:SIGMV011 ABSTRACT.011
+
+Use the actual name shown by LDIR. This is particularly useful when an archive
+contains an abstract or instructions, and you're trying to decide whether the
+volume is worth downloading.
+
+If you mount a different P: archive, use the DU or named directory belonging
+to that disk instead. P0:SIGMV011 is an example for the default archive.
+
+When you find something you want, download the library itself using YSEND and
+unpack it on your own machine. There is no general caller facility for
+extracting archive members onto the RCP/M disks.
+
+Not everything in a historical archive will run on every CP/M machine. Some
+programs are written for a particular screen, disk controller, terminal or
+operating-system revision. Read the author's documentation before trying the
+program locally. Also bear in mind that the original author may have imposed
+conditions on copying or redistribution.

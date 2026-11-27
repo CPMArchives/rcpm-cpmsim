@@ -1,0 +1,38 @@
+;
+UPLOADS AND LIBRARY MAINTENANCE
+
+A - Transfers and incoming software
+
+:A
+TRANSFERS AND INCOMING SOFTWARE
+
+Try at least one download and one upload yourself. There is no substitute for
+having seen the process from the caller's side when someone says his terminal
+has hung.
+
+    YSEND A0:WELCOME.TXT
+    UPLOAD EXAMPLE.LBR
+    UPLOAD /Y
+
+YSEND sends YMODEM; start the corresponding receive operation in your
+terminal. UPLOAD filename receives one file using XMODEM/CRC; UPLOAD /Y
+receives a YMODEM batch. Start the matching send operation at the terminal
+when prompted.
+
+Completed submissions go to uploads/inbox/ on the host. In-progress files go
+to uploads/staging/. Keep both on the same filesystem: completion uses an
+atomic hard link. Duplicate names receive unique suffixes, rather than
+overwriting earlier submissions. Interrupted partial files are discarded;
+previously completed batch members remain. XMODEM retains record padding,
+while YMODEM retains the declared length.
+
+MESSAGE notes saved by callers also arrive in the inbox. Unsaved drafts are
+discarded at call recovery. These files survive WORK cleanup and ordinary
+restarts.
+
+Examine the actual contents of a submission, not just its filename. Check
+archive members, accompanying documentation and redistribution terms. Retain
+the original. Stop the board and back up the destination disk before importing
+reviewed files using the correct image format. Never place arbitrary uploaded
+files directly in the disk catalog, or automatically approve an uploaded COM
+file for caller execution.

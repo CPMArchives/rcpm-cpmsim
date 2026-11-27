@@ -1,0 +1,25 @@
+;
+HUMONGOUS RCP/M - SYSOP'S GUIDE
+
+A - Getting the system running
+B - The local console and BYE
+C - Disks, volumes and named directories
+D - Caller permissions and program approval
+E - Saving and loading permissions
+F - Running the bulletin board
+G - Welcome message and HELP
+H - Uploads and library maintenance
+I - Shutdown, backup and updates
+J - Troubleshooting and network operation
+K - Glossary and acknowledgements
+:A:SYSSTART.HLP
+:B:CONSOLE.HLP
+:C:DISKS.HLP
+:D:AUTH.HLP
+:E:POLICY.HLP
+:F:BOARD.HLP
+:G:BANNER.HLP
+:H:SYSFILES.HLP
+:I:BACKUP.HLP
+:J:SYSNET.HLP
+:K:GLOSSARY.HLP

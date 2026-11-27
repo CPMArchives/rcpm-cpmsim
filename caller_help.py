@@ -1,35 +1,87 @@
 """Install authored HELPC plain-text topics on fresh, stopped staging media."""
 from pathlib import Path
+import re
 import subprocess
 import tempfile
+
+
+def validate_topics(topics):
+    """Validate the authored subset of the HELPC 1.4 text format."""
+    names = set(topics)
+    for name, text in topics.items():
+        if not re.fullmatch(r'[A-Z0-9_]{1,8}\.HLP', name):
+            raise ValueError('Invalid HELP filename: ' + name)
+        lines = text.splitlines()
+        if not lines or lines[0] != ';':
+            raise ValueError('Invalid HELP header: ' + name)
+        if any(len(line) > 78 for line in lines):
+            raise ValueError('HELP line too long: ' + name)
+        if any(ord(ch) < 32 or ord(ch) > 126
+               for line in lines for ch in line):
+            raise ValueError('Invalid HELP character: ' + name)
+        selections = set()
+        displayed = set()
+        menu_lines = 0
+        in_section = False
+        for line in lines[1:]:
+            if line.startswith(':'):
+                match = re.fullmatch(r':([A-Z0-9])(?::([A-Z0-9_]{1,8}\.HLP))?', line)
+                if not match:
+                    raise ValueError('Invalid HELP directive: ' + name + ': ' + line)
+                key, target = match.groups()
+                if key in selections:
+                    raise ValueError('Duplicate HELP selection: ' + name + ': ' + key)
+                selections.add(key)
+                if target:
+                    if in_section:
+                        raise ValueError('HELP links must precede sections: ' + name)
+                    if target not in names:
+                        raise ValueError('Missing HELP target: ' + name + ': ' + target)
+                else:
+                    in_section = True
+            elif not in_section:
+                menu_lines += 1
+                item = re.match(r'^([A-Z0-9]) - ', line)
+                if item:
+                    if item[1] in displayed:
+                        raise ValueError('Duplicate displayed HELP key: ' + name)
+                    displayed.add(item[1])
+        if displayed != selections:
+            raise ValueError('HELP menu/directive mismatch: ' + name)
+        # HELPC automatically paginates selected information sections.
+        # Only the index (or a legacy standalone topic) must fit one screen.
+        if menu_lines > 19:
+            raise ValueError('Oversized HELP index: ' + name)
 
 
 def install(instance, tools):
     topics = Path(__file__).resolve().parent / 'guest/help'
     image = Path(instance) / 'disks/drivei.dsk'
     installed = []
+    authored = {p.name: p.read_text(encoding='ascii')
+                for p in sorted(topics.glob('*.HLP'))}
+    validate_topics(authored)
+    # List once before removing existing files; new topics need no removal.
+    listing = subprocess.run([str(Path(tools)/'cpmls'), '-f', 'z80pack-hd',
+                              str(image), '14:*.*'], check=True,
+                             capture_output=True, text=True).stdout.upper()
+    existing = set(re.findall(r'\b[A-Z0-9_]{1,8}\.HLP\b', listing))
     with tempfile.TemporaryDirectory(prefix='rcpm-help-') as temporary:
-        for topic in sorted(topics.glob('*.HLP')):
-            text = topic.read_text(encoding='ascii')
-            # HELPC's plain-text format begins with a semicolon line, as in
-            # the preserved HLPFILES.LBR/MENU.HLP. Keep each topic one page.
-            if not text.startswith(';\n') or len(text.splitlines()) > 20:
-                raise ValueError('Invalid or oversized HELP topic: ' + topic.name)
-            if any(len(line) > 78 for line in text.splitlines()):
-                raise ValueError('HELP line too long: ' + topic.name)
+        for name, text in authored.items():
             data = text.replace('\n', '\r\n').encode('ascii') + b'\x1a'
             data += b'\x1a' * (-len(data) % 128)
-            stage = Path(temporary) / topic.name
+            stage = Path(temporary) / name
             stage.write_bytes(data)
             def tool(name, *args):
                 subprocess.run([str(Path(tools)/name), *map(str,args)],
                                check=True, capture_output=True)
-            tool('cpmrm', '-f', 'z80pack-hd', image, '14:'+topic.name)
-            tool('cpmcp', '-f', 'z80pack-hd', image, stage, '14:'+topic.name)
+            if name in existing:
+                tool('cpmrm', '-f', 'z80pack-hd', image, '14:'+name)
+            tool('cpmcp', '-f', 'z80pack-hd', image, stage, '14:'+name)
             check = Path(temporary) / 'readback'
-            tool('cpmcp', '-f', 'z80pack-hd', image, '14:'+topic.name, check)
+            tool('cpmcp', '-f', 'z80pack-hd', image, '14:'+name, check)
             if check.read_bytes() != data:
-                raise ValueError('HELP readback mismatch: ' + topic.name)
+                raise ValueError('HELP readback mismatch: ' + name)
             check.unlink()
-            installed.append(topic.name)
+            installed.append(name)
     return installed

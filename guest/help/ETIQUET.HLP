@@ -1,0 +1,32 @@
+;
+ACCESS AND ETIQUETTE
+
+A - A few words about access and etiquette
+
+:A
+A FEW WORDS ABOUT ACCESS AND ETIQUETTE
+
+An RCP/M is a shared computer, and the sysop has to strike a balance between
+providing useful facilities and keeping the machine available for the next
+caller.
+
+Ordinarily you can read the public collections, download their files and
+execute approved programs. You cannot run every COM file you see in the
+directory. The sysop chooses which programs are suitable for online use; the
+supplied AUTH facility requires the executable's DU to be readable but not
+caller-writable and the file to have the appropriate approval attribute.
+
+WORK is the exception to the normal read-only library arrangement. Programs
+use it for temporary data. It is not a personal disk or a place to keep
+software between calls. There is no general caller copy command or direct
+upload into WORK on the standard system.
+
+If a program is unavailable for online execution, download it for your own
+machine rather than trying to circumvent the board's restrictions. Ask the
+sysop if you think it would make a useful addition to the online collection.
+
+If you have the only caller connection, bear in mind that someone else may be
+waiting. Don't leave it occupied unnecessarily. Be considerate in the forums,
+keep private matters out of public messages, and give sufficient details when
+reporting a problem: the command you used, the volume mounted, the terminal
+type and what actually happened.

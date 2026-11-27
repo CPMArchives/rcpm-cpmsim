@@ -1,13 +1,133 @@
 ;
-BULLETIN BOARD
+THE BULLETIN BOARD AND PRIVATE MAIL
 
-Type RBBS at the CP/M prompt to enter the bulletin board.
-Follow its sign-on and registration prompts and its command menus.
-Use the board's normal exit option to return to the CP/M prompt.
+A - Visiting the bulletin board
+B - Reading and posting messages
+C - Private mail
 
-The board keeps its own messages and user records in private storage.
-Those records are not ordinary caller-accessible archive files.
-Ending a call does not erase your registered board account.
+:A
+VISITING THE BULLETIN BOARD
 
-MESSAGE leaves a message for the sysop outside the board.
-BYE ends the call. See HELP LOGOFF.
+At the CP/M prompt type:
+
+    RBBS
+
+The board is based on CP/M RBBS 4.1 Edit 02, adapted to our system. This is
+where you'll find the discussion forums and private mail.
+
+Give your name at the sign-on prompt. If you've never visited the board,
+follow the registration prompts to establish an account. Choose a password you
+can remember, but don't reuse an important password from another service.
+Passwords are case-sensitive; the six-character password facility is a feature
+of this particular RBBS revision.
+
+The normal menus respond to a single key. There is no need to press RETURN
+after choosing a command, a forum number or a Y/N answer. Names, message
+numbers and the text you enter still use RETURN. Expert mode is different: it
+accepts line commands and semicolon-separated arguments.
+
+The current forum is identified at the top of the main menu. Here is a useful
+summary of its commands:
+
+  Key - Function
+  E - Enter a message
+  R - Read messages
+  N - Read new messages
+  S - Summarize messages
+  K - Delete an authorized message
+  F - Select a forum
+  M - Forum status
+  B - Bulletins
+  U - Users
+  W - Welcome
+  P - Password
+  T - Bell
+  X - Expert mode
+  ? - Help
+  C - Return to CP/M
+  G - Disconnect
+
+The board's help and menus are the best authority for a particular sysop's
+installation. This guide describes the version in the standard release, rather
+than every variant of RBBS.
+
+C takes you out of RBBS without ending your call; you may go back to exploring
+the library or playing a game. Reentering RBBS requires signing on to the
+board again. G ends the entire connection.
+
+Your board account and saved messages are retained between calls. They are not
+stored in the temporary WORK directory.
+
+:B
+READING AND POSTING MESSAGES
+
+A bulletin board is most interesting when people actually use it. If you've a
+question about a piece of CP/M software or an interesting project to describe,
+don't feel that you must wait for somebody else to begin the discussion.
+
+Use F to see the forums, then choose one of the displayed numbers. A fresh
+board has PERSONAL, GENERAL, CPM and TEST areas, but your sysop may have
+arranged matters differently. PERSONAL is for private mail; the other forums
+are public discussions.
+
+S summarizes messages in the selected forum, R reads them, and N reads new
+messages. M shows the forum's status. Message numbers refer to the current
+forum.
+
+To post, select E, supply the requested header information and enter your
+text. End the message by typing a period on a line by itself. This brings up
+the draft menu rather than immediately publishing your message.
+
+  Draft key - Function
+  S - Save the message
+  L - Preview it
+  H - Edit the header
+  E - Edit the text
+  C - Continue entering text
+  A - Discard the draft
+  ? - Help
+
+Read the draft over before saving it. Blank lines are allowed; the special
+period line finishes text entry. During entry, a question mark on its own line
+opens the writing help. Ctrl-V shows the line-editing keys.
+
+If you want to read a succession of messages without returning to the menu
+after each one, expert mode provides some useful shorthand:
+
+  Expert command - Function
+  R;123 - Read message 123
+  R;1+ - Read from message 1, pausing between messages
+  R;1* - Read from message 1 without pauses
+  N - Read new messages
+  R;#+ - Start at the next unread message
+
+The + and * suffixes also work with S and K. Take care with deletion commands.
+You may delete only messages which the board permits you to delete.
+
+While the board is displaying messages, Ctrl-S pauses the output and any key
+resumes it; Ctrl-K stops the output. These controls are documented in RBBS's
+own help.
+
+:C
+PRIVATE MAIL
+
+If what you have to say is intended for one particular caller, use the
+PERSONAL forum rather than posting it in a public discussion.
+
+Select PERSONAL with F, then enter a message with E and give the recipient
+when prompted. Use the recipient's registered board name. If you're uncertain
+of its spelling, the U command lists users.
+
+Compose the message as usual, end the text with a period on a line of its own,
+and use S to save. In PERSONAL the draft menu also offers R to save another
+copy; H allows the recipient in the header to be changed. Follow the displayed
+prompts.
+
+To read your mail, enter PERSONAL and use the ordinary reading commands. The
+board restricts private messages to the appropriate accounts.
+
+Private mail belongs to this particular board. This system does not
+exchange mail or forum messages with other RCP/Ms. Nor is
+private mail encrypted: the sysop has custody of the board and its backups,
+and your raw TCP connection is unencrypted. Don't use it for confidential
+information that you wouldn't wish to entrust to the system operator.

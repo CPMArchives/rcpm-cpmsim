@@ -1,0 +1,92 @@
+;
+WELCOME TO HUMONGOUS RCP/M
+
+A - Welcome to RCP/M
+B - Calling the system
+C - Your first visit
+
+:A
+WELCOME TO RCP/M
+
+If you've spent any time exploring old computers, you may have wondered what
+it was like to call one over the telephone. In the days before the World Wide
+Web, much of the business of exchanging computer software and talking to other
+enthusiasts was conducted on bulletin boards. An RCP/M was a particularly
+interesting kind of board, because the caller could use the computer itself.
+
+RCP/M stands for Remote CP/M. On HUMONGOUS RCP/M you can browse disks, read
+documents, download programs, play games and exchange messages. The command
+prompt belongs to a real CP/M 3 operating system, running on a Z80 emulated by
+our customized version of cpmsim from Udo Munk's z80pack project. The enhanced
+command environment is Z3PLUS; remote operation is handled by an adapted
+version of BYE510.
+
+We've also written a few things especially for this system. MOUNT exchanges
+library disks, NDSCAN refreshes their directory names and AUTH allows the
+sysop to decide which files and programs are available to callers. You needn't
+concern yourself with administering AUTH to use the system.
+
+The major difference from calling an RCP/M forty years ago is that you don't
+need a modem or telephone line. Your terminal makes a network connection
+instead. Otherwise, much of the experience will be familiar to anyone who used
+such a system in the 1980s.
+
+If you're looking for a particular piece of software, the library is a good
+place to start. If you've come for company, try the bulletin board. And if you
+simply want to spend an afternoon playing Adventure, you're welcome to do that
+too.
+
+:B
+CALLING THE SYSTEM
+
+You'll need a terminal program capable of a raw TCP connection. SyncTERM is a
+good choice, especially if you intend to exchange files, since it handles the
+terminal display and traditional modem transfer protocols.
+
+Ask the sysop for the address and port, or obtain them from the board's
+announcement. Choose Raw TCP, not Telnet or SSH. Use an 80-column, 24-row ANSI
+or VT100-compatible terminal if possible. This is particularly important for
+Maze Chase and the split-screen CHAT display.
+
+If you're trying a copy of RCP/M on your own computer, the standard native
+installation listens on:
+
+    Connection   Raw TCP
+    Address      127.0.0.1
+    Port         4000
+    Terminal     ANSI/VT100, 80 x 24
+
+Use the address and port advertised by the sysop for a remote system; the
+local address above won't reach a board elsewhere.
+
+Connect and press RETURN. BYE should greet you with the board's welcome
+message and bring you to CP/M. There may be a short delay. If the board is
+already occupied, remember that this is a single-caller machine: try again
+later.
+
+The connection is not encrypted. Use a password for the bulletin board that
+you do not use for anything important elsewhere.
+
+:C
+YOUR FIRST VISIT
+
+You don't need a bulletin board account just to explore the CP/M facilities.
+The board has its own registration procedure when you enter RBBS.
+
+Here are a few things worth trying on your first call:
+
+    HELP
+    DIR
+    DIR SIGM:
+    MOUNT /L
+    RBBS
+
+HELP lists the available topics; DIR shows files; the SIGM directory contains
+one of the large historical software collections; MOUNT /L lists the library
+disks that can be selected. RBBS takes you into the message board.
+
+Once you're in RBBS, C returns you to CP/M. Type BYE when you're ready to
+finish your call. If all you've done is look around, there's nothing that
+needs saving.
+
+Use HELP USER to browse the other caller topics whenever you need them.

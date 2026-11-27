@@ -1,0 +1,36 @@
+;
+GETTING HELP AND READING FILES
+
+A - Getting help and reading files
+
+:A
+GETTING HELP AND READING FILES
+
+The HELP command is worth remembering. A copy of the essential caller
+instructions is always available on the machine itself.
+
+    HELP
+    HELP MOUNT
+    HELP TRANSFER
+    HELP RBBS
+    DIR HELP:
+
+An unqualified HELP opens the main topic. HELP followed by a topic name opens
+that topic directly. HELP // gives the preserved viewer's own usage
+information.
+
+Select a letter from a menu to open another topic or an information section.
+Use ^ to return to the preceding menu and . to return to the root. Long
+sections are paginated automatically; follow the viewer's prompts.
+
+To examine an ordinary text file, try LT:
+
+    LT A0:WELCOME.TXT
+
+LT is also useful for reading supported compressed text and text members
+inside libraries. TYPE is available for ordinary text files. CLS clears the
+terminal display. DIR and SDZ list directories; SDZ is the same supplied Super
+Directory utility as DIR.
+
+Don't attempt to read a binary executable as text. Apart from being
+uninformative, the output can confuse your terminal.

@@ -1,0 +1,44 @@
+;
+SHUTDOWN, BACKUP AND UPDATES
+
+A - Backups, shutdown and recovery
+B - Keeping up with new releases
+
+:A
+BACKUPS, SHUTDOWN AND RECOVERY
+
+BYE logs off a caller; it does not stop the machine. Between calls, use local
+Ctrl-C at BYE's waiting prompt, then RETURN for ordinary CP/M. From private
+local CP/M enter:
+
+    SYSUTLS:BYEBYE
+
+Wait until cpmsim has actually stopped. A blanked caller or an idle listener
+is not a stopped emulator.
+
+Copy the whole installation to separate storage: disks/, the library catalog,
+uploads/inbox/, state/, RCPM.CONF and private SYSOP.DOC. In Docker, preserve
+the complete persistent volume while the board is stopped. A copy on the same
+disk is useful for recovery from mistakes, but not a substitute for a backup
+on separate storage.
+
+Restore a complete snapshot into a new directory. Don't mix accounts and
+message files from unrelated dates. Stop the original before starting a
+restored copy on its port. Never bypass the installation lock or delete it to
+start a second guest on the same disks.
+
+If WORK cleanup fails, the machine refuses to answer. Stop and repair the I:
+image or host write permissions before restarting.
+
+:B
+KEEPING UP WITH NEW RELEASES
+
+Don't unpack a new release over your board. Test it separately and follow its
+migration instructions. Preserve your accounts, messages, policy, credentials,
+uploads and custom software. Keep matching emulator and BYE driver versions
+together. Pulling a new Docker image doesn't automatically migrate an
+initialized volume.
+
+This guide describes local forums and mail only. Preserve the original
+component and archive notices when redistributing material. See
+docs/distribution-review.md in the project repository.

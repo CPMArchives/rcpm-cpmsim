@@ -1,0 +1,45 @@
+;
+PUBLIC COMMAND REFERENCE
+
+A - Command reference
+
+:A
+COMMAND REFERENCE
+
+The following is the standard public transient command set. Sysops may add or
+restrict programs, and some commands have additional options documented in
+HELP or their original instructions.
+
+    Command       Purpose / example
+    -------       -----------------
+    BYE           Log off
+                  BYE
+    CHAT          Page the sysop
+                  CHAT /S
+    CLS           Clear display
+                  CLS
+    DIR / SDZ     List files
+                  DIR SIGM:
+    HELP          Display online help
+                  HELP TRANSFER
+    LDIR          List library members
+                  LDIR P0:SIGMV011
+    LT            Read text or a library member
+                  LT P0:SIGMV011 ABSTRACT.011
+    MESSAGE       Leave a note for the sysop
+                  MESSAGE
+    MOUNT         List or exchange library volumes
+                  MOUNT /L
+    NDSCAN        Refresh names on a selected drive
+                  NDSCAN J:
+    RBBS          Enter the bulletin board
+                  RBBS
+    TYPE          Display an ordinary text file
+                  TYPE A0:WELCOME.TXT
+    UPLOAD        Send files to the sysop
+                  UPLOAD /Y
+    YSEND         Download using YMODEM
+                  YSEND A0:WELCOME.TXT
+
+Game launchers are on their respective volumes, not in the A0: command set.
+Mount the appropriate disk before using them.

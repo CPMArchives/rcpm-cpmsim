@@ -1,17 +1,35 @@
 ;
-CHAT WITH THE SYSOP
+A WORD WITH THE SYSOP
 
-Type CHAT at the CP/M prompt to page the operator.
-In RBBS, use C to return to CP/M first, then type CHAT.
-Wait for the operator to answer. An unanswered page returns to CP/M.
-Ctrl-C or Ctrl-X cancels the page or ends the conversation.
+A - A word with the sysop
 
-CHAT uses an 80x24 ANSI/VT100 split screen.
-SYSOP types in the upper pane; CALLER types in the lower pane.
-Each pane wraps and scrolls independently. Backspace erases text.
-Ctrl-R redraws the screen. CHAT /S uses the plain scrolling display.
-The sysop answers a page with Escape on the local keyboard.
-Local Ctrl-G toggles BYE's page bell and paging availability.
-Local Ctrl-B ends split chat and enters BYE's private-console mode.
+:A
+A WORD WITH THE SYSOP
 
-For a message the sysop can read later, use MESSAGE or RBBS instead.
+If the sysop is at the local console, you can have a live conversation. From
+the CP/M prompt enter:
+
+    CHAT
+
+Leave RBBS with C first if necessary. The program pages the sysop, who answers
+at the local console. An unanswered page returns you to CP/M; the sysop may
+simply be away from the keyboard.
+
+In the normal display, the sysop types in the upper pane and you type in the
+lower one. Each wraps and scrolls independently, so you can type at the same
+time without the two conversations becoming intermingled.
+
+Use an 80-column, 24-row ANSI/VT100 terminal. Backspace erases text on the
+current line, Tab inserts spaces, and Ctrl-R redraws the display. Ctrl-C or
+Ctrl-X ends the conversation.
+
+For simpler terminals, use CHAT /S for the traditional scrolling display.
+
+If nobody answers, don't spend the next ten minutes paging repeatedly. Leave a
+note instead:
+
+    MESSAGE
+
+Follow the prompts and save the message. This is a direct submission to the
+sysop's review inbox, independent of RBBS mail. An unsaved draft is lost at
+call recovery.

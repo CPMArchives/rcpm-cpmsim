@@ -1,0 +1,44 @@
+;
+THE LOCAL CONSOLE AND BYE
+
+A - At the sysop's console
+B - A word with the caller
+
+:A
+AT THE SYSOP'S CONSOLE
+
+When a caller is online, your local keyboard and his remote keyboard
+ordinarily feed the same computer. Don't start a disk operation while someone
+is composing a message.
+
+Use the following local BYE controls in shared mode:
+
+  Key - Action
+  Ctrl-B - Blank the caller and enter private operation; again to unblank
+  Ctrl-G - Toggle the page bell and paging availability
+  Ctrl-Q - Enter sysop message mode
+  Ctrl-X - Leave message mode
+  Ctrl-N - Force caller hangup
+
+While blanked, most local control keys go to the application rather than BYE,
+except Ctrl-B. Finish private work, leave the application and return to A0:
+before unblanking. With a tmux wrapper, Ctrl-B Ctrl-B sends a literal Ctrl-B
+to the guest; the distributed launcher needs only one.
+
+Between calls, local Ctrl-C opens BYE's menu. Select J to jump to CP/M with
+BYE attached if you intend to use AUTH. RETURN instead enters ordinary,
+unpatched CP/M; AUTH needs the resident interface, so don't confuse the two
+choices.
+
+:B
+A WORD WITH THE CALLER
+
+When paged by CHAT, answer with Escape on the local console. Both ends need an
+80-column, 24-row ANSI/VT100 terminal for the split display. Your text appears
+above the caller's; the panes wrap and scroll separately. Backspace erases
+within the current line, Tab inserts spaces, and Ctrl-R redraws. Ctrl-C or
+Ctrl-X ends chat. CHAT /S provides the plain scrolling alternative.
+
+A caller in RBBS must return to CP/M with C before invoking CHAT. Ctrl-G at
+the local console toggles paging availability. If you need to attend to
+private business, local Ctrl-B ends split chat and blanks the caller.

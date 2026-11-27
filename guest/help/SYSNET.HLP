@@ -1,0 +1,45 @@
+;
+TROUBLESHOOTING AND NETWORK OPERATION
+
+A - When something goes wrong
+B - Inviting callers from elsewhere
+
+:A
+WHEN SOMETHING GOES WRONG
+
+  Launcher won't start - Host permissions, occupied port, another running copy
+  Caller connects but sees nothing - Raw TCP rather than Telnet; press RETURN
+  DIR or LT works locally but not remotely - A0: caller read-only permission
+  and F4
+  Game won't prepare its files - MOUNT GAMES; I0: RW; approval of the actual
+  game
+  Old names after MOUNT - NDSCAN errors, marker collisions
+  AUTH refuses to run - Private operation with BYE attached
+  AUTH settings vanish after restart - Saved I13:AUTH.DAT
+  HELP or board records missing - Correct I: image and DU permissions
+  Garbled CHAT - ANSI/VT100 setup, or CHAT /S
+  WORK files vanish - Expected at call boundaries
+
+Try to decide whether the trouble lies in the host, CP/M, BYE or a transient
+program. If a command works in private CP/M but not for a caller, look at
+permissions before rebuilding software. HELP AUTH and HELP POLICY explain
+how to recover a bad policy.
+
+:B
+INVITING CALLERS FROM ELSEWHERE
+
+Once you are happy with local calls, stop the system and change ADDRESS to the
+appropriate host IPv4 address, or 0.0.0.0 for all interfaces. Restart. The
+host firewall and router must permit the caller port. For Docker, arrange the
+host port publication instead; see the Docker guide.
+
+Make a call from another computer before announcing the board. Raw TCP
+provides no encryption; advise callers not to reuse important passwords. Keep
+administrative tools and credentials private, approve only reviewed software,
+and retain a good stopped backup. Guest permission checks are not a substitute
+for securing the host itself.
+
+Automatic startup, scheduled backups, monitoring and other unattended hosting
+arrangements are separate matters. Optional administration guides are
+available for Linux, macOS and Windows. None is needed for ordinary foreground
+operation.
