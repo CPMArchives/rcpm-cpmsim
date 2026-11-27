@@ -39,6 +39,6 @@ uploads and custom software. Keep matching emulator and BYE driver versions
 together. Pulling a new Docker image doesn't automatically migrate an
 initialized volume.
 
-CPMNet is not part of released 1.2.2; this guide describes local forums and
-mail only. Preserve the original component and archive notices when
-redistributing material. See the distribution review.
+This guide describes local forums and mail only. Preserve the original
+component and archive notices when redistributing material. See
+docs/distribution-review.md in the project repository.
