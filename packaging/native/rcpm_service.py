@@ -318,6 +318,9 @@ class Supervisor:
                 # Require a fresh carrier-loss acknowledgement, not boot history.
                 with self.condition:
                     self.output.clear()
+                # Explicitly end the stream before waiting for carrier loss.
+                # In particular, do not rely on a timed socket's close alone.
+                caller.shutdown(socket.SHUT_RDWR)
             phase = 'carrier_cleanup'
             with self.condition:
                 while MODEM_READY not in self.output:
