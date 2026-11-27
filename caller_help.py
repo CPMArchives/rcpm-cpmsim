@@ -25,7 +25,7 @@ def validate_topics(topics):
         in_section = False
         for line in lines[1:]:
             if line.startswith(':'):
-                match = re.fullmatch(r':([A-Z0-9])(?::([A-Z0-9_]{1,8}\.HLP))?', line)
+                match = re.fullmatch(r':([A-Z0-9])(?::HELP:([A-Z0-9_]{1,8}\.HLP))?', line)
                 if not match:
                     raise ValueError('Invalid HELP directive: ' + name + ': ' + line)
                 key, target = match.groups()
