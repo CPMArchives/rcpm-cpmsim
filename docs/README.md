@@ -31,6 +31,14 @@ specific features and engineering details.
 - [BYE510 build](bye5-build.md)
 - [Post-1.0 roadmap](roadmap.md)
 
+## Optional host administration
+
+These tools are separate from the standard unpack-and-launch package.
+
+- [Linux administration add-on](hosting-addon.md)
+- [Add-on installation and administration](INSTALLATION-NATIVE-SERVICE.md)
+- [Local monitoring](operational-monitoring.md)
+
 ## Development workflows and history
 
 These documents also describe local development tools and earlier prototypes;

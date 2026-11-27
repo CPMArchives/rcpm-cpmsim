@@ -6,6 +6,12 @@ the listening address/port after the raw TCP listener opens. No tmux, Python,
 Homebrew, caller client or compiler is required at run time. Python and a compiler
 are build-time tools only. The operator's existing tmux wrapper remains separate.
 
+Host service installation, scheduled backups and monitoring belong to the
+separate [optional administration add-on](hosting-addon.md). Build that add-on
+with `build_admin_addon.py` against an exact standard v1.2.2 archive; it does
+not rebuild or redistribute the base runtime or board media. The standard
+v1.2.2 packages use `prepare_release_1_2_2.py` and retain the foreground workflow.
+
 `build_release.py` produces a common payload and a macOS ARM64 package. The
 native launcher, emulator and bundled POSIX cpmtools depend only on macOS system
 libraries, with deployment target 11.0. Other host packages are not yet built or

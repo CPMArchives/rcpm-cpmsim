@@ -1,0 +1,35 @@
+name: Publish checked administration add-on
+on:
+  workflow_dispatch:
+    inputs:
+      check_run:
+        required: true
+permissions:
+  contents: write
+  actions: read
+jobs:
+  publish:
+    runs-on: ubuntu-22.04
+    timeout-minutes: 10
+    env:
+      GH_TOKEN: ${{ github.token }}
+      CHECK_RUN: ${{ inputs.check_run }}
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+      - name: Require successful checks
+        run: |
+          [[ "$CHECK_RUN" =~ ^[0-9]+$ ]]
+          RESULT=$(gh api "repos/$GITHUB_REPOSITORY/actions/runs/$CHECK_RUN" --jq .conclusion)
+          test "$RESULT" = success
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
+        with:
+          github-token: ${{ github.token }}
+          run-id: ${{ inputs.check_run }}
+          pattern: admin-v0.1.0-*
+          path: inputs
+      - name: Finalize add-on manifests and checksums
+        run: python3 finalize_admin_addon.py --inputs inputs --output dist --run "$CHECK_RUN"
+      - name: Publish separately and retain RCP/M as latest release
+        run: |
+          if gh release view admin-v0.1.0 --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1; then exit 1; fi
+          gh release create admin-v0.1.0 dist/* --repo "$GITHUB_REPOSITORY" --target "$GITHUB_SHA" --latest=false --title 'Optional RCP/M administration add-on 0.1.0' --notes 'Optional Linux ARM64/x64 service, backup and monitoring tools for the standard RCP/M 1.2.2 packages. Separate installation and administration guide. Fresh installation checks and service/monitor tests passed on both architectures. Standard RCP/M does not require this add-on; existing releases and Docker images are unchanged.'
