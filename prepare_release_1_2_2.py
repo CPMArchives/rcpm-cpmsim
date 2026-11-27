@@ -19,7 +19,9 @@ SOURCE_SHA = 'b70e9b222e7dbdcc2fb0395caf444f1ddd329f5d9958b5895a5e921fed2bbc68'
 
 
 def run(*args, **kwargs):
-    return subprocess.run(list(map(str, args)), check=True, **kwargs)
+    # Cygwin windres invokes its preprocessor through a shell; native Windows
+    # backslashes would be consumed as escapes there.
+    return subprocess.run([a.as_posix() if isinstance(a, Path) else str(a) for a in args], check=True, **kwargs)
 
 
 def source(archive, destination):

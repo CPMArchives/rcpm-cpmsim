@@ -1,10 +1,16 @@
 name: Build and check v1.2.2 packages
 on:
   workflow_dispatch:
+    inputs:
+      windows_only:
+        description: Rebuild only Windows after a Windows-specific correction
+        type: boolean
+        default: false
 permissions:
   contents: read
 jobs:
   native:
+    if: inputs.windows_only != true
     strategy:
       fail-fast: false
       matrix:
