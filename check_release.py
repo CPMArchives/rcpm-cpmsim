@@ -137,9 +137,9 @@ class Guest:
             self.caller.sendall(bytes([char]))
             self.collect(.025)
         self.wait(expected, remote=True, start=start)
-        self.collect(.3)
-        # Ctrl-C is the CP/M program-abort convention. Verify that the
-        # actual viewer returns to the command prompt rather than assuming it.
+        self.wait(b'Enter Selection', remote=True, start=start)
+        # Ctrl-C returns HELPC 1.4 to CP/M, confirmed on the native
+        # macOS installation with the expanded HELP collection.
         if b'A0:SYSTEM>' not in self.remote[start:]:
             self.caller.sendall(b'\x03')
             self.wait(b'A0:SYSTEM>', remote=True, start=start, timeout=10)
