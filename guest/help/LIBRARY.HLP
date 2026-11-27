@@ -1,47 +1,47 @@
 ;
 EXPLORING THE SOFTWARE COLLECTION
 
-A - Exploring the software collection
+A - The SIG/M and CPMUG collections
+B - Understanding LBR files
+C - Finding suitable software
+D - DIR - Listing files
+E - LDIR - Examining libraries
+F - LT - Reading library members
+G - MOUNT - Exchanging volumes
+H - YSEND - Downloading files
+
+:D:HELP:DIR.HLP
+:E:HELP:LDIR.HLP
+:F:HELP:LT.HLP
+:G:HELP:MOUNT.HLP
+:H:HELP:YSEND.HLP
 
 :A
-EXPLORING THE SOFTWARE COLLECTION
+THE SIG/M AND CPMUG COLLECTIONS
 
-The standard P: disk contains the 310 SIG/M and 93 CPMUG volumes. These were
-assembled by the CP/M user groups and circulated amongst enthusiasts. They
-contain an extraordinary variety of material: programming tools, source code,
-games, technical notes, correspondence and programs written for particular
-makes of computer.
+The default P: disk contains 310 SIG/M and 93 CPMUG volumes. These were
+assembled by the CP/M user groups and circulated amongst enthusiasts.
+They contain programming tools, source code, games, technical notes,
+correspondence and programs written for particular makes of computer.
 
-The individual volumes are supplied as LBR files. An LBR is a library
-containing a number of separate files. The individual members may themselves
-be compressed.
+SIGM: and CPMUG: identify the two collections on the default P: disk.
+Other mounted archives may have different names and contents.
 
-    DIR SIGM:
-    DIR CPMUG:
+:B
+UNDERSTANDING LBR FILES
 
-A directory of numbered libraries doesn't tell you much about their contents.
-You can look inside one without downloading it:
+An LBR is a library containing a number of separate files. Individual
+members may themselves be compressed. You can examine a library's
+directory with LDIR and read its text members with LT without unpacking
+the entire collection. YSEND downloads the library for local use.
+There is no general caller facility for extracting members onto the
+RCP/M disks.
 
-    LDIR P0:SIGMV011
+:C
+FINDING SUITABLE SOFTWARE
 
-LDIR lists the members of the library. To read a text member, supply both the
-library name and the member name to LT:
-
-    LT P0:SIGMV011 ABSTRACT.011
-
-Use the actual name shown by LDIR. This is particularly useful when an archive
-contains an abstract or instructions, and you're trying to decide whether the
-volume is worth downloading.
-
-If you mount a different P: archive, use the DU or named directory belonging
-to that disk instead. P0:SIGMV011 is an example for the default archive.
-
-When you find something you want, download the library itself using YSEND and
-unpack it on your own machine. There is no general caller facility for
-extracting archive members onto the RCP/M disks.
-
-Not everything in a historical archive will run on every CP/M machine. Some
-programs are written for a particular screen, disk controller, terminal or
-operating-system revision. Read the author's documentation before trying the
-program locally. Also bear in mind that the original author may have imposed
-conditions on copying or redistribution.
+Look for abstracts, catalogs and instructions before downloading a
+library. Not everything in a historical archive will run on every CP/M
+machine. Some programs are written for a particular screen, disk
+controller, terminal or operating-system revision. Read the author's
+documentation and observe any copying or redistribution restrictions.
