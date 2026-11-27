@@ -8,7 +8,6 @@ C - Further reading
 :A
 TERMS AND ABBREVIATIONS
 
-Term - Meaning
   ANSI / VT100 - Terminal display conventions used by the supplied
   screen-oriented programs
   Archive - A collection of preserved files or software volumes
@@ -80,11 +79,14 @@ notices.
 :C
 FURTHER READING
 
-If you decide you'd like to establish a board of your own, the companion
-Sysop's Guide describes the installation, configuration and maintenance of
-HUMONGOUS RCP/M.
+If you decide you'd like to establish a board of your own, HELP SYSOP
+opens the online Sysop's Guide. The standalone manuals are available at:
+
+    https://github.com/CPMArchives/rcpm-cpmsim/tree/main/docs
 
 For a glimpse of what calling an RCP/M was like in its heyday, see Jon
 Schneider's 1985 guide and other period material in the historical RCP/M
 archive. The command set and restrictions of those systems may differ from
 ours.
+
+See the Further reading section of the standalone User's Guide for links.
