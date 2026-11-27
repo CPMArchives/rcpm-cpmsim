@@ -89,7 +89,9 @@ def check(base,addon,output,session_only=False):
             finally:console.close()
             print('Passed: caller carrier cleanup',flush=True)
             time.sleep(12)
-            assert json.loads(run(ctl,'health','--probe').stdout)['status']=='passed'
+            probe=json.loads(run(ctl,'health','--probe').stdout)
+            assert probe['status']=='passed'
+            print('Probe timings:',json.dumps(probe),flush=True)
             print('Passed: idle probe',flush=True)
             run(ctl,'monitor')
             assert not json.loads((home/'monitor/state.json').read_text())['issues']

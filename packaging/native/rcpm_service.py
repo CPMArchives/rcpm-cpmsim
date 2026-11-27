@@ -272,12 +272,13 @@ class Supervisor:
     def probe(self, timeout=30):
         """Reserve an idle line for a real caller HELP transaction, never PTY input."""
         timeout = float(timeout)
-        if not 1 <= timeout <= 60:
-            raise ValueError('Probe timeout must be in 1..60 seconds')
+        if not 1 <= timeout <= 120:
+            raise ValueError('Probe timeout must be in 1..120 seconds')
         if not self.command_lock.acquire(blocking=False):
             return dict(status='deferred', reason='operator_operation')
         reserved = False
         phase = 'reserve'
+        timings = {}
         started = time.monotonic()
         try:
             with self.mutex:
@@ -308,11 +309,13 @@ class Supervisor:
                     return data
                 phase = 'login'
                 until_prompt()
+                timings['login_seconds'] = round(time.monotonic()-started,3)
                 for byte in b'HELP\r':
                     caller.sendall(bytes([byte]))
                     time.sleep(.03)
                 phase = 'HELP'
                 reply = until_prompt()
+                timings['transaction_seconds'] = round(time.monotonic()-started,3)
                 if len(reply) < 100 or b'HELP?' in reply:
                     raise RuntimeError('Caller HELP probe did not return help')
                 # Require a fresh carrier-loss acknowledgement, not boot history.
@@ -337,7 +340,7 @@ class Supervisor:
                     self.probing = False
                     self.idle_since = time.monotonic()
             self.command_lock.release()
-        result.update(checked_at=time.time(), seconds=round(time.monotonic()-started, 3))
+        result.update(checked_at=time.time(), seconds=round(time.monotonic()-started, 3), **timings)
         self.last_probe = result
         return result
 

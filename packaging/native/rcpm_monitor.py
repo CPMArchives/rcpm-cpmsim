@@ -74,7 +74,7 @@ def load_config(path):
     for name in set(DEFAULTS)-{'data_path', 'backup_path'}:
         if not isinstance(config[name], (int, float)) or not 0 <= config[name] < 10**15:
             raise ValueError('Invalid monitor threshold: ' + name)
-    if not 1 <= config['probe_timeout'] <= 60 or config['restart_limit'] < 1 or config['restart_window'] < 1:
+    if not 1 <= config['probe_timeout'] <= 120 or config['restart_limit'] < 1 or config['restart_window'] < 1:
         raise ValueError('Invalid monitor time/restart limit')
     return config
 

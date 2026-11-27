@@ -114,7 +114,7 @@ Private state lives under `monitor`; launchd's operational logs are under
 `logs`. Raw private console output is not logged. Neither email delivery nor
 an external monitoring account is required or supplied. Optional `monitor.json`
 can override storage thresholds and probe timeout. Defaults are 512 MiB,
-five percent free, 1,024 free inodes and a 60-second probe budget, including
+five percent free, 1,024 free inodes and a 120-second probe budget, including
 the caller transaction and carrier-loss cleanup.
 
 To return to standalone use, disable the three jobs, stop the board, and copy

@@ -112,7 +112,7 @@ def backup(home):
 def check_monitor(home,probe=True):
     config=monitor.load_config(home/'monitor.json')
     if not (home/'monitor.json').exists() or 'probe_timeout' not in json.loads((home/'monitor.json').read_text()):
-        config['probe_timeout']=60
+        config['probe_timeout']=120
     config.update(data_path=str(home),backup_path=str(home/'backups'))
     state_path=home/'monitor/state.json'
     with monitor.monitor_lock(home/'monitor/state.lock'):
@@ -214,7 +214,7 @@ def main(argv=None):
     else:
         action='probe' if a.action=='health' and a.probe else a.action
         result=service.request(home/'run','status' if action=='health' else action,
-                               probe_timeout=60,socket_timeout=65 if action=='probe' else 300)
+                               probe_timeout=120,socket_timeout=125 if action=='probe' else 300)
         print(json.dumps(result))
         if a.action=='health' and (result.get('status')=='failed' or (action=='health' and not result['ready'])):raise SystemExit(1)
 
