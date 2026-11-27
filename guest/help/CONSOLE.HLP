@@ -1,38 +1,44 @@
 ;
-THE SYSOP'S CONSOLE
+THE LOCAL CONSOLE AND BYE
 
-A - Local BYE controls
-B - Between calls
-C - Answering a chat page
+A - At the sysop's console
+B - A word with the caller
+
 :A
-LOCAL BYE CONTROLS
+AT THE SYSOP'S CONSOLE
 
-During a call, the local keyboard can affect the caller's work.
+When a caller is online, your local keyboard and his remote keyboard
+ordinarily feed the same computer. Don't start a disk operation while someone
+is composing a message.
 
-Ctrl-B   Blank or unblank the caller
-Ctrl-G   Toggle paging availability
-Ctrl-Q   Enter sysop message mode
-Ctrl-X   Leave sysop message mode
-Ctrl-N   Force caller disconnect
+Use the following local BYE controls in shared mode:
 
-While blanked, most control keys pass to the local application.
-Keep the caller blanked during private work. Leave private programs
-and return to A0: before unblanking. If using tmux, Ctrl-B Ctrl-B
-passes a literal Ctrl-B to the guest.
+  Key - Action
+  Ctrl-B - Blank the caller and enter private operation; again to unblank
+  Ctrl-G - Toggle the page bell and paging availability
+  Ctrl-Q - Enter sysop message mode
+  Ctrl-X - Leave message mode
+  Ctrl-N - Force caller hangup
+
+While blanked, most local control keys go to the application rather than BYE,
+except Ctrl-B. Finish private work, leave the application and return to A0:
+before unblanking. With a tmux wrapper, Ctrl-B Ctrl-B sends a literal Ctrl-B
+to the guest; the distributed launcher needs only one.
+
+Between calls, local Ctrl-C opens BYE's menu. Select J to jump to CP/M with
+BYE attached if you intend to use AUTH. RETURN instead enters ordinary,
+unpatched CP/M; AUTH needs the resident interface, so don't confuse the two
+choices.
+
 :B
-BETWEEN CALLS
+A WORD WITH THE CALLER
 
-At BYE's waiting prompt, local Ctrl-C opens its menu.
-Select J to enter CP/M with BYE still attached. This is the
-environment needed by AUTH. RETURN instead enters ordinary CP/M
-without the resident BYE interface.
-:C
-ANSWERING A CHAT PAGE
+When paged by CHAT, answer with Escape on the local console. Both ends need an
+80-column, 24-row ANSI/VT100 terminal for the split display. Your text appears
+above the caller's; the panes wrap and scroll separately. Backspace erases
+within the current line, Tab inserts spaces, and Ctrl-R redraws. Ctrl-C or
+Ctrl-X ends chat. CHAT /S provides the plain scrolling alternative.
 
-A caller enters CHAT from CP/M. Answer with Escape on the local
-keyboard. The upper pane is yours; the lower pane is the caller's.
-Both ends need an 80x24 ANSI/VT100 terminal for split-screen CHAT.
-CHAT /S is the plain scrolling alternative.
-
-Ctrl-R redraws the split display. Ctrl-C or Ctrl-X ends chat.
-Local Ctrl-B ends split chat and enters private operation.
+A caller in RBBS must return to CP/M with C before invoking CHAT. Ctrl-G at
+the local console toggles paging availability. If you need to attend to
+private business, local Ctrl-B ends split chat and blanks the caller.
