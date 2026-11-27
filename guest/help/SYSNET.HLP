@@ -7,7 +7,6 @@ B - Inviting callers from elsewhere
 :A
 WHEN SOMETHING GOES WRONG
 
-Symptom - First things to examine
   Launcher won't start - Host permissions, occupied port, another running copy
   Caller connects but sees nothing - Raw TCP rather than Telnet; press RETURN
   DIR or LT works locally but not remotely - A0: caller read-only permission
@@ -23,8 +22,8 @@ Symptom - First things to examine
 
 Try to decide whether the trouble lies in the host, CP/M, BYE or a transient
 program. If a command works in private CP/M but not for a caller, look at
-permissions before rebuilding software. The AUTH appendix goes into more
-detail about recovering a bad policy.
+permissions before rebuilding software. HELP AUTH and HELP POLICY explain
+how to recover a bad policy.
 
 :B
 INVITING CALLERS FROM ELSEWHERE
