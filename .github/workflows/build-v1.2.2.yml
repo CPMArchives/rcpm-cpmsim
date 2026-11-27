@@ -6,6 +6,10 @@ on:
         description: Rebuild only Windows after a Windows-specific correction
         type: boolean
         default: false
+      repairs_only:
+        description: Build Mac and Windows only; reuse completed Linux checks
+        type: boolean
+        default: false
 permissions:
   contents: read
 jobs:
@@ -13,16 +17,7 @@ jobs:
     if: inputs.windows_only != true
     strategy:
       fail-fast: false
-      matrix:
-        include:
-          - platform: macos-arm64
-            runner: macos-15
-          - platform: linux-x64
-            runner: ubuntu-22.04
-            docker_arch: x64
-          - platform: linux-arm64
-            runner: ubuntu-22.04-arm
-            docker_arch: arm64
+      matrix: ${{ fromJSON(inputs.repairs_only && '{"include":[{"platform":"macos-arm64","runner":"macos-15"}]}' || '{"include":[{"platform":"macos-arm64","runner":"macos-15"},{"platform":"linux-x64","runner":"ubuntu-22.04","docker_arch":"x64"},{"platform":"linux-arm64","runner":"ubuntu-22.04-arm","docker_arch":"arm64"}]}') }}
     runs-on: ${{ matrix.runner }}
     timeout-minutes: 25
     env:

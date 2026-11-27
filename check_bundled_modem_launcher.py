@@ -47,6 +47,7 @@ def check(package, output):
                 guest.wait(b'RCP/M modem ready.' if mode == 'direct' else
                            b'ATE0Q0V0S0=0M0S10=25X1H0', timeout=60)
                 if mode == 'ip232':
+                    guest.wait(b'\n0\n' if os.name == 'nt' else b'\n0\r\n')
                     guest.collect(3)
                 if os.name == 'nt':
                     guest.caller = socket.create_connection(('127.0.0.1', port), timeout=5)
@@ -62,6 +63,7 @@ def check(package, output):
                 guest.caller.close(); guest.caller = None
                 if mode == 'ip232':
                     guest.wait(b'ATE0Q0V0S0=0M0S10=25X1H0', start=local_start)
+                    guest.wait(b'\n0\n' if os.name == 'nt' else b'\n0\r\n', start=local_start)
                 guest.collect(3)
                 guest.remote.clear()
                 if os.name == 'nt':
@@ -78,6 +80,7 @@ def check(package, output):
                     local_start = len(guest.local)
                     guest.caller.close(); guest.caller = None
                     guest.wait(b'ATE0Q0V0S0=0M0S10=25X1H0', start=local_start)
+                    guest.wait(b'\n0\n' if os.name == 'nt' else b'\n0\r\n', start=local_start)
                     guest.collect(3)
                 guest.stop()
                 with socket.socket() as listener:
@@ -98,6 +101,9 @@ def check(package, output):
                 if os.name != 'nt':
                     os.close(guest.master); os.close(guest.slave)
                 if not passed:
+                    print('Failure console tail:', repr(bytes(guest.local[-3500:])), flush=True)
+                    if (root / 'state/tcpser.log').exists():
+                        print('Modem diagnostic tail:', (root / 'state/tcpser.log').read_text(errors='replace')[-3500:], flush=True)
                     (output / 'result.json').write_text(json.dumps(dict(passed=False, completed=results), indent=2)+'\n')
     value = dict(passed=True, results=results, launcher_sha256=hashlib.sha256(
         (package / ('runtime/rcpm.exe' if os.name == 'nt' else 'runtime/rcpm')).read_bytes()).hexdigest())

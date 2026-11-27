@@ -111,7 +111,13 @@ def prepare(platform, work, base=None, upstream=None, cygwin=None):
         filename = next(line.split()[1] for line in installed.splitlines() if line.startswith('cygwin '))
         version = filename.removeprefix('cygwin-').split('.tar')[0]
         cygsrc = work / 'cygwin-source.tar.xz'
-        urllib.request.urlretrieve('https://mirrors.kernel.org/sourceware/cygwin/x86_64/release/cygwin/cygwin-'+version+'-src.tar.xz', cygsrc)
+        source_url = 'https://mirrors.kernel.org/sourceware/cygwin/src/release/cygwin/'
+        source_name = 'cygwin-'+version+'-src.tar.xz'
+        urllib.request.urlretrieve(source_url+source_name, cygsrc)
+        rows = urllib.request.urlopen(source_url+'sha512.sum').read().decode().splitlines()
+        source_checks = {r.split()[1].lstrip('*'):r.split()[0] for r in rows if len(r.split())==2}
+        if hashlib.sha512(cygsrc.read_bytes()).hexdigest() != source_checks.get(source_name):
+            raise ValueError('Cygwin runtime source checksum mismatch')
         extras['source/cygwin-source.tar.xz'] = cygsrc
     else:
         flags = ['-mmacosx-version-min=11.0'] if platform.startswith('macos-') else ['-D_XOPEN_SOURCE=700']
