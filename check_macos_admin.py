@@ -123,8 +123,15 @@ def check(base,addon,output,session_only=False):
             trace=home/'private-console.log'
             if trace.exists():
                 data=trace.read_bytes();marker=b'ATE0Q0V0S0=0M0S10=25X1H0\r\n0\r\n'
-                # Exclude startup, which can contain newly generated credentials.
-                if marker in data:print('Post-initialization diagnostic:',repr(data.split(marker,1)[1][-3500:]),flush=True)
+                # Emit only fixed labels and counts, never any console bytes.
+                print('Modem diagnostic counts:',json.dumps({
+                    'initialized':data.count(marker),
+                    'initialization_commands':data.count(b'ATE0Q0V0S0=0M0S10=25X1H0'),
+                    'numeric_ok':data.count(b'\r\n0\r\n'),
+                    'no_carrier':data.count(b'NO CARRIER'),
+                    'numeric_no_carrier':data.count(b'\r\n3\r\n'),
+                    'system_prompt':data.count(b'A0:SYSTEM>'),
+                    'console_bytes':len(data)}),flush=True)
             for p in (home/'logs').glob('*'):
                 print(p.name,p.read_text(errors='replace')[-6000:],flush=True)
             raise
