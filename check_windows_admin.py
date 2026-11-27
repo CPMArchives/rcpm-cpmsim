@@ -14,7 +14,11 @@ import xml.etree.ElementTree as ET
 
 
 def run(*args,check=True,timeout=360):
-    result=subprocess.run(list(map(str,args)),capture_output=True,text=True,timeout=timeout)
+    arguments=list(map(str,args))
+    if arguments[0].lower() in ('powershell.exe','pwsh.exe') and '-Command' in arguments:
+        index=arguments.index('-Command')+1
+        arguments[index]="$ErrorActionPreference='Stop';"+arguments[index]
+    result=subprocess.run(arguments,capture_output=True,text=True,timeout=timeout)
     if check and result.returncode:raise RuntimeError('Command failed: '+str(args)+'\n'+result.stdout+'\n'+result.stderr)
     return result
 
