@@ -402,7 +402,8 @@ def task(home,name,mode):
     if mode=='disable' and name=='board':stop(home)
     result=subprocess.run(['powershell.exe','-NoProfile','-NonInteractive','-ExecutionPolicy','Bypass','-File',
                            str(home/'helpers/tasks.ps1'),'-AdminHome',str(home),'-Job',name,'-Mode',mode],
-                          capture_output=True,text=True,timeout=45,creationflags=subprocess.CREATE_NO_WINDOW)
+                          capture_output=True,text=True,timeout=45,creationflags=subprocess.CREATE_NO_WINDOW,
+                          env=platform.powershell_environment())
     if result.returncode:raise RuntimeError('Task Scheduler operation failed: '+result.stderr.strip())
     return json.loads(result.stdout) if result.stdout.strip() else dict(completed=True)
 

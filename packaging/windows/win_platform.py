@@ -14,6 +14,12 @@ def kernel():
     return c.WinDLL('kernel32', use_last_error=True)
 
 
+def powershell_environment():
+    # PowerShell 7 exports its own module search path. Windows PowerShell 5.1
+    # must build its native path instead of trying to load those Core modules.
+    return {key:value for key,value in os.environ.items() if key.casefold()!='psmodulepath'}
+
+
 class Security(c.Structure):
     _fields_=[('length',w.DWORD),('descriptor',c.c_void_p),('inherit',w.BOOL)]
 
