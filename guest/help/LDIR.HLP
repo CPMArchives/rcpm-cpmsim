@@ -1,0 +1,26 @@
+;
+LDIR - LIST THE MEMBERS OF A LIBRARY
+
+A - List the members of a library
+
+:A
+LIST THE MEMBERS OF A LIBRARY
+
+    LDIR DU:library
+    LDIR NAME:library
+
+LDIR-B 1.5 examines an LBR library without extracting its members.
+For example, on the default P: archive:
+
+    LDIR P0:SIGMV011
+    LDIR SIGM:SIGMV011
+
+Use the member names in the listing when reading documentation with LT.
+
+    LT P0:SIGMV011 ABSTRACT.011
+
+Supply the actual member name shown by LDIR. Some members are compressed.
+LDIR does not unpack them into WORK or execute programs in the library.
+To take the whole library home, use YSEND with its .LBR filename.
+
+See HELP LT, HELP LIBRARY and HELP YSEND.

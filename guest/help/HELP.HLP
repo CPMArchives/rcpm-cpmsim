@@ -3,6 +3,10 @@ HUMONGOUS RCP/M - ONLINE HELP
 
 U - User's Guide
 S - Sysop's Guide
+C - Command reference
+H - Using HELP
 
 :U:USER.HLP
 :S:SYSOP.HLP
+:C:CMDREF.HLP
+:H:READING.HLP

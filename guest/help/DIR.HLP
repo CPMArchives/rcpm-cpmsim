@@ -1,0 +1,32 @@
+;
+DIR - LIST FILES ON A DISK
+
+A - List files on a disk
+
+:A
+LIST FILES ON A DISK
+
+    DIR
+    DIR DU:
+    DIR NAME:
+    DIR DU:filespec
+
+DIR is the supplied Super Directory (SD 1.37) utility, also available
+as SDZ. With no argument it lists files in the current drive/user area.
+
+    DIR SIGM:
+    DIR J1:*.DOC
+    DIR P0:SIGMV011.LBR
+    DIR HELP:
+
+A question mark matches a filename character; an asterisk matches the
+remainder of the name or extension. A DU or named directory selects the
+area to examine without changing your current directory.
+
+The listing reports file sizes, the number and total size of listed
+files, and free space on the drive. Space is allocated in disk blocks;
+the displayed size need not be the exact length of a file.
+
+Private areas and privileged directory options remain restricted.
+
+See HELP SDZ, HELP COMMANDS and HELP LDIR.

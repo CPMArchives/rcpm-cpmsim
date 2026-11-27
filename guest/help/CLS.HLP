@@ -1,0 +1,17 @@
+;
+CLS - CLEAR THE TERMINAL DISPLAY
+
+A - Clear the terminal display
+
+:A
+CLEAR THE TERMINAL DISPLAY
+
+    CLS
+
+Clears the terminal screen. Use it when you want a clean command display.
+It does not erase files, alter the current DU or end your call.
+
+Use an ANSI/VT100-compatible terminal for the supplied screen-oriented
+programs. If the display remains garbled, check your terminal settings.
+
+See HELP READING.

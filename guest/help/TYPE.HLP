@@ -1,0 +1,23 @@
+;
+TYPE - DISPLAY AN ORDINARY TEXT FILE
+
+A - Display an ordinary text file
+
+:A
+DISPLAY AN ORDINARY TEXT FILE
+
+    TYPE DU:filename
+
+Displays an ordinary text file on the terminal.
+
+    TYPE A0:WELCOME.TXT
+    TYPE A0:WELCOME.TXT [NO PAGE]
+
+The second example requests output without page pauses. For supported
+compressed text or text inside an LBR, use LT instead.
+
+Do not display binary files with TYPE. Control characters in binary
+data can confuse your terminal. If you want to keep a file on your own
+computer, use the download command rather than screen capture.
+
+See HELP LT, HELP READING and HELP YSEND.

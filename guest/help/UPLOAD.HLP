@@ -1,0 +1,29 @@
+;
+UPLOAD - SEND FILES TO THE SYSOP
+
+A - Send files to the sysop
+
+:A
+SEND FILES TO THE SYSOP
+
+    UPLOAD filename
+    UPLOAD /Y
+
+For a single file, supply its intended CP/M filename and select
+XMODEM/CRC send in your terminal. For a batch, use /Y and select
+YMODEM send. Follow the prompts and wait for confirmation.
+
+    UPLOAD MYPROG.LBR
+
+Completed submissions go to the sysop's private host inbox, not the
+public library or WORK. XMODEM may leave record padding; YMODEM carries
+the declared file length. Interrupted partial uploads are discarded,
+but already completed batch members survive.
+
+If the transfer stalls, check the protocol and send direction. Use
+the terminal's transfer-cancel facility if necessary.
+
+Leave a MESSAGE describing the submission, its author, hardware
+requirements and any distribution restrictions.
+
+See HELP TRANSFER and HELP MESSAGE.
