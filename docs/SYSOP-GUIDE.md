@@ -272,6 +272,18 @@ CPMNet is not part of released 1.2.2; this guide describes local forums and mail
 
 For further historical reading, see the [RCP/M archive](https://www.dflund.se/~pi/cpm/files/ftp.mayn.de/pub/cpm/archive/rcpm/), including Jon Schneider's 1985 RCP/M user's guide and period security notes. The [historical security review](historical-rcpm-security.md) explains how such material informs this distribution.
 
+## Acknowledgements
+
+HUMONGOUS RCP/M owes its existence to the work of a great many people, some of whom made their contributions more than forty years ago. Much of our work has been to bring their software together, adapt it to present-day computers and make it available to another generation of CP/M enthusiasts.
+
+Our particular thanks go to Gary Kildall and the team at Digital Research for CP/M; Udo Munk for z80pack and cpmsim; Richard Conn for his pioneering work on ZCPR; and Jay Sage and Bridger Mitchell for Z3PLUS, with Joe Wright for his contributions to the Z-System.
+
+We also owe a debt to Dave Jaffe, the original author of BYE, and to Wayne Masters, Irv Hoff, George Peace and the other contributors who carried its development forward; to the authors and maintainers of CP/M RBBS, whose work gives our callers a place to exchange messages; and to Jim Brain for tcpser, which allows us to recreate the modem connection without a telephone line.
+
+Finally, our thanks to the many authors of CP/M utilities, the SIG/M and CPMUG librarians and contributors, and the archivists and volunteers who have kept this remarkable body of software and documentation accessible. Without their generosity and persistence, there would be very little for an RCP/M such as ours to offer.
+
+The individual software distributions retain their original credits and notices.
+
 ## Appendix: AUTH command reference
 
 The following detailed reference preserves the operational notes from the original 1.2.2 package manual. References to its numbered sections refer to the [original package reference](../packaging/SYSOP-GUIDE.DOC).
