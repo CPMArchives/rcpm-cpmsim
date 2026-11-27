@@ -1,0 +1,24 @@
+;
+SDZ - SUPER DIRECTORY
+
+A - Super Directory
+
+:A
+SUPER DIRECTORY
+
+    SDZ
+    SDZ HELP:
+    SDZ P0:*.LBR
+
+SDZ and DIR are the same supplied Super Directory (SD 1.37) utility.
+Both names accept the same public directory-listing syntax.
+
+Use a DU or named directory to examine a particular area. Wildcards
+can narrow the listing to filenames or extensions of interest. The
+listing gives allocated file sizes, matched totals and drive free space.
+
+Some original SD options are reserved to the private sysop, including
+printer or disk output, disk reset and privileged attribute listings.
+A caller cannot use SDZ to bypass directory permissions.
+
+See HELP DIR for more examples and HELP COMMANDS for DU conventions.
