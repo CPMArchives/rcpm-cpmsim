@@ -1,32 +1,28 @@
 ;
+WELCOME MESSAGE AND HELP MAINTENANCE
+
+A - Making the system your own
+
+:A
 MAKING THE SYSTEM YOUR OWN
 
-A - The sign-on message
-B - Maintaining HELP
-:A
-THE SIGN-ON MESSAGE
+The sign-on message should tell the caller where he's arrived and what he
+might find there. A few lines are often sufficient; regular callers needn't
+read several screens of announcements every time.
 
-BYE displays A0:WELCOME.TXT when a caller calls.
-From private CP/M, enter:
+From private CP/M:
 
     SYSUTLS:ZDE A0:WELCOME.TXT
 
-ZDE uses WordStar editing keys.
-Ctrl-K S saves; Ctrl-K X saves and exits; Ctrl-K Q abandons edits.
-Keep the caller blanked until editing and saving are finished.
-The revised welcome appears on the next call.
-Keep it short enough that a regular caller won't dread reading it.
-:B
-MAINTAINING HELP
+ZDE uses WordStar keys: Ctrl-K S saves, Ctrl-K X saves and exits, Ctrl-K Q
+abandons changes. If an unchanged buffer prompts after a previous save, N
+exits without saving again. Keep the caller blanked throughout editing and
+saving. BYE displays WELCOME.TXT on the next call, not its .BAK file.
 
-HELP topics live in I14:HELP and use the HELPC plain-text format.
-HELP opens HELP.HLP; HELP topic opens the named topic directly.
-
-A semicolon on the first line starts the file. An index may link
-to another file with :A:AUTH.HLP or introduce a section with :A.
-Keep indexes within one screen and all lines within 78 columns.
-Information sections are paginated automatically.
-
-Use ASCII text with CRLF line endings and Ctrl-Z EOF. Maintain
-the source files as well as the installed copies. No passwords
-or private installation details belong in public HELP.
+The HELP topics are in I14:HELP. DIR HELP: lists them; HELP GAMES opens a
+particular topic. HELP topics use ASCII, a semicolon on the first line, CRLF
+and Ctrl-Z termination. Keep lines within 78 characters and menu indexes
+within one screen. Link to another topic with :A:TOPIC.HLP, or begin an
+information section with :A on a line of its own. HELPC paginates long
+information sections automatically. Maintain HELP privately, and put no
+passwords or installation-specific secrets in public topics.
