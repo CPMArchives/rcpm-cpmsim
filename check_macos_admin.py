@@ -54,6 +54,20 @@ def check(base,addon,output,session_only=False):
                 caller.sendall(b'HELP\r');data=b''
                 while b'A0:SYSTEM>' not in data:data+=caller.recv(16384)
                 assert len(data)>100
+                # Observe a fresh modem initialization after this caller leaves.
+                # A fixed sleep can call back during BYE's carrier-loss cleanup.
+                console=socket.socket(socket.AF_UNIX)
+                console.connect(str(home/'run/control.sock'))
+                console.sendall(b'{"action":"attach"}\n');reply=b''
+                while not reply.endswith(b'\n'):reply+=console.recv(1)
+                assert json.loads(reply)['ok']
+            try:
+                console.settimeout(60);reset=b''
+                while b'ATE0Q0V0S0=0M0S10=25X1H0\r\n0\r\n' not in reset:
+                    part=console.recv(16384)
+                    if not part:raise RuntimeError('Console closed during carrier cleanup')
+                    reset=(reset+part)[-65536:]
+            finally:console.close()
             time.sleep(12)
             assert json.loads(run(ctl,'health','--probe').stdout)['status']=='passed'
             run(ctl,'monitor')
