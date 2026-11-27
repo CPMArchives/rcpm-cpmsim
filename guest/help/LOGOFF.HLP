@@ -1,15 +1,23 @@
 ;
-ENDING A CALL
+FINISHING YOUR CALL
 
-A - Read this topic
+A - Finishing your call
+
 :A
-READ THIS TOPIC
+FINISHING YOUR CALL
 
-Type BYE at the CP/M prompt to log off normally.
-Exit an active game or the bulletin board before typing BYE.
-Files in I0:WORK are cleared when the call ends.
-The bulletin board's persistent account and messages are retained.
+Finish any file transfer or draft message and leave the program you're using
+in its normal fashion. From RBBS, C returns to CP/M; G logs off directly.
 
-Type MESSAGE at the CP/M prompt to leave a message for the sysop.
-Follow its prompts; this is separate from messages posted in RBBS.
-Your terminal client's disconnect operation also ends the connection.
+At the CP/M prompt enter:
+
+    BYE
+
+That ends your call and leaves the machine available for the next caller. You
+can also disconnect with your terminal, but the ordinary logoff command is
+preferable when circumstances permit.
+
+WORK is cleared at call boundaries. Saved RBBS messages and your board account
+remain, as do completed uploads and saved MESSAGE notes. The mounted library
+volumes need not return to their defaults until the machine restarts or
+somebody selects another volume.
