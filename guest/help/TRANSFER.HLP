@@ -1,76 +1,26 @@
 ;
 FILE TRANSFERS
 
-A - Taking software home
-B - Sending something to the sysop
+A - About file transfers
+B - YSEND - Downloading files
+C - UPLOAD - Sending files to the sysop
+D - MESSAGE - Describing a submission
+
+:B:HELP:YSEND.HLP
+:C:HELP:UPLOAD.HLP
+:D:HELP:MESSAGE.HLP
 
 :A
-TAKING SOFTWARE HOME
+ABOUT FILE TRANSFERS
 
-A file transfer involves two programs: one sending and one receiving. Entering
-the command at the RCP/M end is only half the job. Your terminal program must
-be ready to receive the file.
+A file transfer involves two programs: one sending and one receiving.
+Entering the command at the RCP/M end is only half the job. Your terminal
+must be ready to receive or send using the matching protocol.
 
-The supplied download command is YSEND, which uses YMODEM. A small text file
-makes a convenient first test:
+SyncTERM supports the traditional transfer protocols. The board uses
+YMODEM for downloads and XMODEM/CRC or YMODEM for uploads. Do not use
+terminal text capture for binary files.
 
-    YSEND A0:WELCOME.TXT
-
-When the RCP/M is ready to send, select YMODEM receive in your terminal,
-unless it has already started receiving automatically. Choose your local
-download directory according to the terminal's instructions. Wait for the
-transfer to complete and for the CP/M prompt to return.
-
-To take a whole library home, for example:
-
-    YSEND P0:SIGMV011.LBR
-
-Make sure the file is on the currently mounted disk. A library is a binary
-file: do not run it through a terminal's text capture or character-set
-conversion.
-
-If the RCP/M appears to be doing nothing after you start a transfer, it may
-simply be waiting for the receiving end. Check that you've selected the
-corresponding protocol and the right transfer direction. If a transfer fails,
-use the terminal's transfer-cancel facility and follow the remote program's
-prompts before trying again.
-
-The YMODEM download service can send files from readable directories even when
-those files are not approved for execution on the board. The two permissions
-are quite different.
-
-:B
-SENDING SOMETHING TO THE SYSOP
-
-Perhaps you've found a CP/M program missing from the collection, or have
-written a utility of your own. The sysop will generally appreciate a useful
-contribution, particularly if it comes with instructions.
-
-For a single file, the supplied upload command uses XMODEM with CRC:
-
-    UPLOAD MYPROG.LBR
-
-Supply the intended CP/M filename, then choose XMODEM/CRC send in the terminal
-and select your local file. For a batch, use:
-
-    UPLOAD /Y
-
-and choose YMODEM send at your end. Follow the prompts and wait for
-confirmation. XMODEM may leave record padding at the end of the received file;
-YMODEM carries its declared length.
-
-Your submission goes into the sysop's private review inbox. It won't
-immediately appear in the public library or in WORK, and DIR cannot list that
-inbox. The sysop will examine it before deciding whether to add it to a
-collection.
-
-It's helpful to accompany an upload with a note giving its filename, purpose,
-author, supported hardware and any distribution restrictions. Use MESSAGE or a
-suitable RBBS message to contact the sysop.
-
-A completed file survives a disconnect. An unfinished partial upload is
-discarded; a completed member of a YMODEM batch is retained even if a later
-member fails.
-
-The fact that a file was uploaded successfully is not a promise that it will
-be published or made executable on the board.
+Completed uploads go to the sysop's private review inbox, rather than
+WORK or the public collections. A useful submission should include
+instructions, author and hardware information, and distribution terms.
