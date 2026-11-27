@@ -1,33 +1,34 @@
 ;
 HUMONGOUS RCP/M - USER'S GUIDE
 
-A - Basic commands and named directories
-B - Mounting volumes
-C - Browsing software libraries
-D - File transfers
-E - Bulletin board and private mail
-F - Chatting with the sysop
-G - Online games
-H - Temporary workspace
-I - Logging off
-J - Glossary and acknowledgements
-K - Welcome and getting started
-L - Getting help and reading files
-M - Access and etiquette
-N - Command reference
-O - Troubleshooting
-:A:COMMANDS.HLP
-:B:MOUNT.HLP
-:C:LIBRARY.HLP
-:D:TRANSFER.HLP
-:E:RBBS.HLP
-:F:CHAT.HLP
-:G:GAMES.HLP
-:H:WORK.HLP
-:I:LOGOFF.HLP
-:J:GLOSSARY.HLP
-:K:START.HLP
-:L:READING.HLP
-:M:ETIQUET.HLP
-:N:CMDREF.HLP
-:O:TROUBLE.HLP
+A - Welcome and getting started
+B - Basic commands and named directories
+C - Getting help and reading files
+D - Browsing software libraries
+E - Mounting volumes
+F - File transfers
+G - Bulletin board and private mail
+H - Online games
+I - Chatting with the sysop
+J - Temporary workspace
+K - Access and etiquette
+L - Logging off
+M - Command reference
+N - Troubleshooting
+O - Glossary and acknowledgements
+
+:A:START.HLP
+:B:COMMANDS.HLP
+:C:READING.HLP
+:D:LIBRARY.HLP
+:E:MOUNT.HLP
+:F:TRANSFER.HLP
+:G:RBBS.HLP
+:H:GAMES.HLP
+:I:CHAT.HLP
+:J:WORK.HLP
+:K:ETIQUET.HLP
+:L:LOGOFF.HLP
+:M:CMDREF.HLP
+:N:TROUBLE.HLP
+:O:GLOSSARY.HLP
