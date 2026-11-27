@@ -1,4 +1,4 @@
-# Optional RCP/M administration add-on 0.1.0
+# Optional Linux RCP/M administration add-on 0.1.0
 
 RCP/M's standard package is self-contained: unpack it where you want, run its
 launcher, edit the small host connection configuration and board configuration,
@@ -7,11 +7,15 @@ The standard package neither installs nor depends on system services, scheduled
 backups, monitoring, alert state or this add-on. Its internal caller permissions
 and clean shutdown remain part of the base system.
 
-The optional hosting add-on provides systemd supervision, a reattachable private
+The Linux hosting add-on provides systemd supervision, a reattachable private
 console, verified backup/restore commands, an optional daily backup timer and
 local monitoring. Its separate administration instructions are for operators
 who deliberately choose host integration. Monitoring records local alerts; it
 does not deliver remote notifications. Probes briefly reserve an idle caller line.
+
+Separate [macOS](ADMINISTRATION-MACOS.md) and [Windows](ADMINISTRATION-WINDOWS.md)
+add-ons provide per-user administration on those hosts. Their installation and
+scheduling procedures are described in their own guides.
 
 ## Downloads and platform scope
 
@@ -21,12 +25,11 @@ not this supplemental download. Existing boards are not migrated automatically.
 
 | Platform | Standard workflow | Hosting add-on |
 | --- | --- | --- |
-| macOS ARM64 | Platform launcher | None supplied |
-| Windows x64 / ARM64 | Platform launcher, where a matching build is available | None supplied |
+| macOS ARM64 | Platform launcher | [Separate per-user launchd add-on](https://github.com/CPMArchives/rcpm-cpmsim/releases/tag/admin-macos-v0.1.0) |
+| Windows x64; Windows 11 ARM64 through x64 emulation | Platform launcher | [Separate per-user Task Scheduler add-on](https://github.com/CPMArchives/rcpm-cpmsim/releases/tag/admin-windows-v0.1.0) |
 | Linux x64 / ARM64 | `Start-RCPM.sh` | Debian/systemd add-on |
 | Docker | Container entry point | None supplied; host orchestration is separate |
 
-This split does not claim new builds or qualification for other platforms.
 For Linux, choose the matching pair:
 
 - `rcpm-v1.2.2-linux-arm64.tar.gz` and, optionally, `rcpm-admin-v0.1.0-linux-arm64.tar.gz`

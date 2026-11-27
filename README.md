@@ -96,9 +96,17 @@ another computer.
 
 The standard package runs locally or on a server through its launch script.
 Service installation, scheduled backups and monitoring are separate optional
-hosting facilities, outside the common sysop workflow. The [administration add-on 0.1.0](https://github.com/CPMArchives/rcpm-cpmsim/releases/tag/admin-v0.1.0)
-is a separate Linux ARM64/x64 download with its own [administration guide](docs/hosting-addon.md).
-It is not required for v1.2.2.
+hosting facilities, outside the common sysop workflow. Each add-on is a separate
+download with its own administration guide. None is required for RCP/M 1.2.2.
+
+| Platform | Administration add-on 0.1.0 | Guide |
+| --- | --- | --- |
+| Linux ARM64/x64 | [Download](https://github.com/CPMArchives/rcpm-cpmsim/releases/tag/admin-v0.1.0) | [Linux administration](docs/hosting-addon.md) |
+| macOS ARM64 | [Download](https://github.com/CPMArchives/rcpm-cpmsim/releases/tag/admin-macos-v0.1.0) | [macOS administration](docs/ADMINISTRATION-MACOS.md) |
+| Windows x64; Windows 11 ARM64 through x64 emulation | [Download](https://github.com/CPMArchives/rcpm-cpmsim/releases/tag/admin-windows-v0.1.0) | [Windows administration](docs/ADMINISTRATION-WINDOWS.md) |
+
+The Linux add-on uses systemd. The macOS and Windows add-ons run under the
+sysop's signed-in account and require Python 3.9 or newer.
 
 ## Software
 
