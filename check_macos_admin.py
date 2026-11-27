@@ -25,6 +25,17 @@ def free_port():
     with socket.socket() as s:s.bind(('127.0.0.1',0));return s.getsockname()[1]
 
 
+def until_prompt(caller):
+    deadline=time.monotonic()+45;data=b''
+    while b'A0:SYSTEM>' not in data:
+        if time.monotonic()>=deadline:raise RuntimeError('Caller prompt deadline expired')
+        part=caller.recv(16384)
+        if not part:raise RuntimeError('Caller disconnected before prompt')
+        data+=part
+        if len(data)>65536:raise RuntimeError('Caller response exceeded limit')
+    return data
+
+
 def check(base,addon,output,session_only=False):
     if sys.platform!='darwin':raise SystemExit('macOS required')
     label='org.cpmarchives.rcpm.test'+str(os.getpid())
@@ -55,12 +66,13 @@ def check(base,addon,output,session_only=False):
         try:
             run(ctl,'start')
             assert json.loads(run(ctl,'status').stdout)['ready']
+            print('Passed: launchd startup',flush=True)
             with socket.create_connection(('127.0.0.1',config['port']),timeout=5) as caller:
-                caller.settimeout(40);data=b''
-                while b'A0:SYSTEM>' not in data:data+=caller.recv(16384)
-                caller.sendall(b'HELP\r');data=b''
-                while b'A0:SYSTEM>' not in data:data+=caller.recv(16384)
+                caller.settimeout(40);until_prompt(caller)
+                for byte in b'HELP\r':caller.sendall(bytes([byte]));time.sleep(.03)
+                data=until_prompt(caller)
                 assert len(data)>100
+                print('Passed: caller HELP',flush=True)
                 # Observe a fresh modem initialization after this caller leaves.
                 # A fixed sleep can call back during BYE's carrier-loss cleanup.
                 console=socket.socket(socket.AF_UNIX)
@@ -75,11 +87,14 @@ def check(base,addon,output,session_only=False):
                     if not part:raise RuntimeError('Console closed during carrier cleanup')
                     reset=(reset+part)[-65536:]
             finally:console.close()
+            print('Passed: caller carrier cleanup',flush=True)
             time.sleep(12)
             assert json.loads(run(ctl,'health','--probe').stdout)['status']=='passed'
+            print('Passed: idle probe',flush=True)
             run(ctl,'monitor')
             assert not json.loads((home/'monitor/state.json').read_text())['issues']
             run(ctl,'backup')
+            print('Passed: backup and restart',flush=True)
             assert json.loads(run(ctl,'status').stdout)['ready']
             snapshots=list((home/'backups').glob('snapshot-*'));assert len(snapshots)==1
             run(ctl,'verify',snapshots[0])
