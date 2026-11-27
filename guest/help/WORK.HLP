@@ -1,19 +1,14 @@
 ;
 TEMPORARY WORKSPACE
 
-A - Read this topic
+A - Using WORK
+
 :A
-READ THIS TOPIC
+USING WORK
 
-I0:WORK is caller-readable and writable under the default policy.
-It is cleared when a call ends and before the next caller starts.
-Do not treat files in WORK as permanent storage.
-
-Game launchers and approved applications can create files in WORK.
-There is currently no general caller copy command or direct upload to WORK.
-UPLOAD instead submits files privately for sysop review.
-
-The sysop controls access per drive and user area through AUTH.
-Caller programs require readable, non-writable storage and file approval.
-Consequently programs cannot be executed from caller-writable WORK.
-Permission changes and file approval are private sysop operations.
+I0: (WORK:) is temporary workspace for programs. The game launchers prepare
+their data here. WORK is cleared before answering, including startup and call
+recovery. There is no general caller copy command or direct upload into WORK.
+Completed uploads go to the sysop's private review inbox. Saved RBBS messages
+and accounts are kept separately. See HELP GAMES, HELP TRANSFER and HELP
+LOGOFF.
