@@ -1,23 +1,47 @@
 ;
-SWAPPABLE VOLUMES
+EXCHANGING LIBRARY DISKS
 
-A - Read this topic
+A - Exchanging library disks
+
 :A
-READ THIS TOPIC
+EXCHANGING LIBRARY DISKS
 
-MOUNT /L lists both J: collections and P: archives.
-MOUNT name chooses J: or P: from the image size. Example: MOUNT WALNUT
-MOUNT J: /L or MOUNT P: /L lists only the selected catalog.
-Use MOUNT J: name or MOUNT P: name if both catalogs share a name.
-MOUNT P: /DEFAULT restores SIG/M-CPMUG.
-MOUNT J: /DEFAULT restores the startup J: image.
-DIR J1: lists J: user area 1. DIR P: lists P: user area 0.
+You aren't restricted to the disks which were mounted when you called. The
+sysop may have made additional volumes available, ranging from small
+collections of games to much larger archives.
 
-After swapping, MOUNT chains to NDSCAN to refresh directory names.
-NDSCAN P: also runs independently. Names come from extensionless -NAME
-files in user areas 0-15; areas without markers lose their old names.
-Other drives' names and AUTH permissions stay unchanged.
-If scanning reports an error, the image is mounted but old names remain.
-Use drive/user addresses until the names are corrected or default restored.
-Callers need read access to every user area of a drive to scan its names.
-Use HELP LIBRARY for archive browsing or HELP GAMES for online play.
+    MOUNT /L
+
+This lists the J: and P: catalogs and identifies their current images. To
+select a volume, enter its catalog name:
+
+    MOUNT GAMES
+
+MOUNT chooses the appropriate drive for the image. The following forms are
+useful if you wish to look at just one catalog:
+
+    MOUNT J: /L
+    MOUNT P: /L
+
+If both catalogs have a volume of the same name, specify the drive as well,
+for example MOUNT J: GAMES. The names in your board's catalog may be different
+from the examples in this manual.
+
+After a successful mount the program reports which drive received the new
+volume. Try DIR J: for a J: disk and read its README.TXT if one is supplied.
+
+To restore the original disks:
+
+    MOUNT J: /DEFAULT
+    MOUNT P: /DEFAULT
+
+The second command restores the SIG/M and CPMUG archive on a standard
+installation. The two drives can be exchanged independently. Logging off does
+not necessarily restore them; a previous caller may have left a different
+volume mounted.
+
+MOUNT automatically runs NDSCAN to rebuild the selected drive's names. If the
+scan reports an error after the mount has succeeded, don't assume that the old
+names refer to the new disk. Use explicit DUs until the names have been
+corrected or the default volume restored. You can run NDSCAN J: or NDSCAN P:
+yourself on a fully readable drive.
