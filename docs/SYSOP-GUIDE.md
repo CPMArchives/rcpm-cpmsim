@@ -2,6 +2,41 @@
 
 *For the released RCP/M 1.2.2 system • November 2026*
 
+This is the maintained edition of the manual. It describes the released system, not features still under development. Check the [release notes](RELEASE-NOTES-1.2.2.md) if your installation differs.
+
+## Contents
+
+- [1. So you've decided to run an RCP/M](#1-so-youve-decided-to-run-an-rcpm)
+- [2. Making the first call](#2-making-the-first-call)
+- [3. Host configuration](#3-host-configuration)
+- [4. At the sysop's console](#4-at-the-sysops-console)
+- [5. A tour of the disks](#5-a-tour-of-the-disks)
+- [6. Putting together a software collection](#6-putting-together-a-software-collection)
+- [7. Giving directories names](#7-giving-directories-names)
+- [8. Deciding what callers may do](#8-deciding-what-callers-may-do)
+- [9. Approving programs for online use](#9-approving-programs-for-online-use)
+- [10. Running RBBS](#10-running-rbbs)
+- [11. Making the system your own](#11-making-the-system-your-own)
+- [12. Transfers and incoming software](#12-transfers-and-incoming-software)
+- [13. A word with the caller](#13-a-word-with-the-caller)
+- [14. Backups, shutdown and recovery](#14-backups-shutdown-and-recovery)
+- [15. When something goes wrong](#15-when-something-goes-wrong)
+- [16. Inviting callers from elsewhere](#16-inviting-callers-from-elsewhere)
+- [17. Keeping up with new releases](#17-keeping-up-with-new-releases)
+- [Further reading](#further-reading)
+- [Acknowledgements](#acknowledgements)
+- [Appendix: AUTH command reference](#appendix-auth-command-reference)
+  - [A.1 Starting AUTH safely](#a1-starting-auth-safely)
+  - [A.2 The permission model and shipped defaults](#a2-the-permission-model-and-shipped-defaults)
+  - [A.3 Reading the map and querying targets](#a3-reading-the-map-and-querying-targets)
+  - [A.4 Setting drive and DU permissions](#a4-setting-drive-and-du-permissions)
+  - [A.5 COM-file execution and F4](#a5-com-file-execution-and-f4)
+  - [A.6 Live settings, saved files and startup](#a6-live-settings-saved-files-and-startup)
+  - [A.7 Scripts, explicit filenames and overwrite authorization](#a7-scripts-explicit-filenames-and-overwrite-authorization)
+  - [A.8 Worked policy workflows](#a8-worked-policy-workflows)
+  - [A.9 Backups, failed saves and recovery](#a9-backups-failed-saves-and-recovery)
+  - [A.10 Troubleshooting](#a10-troubleshooting)
+
 ## 1. So you've decided to run an RCP/M
 
 Forty years ago, this would have meant setting aside a computer, buying a modem, arranging for a telephone line and spending a good many evenings persuading the various pieces of software to cooperate. Fortunately, most of that work has already been done for you.
@@ -10,7 +45,7 @@ HUMONGOUS RCP/M is a working CP/M computer, not simply a bulletin board with a C
 
 This guide assumes you know your way around CP/M and a host command line. It deals with the peculiarities of running this particular RCP/M. For exact disk geometry and host-side image tools, keep the [Disk Images reference](../packaging/DISK-IMAGES.DOC) handy. The [Installation notes](../packaging/INSTALLATION.DOC) cover platform-specific startup matters.
 
-Under the bonnet is a customized version of Udo Munk's cpmsim, from the [z80pack project](https://github.com/udo-munk/z80pack), emulating a Z80 computer running banked [CP/M 3](https://www.cpm.z80.de/drilib.html). Our version adds facilities specifically for RCP/M, including the caller connection and shared sysop console, swappable library volumes, and the host-side services used to receive uploads and saved messages. These facilities work in conjunction with the adapted guest software. Use the cpmsim executable supplied with HUMONGOUS RCP/M rather than substituting a stock z80pack binary; the two are not interchangeable for this system. [Z3PLUS](https://www.gaby.de/emanuals.htm) supplies the command environment and named directories. [BYE510](https://dflund.se/~pi/cpm/files/ftp.mayn.de/pub/cpm/archive/bye5/bye510/) handles remote operation, and [RBBS](#10-running-rbbs) provides forums and private mail.
+Under the bonnet is a customized version of Udo Munk's cpmsim, from the [z80pack project](https://github.com/udo-munk/z80pack), emulating a Z80 computer running banked [CP/M 3](https://www.cpm.z80.de/drilib.html). Our version adds facilities specifically for RCP/M, including the caller connection and shared sysop console, swappable library volumes, and the host-side services used to receive uploads and saved messages. These facilities work in conjunction with the adapted guest software. Use the cpmsim executable supplied with HUMONGOUS RCP/M rather than substituting a stock z80pack binary; the two are not interchangeable for this system. [Z3PLUS](https://manualzilla.com/doc/6919195/z3plus-user-s-manual) supplies the command environment and named directories. [BYE510](https://dflund.se/~pi/cpm/files/ftp.mayn.de/pub/cpm/archive/bye5/bye510/) handles remote operation, and [RBBS](#10-running-rbbs) provides forums and private mail.
 
 We've also written several utilities specifically for HUMONGOUS RCP/M. [AUTH](#appendix-auth-command-reference) gives the sysop control over caller permissions and program approval. [MOUNT](#6-putting-together-a-software-collection) lets callers exchange software library volumes without restarting CP/M, and [NDSCAN](#7-giving-directories-names) updates the named directories to reflect the contents of a mounted disk. These three utilities are original contributions of this project, rather than adaptations of historical CP/M programs.
 
@@ -108,7 +143,7 @@ MOUNT chooses J: or P: by exact image size. If a name occurs in both catalogs, q
 
 Keep private media outside the public catalogs (the supplied offline directory is one such place). A private image mounted in a caller-readable DU is no longer private simply because of where it came from. AUTH permissions follow the drive/user slot, not the volume.
 
-Never host-edit an image while cpmsim has it open. Stop the board, keep a backup, and use the supplied disk tools (based on [cpmtools](https://www.moria.de/~michael/cpmtools/)). Host file permissions and CP/M attributes are distinct from AUTH; an owner-writeable image does not by itself grant callers write access.
+Never host-edit an image while cpmsim has it open. Stop the board, keep a backup, and use the supplied disk tools (based on [cpmtools](https://www.moria.de/~michael/cpmtools/)). Host file permissions and CP/M attributes are distinct from AUTH; an owner-writable image does not by itself grant callers write access.
 
 The [GAMES collection](online-games.md) has preparation launchers in J0: for Adventure, Animals and Maze Chase. Try MOUNT GAMES followed by J0:ADVENT, J0:ANIMALS or J0:MCHASE. The launchers need readable/writable WORK for data; the approved game itself runs from a protected DU. Games that insist on writing to the library disk are better left for download and local play.
 
@@ -290,7 +325,7 @@ The individual software distributions retain their original credits and notices.
 
 ## Appendix: AUTH command reference
 
-The following detailed reference preserves the operational notes from the original 1.2.2 package manual. References to its numbered sections refer to the [original package reference](../packaging/SYSOP-GUIDE.DOC).
+This appendix gives the complete AUTH command reference for the released system, including policy recovery and scripting.
 
 ### A.1 Starting AUTH safely
 
@@ -349,7 +384,7 @@ that require read access for file lookup may not work with a write-only DU.
 RW is permission, not a supplied file-transfer or copy service: callers still
 have no general copy command or direct upload into WORK in this package.
 The game launchers seed WORK, and caller programs can create workspace data.
-UPLOAD continues to use the private host inbox described in section 6.
+UPLOAD continues to use the private host inbox described in [Chapter 12](#12-transfers-and-incoming-software).
 
 I0:WORK is cleared at startup and call recovery regardless of its AUTH setting.
 Changing its permissions does not turn it into permanent storage.
@@ -421,7 +456,7 @@ at call boundaries. Individual file R/O does not override the writable-DU ban.
 All ordinary COM files use this rule, including public commands in A0:.
 Setting A0: to RW therefore stops callers loading DIR, SDZ, LT and the other
 COM commands there. Private sysop operation continues to work. To restore
-normal caller commands, set AUTH A0: /R. See troubleshooting below.
+normal caller commands, set AUTH A0: /R. See [A.10](#a10-troubleshooting).
 
 Inspect, approve or revoke an existing exact filename:
 
@@ -550,7 +585,7 @@ only. To use that live map after restart as well:
 
     AUTH /SAVE=I13:AUTH.DAT /Y
 
-Approve Adventure, with GAMES already selected on J::
+Approve Adventure, with GAMES already selected on J:
 
     AUTH J1:ADV.COM
     AUTH J1:ADV.COM +X
@@ -575,7 +610,7 @@ even with /Y. After an I/O error retain all temporary/backup files for
 inspection.
 If installing the new destination fails, AUTH attempts to rename the backup
 back into place. Failure of that recovery or a power loss can still leave a
-missing startup file; keep whole-installation backups as described in section 8.
+missing startup file; keep whole-installation backups as described in [Chapter 14](#14-backups-shutdown-and-recovery).
 
 LOAD validates the signature, complete required records and every permission
 byte before changing the resident table. An invalid, incomplete or missing file
@@ -597,7 +632,7 @@ and clear only the stale staging file using private maintenance tools.
 
 If no valid policy file remains, use private AUTH to rebuild the desired drive
 and DU grants, inspect /MAP, then save them as I13:AUTH.DAT. The defaults table
-in section 4.2 is a reference, not an automatic reset command.
+in [A.2](#a2-the-permission-model-and-shipped-defaults) is a reference, not an automatic reset command.
 
 ### A.10 Troubleshooting
 
@@ -632,7 +667,7 @@ Explicit /SAVE says the file exists:
 
 Save reports a staging file already exists:
     Inspect the same-basename .$$$ before removing it. It may contain a complete
-    recoverable map from a previous interrupted save; see section 4.9.
+    recoverable map from a previous interrupted save; see [A.9](#a9-backups-failed-saves-and-recovery).
 
 The optional host --caller-allow/deny/list helper is for stopped-image
 maintenance. Normal live administration uses AUTH inside CP/M.
