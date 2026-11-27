@@ -1,21 +1,42 @@
 ;
-ONLINE GAMES
+PLAYING GAMES
 
-A - Read this topic
+A - Playing games
+
 :A
-READ THIS TOPIC
+PLAYING GAMES
 
-First type MOUNT GAMES at the CP/M prompt.
-Then choose J0:ADVENT, J0:ANIMALS or J0:MCHASE.
-ADVENT starts expanded Adventure; answer its instructions prompt.
-ANIMALS starts the animal guessing game.
-MCHASE starts Maze Chase and requires an ANSI-compatible terminal.
+One of the more pleasant ways of spending time on an RCP/M is to play the
+software instead of merely collecting it. The supplied GAMES volume contains
+three prepared launchers:
 
-These launchers reside on GAMES, not A0:.
-They prepare data in I0:WORK and run the approved game on J:.
-WORK must be readable and writable for preparation.
-Use the game's own quit command to return to the CP/M prompt.
-WORK files, including any temporary game data, are cleared at logoff.
+    MOUNT GAMES
+    J0:ADVENT
+    J0:ANIMALS
+    J0:MCHASE
 
-GAMES contains playable games, required data and playing instructions.
-Source-only and unqualified material stays in the separate archives.
+Each launcher is a separate alternative to enter at the CP/M prompt after
+mounting GAMES.
+
+Adventure is the expanded version of the classic text adventure. Answer its
+instructions prompt and follow the game's own commands.
+
+Animals is the guessing game which asks questions to identify the animal
+you're thinking of.
+
+Maze Chase requires an ANSI/VT100-compatible display. If the screen is a mess
+of stray characters, check your terminal emulation.
+
+The launchers prepare the files the games need in WORK before starting the
+actual game from the protected library disk. The supplied programs can
+therefore write temporary data without modifying the shared software
+collection.
+
+Use a game's own exit command to return to CP/M. Temporary game data,
+including any saved games and high scores in WORK, disappears when you log
+off. You may be able to resume a game within the same call, but don't expect
+its data to be there next week.
+
+Some sysops install the optional software collections, including an expanded
+GAMES volume. Read their catalogs and instructions. Not all archived games are
+suitable for playing online; many are there for download and local use.
