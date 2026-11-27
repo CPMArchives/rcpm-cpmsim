@@ -136,7 +136,7 @@ def clean_common(args, output):
     (output / 'state').mkdir(mode=0o700)
     for name in ('INSTALLATION.DOC', 'SYSOP-GUIDE.DOC', 'DISK-IMAGES.DOC'):
         shutil.copy2(REPO / 'packaging' / name, output / 'docs' / name)
-    (output / 'RCPM.CONF').write_text('MODE=direct\nADDRESS=127.0.0.1\nPORT=4000\n')
+    shutil.copy2(REPO / 'packaging/RCPM.CONF', output / 'RCPM.CONF')
     shutil.copy2(REPO / 'build/cpmtools/share/diskdefs', output / 'runtime/diskdefs')
     (output / 'README.txt').write_text(
         'RCP/M engineering candidate\n\n'

@@ -1,0 +1,107 @@
+name: Build and check v1.2.2 packages
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  native:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - platform: macos-arm64
+            runner: macos-15
+          - platform: linux-x64
+            runner: ubuntu-22.04
+            docker_arch: x64
+          - platform: linux-arm64
+            runner: ubuntu-22.04-arm
+            docker_arch: arm64
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 25
+    env:
+      GH_TOKEN: ${{ github.token }}
+      RCPM_PLATFORM: ${{ matrix.platform }}
+      DOCKER_ARCH: ${{ matrix.docker_arch }}
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+      - name: Build from verified v1.2.1 media and pinned modem sources
+        run: python3 prepare_release_1_2_2.py --platform "$RCPM_PLATFORM" --work out
+      - name: Check direct and bundled-modem launch, caller reconnect and shutdown
+        run: |
+          PACKAGE=$(python3 -c 'import json;print(json.load(open("out/BUILT.json"))["package"])')
+          python3 check_bundled_modem_launcher.py --package "$PACKAGE" --output out/checks
+      - name: Build and check Docker image in both modes
+        if: matrix.docker_arch != ''
+        run: |
+          PACKAGE=$(python3 -c 'import json,pathlib;print(pathlib.Path(json.load(open("out/BUILT.json"))["package"]).relative_to(pathlib.Path.cwd()))')
+          IMAGE="cpmarchives/rcpm:1.2.2-$DOCKER_ARCH"
+          docker build --build-arg "PACKAGE=$PACKAGE" --label "org.opencontainers.image.source=https://github.com/$GITHUB_REPOSITORY" -t "$IMAGE" -f packaging/docker/Dockerfile .
+          python3 check_docker_release.py "$IMAGE" --mode direct --output out/docker-direct
+          python3 check_docker_release.py "$IMAGE" --mode ip232 --output out/docker-ip232
+          docker save "$IMAGE" | gzip > "out/rcpm-v1.2.2-docker-$DOCKER_ARCH.tar.gz"
+      - name: Save packages and focused check evidence
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: v1.2.2-${{ matrix.platform }}
+          compression-level: 0
+          path: |
+            out/package/*.zip
+            out/package/*.tar.gz
+            out/package/SHA256SUMS
+            out/rcpm-v1.2.2-docker-*.tar.gz
+            out/BUILT.json
+            out/checks/*
+            out/docker-*/*.json
+  windows:
+    runs-on: windows-2022
+    timeout-minutes: 30
+    env:
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+      - name: Install build-only Cygwin and MinGW compilers
+        shell: pwsh
+        run: |
+          Invoke-WebRequest https://cygwin.com/setup-x86_64.exe -OutFile "$env:RUNNER_TEMP/setup.exe"
+          $p = Start-Process "$env:RUNNER_TEMP/setup.exe" -Wait -PassThru -ArgumentList '-q -n -N -d -R C:\cygwin64 -l C:\cygwin-cache -s https://mirrors.kernel.org/sourceware/cygwin/ -P gcc-core,make,mingw64-x86_64-gcc-core'
+          if ($p.ExitCode -ne 0) { throw "Cygwin build setup failed: $($p.ExitCode)" }
+      - name: Build self-contained Windows package
+        run: python prepare_release_1_2_2.py --platform windows-x64 --work out --cygwin C:\cygwin64
+      - name: Check direct and bundled modem with only Windows system directories on PATH
+        shell: pwsh
+        run: |
+          $package = (Get-Content out/BUILT.json | ConvertFrom-Json).package
+          python check_bundled_modem_launcher.py --package "$package" --output out/checks
+      - name: Save Windows package and evidence
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: v1.2.2-windows-x64
+          compression-level: 0
+          path: |
+            out/package/*.zip
+            out/package/SHA256SUMS
+            out/BUILT.json
+            out/checks/*
+  windows-arm64:
+    needs: windows
+    runs-on: windows-11-arm
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
+        with:
+          name: v1.2.2-windows-x64
+          path: input
+      - name: Check Windows x64 bundle under Windows 11 ARM64 emulation
+        shell: pwsh
+        run: |
+          python -c "from pathlib import Path; from check_windows_release import unpack; unpack(next(Path('input').rglob('rcpm-v1.2.2-windows-x64.zip')),Path('unpacked'))"
+          python check_bundled_modem_launcher.py --package unpacked/RCPM-windows-x64 --output checks-arm64
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: v1.2.2-windows-arm64-evidence
+          path: checks-arm64/*

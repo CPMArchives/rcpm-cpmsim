@@ -26,10 +26,12 @@ one connected caller share that guest; they are not independent sessions.
 Keep the terminal open while serving calls. The distributed launcher has
 no tmux dependency and does not create a background daemon.
 
-RCPM.CONF selects direct TCP or IP232, address and port. Direct raw TCP on
-127.0.0.1:4000 is the default. Changing settings takes effect at next start.
-The listener reports successful startup only after it has opened the port.
-If another listener owns that address/port, this guest cannot also bind it.
+The external RCPM.CONF selects direct TCP or bundled tcpser/IP232 and the
+caller address/port. It includes descriptions and working local defaults:
+direct raw TCP on 127.0.0.1 port 4000. No initial editing is required.
+Set MODE=ip232 while stopped to have the launcher manage the virtual modem.
+PORT remains the caller port; internal modem settings are automatic.
+No system service, scheduled job or monitoring configuration is required.
 
 The current candidate uses a 4 MHz emulated CPU. CPU speed affects game
 loops and software timing, as well as console throughput. Client display
@@ -634,6 +636,13 @@ If WORK cleanup reports failure, answering remains disabled. Stop and repair
 the I: image or its host write permissions before trying again. Read-only
 system attributes inside CP/M and read-only host filesystem permissions are
 different mechanisms; consult docs/DISK-IMAGES.DOC when diagnosing either one.
+
+Internet-facing or unattended hosts may benefit from automatic startup,
+scheduled backups, host updates, firewall configuration and failure notices.
+These host-administration choices are outside this manual's scope. Consult
+your host's administration documentation or a system administrator. A separate
+optional Linux hosting add-on supplies service, backup and monitoring tools
+with its own administration guide; it is not required to operate RCP/M.
 
 9. UPDATING THIS CANDIDATE
 

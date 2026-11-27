@@ -145,7 +145,7 @@ def build(common_archive, output):
         host_source.mkdir()
         for source in ('build_linux_release.py', 'build_raw_cpmtools.py', 'build_modem_runtime.py',
                        'backup_rcpm.py', 'shared_instance.py', 'release_media.py',
-                       'check_release.py', 'packaging/launcher.c'):
+                       'check_release.py', 'packaging/launcher.c', 'packaging/modem_host.h', 'packaging/RCPM.CONF'):
             source_target = host_source / source
             source_target.parent.mkdir(parents=True, exist_ok=True)
             shutil.copy2(REPO / source, source_target)
@@ -186,7 +186,7 @@ def prepare_kit(common_archive, output, architecture='x64'):
     shutil.copy2(common_archive, kit / 'rcpm-common-candidate.zip')
     for source in ('build_linux_release.py', 'build_raw_cpmtools.py', 'build_modem_runtime.py',
                    'backup_rcpm.py', 'shared_instance.py', 'release_media.py',
-                   'check_release.py', 'packaging/launcher.c'):
+                   'check_release.py', 'packaging/launcher.c', 'packaging/modem_host.h', 'packaging/RCPM.CONF'):
         target = kit / source
         target.parent.mkdir(parents=True, exist_ok=True)
         shutil.copy2(REPO / source, target)

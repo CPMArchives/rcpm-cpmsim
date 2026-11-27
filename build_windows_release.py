@@ -72,6 +72,8 @@ def build(common_archive, toolchain, output):
     shutil.copy2(REPO / 'docs/windows-host-build.md', host_source / 'README.md')
     (host_source / 'packaging').mkdir()
     shutil.copy2(REPO / 'packaging/launcher.c', host_source / 'packaging/launcher.c')
+    shutil.copy2(REPO / 'packaging/modem_host.h', host_source / 'packaging/modem_host.h')
+    shutil.copy2(REPO / 'packaging/RCPM.CONF', host_source / 'packaging/RCPM.CONF')
     for area in ('tools', 'emulator', 'launcher'):
         for name in ('BUILD.json', 'build.log', 'launcher.c'):
             source = native / area / name

@@ -1,20 +1,25 @@
 RCP/M - INSTALLATION GUIDE
 
-1. MACOS ARM64: DOWNLOAD, UNPACK, RUN
+1. DOWNLOAD, UNPACK, RUN
 
-This package targets Apple Silicon Macs with macOS 11 or later.
-The deployment target is 11.0; testing was performed on the build host,
-not on every macOS release. Unpack the ZIP into a writable
-folder, then open Start-RCPM.command. Keep all files together. No Python,
-tmux, compiler, Homebrew or separately installed CP/M tools are required.
-The program uses macOS system libraries. About 550 MB is needed after
-unpacking. The first start creates a unique six-character RBBS SYSOP password in SYSOP.DOC;
-keep that file private. No historical users or messages are supplied.
+Use the package matching your operating system and architecture. Unpack it
+into a writable folder and keep all its files together. No configuration
+is required for local use. Run the supplied launcher:
 
-This is an unsigned engineering candidate. macOS download security policy
-may require you to approve an identified application through Privacy &
-Security. Code signing/notarization and a fresh-Mac download test are still
-release qualification work. Do not disable system-wide security settings.
+    macOS:  Start-RCPM.command
+    Linux:  Start-RCPM.sh
+    Windows: Start-RCPM.cmd
+    Docker: use the supplied container instructions and persistent volume.
+
+Defaults are direct TCP, local address 127.0.0.1, and caller port 4000.
+The external RCPM.CONF describes these settings; editing it is optional.
+First start creates private RBBS SYSOP credentials in SYSOP.DOC. Keep that
+file private. Fresh packages contain no historical users or messages.
+
+The package supplies the emulator, CP/M tools and virtual modem. No Python,
+compiler, package manager or separately installed tcpser is needed to run.
+macOS tools are unsigned; approve the identified application through macOS
+Privacy & Security if required. Do not disable system-wide protection.
 
 The local terminal is the sysop console. On successful listener creation:
 
@@ -23,7 +28,9 @@ The local terminal is the sysop console. On successful listener creation:
     See docs/INSTALLATION.DOC for information on how to connect
     from your system (Windows, Linux, macOS).
 
-Wait for 'RCP/M modem ready.' before connecting. One caller at a time.
+Direct mode displays 'RCP/M modem ready.' before answering. Virtual-modem
+mode shows its Hayes initialization command and numeric 0 reply; allow a few
+seconds for initialization, then connect. One caller at a time.
 This foreground session must stay open while the service runs. There is no
 tmux service, background daemon, automatic client launch or auto-reattach.
 
@@ -40,8 +47,7 @@ SyncTERM can use its Raw connection type on Windows, Linux and macOS.
 Linux/macOS: 'nc 127.0.0.1 4000' is useful for a basic connection check;
 a proper raw terminal client is preferable for file transfers and editing.
 Clients are supplied/installed by the operator, not bundled with RCP/M.
-The packaged emulator currently runs on macOS ARM64; these client notes do
-not imply native Windows/Linux host binaries have been qualified.
+Use the matching native host download; terminal clients are independent.
 
 127.0.0.1 is local to the machine running RCP/M. For another computer to
 connect, stop RCP/M, edit ADDRESS in RCPM.CONF to the Mac's LAN IPv4
@@ -72,40 +78,21 @@ Both compiled BYE5 drivers are in drivers/direct/ and drivers/ip232/.
 The launcher installs the driver matching MODE before boot, while stopped.
 Never replace the driver on a mounted/running A: disk.
 
-For tcpser, there are TWO ports: its caller port and its IP232 virtual
-serial endpoint. cpmsim connects OUT to the IP232 endpoint; callers connect
-IN to tcpser's caller port. This is not a TCP proxy in front of the direct
-listener. Other virtual modems must implement compatible IP232 control
-framing, including DCD and DTR; an arbitrary virtual serial port is not enough.
-
-Install an IP232-capable tcpser build separately if you want this option:
-    https://github.com/go4retro/tcpser
-
-Example for the tested go4retro tcpser options (Mac/Linux shell; use the
-same flags with a suitable Windows build of that optional program):
-
-    tcpser -v 127.0.0.1:25232 -p 127.0.0.1:4000 -s 2400 -S 2400 -i '&c1&d2' -l 0
-
-Stop RCP/M before switching. Edit RCPM.CONF:
+tcpser is bundled. With RCP/M stopped, edit the commented external RCPM.CONF:
 
     MODE=ip232
     ADDRESS=127.0.0.1
-    PORT=25232
-
-Start tcpser, then Start-RCPM.command. The modem build sends Hayes setup
-and uses tcpser carrier detect. Connect callers to tcpser port 4000; do not
-connect them to IP232 port 25232. tcpser is optional and is not bundled.
-
-To switch back, stop RCP/M and tcpser, restore these RCPM.CONF values, then
-start RCP/M:
-
-    MODE=direct
-    ADDRESS=127.0.0.1
     PORT=4000
 
-The native launcher also accepts --mode, --address and --port as temporary
-overrides, e.g. './runtime/rcpm --mode direct --port 4003'. These options do
-not alter RCPM.CONF. './runtime/rcpm --check' reports configuration only.
+Run the normal launcher. It starts tcpser, connects the emulator through a
+private automatically chosen loopback port, and stops tcpser when CP/M exits.
+PORT is always the CALLER port, in either mode. Do not start tcpser manually
+or expose an internal modem endpoint. Restore MODE=direct and restart to
+use direct TCP without tcpser. No other setting needs changing.
+
+The native launcher accepts --mode, --address and --port for temporary
+settings; --check reports configuration without starting the board. These
+options do not edit RCPM.CONF. Advanced host integrations are documented separately.
 
 6. PROVENANCE AND RELEASE STATUS
 
@@ -113,8 +100,8 @@ metadata/MANIFEST.json records the common payload and platform binary checksums.
 metadata/ARCHIVE.sha256 lists all 403 P: libraries. metadata/VOLUMES.json records the curated
 J: contents. Sources, patches and build notes are under source/. Original
 notices are retained under docs/NOTICES/ and within the original libraries.
-Read docs/DISTRIBUTION-STATUS.DOC: this engineering candidate is not yet cleared
-for public redistribution. It does not import an operator's live disks.
+Component notices in docs/DISTRIBUTION-STATUS.DOC still apply. Fresh packages
+do not import an operator's live disks. See the release evidence for tested hosts.
 
 Microsoft M80/L80 and MicroPro WM (including WM.HLP) are not bundled as development tools.
 Running this package does not require them. Builders supply their original

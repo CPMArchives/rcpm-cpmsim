@@ -11,7 +11,7 @@ import tempfile
 from check_release import Guest
 
 
-def check(image, output, docker):
+def check(image, output, docker, mode='direct'):
     output.mkdir(parents=True, exist_ok=False)
     suffix = image.rsplit(':', 1)[-1].replace('.', '-')
     name, volume = 'rcpm-check-' + suffix, 'rcpm-check-data-' + suffix
@@ -23,14 +23,16 @@ def check(image, output, docker):
             package = Path(temporary)
             launcher = package / 'Start-RCPM.sh'
             launcher.write_text('#!/bin/sh\nexec ' + docker + ' run --rm -it --name ' + name +
-                ' -p 127.0.0.1:14000:4000 -v ' + volume + ':/data ' + image + '\n')
+                ' -p 127.0.0.1:14000:4000 -v ' + volume + ':/data ' + image + ' --mode ' + mode + '\n')
             launcher.chmod(0o755)
             prior = None
             for attempt in range(2):
                 guest = Guest(package, output / ('run-' + str(attempt)))
                 try:
-                    guest.wait(b'RCP/M modem ready.', timeout=120)
-                    guest.connect(14000)
+                    guest.wait(b'RCP/M modem ready.' if mode == 'direct' else
+                               b'ATE0Q0V0S0=0M0S10=25X1H0', timeout=120)
+                    if mode == 'ip232': guest.collect(3)
+                    guest.connect(14000, kick=mode == 'direct')
                     assert b'CHAT -' in guest.remote
                     assert b'HELP' in re.sub(rb'\x1b\[[0-9;]*m', b'', guest.command('DIR')).upper()
                     assert b'CHAT' in guest.command('HELP CHAT')
@@ -44,11 +46,16 @@ def check(image, output, docker):
                     target.unlink()
                     if prior: assert prior == digest
                     prior = digest
+                    if mode == 'ip232':
+                        start = len(guest.local)
+                        guest.caller.close(); guest.caller = None
+                        guest.wait(b'ATE0Q0V0S0=0M0S10=25X1H0', start=start)
+                        guest.collect(3)
                     guest.stop()
                 finally:
                     guest.close()
                     subprocess.run([docker, 'rm', '-f', name], capture_output=True)
-            result = dict(image=image, published_tcp_login=True, caller_help=True,
+            result = dict(image=image, mode=mode, published_tcp_login=True, caller_help=True,
                           rbbs_entry=True, orderly_shutdown=True,
                           container_replacement_preserves_credentials=True,
                           persistent_volume=True)
@@ -62,4 +69,5 @@ if __name__ == '__main__':
     p=argparse.ArgumentParser()
     p.add_argument('image'); p.add_argument('--output', type=Path, required=True)
     p.add_argument('--docker', default=shutil.which('docker'))
-    a=p.parse_args();check(a.image,a.output.resolve(),a.docker)
+    p.add_argument('--mode', choices=['direct', 'ip232'], default='direct')
+    a=p.parse_args();check(a.image,a.output.resolve(),a.docker,a.mode)

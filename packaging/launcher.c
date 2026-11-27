@@ -222,9 +222,11 @@ static void caller_files(const char *operation, const char *argument) {
     char *show[] = {"runtime/cpmls", "-A", "-f", (char *)format, image, NULL}; run(show);
     close(lease);
 }
+#include "modem_host.h"
+
 int main(int argc, char **argv) {
     char mode[16] = "direct", address[64] = "127.0.0.1", port[16] = "4000", line[256];
-    int check = 0; struct in_addr ip; char *end; long number;
+    int check = 0, external_modem = 0; struct in_addr ip; char *end; long number;
     location(argv[0]);
     if (argc == 3 && (!strcmp(argv[1], "--caller-allow") || !strcmp(argv[1], "--caller-deny") || !strcmp(argv[1], "--caller-list"))) {
         umask(077); caller_files(argv[1], argv[2]); return 0;
@@ -243,8 +245,10 @@ int main(int argc, char **argv) {
     fclose(config);
     for (int k = 1; k < argc; k++) {
         if (!strcmp(argv[k], "--check")) { check = 1; continue; }
+        if (!strcmp(argv[k], "--external-modem")) { external_modem = 1; continue; }
         if (!strcmp(argv[k], "--help")) {
             puts("RCP/M [--mode direct|ip232] [--address IPv4] [--port NUMBER] [--check]\n"
+                 "--external-modem: advanced integration; PORT is an existing IP232 endpoint\n"
                  "RCP/M --caller-allow IMAGE:USER:FILE.COM\nRCP/M --caller-deny IMAGE:USER:FILE.COM\nRCP/M --caller-list IMAGE\nIMAGE: A, P, a J: catalog name, or P/NAME for a P: archive\n"
                  "IMAGE is A, P, or a catalog name such as GAMES. Stop the guest first.\nDefaults come from RCPM.CONF. See docs/SYSOP-GUIDE.DOC."); return 0;
         }
@@ -268,5 +272,6 @@ int main(int argc, char **argv) {
     if (setenv("RCPM_MODEM", mode, 1) || setenv("RCPM_MODEM_HOST", address, 1) ||
         setenv("RCPM_MODEM_PORT", port, 1) || setenv("RCPM_ANNOUNCE", "1", 1)) io_fail("runtime environment");
     fflush(NULL);
-    char *guest[] = {"runtime/cpmsim", "-f", "4", NULL}; execv(guest[0], guest); io_fail("cpmsim"); return 1;
+    char *guest[] = {"runtime/cpmsim", "-f", "4", NULL};
+    return launch_guest(guest, !strcmp(mode, "ip232") && !external_modem, address, port, lease);
 }
