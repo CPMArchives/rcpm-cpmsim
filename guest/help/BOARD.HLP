@@ -1,32 +1,65 @@
 ;
 RUNNING THE BULLETIN BOARD
 
-A - Sysop access
-B - Looking after your board
+A - Running RBBS
+
 :A
-SYSOP ACCESS
+RUNNING RBBS
 
-RBBS is the board's public entry command. It supports discussion
-forums and private mail between registered callers.
+The released 1.2.2 board uses RBBS 4.1 Edit 02. Our RBBS integration notes
+describe the adaptations to this version. Fresh boards contain PERSONAL,
+GENERAL, CPM and TEST areas, with one SYSOP seed account. New callers can
+register and post without prior validation.
 
-Use private local CP/M for sysop business. The initial credentials
-are in the private host file SYSOP.DOC. Never enter them on a shared
-console. Use the board's supplied maintenance menus.
 
-A15: contains board programs and static files. I15: contains the
-accounts and message base. The public RBBS launcher has a controlled
-exception for these areas; callers need no direct access to them.
-:B
-LOOKING AFTER YOUR BOARD
+GETTING IN AS SYSOP
 
-A few active forums are better than a dozen empty ones.
-Choose subjects that suit your callers and post a welcome message
-explaining the purpose of each forum. Check new accounts and keep
-an eye on the message base.
+Work at the private local console, not with the caller looking over your
+shoulder. Enter RBBS, give the name SYSOP and use the generated six-character
+password recorded in private SYSOP.DOC. Passwords are case-sensitive. The
+displayed 123456 is a character counter, not a password.
 
-Do not promise absolute confidentiality for private mail. The sysop
-controls the disks and backups; raw TCP is unencrypted.
+Normal menus accept a single key. Text, names and message numbers still
+require RETURN. Expert mode retains line commands and semicolon sequences such
+as R;1 and R;1+. End a message with a period on its own line, then S to save.
 
-Back up the complete stopped installation before major changes.
-Exact maintenance menus can differ between board revisions; follow
-the instructions displayed by your installed RBBS.
+  Key - Main board function
+  F - Select forum
+  R - Read messages
+  S - Summarize
+  N - Read new messages
+  K - Delete an authorized message
+  C - Return to CP/M
+  G - Disconnect
+
+
+LOOKING AFTER THE FORUMS AND ACCOUNTS
+
+From private CP/M run:
+
+    SYSUTLS:RBUTIL41
+
+The numbered maintenance menu offers 4 to select a forum, 5 to add a forum, 6
+to manage users, and 9 to quit. Option 3 resets the account database. It is
+not an ordinary account-maintenance command. Back up before making significant
+changes.
+
+Forum names have at most eight characters, and this released board supports
+eight areas total, including PERSONAL. Later RBBS revisions may differ; use
+their own documentation. A few active forums are much more inviting than a
+long list of empty ones. Choose subjects your callers are likely to care
+about, and put a welcoming message in each new forum.
+
+Check new accounts and look in on the discussions. Answer questions when you
+can. Few things make a board seem more deserted than a question left
+unanswered for weeks.
+
+The protected executable is A15:RBBS41.COM; accounts, callers, subjects,
+messages and associated data reside in I15:. The fixed public RBBS launcher
+grants only the access needed for the board. Do not make those areas public.
+Private mail is private from ordinary callers, not from the sysop or anyone
+with access to backups. Raw TCP is unencrypted.
+
+Do not delete state/initialized to reset credentials. SYSOP.DOC records the
+original generated password. RBBS 3.7 and 4.1 data files differ; fresh release
+disks are not an in-place migration.
