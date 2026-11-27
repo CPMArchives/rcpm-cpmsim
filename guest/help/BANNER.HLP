@@ -22,7 +22,7 @@ saving. BYE displays WELCOME.TXT on the next call, not its .BAK file.
 The HELP topics are in I14:HELP. DIR HELP: lists them; HELP GAMES opens a
 particular topic. HELP topics use ASCII, a semicolon on the first line, CRLF
 and Ctrl-Z termination. Keep lines within 78 characters and menu indexes
-within one screen. Link to another topic with :A:TOPIC.HLP, or begin an
+within one screen. Link to another topic with :A:HELP:TOPIC.HLP, or begin an
 information section with :A on a line of its own. HELPC paginates long
 information sections automatically. Maintain HELP privately, and put no
 passwords or installation-specific secrets in public topics.
