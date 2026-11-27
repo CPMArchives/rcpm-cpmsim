@@ -27,8 +27,9 @@ for section in ('common', 'host'):
             raise SystemExit('Package checksum mismatch: ' + name)
 # Reject the wrong architecture and missing loader/dependencies without booting.
 subprocess.run([str(root / 'runtime/rcpm'), '--check'], check=True)
-receipt = json.loads((root / 'metadata/TCPSER.json').read_text())
-if hashlib.sha256((root / 'runtime/tcpser').read_bytes()).hexdigest() != receipt['sha256']:
+receipt_path = root / 'metadata/TCPSER.json'
+receipt = json.loads((receipt_path if receipt_path.exists() else root / 'metadata/PACKAGE.json').read_text())
+if hashlib.sha256((root / 'runtime/tcpser').read_bytes()).hexdigest() != receipt.get('sha256', receipt.get('tcpser_sha256')):
     raise SystemExit('tcpser checksum mismatch')
 header = (root / 'runtime/tcpser').read_bytes()[:20]
 expected_machine = {'aarch64': 183, 'arm64': 183, 'x86_64': 62}.get(platform.machine())

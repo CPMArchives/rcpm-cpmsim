@@ -2,6 +2,7 @@
 Description=Stopped and verified RCP/M snapshot
 Wants=rcpm.service
 After=rcpm.service
+OnFailure=rcpm-alert@%n.service
 
 [Service]
 Type=oneshot

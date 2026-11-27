@@ -1,42 +1,32 @@
-# Native Debian service installation — v1.2.2-rc2
+# Optional Linux hosting add-on — administration
 
-This is a **prerelease**, not a production-readiness claim. The complete ARM64
-service kit passed installer and lifecycle tests in a disposable Debian 12.15
-ARM64 VM running real systemd. The preceding rc1 x64 kit also passed Debian
-12.15 systemd VM tests under QEMU CPU emulation. rc2 retains those native
-binaries and updates the architecture-independent service helper. Native x64
-hardware qualification remains pending. See the rc2 verification report for
-the exact checks performed on the rebuilt archives.
+These instructions apply only to the separately downloaded hosting add-on.
+The standard RCP/M package runs through Start-RCPM.sh without any of these
+steps. This guide is separate from the common sysop manual.
 
-These are fresh-installation kits around the unchanged v1.2.1 CP/M guest media.
-Do not unpack either archive over an existing board. The installer refuses
-existing installations; migration of live accounts/messages is not automatic.
-There is no CPMNet implementation or scheduled outbound mail polling.
+Administration add-on 0.1.0 is for RCP/M 1.2.2 on Linux ARM64/x64 with systemd.
+The release validation report records fresh installation and service operation
+on both architectures. Earlier Debian 12.15 tests cover the underlying service,
+backup and monitoring behavior. No multi-day soak or live VPS deployment is
+claimed. Other platforms retain their ordinary foreground launcher workflow.
 
-## Choose and verify the download
+## Choose and install
 
-- ARM64: `rcpm-v1.2.2-rc2-linux-arm64-service.tar.gz`
-- x64: `rcpm-v1.2.2-rc2-linux-x64-service.tar.gz`
+Download the matching standard Linux package and optional hosting add-on.
+Verify each against its SHA256SUMS. Extract into separate new directories:
+RCPM-linux-arm64 and RCPM-admin-linux-arm64 (or their x64 equivalents).
+The add-on contains no disk images or emulator; it verifies the matching base.
+Requires Debian Linux with running systemd and Python 3.9+. No compiler,
+pip dependency or separate tcpser download is required.
 
-Both contain the complete system, bundled IP232-capable tcpser, corresponding
-source and service helpers. The separate common archive is not required.
-Download `SHA256SUMS` alongside your chosen archive and verify it:
-
-```sh
-sha256sum --ignore-missing -c SHA256SUMS
-```
-
-Requires matching-architecture Debian Linux, running systemd and Python 3.9+.
-No compiler, pip dependencies or tcpser download is needed to install the kit.
-
-## Install a fresh board
-
-Extract the archive into a new directory, enter `RCPM-linux-arm64` or
-`RCPM-linux-x64`, and run:
+Install from a freshly unpacked standard package. Do not launch or personalize
+it first; existing boards are not migrated automatically. Neither directory
+may be extracted over a live installation.
 
 ```sh
-./Install-Service.sh --check
-sudo ./Install-Service.sh --install
+cd RCPM-admin-linux-arm64
+./Install-Hosting.sh --package ../RCPM-linux-arm64 --check
+sudo ./Install-Hosting.sh --package ../RCPM-linux-arm64 --install
 ```
 
 Preflight is read-only. Installation creates the unprivileged `rcpm` account,
@@ -95,8 +85,7 @@ uploads, state and credentials together. Failed backups preserve the last good
 snapshot and remain stopped for inspection. Configure separate-storage copying,
 retention and disk/inode monitoring independently.
 
-After your own successful qualification and restore drill, boot startup and the
-optional daily stopped-backup timer can be enabled:
+If desired, enable boot startup or the optional daily stopped-backup timer:
 
 ```sh
 sudo systemctl enable rcpm

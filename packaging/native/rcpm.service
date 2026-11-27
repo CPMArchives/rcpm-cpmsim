@@ -1,6 +1,7 @@
 [Unit]
 Description=Humongous RCP/M with private tcpser modem
 After=network.target
+OnFailure=rcpm-alert@%n.service
 
 [Service]
 Type=notify

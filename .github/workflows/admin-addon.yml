@@ -1,0 +1,46 @@
+name: Check optional administration add-on
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  check:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - arch: x64
+            runner: ubuntu-22.04
+          - arch: arm64
+            runner: ubuntu-22.04-arm
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 15
+    env:
+      GH_TOKEN: ${{ github.token }}
+      ARCH: ${{ matrix.arch }}
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+      - name: Download and verify the published standard package
+        run: |
+          gh release download v1.2.2 --repo "$GITHUB_REPOSITORY" --pattern "rcpm-v1.2.2-linux-$ARCH.tar.gz" --pattern SHA256SUMS --dir input
+          cd input
+          sha256sum --ignore-missing -c SHA256SUMS
+      - name: Build the add-on only
+        run: |
+          python3 build_admin_addon.py --package "input/rcpm-v1.2.2-linux-$ARCH.tar.gz" --output out
+          mkdir base
+          tar -xzf "input/rcpm-v1.2.2-linux-$ARCH.tar.gz" -C base
+      - name: Service and monitoring unit tests
+        run: python3 -m unittest -v test_native_service test_native_monitor
+      - name: Fresh installation, real caller, probe, backup and restoration
+        run: sudo python3 check_admin_addon.py --base "base/RCPM-linux-$ARCH" --addon "out/RCPM-admin-linux-$ARCH" --output out/VALIDATION.json
+      - name: Save add-on and evidence
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: admin-v0.1.0-linux-${{ matrix.arch }}
+          compression-level: 0
+          path: |
+            out/*.tar.gz
+            out/SHA256SUMS
+            out/VALIDATION.json

@@ -114,12 +114,13 @@ class SupervisorTests(unittest.TestCase):
             parent_script = root / 'parent.py'
             pid_file = root / 'child.pid'
             parent_script.write_text(
-                'import importlib.util,subprocess,sys,time\n'
+                'import importlib.util,subprocess,sys,time,pathlib\n'
                 'spec=importlib.util.spec_from_file_location("svc",'+repr(str(SCRIPT.resolve()))+')\n'
                 'svc=importlib.util.module_from_spec(spec);spec.loader.exec_module(svc)\n'
                 'child=subprocess.Popen([sys.executable,"-c","import time;time.sleep(300)"],'
                 'preexec_fn=svc.linux_parent_guard())\n'
-                'open('+repr(str(pid_file))+',"w").write(str(child.pid))\n'
+                'stage=pathlib.Path('+repr(str(pid_file.with_suffix('.tmp')))+')\n'
+                'stage.write_text(str(child.pid));stage.replace('+repr(str(pid_file))+')\n'
                 'time.sleep(300)\n')
             parent = subprocess.Popen([sys.executable, str(parent_script)])
             child = None

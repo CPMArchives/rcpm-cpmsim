@@ -1,0 +1,17 @@
+[Unit]
+Description=Record local RCP/M failure for %i
+
+[Service]
+Type=oneshot
+TimeoutStartSec=90
+User=rcpm
+Group=rcpm
+UMask=0077
+ExecStart=/usr/bin/python3 /usr/local/lib/rcpm/rcpm_monitor.py failure --unit %i
+NoNewPrivileges=yes
+ProtectSystem=strict
+ProtectHome=yes
+PrivateTmp=yes
+ReadWritePaths=/var/lib/rcpm/monitor
+RestrictAddressFamilies=AF_UNIX
+SyslogIdentifier=rcpm-monitor

@@ -192,6 +192,9 @@ class Supervisor:
         self.ready = False
         self.failed = None
         self.trace = None
+        self.probing = False
+        self.idle_since = time.monotonic()
+        self.last_probe = None
 
     def collect(self):
         while self.guest.poll() is None:
@@ -252,6 +255,7 @@ class Supervisor:
                 peer.close()
             with self.mutex:
                 self.active -= 1
+                self.idle_since = time.monotonic()
 
     def accept_callers(self):
         while not self.stopping:
@@ -259,11 +263,75 @@ class Supervisor:
                 continue
             caller, _ = self.listener.accept()
             with self.mutex:
-                if self.draining or self.active or not self.ready:
+                if self.draining or self.active or self.probing or not self.ready:
                     caller.close()
                     continue
                 self.active += 1
             threading.Thread(target=self.relay, args=(caller,), daemon=True).start()
+
+    def probe(self, timeout=30):
+        """Reserve an idle line for a real caller HELP transaction, never PTY input."""
+        timeout = float(timeout)
+        if not 1 <= timeout <= 60:
+            raise ValueError('Probe timeout must be in 1..60 seconds')
+        if not self.command_lock.acquire(blocking=False):
+            return dict(status='deferred', reason='operator_operation')
+        reserved = False
+        started = time.monotonic()
+        try:
+            with self.mutex:
+                if self.active or self.attached or self.draining or not self.ready:
+                    return dict(status='deferred', reason='caller_console_or_maintenance')
+                if started - self.idle_since < 10:
+                    return dict(status='deferred', reason='carrier_cleanup')
+                self.probing = reserved = True
+            deadline = started + timeout
+            with socket.create_connection(('127.0.0.1', self.caller_port),
+                                          timeout=min(3, timeout)) as caller:
+                caller.settimeout(.25)
+                def until_prompt():
+                    data = bytearray()
+                    while b'A0:SYSTEM>' not in data:
+                        if time.monotonic() >= deadline:
+                            raise RuntimeError('Caller probe timed out')
+                        try:
+                            part = caller.recv(16384)
+                        except socket.timeout:
+                            continue
+                        if not part:
+                            raise RuntimeError('Caller probe disconnected')
+                        data.extend(part)
+                        if len(data) > 65536:
+                            raise RuntimeError('Caller probe exceeded response limit')
+                    return data
+                until_prompt()
+                for byte in b'HELP\r':
+                    caller.sendall(bytes([byte]))
+                    time.sleep(.03)
+                reply = until_prompt()
+                if len(reply) < 100 or b'HELP?' in reply:
+                    raise RuntimeError('Caller HELP probe did not return help')
+                # Require a fresh carrier-loss acknowledgement, not boot history.
+                with self.condition:
+                    self.output.clear()
+            with self.condition:
+                while MODEM_READY not in self.output:
+                    if time.monotonic() >= deadline:
+                        raise RuntimeError('Caller probe cleanup timed out')
+                    self.condition.wait(.1)
+            result = dict(status='passed', scope='caller HELP and carrier cleanup')
+        except (OSError, RuntimeError) as error:
+            # Never include caller/console bytes in monitoring records.
+            result = dict(status='failed', error=str(error))
+        finally:
+            if reserved:
+                with self.mutex:
+                    self.probing = False
+                    self.idle_since = time.monotonic()
+            self.command_lock.release()
+        result.update(checked_at=time.time(), seconds=round(time.monotonic()-started, 3))
+        self.last_probe = result
+        return result
 
     def graceful_stop(self):
         if not self.ready:
@@ -310,11 +378,14 @@ class Supervisor:
             action = request['action']
             if action == 'status':
                 result = dict(readiness_scope='Hayes initialization acknowledged; processes alive; not draining',
-                              ready=self.ready and not self.draining and self.guest.poll() is None
+                              ready=self.ready and not self.draining and not self.probing and self.guest.poll() is None
                               and self.modem.poll() is None, active=self.active,
                               draining=self.draining, guest_exit=self.guest.poll(),
                               tcpser_exit=self.modem.poll(), guest_pid=self.guest.pid,
-                              tcpser_pid=self.modem.pid, failure=self.failed)
+                              tcpser_pid=self.modem.pid, failure=self.failed,
+                              probing=self.probing, last_probe=self.last_probe)
+            elif action == 'probe':
+                result = self.probe(request.get('probe_timeout', 30))
             elif action == 'attach':
                 with self.mutex:
                     if not self.ready or self.attached or self.command_lock.locked():
@@ -403,7 +474,7 @@ class Supervisor:
                     self.master, self.slave = pty.openpty()
                     tty.setraw(self.slave)
                     fcntl.ioctl(self.slave, termios.TIOCSWINSZ, struct.pack('HHHH', 24, 80, 0, 0))
-                    self.guest = subprocess.Popen([str(self.root / 'runtime/rcpm'), '--mode', 'ip232',
+                    self.guest = subprocess.Popen([str(self.root / 'runtime/rcpm'), '--external-modem', '--mode', 'ip232',
                         '--address', '127.0.0.1', '--port', str(self.modem_port)], cwd=self.root,
                         stdin=self.slave, stdout=self.slave, stderr=self.slave, start_new_session=True, preexec_fn=guard)
                     threading.Thread(target=self.collect, daemon=True).start()
@@ -446,12 +517,13 @@ class Supervisor:
                     control.unlink(missing_ok=True)
 
 
-def request(run_dir, action, output=None):
+def request(run_dir, action, output=None, probe_timeout=30, socket_timeout=300):
     connection = socket.socket(socket.AF_UNIX)
     try:
-        connection.settimeout(300)
+        connection.settimeout(socket_timeout)
         connection.connect(str(run_dir / 'control.sock'))
-        connection.sendall(json.dumps(dict(action=action, output=output)).encode() + b'\n')
+        connection.sendall(json.dumps(dict(action=action, output=output,
+                                          probe_timeout=probe_timeout)).encode() + b'\n')
         response = bytearray()
         while not response.endswith(b'\n'):
             b = connection.recv(1)
@@ -497,8 +569,12 @@ def main():
     run.add_argument('--modem-port', type=int, default=25232)
     run.add_argument('--caller-port', type=int, default=24000)
     run.add_argument('--trace-console', type=Path, help='Private diagnostic file; may contain passwords/mail')
-    for action in ('status', 'health', 'attach', 'stop', 'resume'):
+    for action in ('status', 'attach', 'stop', 'resume'):
         sub.add_parser(action)
+    health = sub.add_parser('health')
+    health.add_argument('--probe', action='store_true')
+    health.add_argument('--probe-timeout', type=float, default=30)
+    sub.add_parser('alerts')
     stop_unit = sub.add_parser('systemd-stop')
     stop_unit.add_argument('--instance', type=Path, required=True)
     backup = sub.add_parser('backup')
@@ -546,11 +622,16 @@ def main():
     elif args.action == 'restore':
         restore(args.backup, args.output)
         print('Restored into ' + str(args.output))
+    elif args.action == 'alerts':
+        print(Path('/var/lib/rcpm/monitor/state.json').read_text())
     else:
-        result = request(args.run_dir, 'status' if args.action == 'health' else args.action,
-                         getattr(args, 'output', None))
+        action = 'probe' if args.action == 'health' and args.probe else args.action
+        result = request(args.run_dir, 'status' if action == 'health' else action,
+                         getattr(args, 'output', None), getattr(args, 'probe_timeout', 30),
+                         getattr(args, 'probe_timeout', 30)+5 if action == 'probe' else 300)
         print(json.dumps(result))
-        if args.action == 'health' and not result['ready']:
+        if args.action == 'health' and (result.get('status') == 'failed' or
+                                      (action == 'health' and not result['ready'])):
             raise SystemExit(1)
 
 
