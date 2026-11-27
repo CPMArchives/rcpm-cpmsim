@@ -1,17 +1,90 @@
 ;
 RCP/M GLOSSARY
 
-A - System terms
-:A
-SYSTEM TERMS
+A - Terms and abbreviations
+B - Acknowledgements
+C - Further reading
 
-RCP/M    Remote CP/M, a CP/M computer available to callers.
-Sysop    System operator.
-Caller   Someone calling the remote computer.
-BYE      Resident remote-operation software; also the logoff command.
-DU       Drive and user area, such as J3:.
-NDR      Named directory register (Z-System).
-LBR      A library containing several files.
-RBBS     The bulletin board program.
-WORK     Temporary workspace, cleared at call boundaries.
-F4       File attribute used here for caller executable approval.
+:A
+TERMS AND ABBREVIATIONS
+
+Term - Meaning
+  ANSI / VT100 - Terminal display conventions used by the supplied
+  screen-oriented programs
+  Archive - A collection of preserved files or software volumes
+  Bulletin board / BBS - A system for exchanging messages, and often files,
+  among callers
+  BYE - Resident remote-operation software; also the command to log off
+  Caller - Someone using a remote system
+  COM file - CP/M executable program, with a .COM extension
+  CP/M - Control Program for Microcomputers, the operating system used here
+  CPMUG - CP/M User Group; also the name of its software collection
+  DU - Drive/user combination, for example J3:
+  F4 - CP/M file attribute used by this distribution to mark caller-approved
+  executables
+  Forum - A bulletin board message area devoted to a subject
+  LBR - CP/M library file containing other files
+  Library volume - A disk or disk image containing a software collection
+  Logoff - Ending a call
+  Message base - The collection of stored bulletin board messages
+  Named directory - A Z-System name associated with a particular DU
+  Private mail - Messages addressed to a particular registered board user
+  Raw TCP - Network connection carrying terminal data without Telnet
+  negotiation
+  RBBS - The bulletin board software supplied with the system
+  RCP/M - Remote CP/M
+  Resident program - Software which remains in memory while other programs
+  operate
+  SIG/M - A CP/M software-sharing user-group collection
+  Sysop - System operator
+  Terminal - The program or device used to communicate with the remote
+  computer
+  Transient program - A program loaded to perform a task and then return
+  control to the command environment
+  User area - One of CP/M's numbered file areas on a disk
+  Warm boot - Return to the CP/M command environment without a full machine
+  restart
+  WORK - Temporary caller workspace in I0:
+  XMODEM / YMODEM - File transfer protocols supported by the supplied
+  upload/download services
+  Z-System - The enhanced CP/M command environment from which Z3PLUS developed
+
+:B
+ACKNOWLEDGEMENTS
+
+HUMONGOUS RCP/M owes its existence to the work of a great many people, some of
+whom made their contributions more than forty years ago. Much of our work has
+been to bring their software together, adapt it to present-day computers and
+make it available to another generation of CP/M enthusiasts.
+
+Our particular thanks go to Gary Kildall and the team at Digital Research for
+CP/M; Udo Munk for z80pack and cpmsim; Richard Conn for his pioneering work on
+ZCPR; and Jay Sage and Bridger Mitchell for Z3PLUS, with Joe Wright for his
+contributions to the Z-System.
+
+We also owe a debt to Dave Jaffe, the original author of BYE, and to Wayne
+Masters, Irv Hoff, George Peace and the other contributors who carried its
+development forward; to the authors and maintainers of CP/M RBBS, whose work
+gives our callers a place to exchange messages; and to Jim Brain for tcpser,
+which allows us to recreate the modem connection without a telephone line.
+
+Finally, our thanks to the many authors of CP/M utilities, the SIG/M and CPMUG
+librarians and contributors, and the archivists and volunteers who have kept
+this remarkable body of software and documentation accessible. Without their
+generosity and persistence, there would be very little for an RCP/M such as
+ours to offer.
+
+The individual software distributions retain their original credits and
+notices.
+
+:C
+FURTHER READING
+
+If you decide you'd like to establish a board of your own, the companion
+Sysop's Guide describes the installation, configuration and maintenance of
+HUMONGOUS RCP/M.
+
+For a glimpse of what calling an RCP/M was like in its heyday, see Jon
+Schneider's 1985 guide and other period material in the historical RCP/M
+archive. The command set and restrictions of those systems may differ from
+ours.
