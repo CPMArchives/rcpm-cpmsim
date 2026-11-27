@@ -22,7 +22,10 @@ DEFAULT_HOME=Path.home()/'Library/Application Support/RCPMAdmin'
 
 
 def command(*args,check=True):
-    return subprocess.run(list(map(str,args)),check=check,capture_output=True,text=True,timeout=30)
+    result=subprocess.run(list(map(str,args)),capture_output=True,text=True,timeout=30)
+    if check and result.returncode:
+        raise RuntimeError('Command failed: '+str(args)+'\n'+result.stdout+'\n'+result.stderr)
+    return result
 
 
 def load(home):return json.loads((home/'admin.json').read_text())

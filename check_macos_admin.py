@@ -15,14 +15,17 @@ import time
 
 
 def run(*args,check=True):
-    return subprocess.run(list(map(str,args)),check=check,capture_output=True,text=True,timeout=360)
+    result=subprocess.run(list(map(str,args)),capture_output=True,text=True,timeout=360)
+    if check and result.returncode:
+        raise RuntimeError('Command failed: '+str(args)+'\n'+result.stdout+'\n'+result.stderr)
+    return result
 
 
 def free_port():
     with socket.socket() as s:s.bind(('127.0.0.1',0));return s.getsockname()[1]
 
 
-def check(base,addon,output):
+def check(base,addon,output,session_only=False):
     if sys.platform!='darwin':raise SystemExit('macOS required')
     label='org.cpmarchives.rcpm.test'+str(os.getpid())
     before=hashlib.sha256((base/'metadata/MANIFEST.json').read_bytes()).hexdigest()
@@ -62,9 +65,10 @@ def check(base,addon,output):
             recovered=Path(temporary)/'restored'
             run(ctl,'restore',snapshots[0],'--output',recovered)
             assert (recovered/'SYSOP.DOC').read_bytes()==(home/'instance/SYSOP.DOC').read_bytes()
-            for name in ('backup','monitor','board'):
-                run(ctl,'enable',name)
-                assert (Path.home()/'Library/LaunchAgents'/(label+'.'+name+'.plist')).exists()
+            if not session_only:
+                for name in ('backup','monitor','board'):
+                    run(ctl,'enable',name)
+                    assert (Path.home()/'Library/LaunchAgents'/(label+'.'+name+'.plist')).exists()
             backup=plistlib.loads((home/'jobs/backup.plist').read_bytes())
             monitoring=plistlib.loads((home/'jobs/monitor.plist').read_bytes())
             assert backup['StartCalendarInterval']=={'Hour':3,'Minute':0}
@@ -82,11 +86,14 @@ def check(base,addon,output):
                 assert json.loads(run(ctl,'status').stdout)['ready']
             finally:link.close()
             time.sleep(1)
-            run(ctl,'disable','monitor');run(ctl,'disable','backup');run(ctl,'disable','board')
+            if session_only:run(ctl,'stop')
+            else:
+                run(ctl,'disable','monitor');run(ctl,'disable','backup');run(ctl,'disable','board')
             assert hashlib.sha256((base/'metadata/MANIFEST.json').read_bytes()).hexdigest()==before
             result=dict(passed=True,read_only_preflight=True,per_user_install=True,repeat_install_refused=True,
                 stopped_disabled_defaults=True,launchd_start=True,caller_HELP=True,probe=True,monitor=True,
-                verified_backup_restore=True,backup_restarts_board=True,login_and_schedules_opt_in=True,
+                verified_backup_restore=True,backup_restarts_board=True,login_and_schedules_opt_in=not session_only,
+                schedules_plist_validated=True,
                 attached_console_protected=True,clean_stop_and_disable=True,base_source_unchanged=True,
                 scope='User launchd agent, not a boot-time system daemon')
             (output/'VALIDATION.json').write_text(json.dumps(result,indent=2)+'\n')
@@ -97,13 +104,16 @@ def check(base,addon,output):
             raise
         finally:
             for name in ('monitor','backup','board'):
-                run(ctl,'disable',name,check=False)
+                if session_only:
+                    if name=='board':run(ctl,'stop',check=False)
+                else:run(ctl,'disable',name,check=False)
                 # Only this test's unique labels are eligible for final cleanup.
                 run('/bin/launchctl','bootout',config['domain']+'/'+label+'.'+name,check=False)
-                (Path.home()/'Library/LaunchAgents'/(label+'.'+name+'.plist')).unlink(missing_ok=True)
+                if not session_only:(Path.home()/'Library/LaunchAgents'/(label+'.'+name+'.plist')).unlink(missing_ok=True)
 
 
 if __name__=='__main__':
     p=argparse.ArgumentParser(description=__doc__)
     for n in ('base','addon','output'):p.add_argument('--'+n,type=Path,required=True)
-    a=p.parse_args();check(a.base.resolve(),a.addon.resolve(),a.output.resolve())
+    p.add_argument('--session-only',action='store_true',help='Use temporary agents only; do not write login registration files')
+    a=p.parse_args();check(a.base.resolve(),a.addon.resolve(),a.output.resolve(),a.session_only)
