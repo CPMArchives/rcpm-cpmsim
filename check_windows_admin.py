@@ -49,6 +49,10 @@ def check(base,addon,output):
             sys.path.insert(0,str(home/'helpers'));import win_admin as admin
             before=admin.store.files(base)
             cfg=admin.config(home)
+            quoted=str(home).replace("'","''")
+            acl=json.loads(run('powershell.exe','-NoProfile','-NonInteractive','-Command',
+                "$a=Get-Acl -LiteralPath '"+quoted+"'; @{protected=$a.AreAccessRulesProtected;sids=@($a.Access | ForEach-Object {$_.IdentityReference.Translate([System.Security.Principal.SecurityIdentifier]).Value})} | ConvertTo-Json -Compress").stdout)
+            assert acl['protected'] and set(acl['sids'])=={cfg['owner_sid'],'S-1-5-18'}
             for key in ('port','caller_port','modem_port'):cfg[key]=port()
             assert len({cfg[key] for key in ('port','caller_port','modem_port')})==3
             admin.store.atomic(home/'admin.json',cfg)
@@ -70,6 +74,13 @@ def check(base,addon,output):
             stage='worker startup';ctl('start');status=state();assert status['ready']
             worker_pid=status['worker_pid'];guest_pid=status['guest_pid'];modem_pid=status['tcpser_pid']
             print('Passed: private worker and modem startup',flush=True)
+            from multiprocessing.connection import Client
+            from multiprocessing import AuthenticationError
+            try:
+                with Client(cfg['pipe'],family='AF_PIPE',authkey=os.urandom(32)):pass
+            except AuthenticationError:pass
+            else:raise AssertionError('Incorrect control key was accepted')
+            assert state()['ready']
             stage='caller HELP';sequence=status['ready_sequence']
             with socket.create_connection(('127.0.0.1',cfg['port']),timeout=5) as caller:
                 until_prompt(caller)
@@ -86,6 +97,9 @@ def check(base,addon,output):
             stage='console protection'
             with admin.connect(home) as link:
                 link.send_bytes(b'{"action":"attach"}');admin.receive(link,10)
+                assert link.poll(5)
+                frame=json.loads(link.recv_bytes(1048576))['output']
+                assert frame.startswith('\x1b[H') and len(frame)>80
                 assert state()['attached']
                 assert json.loads(ctl('health','--probe').stdout)['status']=='deferred'
                 assert ctl('stop',check=False).returncode
@@ -99,7 +113,9 @@ def check(base,addon,output):
                         'Export-ScheduledTask -TaskName "'+cfg['task_prefix']+'-'+job+'"').stdout
                 tree=ET.fromstring(xml);ns={'t':'http://schemas.microsoft.com/windows/2004/02/mit/task'}
                 assert tree.find('.//t:LogonType',ns).text=='InteractiveToken'
-                assert tree.find('.//t:RunLevel',ns).text=='LeastPrivilege'
+                privilege=run('powershell.exe','-NoProfile','-NonInteractive','-Command',
+                              '(Get-ScheduledTask -TaskName "'+cfg['task_prefix']+'-'+job+'").Principal.RunLevel.ToString()').stdout.strip()
+                assert privilege=='Limited'
                 if job=='board':assert tree.find('.//t:LogonTrigger',ns) is not None
                 elif job=='backup':assert 'T03:00:00' in tree.find('.//t:StartBoundary',ns).text
                 else:assert tree.find('.//t:Repetition/t:Interval',ns).text=='PT5M'
@@ -135,10 +151,12 @@ def check(base,addon,output):
             stage='complete'
             result=dict(passed=True,windows_build=sys.getwindowsversion().build,
                         architecture=os.environ.get('PROCESSOR_ARCHITECTURE'),
-                        read_only_preflight=True,private_per_user_install=True,repeat_install_refused=True,
+                        read_only_preflight=True,private_per_user_install=True,private_directory_ACL=True,
+                        incorrect_control_key_refused=True,repeat_install_refused=True,
                         defaults_stopped_disabled=True,background_console=True,caller_HELP=True,
                         carrier_cleanup=True,active_caller_probe_deferred=True,idle_probe=probe,
-                        attached_console_protected=True,user_task_definitions=True,scheduled_backup_and_restart=True,
+                        attached_console_protected=True,console_screen_frame=True,
+                        user_task_definitions=True,scheduled_backup_and_restart=True,
                         verified_restore_and_credentials=True,scheduled_monitor=True,clean_stop_and_task_removal=True,
                         child_processes_exited=True,base_package_unchanged=True,
                         scope='Per-user Windows administration, not a system service')
