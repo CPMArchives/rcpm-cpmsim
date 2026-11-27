@@ -45,7 +45,7 @@ def check(base,addon,output,session_only=False):
         # Enable the supervisor's existing private trace in this disposable test
         # only; never enable console logging in an installed user's agent.
         diagnostic=home/'diagnostic.py'
-        diagnostic.write_text('import sys\nfrom pathlib import Path\nsys.path.insert(0,'+repr(str(home/'helpers'))+')\nimport rcpm_admin as a\noriginal=a.service.Supervisor\nclass Traced(original):\n def __init__(self,*args,**kwargs):\n  super().__init__(*args,**kwargs);self.trace=Path('+repr(str(home/'private-console.log'))+')\na.service.Supervisor=Traced\na.main()\n')
+        diagnostic.write_text('import sys\nsys.path.insert(0,'+repr(str(home/'helpers'))+')\nimport rcpm_admin as a\noriginal=a.service.main\ndef traced():\n sys.argv.extend(["--trace-console",'+repr(str(home/'private-console.log'))+'])\n original()\na.service.main=traced\na.main()\n')
         board_plist=home/'jobs/board.plist'
         values=plistlib.loads(board_plist.read_bytes());values['ProgramArguments'][2]=str(diagnostic)
         board_plist.write_bytes(plistlib.dumps(values))
