@@ -52,14 +52,13 @@ THE DRIVES AND NAMED DIRECTORIES
 A standard HUMONGOUS RCP/M has four drives. The sysop can customize their
 contents and the access you have to them.
 
-  Drive or directory - What you'll find
-  A0: / SYSTEM: - Public commands and the welcome message
-  I0: / WORK: - Temporary workspace for programs
-  I14: / HELP: - Online HELP topics
-  J: - The selected smaller software collection
-  P: - The selected large software archive
-  P0: / SIGM: - SIG/M libraries on the default P:
-  P1: / CPMUG: - CPMUG libraries on the default P:
+  A0: / SYSTEM:    Public commands and the welcome message
+  I0: / WORK:      Temporary workspace for programs
+  I14: / HELP:     Online HELP topics
+  J:               The selected smaller software collection
+  P:               The selected large software archive
+  P0: / SIGM:      SIG/M libraries on the default P:
+  P1: / CPMUG:     CPMUG libraries on the default P:
 
 There are also private system and bulletin board areas. You cannot ordinarily
 read or change their files. Selecting a DU or knowing its name does not confer
@@ -67,7 +66,7 @@ permission to use it.
 
 J: holds a nominal 4 MB collection; P: is a 512 MiB archive disk. Either can
 be exchanged using MOUNT. The SIGM and CPMUG names therefore describe the
-*default* P: disk, not every disk that can be mounted there.
+default P: disk, not every disk that can be mounted there.
 
 Named directories save a good deal of typing and remembering. If a volume
 gives one of its user areas the name INFOCOM, for instance, you can enter that
