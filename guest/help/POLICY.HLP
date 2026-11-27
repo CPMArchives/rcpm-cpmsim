@@ -46,7 +46,7 @@ disk filenames, not host operating-system paths.
 :B
 SCRIPTS, EXPLICIT FILENAMES AND OVERWRITE AUTHORIZATION
 
-AUTH /SAVE=I13:PUBLIC.DAT
+    AUTH /SAVE=I13:PUBLIC.DAT
     AUTH /SAVE=I13:PUBLIC.DAT /Y
     AUTH /LOAD=I13:PUBLIC.DAT
 
@@ -129,7 +129,7 @@ erased, even with /Y. After an I/O error retain all temporary/backup files for
 inspection. If installing the new destination fails, AUTH attempts to rename
 the backup back into place. Failure of that recovery or a power loss can still
 leave a missing startup file; keep whole-installation backups as described in
-Chapter 14.
+HELP BACKUP.
 
 LOAD validates the signature, complete required records and every permission
 byte before changing the resident table. An invalid, incomplete or missing
@@ -151,4 +151,4 @@ inspect and clear only the stale staging file using private maintenance tools.
 
 If no valid policy file remains, use private AUTH to rebuild the desired drive
 and DU grants, inspect /MAP, then save them as I13:AUTH.DAT. The defaults
-table in A.2 is a reference, not an automatic reset command.
+table in HELP AUTH, section D, is a reference, not an automatic reset command.
