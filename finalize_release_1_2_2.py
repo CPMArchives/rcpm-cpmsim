@@ -90,10 +90,11 @@ def finalize(inputs, output, run_ids):
                 raise ValueError('Hosting units leaked into standard package')
             # Keep the original audit identified as a base record, never as an audit of new binaries.
             old = root / 'metadata/BUILD-HOST.json'
-            old.rename(root / 'metadata/BASE-BUILD-HOST.json')
+            base_audit = 'BASE-BUILD-HOST.json' if old.exists() else None
+            if old.exists(): old.rename(root / 'metadata/BASE-BUILD-HOST.json')
             old.write_text(json.dumps(dict(version='v1.2.2', platform=platform,
                 runtime_sha256={n:h for n,h in runtime.items() if n.startswith('runtime/')},
-                qualification='LAUNCHER-VALIDATION.json', base_audit='BASE-BUILD-HOST.json'), indent=2)+'\n')
+                qualification='LAUNCHER-VALIDATION.json', base_audit=base_audit), indent=2)+'\n')
             contents = {p.relative_to(root).as_posix():sha(p) for p in root.rglob('*') if p.is_file() and p != manifest_path}
             common = {n:h for n,h in manifest['common'].items() if contents.get(n)==h}
             manifest.update(version='v1.2.2', status='qualified-standard-foreground-package', common=common,
