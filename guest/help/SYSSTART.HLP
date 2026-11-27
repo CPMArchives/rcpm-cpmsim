@@ -1,44 +1,99 @@
 ;
-GETTING YOUR RCP/M RUNNING
+GETTING THE SYSTEM RUNNING
 
-A - The shared machine
-B - First startup
+A - So you've decided to run an RCP/M
+B - Making the first call
 C - Host configuration
+
 :A
-THE SHARED MACHINE
+SO YOU'VE DECIDED TO RUN AN RCP/M
 
-HUMONGOUS RCP/M runs CP/M 3 and Z3PLUS under cpmsim. BYE510
-looks after the caller connection; AUTH controls caller access.
-RBBS provides forums and private mail.
+Forty years ago, this would have meant setting aside a computer, buying a
+modem, arranging for a telephone line and spending a good many evenings
+persuading the various pieces of software to cooperate. Fortunately, most of
+that work has already been done for you.
 
-You and the caller share one CP/M computer. The local console is
-not a second independent session. Give the caller a chance to finish
-before undertaking maintenance.
+HUMONGOUS RCP/M is a working CP/M computer, not simply a bulletin board with a
+CP/M theme. Callers can explore its disks, read documentation, exchange
+software, play approved games and visit the board. What sort of collection and
+community you build is up to you.
+
+This guide assumes you know your way around CP/M and a host command line. If
+you would like a refresher on the caller's side of the system, see the
+companion User's Guide. It deals with the peculiarities of running this
+particular RCP/M. For exact disk geometry and host-side image tools, keep the
+Disk Images reference handy. The Installation notes cover platform-specific
+startup matters.
+
+Under the bonnet is a customized version of Udo Munk's cpmsim, from the
+z80pack project, emulating a Z80 computer running banked CP/M 3. Our version
+adds facilities specifically for RCP/M, including the caller connection and
+shared sysop console, swappable library volumes, and the host-side services
+used to receive uploads and saved messages. These facilities work in
+conjunction with the adapted guest software. Use the cpmsim executable
+supplied with HUMONGOUS RCP/M rather than substituting a stock z80pack binary;
+the two are not interchangeable for this system. Z3PLUS supplies the command
+environment and named directories. BYE510 handles remote operation, and RBBS
+provides forums and private mail.
+
+We've also written several utilities specifically for HUMONGOUS RCP/M. AUTH
+gives the sysop control over caller permissions and program approval. MOUNT
+lets callers exchange software library volumes without restarting CP/M, and
+NDSCAN updates the named directories to reflect the contents of a mounted
+disk. These three utilities are original contributions of this project, rather
+than adaptations of historical CP/M programs.
+
+The normal emulated CPU speed is 4 MHz; changing it affects program timing,
+not just the apparent speed of the connection.
+
+You and the caller share this one machine. There is one caller at a time,
+alongside your local console. Bear that in mind whenever you sit down to do
+some maintenance.
+
 :B
-FIRST STARTUP
+MAKING THE FIRST CALL
 
-Unpack the complete distribution into a writable directory.
-Run Start-RCPM.command on macOS, Start-RCPM.sh on Linux or
-Start-RCPM.cmd on Windows. Docker has its own startup guide.
+Obtain the complete package for your host from the release page. Unpack it
+into a writable directory. On macOS run Start-RCPM.command, on Linux
+Start-RCPM.sh, and on Windows Start-RCPM.cmd. There is no setup wizard and no
+initial configuration is required. Docker users should follow the Docker
+instructions; the CP/M side is the same.
 
-The first startup creates a private SYSOP.DOC containing credentials.
-Keep it out of the public software collection.
+The first startup generates the private file SYSOP.DOC in the installation
+directory. This contains your initial board credentials. It is not the Sysop's
+Guide and should never be made available to callers.
 
-Call your own board using raw TCP at 127.0.0.1, port 4000.
-Press RETURN, try DIR SIGM:, MOUNT /L and RBBS, then log off with BYE.
-Make a second call to see that the board is ready again.
+When the modem is ready, call your own system using a terminal such as
+SyncTERM. Select raw TCP, address 127.0.0.1, port 4000. Press RETURN. Try:
+
+    HELP
+    DIR SIGM:
+    DIR CPMUG:
+    MOUNT /L
+    RBBS
+
+Register an ordinary account, enter a message, read it back and leave the
+board with C. At CP/M, type BYE. Call again. You have now seen the machine
+from the other end of the connection, which is a useful habit for a sysop to
+cultivate.
+
 :C
 HOST CONFIGURATION
 
-Stop the system before editing the external RCPM.CONF.
-The supplied defaults need no editing.
+The external RCPM.CONF is deliberately small and commented. Stop the machine
+before editing it.
 
-MODE=direct     Direct TCP (the default)
-MODE=ip232      Bundled tcpser virtual modem
-ADDRESS         Listener IPv4 address
-PORT            Caller port in either mode
+  Setting - Default - Purpose
+  MODE - direct - Direct raw TCP; ip232 selects the bundled tcpser virtual
+  modem
+  ADDRESS - 127.0.0.1 - Listener IPv4 address
+  PORT - 4000 - Caller port in either mode
 
-Restart with the normal launcher after making changes.
-Keep each installation and its writable images separate.
-The normal launcher is not a background service. See the separate
-host administration guide for unattended operation.
+The launcher handles tcpser's internal endpoints automatically. Keep the
+distributed foreground terminal open while serving calls. If you use your own
+tmux wrapper, detaching is not shutting down. Docker uses its published port
+and persistent data volume; consult its guide before changing the container.
+
+Running a second board is quite possible. Give it its own directory or Docker
+volume and a different caller port. Never share writable disk images between
+two running machines.
