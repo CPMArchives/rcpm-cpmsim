@@ -42,6 +42,13 @@ def check(base,addon,output,session_only=False):
         for n in ('port','caller_port','modem_port'):config[n]=free_port()
         assert len({config[n] for n in ('port','caller_port','modem_port')})==3
         (home/'admin.json').write_text(json.dumps(config))
+        # Enable the supervisor's existing private trace in this disposable test
+        # only; never enable console logging in an installed user's agent.
+        diagnostic=home/'diagnostic.py'
+        diagnostic.write_text('import sys\nfrom pathlib import Path\nsys.path.insert(0,'+repr(str(home/'helpers'))+')\nimport rcpm_admin as a\noriginal=a.service.Supervisor\nclass Traced(original):\n def __init__(self,*args,**kwargs):\n  super().__init__(*args,**kwargs);self.trace=Path('+repr(str(home/'private-console.log'))+')\na.service.Supervisor=Traced\na.main()\n')
+        board_plist=home/'jobs/board.plist'
+        values=plistlib.loads(board_plist.read_bytes());values['ProgramArguments'][2]=str(diagnostic)
+        board_plist.write_bytes(plistlib.dumps(values))
         for name in ('board','backup','monitor'):
             assert run('/bin/launchctl','print',config['domain']+'/'+label+'.'+name,check=False).returncode
             assert not (Path.home()/'Library/LaunchAgents'/(label+'.'+name+'.plist')).exists()
@@ -113,6 +120,11 @@ def check(base,addon,output,session_only=False):
             (output/'VALIDATION.json').write_text(json.dumps(result,indent=2)+'\n')
             print(json.dumps(result,indent=2),flush=True)
         except Exception:
+            trace=home/'private-console.log'
+            if trace.exists():
+                data=trace.read_bytes();marker=b'ATE0Q0V0S0=0M0S10=25X1H0\r\n0\r\n'
+                # Exclude startup, which can contain newly generated credentials.
+                if marker in data:print('Post-initialization diagnostic:',repr(data.split(marker,1)[1][-3500:]),flush=True)
             for p in (home/'logs').glob('*'):
                 print(p.name,p.read_text(errors='replace')[-6000:],flush=True)
             raise
