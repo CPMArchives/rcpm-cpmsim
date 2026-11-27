@@ -33,6 +33,18 @@ Set MODE=ip232 while stopped to have the launcher manage the virtual modem.
 PORT remains the caller port; internal modem settings are automatic.
 No system service, scheduled job or monitoring configuration is required.
 
+Optional host settings (edit RCPM.CONF while stopped, then restart):
+
+    MODE       direct (default), or ip232 for the bundled virtual modem.
+    ADDRESS    127.0.0.1 (default) for local callers. Use the host's network
+               IPv4 address or 0.0.0.0 for callers from other computers.
+    PORT       4000 (default). This is the caller port in either mode.
+               Choose another unused port when running multiple boards.
+
+The file contains the same descriptions as comments. There is no setup
+wizard or required configuration step. Docker additionally publishes its
+container port and keeps the board in a persistent volume; see its guide.
+
 The current candidate uses a 4 MHz emulated CPU. CPU speed affects game
 loops and software timing, as well as console throughput. Client display
 pacing or an optional virtual modem is a separate way to reproduce a slow

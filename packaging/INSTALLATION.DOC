@@ -50,7 +50,7 @@ Clients are supplied/installed by the operator, not bundled with RCP/M.
 Use the matching native host download; terminal clients are independent.
 
 127.0.0.1 is local to the machine running RCP/M. For another computer to
-connect, stop RCP/M, edit ADDRESS in RCPM.CONF to the Mac's LAN IPv4
+connect, stop RCP/M, edit ADDRESS in RCPM.CONF to the host's LAN IPv4
 address, restart, and allow that port in the host firewall as appropriate.
 Connect clients to that LAN address. Raw TCP provides no encryption.
 

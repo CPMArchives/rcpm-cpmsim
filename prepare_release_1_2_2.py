@@ -9,6 +9,7 @@ import shutil
 import subprocess
 import tarfile
 import urllib.request
+import zipfile
 
 from assemble_release_1_2_2 import build, sha
 
@@ -66,9 +67,28 @@ def prepare(platform, work, base=None, upstream=None, cygwin=None):
     tcpser = work / 'tcpser'
     source(upstream, tcpser)
     extras = {'source/tcpser-upstream.tar.gz': upstream}
+    if platform == 'macos-arm64':
+        # The old Mac tools embed the builder's diskdefs path. Rebuild with
+        # the existing package-local DISKDEFS fix used by the Linux tools.
+        tool_source = work / 'cpmtools-source'
+        tool_source.mkdir()
+        with zipfile.ZipFile(base) as archive:
+            for entry in archive.infolist():
+                marker = '/source/upstream/cpmtools-2.23/'
+                if marker not in entry.filename or entry.is_dir(): continue
+                relative = PurePosixPath(entry.filename.split(marker, 1)[1])
+                if relative.is_absolute() or '..' in relative.parts: raise ValueError('Unsafe tool source')
+                target = tool_source.joinpath(*relative.parts); target.parent.mkdir(parents=True, exist_ok=True)
+                target.write_bytes(archive.read(entry))
+        env = dict(os.environ, CFLAGS='-O2 -mmacosx-version-min=11.0')
+        tools = work / 'cpmtools'
+        run('python3', REPO / 'build_raw_cpmtools.py', tool_source, '--output', tools, env=env)
+        for name in ('cpmcp', 'cpmls', 'cpmrm', 'cpmchattr', 'mkfs.cpm'):
+            extras['runtime/'+name] = tools / 'bin' / name
     launcher = work / ('rcpm.exe' if platform.startswith('windows-') else 'rcpm')
     if platform.startswith('windows-'):
         if cygwin is None: raise ValueError('Windows build needs a build-only Cygwin toolchain path')
+        os.environ['PATH'] = str(cygwin / 'bin') + os.pathsep + os.environ['PATH']
         from windows.build_support import launcher_source
         generated = work / 'launcher.c'; generated.write_text(launcher_source())
         gcc = cygwin / 'bin/x86_64-w64-mingw32-gcc.exe'

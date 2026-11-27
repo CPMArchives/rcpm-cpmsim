@@ -54,7 +54,7 @@ def build(base, platform, launcher, tcpser, tcpser_source, output, extras=None):
         shutil.copy2(path, destination)
     for name in ('packaging/launcher.c', 'packaging/modem_host.h', 'packaging/RCPM.CONF',
                  'windows/launcher_host.h', 'windows/modem_host.h', 'windows/build_support.py',
-                 'assemble_release_1_2_2.py', 'prepare_release_1_2_2.py'):
+                 'assemble_release_1_2_2.py', 'prepare_release_1_2_2.py', 'build_raw_cpmtools.py'):
         target = root / 'source/release-1.2.2' / name
         target.parent.mkdir(parents=True, exist_ok=True)
         shutil.copy2(REPO / name, target)
