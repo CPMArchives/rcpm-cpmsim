@@ -1,0 +1,39 @@
+name: Publish released Docker images to GHCR
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+    inputs:
+      release_tag:
+        description: Published release containing both Docker archives and SHA256SUMS
+        required: true
+        default: v1.2.1
+
+permissions:
+  contents: read
+  packages: write
+
+concurrency:
+  group: ghcr-release-publishing
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    env:
+      GH_TOKEN: ${{ github.token }}
+      RELEASE_TAG: ${{ inputs.release_tag || github.event.release.tag_name }}
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: docker/setup-buildx-action@8d2750c68a42422c14e847fe6c8ac0403b4cbd6f # v3
+      - name: Log in to GHCR
+        env:
+          REGISTRY_TOKEN: ${{ github.token }}
+        run: printf '%s' "$REGISTRY_TOKEN" | docker login ghcr.io --username "$GITHUB_ACTOR" --password-stdin
+      - name: Publish verified release images and multi-platform index
+        run: python3 publish_docker_release.py --tag "$RELEASE_TAG" --repository "$GITHUB_REPOSITORY"
+      - name: Log out
+        if: always()
+        run: docker logout ghcr.io

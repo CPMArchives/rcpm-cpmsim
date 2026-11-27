@@ -1,5 +1,34 @@
 # Docker packages
 
+## GHCR images
+
+The repository's `Publish released Docker images to GHCR` workflow publishes
+the Docker archives attached to a release after verifying their SHA256SUMS.
+One image tag supports both Linux ARM64 and x64; Docker selects the host
+architecture. The registry image adds identification labels only; it retains
+the released image filesystem. The archive downloads remain available.
+
+Once the package is public, installation is:
+
+```sh
+docker pull ghcr.io/cpmarchives/rcpm-cpmsim:1.2.1
+docker run --name rcpm -it -p 127.0.0.1:4000:4000 \
+  -v rcpm-data:/data ghcr.io/cpmarchives/rcpm-cpmsim:1.2.1
+```
+
+New published releases containing both Docker archives and checksums trigger
+publication automatically. Version tags remain available. `latest` follows
+GitHub's current stable release, never a prerelease or an older manual replay.
+A release without Docker assets leaves GHCR unchanged. If assets are added
+after a release is published, run the workflow manually with its release tag.
+The workflow uses GitHub's built-in token; no Docker Hub account or additional
+publishing secret is required. Initial GHCR package visibility must be public
+for anonymous pulls (GitHub defaults new packages to private).
+
+This updates the registry, not running boards. Existing containers and data
+volumes are unchanged. Upgrade an existing board separately; pulling an image
+does not migrate the initialized installation in its persistent volume.
+
 ## CONTENTS
 
 The 1.2.1 release provides Docker image archives for ARM64 and x64. Download
