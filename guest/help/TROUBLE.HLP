@@ -1,0 +1,26 @@
+;
+WHEN THINGS DON'T WORK
+
+A - When things don't work as expected
+
+:A
+WHEN THINGS DON'T WORK AS EXPECTED
+
+Symptom - Things to try
+  No connection - Check the advertised address and port; the board may be
+  occupied
+  Connected, but no welcome - Check Raw TCP and press RETURN
+  A directory name is missing - Check the mounted volume and use its numeric
+  DU
+  A command is rejected - Check spelling, DU and caller execution approval
+  Download appears to stall - Start the matching YMODEM receive operation
+  Uploaded file isn't in DIR - Expected: the submission is in the private
+  sysop inbox
+  RBBS ignores RETURN - Normal menus use single-key selection
+  CHAT or Maze Chase display is garbled - Check ANSI/VT100 and terminal
+  dimensions; CHAT /S is an alternative for chat
+  Saved game is gone - WORK is temporary and cleared between calls
+
+If you can't resolve a difficulty, leave the sysop a note. Include the steps
+needed to reproduce it rather than merely saying that the program doesn't
+work.
