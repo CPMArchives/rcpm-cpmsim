@@ -51,11 +51,10 @@ Maze Chase and the split-screen CHAT display.
 If you're trying a copy of RCP/M on your own computer, the standard native
 installation listens on:
 
-  Setting - Value
-  Connection - Raw TCP
-  Address - 127.0.0.1
-  Port - 4000
-  Terminal - ANSI/VT100, 80 x 24
+    Connection   Raw TCP
+    Address      127.0.0.1
+    Port         4000
+    Terminal     ANSI/VT100, 80 x 24
 
 Use the address and port advertised by the sysop for a remote system; the
 local address above won't reach a board elsewhere.
@@ -90,5 +89,4 @@ Once you're in RBBS, C returns you to CP/M. Type BYE when you're ready to
 finish your call. If all you've done is look around, there's nothing that
 needs saving.
 
-The rest of this guide describes these facilities in more detail. You needn't
-read it from cover to cover before using the board.
+Use HELP USER to browse the other caller topics whenever you need them.
