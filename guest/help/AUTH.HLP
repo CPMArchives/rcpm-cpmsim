@@ -1,56 +1,288 @@
 ;
-AUTH - CALLER PERMISSIONS
+CALLER PERMISSIONS AND PROGRAM APPROVAL
 
-A - Reading the permission map
-B - Changing permissions
-C - Approving executable programs
+A - Deciding what callers may do
+B - Approving programs for online use
+C - Starting AUTH safely
+D - The permission model and shipped defaults
+E - Reading the map and querying targets
+F - Setting drive and DU permissions
+G - COM-file execution and F4
+H - Troubleshooting
+
 :A
-READING THE PERMISSION MAP
+DECIDING WHAT CALLERS MAY DO
 
-Enter AUTH from private CP/M with BYE attached.
-AUTH /MAP displays the entire map; AUTH J: displays one drive.
+An RCP/M gives strangers the use of a real computer. That's its attraction,
+and also the reason for taking permissions seriously.
 
-An asterisk indicates an explicit DU setting. Otherwise the DU
-inherits the drive setting. An explicit DU denial takes precedence.
+AUTH lives in SYSUTLS:. With the caller blanked, or between calls with BYE
+attached, type AUTH /MAP. The map shows the effective read/write pair for each
+DU. An asterisk marks an explicit override; without it the DU follows the
+drive setting.
 
-Shipped defaults:
-A0: and I14:    Read only
-I0:             Read/write
-J: and P:       Read only
-Other DUs       No access
+The shipped policy gives read access to A0:, I14:, J: and P:, read/write
+access to I0:, and denies other areas. In particular, I13: and I15: inherit
+I:'s denial. Don't casually grant access to all of I:; you would expose
+inherited private areas unless you explicitly protect them first.
 
-Keep SYSUTLS: and the private RBBS areas protected.
+Suppose you want to keep J3: out of sight:
+
+    AUTH J: /R
+    AUTH J3: /NONE
+
+To remove that exception, use AUTH J3: /INHERIT. A drive change doesn't erase
+its DU overrides. Each permission argument replaces the entire pair: /W is
+write only, not an instruction to add write permission to read.
+
+AUTH changes take effect immediately and survive calls. Save the map with AUTH
+/SAVE, accepting I13:AUTH.DAT, if you want it at the next startup. AUTH /LOAD
+restores a saved map. The full reference in the appendix covers alternate
+policies, scripts and recovery.
+
 :B
-CHANGING PERMISSIONS
+APPROVING PROGRAMS FOR ONLINE USE
 
-AUTH J: /R       Read only
-AUTH J: /RW      Read and write
-AUTH J: /W       Write only
-AUTH J: /NONE    Neither
-AUTH J3: NONE    Explicit denial of J3:
-AUTH J3: INHERIT Remove the DU override
+A disk full of useful CP/M programs is not necessarily a disk full of programs
+suitable for remote execution. Debuggers, memory editors and arbitrary loaders
+are obvious examples.
 
-Each argument replaces the entire permission pair.
-Changing a drive does not erase its DU overrides. Be particularly
-careful with I:, whose private areas inherit the drive's setting
-unless explicitly denied.
+An ordinary caller COM load requires read access to its source DU, no caller
+write access to that DU, and F4 on the actual file. F4 is our approval
+convention, not a universal CP/M rule. For example, after reviewing Adventure
+on the mounted GAMES disk:
 
-Changes take effect immediately. AUTH /SAVE saves the running map.
-See HELP POLICY for details.
+    AUTH J1:ADV.COM
+    AUTH J1:ADV.COM +X
+    AUTH J1:ADV.COM
+
+Withdraw approval with AUTH J1:ADV.COM -X. These changes go straight to the
+disk directory; AUTH /SAVE and /LOAD affect permissions, not F4.
+
+Clear inherited F4 flags when importing software. Review the actual binary and
+its options, including shell escapes and secondary loaders. BYE is not a
+sandbox for hostile Z80 code. See the caller execution policy and security
+boundary for details. Approving a program means trusting it. Individual file
+R/O and SYS attributes do not replace AUTH.
+
+Don't give callers write access to A0: in an attempt to make a program work.
+That will prevent ordinary public COM loads. If it happens, restore AUTH A0:
+/R. A caller in writable WORK can still load approved commands from read-only
+A0:.
+
 :C
-APPROVING EXECUTABLE PROGRAMS
+STARTING AUTH SAFELY
 
-An ordinary COM file must be in a caller-readable, non-writable DU
-and have F4 set before a caller can run it.
+With a caller connected, use local Ctrl-B to blank the caller and enter
+private sysop mode. Then use SYSUTLS:AUTH, or simply AUTH if the private
+command path is active. Keep the caller blanked throughout administration.
+Return to A0:SYSTEM before pressing Ctrl-B again to restore caller operation.
 
-AUTH J2:EXAMPLE.COM      Examine executable status
-AUTH J2:EXAMPLE.COM +X   Approve
-AUTH J2:EXAMPLE.COM -X   Withdraw approval
+If administering between calls, local Ctrl-C opens BYE's menu. Select J to
+jump to CP/M with BYE attached. AUTH needs that resident BYE interface; Return
+for normal unpatched CP/M removes it and is not the AUTH environment.
 
-Use an exact DU and COM filename. F4 changes are written directly
-to disk and do not need AUTH /SAVE. F4 is not a substitute for
-the required DU permissions.
+AUTH rejects administration outside private sysop mode, even if someone copies
+AUTH.COM to a public DU and marks it executable. These permissions control the
+caller, not the private operator. Private mode permits maintenance on A:, I:,
+J: and P: through the same policy bypass. Genuine host read-only media,
+ordinary CP/M file R/O attributes and other file errors still apply.
 
-Review the actual program, including its loaders and shell escapes.
-BYE is not a sandbox for arbitrary machine code. Clear inherited
-F4 flags on imported programs before deliberately approving them.
+Display help with:
+
+    SYSUTLS:AUTH //
+
+Commands and filenames are case-insensitive. AUTH accepts one target per
+invocation; use several commands in a SUBMIT file or alias for a sequence.
+
+:D
+THE PERMISSION MODEL AND SHIPPED DEFAULTS
+
+D: means a drive, for example J:. DU: means a drive plus user area, for
+example J3:. Each drive has a caller permission pair. Each DU either inherits
+that pair or has an explicit replacement. The order is:
+
+    explicit DU setting -> drive setting -> default NONE
+
+An explicit DU setting always takes precedence, including an explicit NONE. A
+drive change preserves existing DU overrides. There are no automatic private
+exceptions for particular drive letters: SYSUTLS and RBBS data are private
+because of the configured policy, with a separate controlled RBBS service
+grant.
+
+The supplied startup policy grants:
+
+    Scope                     Caller permission
+    A0:SYSTEM                 R-  (public commands and banner)
+    J: and P:                 R-  (public collections)
+    I0:WORK                   RW  (temporary workspace)
+    I14:HELP                  R-  (help topics)
+    Other DUs                 --  (neither read nor write)
+
+I13:SYSUTLS and I15:RBBS inherit I:'s NONE setting in that policy. If you
+grant access to all of I:, those inherited DUs follow it too. To keep
+particular DUs private under a broader drive grant, give them explicit NONE
+overrides first. Keep the policy files and private board data protected
+against caller writes.
+
+R permits file reading and directory browsing. W permits file mutations
+through available programs. Write-only settings deny reading/listing;
+utilities that require read access for file lookup may not work with a
+write-only DU. RW is permission, not a supplied file-transfer or copy service:
+callers still have no general copy command or direct upload into WORK in this
+package. The game launchers seed WORK, and caller programs can create
+workspace data. UPLOAD continues to use the private host inbox described in
+Chapter 12.
+
+I0:WORK is cleared at startup and call recovery regardless of its AUTH
+setting. Changing its permissions does not turn it into permanent storage.
+
+:E
+READING THE MAP AND QUERYING TARGETS
+
+AUTH                      All drives, users 0-15
+    AUTH /MAP                 Same complete map
+    AUTH J:                   Only the J: row, users 0-15
+    AUTH J3:                  Same complete J: row
+
+These commands only display information. AUTH D: does NOT reset D: to NONE. No
+permission change occurs without an explicit permission argument.
+
+The map shows effective caller permissions for each DU. An asterisk before the
+pair means that DU has an explicit override:
+
+    *RW   Explicit read/write       *R-   Explicit read-only
+    *-W   Explicit write-only       *--   Explicit denial
+     R-   Read-only inherited from the drive (no asterisk)
+
+A missing asterisk means inheritance, even when the inherited value is --. The
+map does not show whether a disk is mounted or whether a particular file
+exists. You can configure G3: even if no G: image is currently attached.
+
+:F
+SETTING DRIVE AND DU PERMISSIONS
+
+Both slash syntax and map-style pairs are supported:
+
+    Slash form       Map form       Also accepted       Result
+    /RW              RW             RW                  Read and write
+    /R               R-             R                   Read only
+    /W               -W             W                   Write only
+    /NONE            --             NONE                Neither
+
+Every form REPLACES the complete pair. /W does not add W to an existing R; it
+sets -W and removes read access. Likewise, /R removes write access. Do not
+type the map's asterisk as part of a permission argument.
+
+    AUTH J: /R                Set the drive's caller pair to R-
+    AUTH J3: RW               Override J3: with read/write
+    AUTH J3: /W               Replace that override with write-only
+    AUTH J3: --               Explicitly deny both permissions on J3:
+    AUTH J3: INHERIT           Remove its override; follow J: again
+
+/INHERIT is equivalent to INHERIT and applies only to a DU. With J: set to R-,
+J3: INHERIT becomes R- and loses its asterisk. Explicit J3: NONE remains
+denied and keeps its asterisk even if the drive is readable. To deny a drive's
+base permissions, use AUTH J: /NONE; that does not erase its explicit DU
+overrides.
+
+Changes take effect in BYE's resident map immediately and survive caller
+hangups. They remain unsaved until you use /SAVE. They are replaced by /LOAD
+or by the next startup's saved map.
+
+:G
+COM-FILE EXECUTION AND F4
+
+Normal caller execution requires ALL of the following:
+
+    - Read access to the executable's DU.
+    - No caller write access to that DU.
+    - F4 set on the actual COM file's directory entry.
+
+The source DU matters, not the caller's current working directory. A caller in
+writable I0: can run approved commands found on read-only A0:. The caller
+cannot run a COM stored in writable I0:, even if it has F4 set. If you make
+I0: caller-read-only, approved files there can run; they are still cleared at
+call boundaries. Individual file R/O does not override the writable-DU ban.
+
+All ordinary COM files use this rule, including public commands in A0:.
+Setting A0: to RW therefore stops callers loading DIR, SDZ, LT and the other
+COM commands there. Private sysop operation continues to work. To restore
+normal caller commands, set AUTH A0: /R. See A.10.
+
+Inspect, approve or revoke an existing exact filename:
+
+    AUTH J1:ADV.COM            Report effective caller executable status
+    AUTH J1:ADV.COM +X         Set F4; preserve other file attributes
+    AUTH J1:ADV.COM -X         Clear F4; preserve other file attributes
+
+The target comes first. AUTH +X J1:ADV.COM is not supported. These file
+commands require a DU prefix, a COM extension and an exact name; wildcards are
+rejected.
+
+Examples of status output:
+
+    J1:ADV.COM is executable.
+    J1:ADV.COM is not executable: F4 is not set.
+    J1:ADV.COM is not executable: DU is caller-writable.
+    J1:ADV.COM is not executable: no caller read access.
+    J1:ADV.COM not found.
+
++X is approval, not a way to override DU permissions. F4 is our
+caller-approval convention, not a universal meaning imposed by CP/M. Clear
+inherited F4 flags when importing software, then approve reviewed programs
+deliberately. Individual file R/O is optional for execution and retains its
+normal CP/M meaning. SET can also manage F4 in private mode. SYS controls
+directory display, not approval.
+
+F4 changes are written directly to the file directory. They do NOT require
+AUTH /SAVE. Conversely, AUTH /LOAD does not undo any F4 changes. If a copied
+file retains F4, it still cannot execute while its DU is caller-writable.
+
+Approval means trusting the program, including external loaders, interpreters,
+shell escapes and direct memory/disk operations it may provide. BYE is not a
+sandbox for hostile Z80 code. The reviewed RBBS entry has its own narrow grant
+for the private board executable/data; do not make those DUs public to run it.
+
+:H
+TROUBLESHOOTING
+
+DIR?, SDZ? or LT? after making A0: RW:
+    Caller-writable DUs cannot supply caller executables. Blank the caller and
+    run AUTH A0: /R. Save the corrected map if the bad setting was saved.
+    Query AUTH A0:DIR.COM if it still fails; also check that the file exists.
+
+Game preparation failed:
+    MOUNT GAMES first. I0: needs read/write access for the supplied launchers.
+    Use AUTH I0: RW in private mode if necessary. The game executable's DU
+    still needs caller read access, no write access and F4 approval.
+
+I0: changed to -- after /INHERIT:
+    It now follows I:'s NONE setting. Restore the explicit AUTH I0: RW
+    override.
+
+/LOAD did not undo an executable approval:
+    Policy files hold DU permissions only. Use AUTH DU:FILE.COM -X to clear
+    F4.
+
+Changes disappeared after restart:
+    Save to I13:AUTH.DAT, not just an alternate filename. Unsaved changes
+    survive call boundaries but not a new BYE startup. Check that the save
+    succeeded.
+
+AUTH reports that private mode or an AUTH-enabled driver is required:
+    Blank the caller locally. With no caller, use BYE's J menu choice to keep
+    its resident interface attached. Do not use normal unpatched CP/M for
+    AUTH.
+    Check that the driver and utility came from a compatible package.
+
+Explicit /SAVE says the file exists:
+    Use /Y only if you intend to overwrite it, or choose a new filename.
+
+Save reports a staging file already exists:
+    Inspect the same-basename .$$$ before removing it. It may contain a
+    complete
+    recoverable map from a previous interrupted save; see A.9.
+
+The optional host --caller-allow/deny/list helper is for stopped-image
+maintenance. Normal live administration uses AUTH inside CP/M.
