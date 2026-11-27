@@ -1,0 +1,44 @@
+;
+GETTING YOUR RCP/M RUNNING
+
+A - The shared machine
+B - First startup
+C - Host configuration
+:A
+THE SHARED MACHINE
+
+HUMONGOUS RCP/M runs CP/M 3 and Z3PLUS under cpmsim. BYE510
+looks after the caller connection; AUTH controls caller access.
+RBBS provides forums and private mail.
+
+You and the caller share one CP/M computer. The local console is
+not a second independent session. Give the caller a chance to finish
+before undertaking maintenance.
+:B
+FIRST STARTUP
+
+Unpack the complete distribution into a writable directory.
+Run Start-RCPM.command on macOS, Start-RCPM.sh on Linux or
+Start-RCPM.cmd on Windows. Docker has its own startup guide.
+
+The first startup creates a private SYSOP.DOC containing credentials.
+Keep it out of the public software collection.
+
+Call your own board using raw TCP at 127.0.0.1, port 4000.
+Press RETURN, try DIR SIGM:, MOUNT /L and RBBS, then log off with BYE.
+Make a second call to see that the board is ready again.
+:C
+HOST CONFIGURATION
+
+Stop the system before editing the external RCPM.CONF.
+The supplied defaults need no editing.
+
+MODE=direct     Direct TCP (the default)
+MODE=ip232      Bundled tcpser virtual modem
+ADDRESS         Listener IPv4 address
+PORT            Caller port in either mode
+
+Restart with the normal launcher after making changes.
+Keep each installation and its writable images separate.
+The normal launcher is not a background service. See the separate
+host administration guide for unattended operation.

@@ -1,0 +1,50 @@
+;
+DISKS AND NAMED DIRECTORIES
+
+A - The disk layout
+B - Adding and mounting volumes
+C - Naming user areas
+:A
+THE DISK LAYOUT
+
+A0:    SYSTEM    Public commands, boot files and welcome text
+A15:             Private board executable and static files
+I0:    WORK      Temporary caller workspace
+I13:   SYSUTLS   Private maintenance programs
+I14:   HELP      Online documentation
+I15:   RBBS      Private accounts and message data
+J:               Swappable nominal 4 MB collections
+P:               Swappable 512 MiB archives
+
+P0:SIGM and P1:CPMUG are the default P: archive directories.
+WORK is cleared at call boundaries. Do not keep sysop files there.
+:B
+ADDING AND MOUNTING VOLUMES
+
+Place compatible J: images in disks/library/ and P: images in
+disks/library/archives/. Use 1-8 letters, digits or underscores
+for a catalog name, followed by .dsk.
+
+J: z80pack-hd   4177920 bytes
+P: z80pack-hdb  536870912 bytes
+
+MOUNT /L lists the catalogs; MOUNT NAME selects the correct drive.
+Use an explicit drive if names collide. MOUNT P: /DEFAULT restores
+the default large archive. MOUNT J: /DEFAULT restores the small one.
+
+Never edit a mounted image with host utilities. See DISK-IMAGES.DOC
+for image creation. Keep private images outside the public catalogs.
+Permissions follow the mounted DU, not the image's filename.
+:C
+NAMING USER AREAS
+
+Create an extensionless marker such as -INFOCOM in the relevant DU.
+Names have up to seven letters, digits or underscores.
+NDSCAN J: rebuilds names for J: from its markers; MOUNT normally
+does this automatically after a swap.
+
+Duplicate names or invalid markers cause a scan failure. A successful
+mount followed by a scan failure leaves the new image mounted with
+the old names. Use explicit DU addresses until corrected.
+
+A directory name does not grant access. AUTH determines permissions.

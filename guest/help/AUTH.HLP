@@ -1,0 +1,56 @@
+;
+AUTH - CALLER PERMISSIONS
+
+A - Reading the permission map
+B - Changing permissions
+C - Approving executable programs
+:A
+READING THE PERMISSION MAP
+
+Enter AUTH from private CP/M with BYE attached.
+AUTH /MAP displays the entire map; AUTH J: displays one drive.
+
+An asterisk indicates an explicit DU setting. Otherwise the DU
+inherits the drive setting. An explicit DU denial takes precedence.
+
+Shipped defaults:
+A0: and I14:    Read only
+I0:             Read/write
+J: and P:       Read only
+Other DUs       No access
+
+Keep SYSUTLS: and the private RBBS areas protected.
+:B
+CHANGING PERMISSIONS
+
+AUTH J: /R       Read only
+AUTH J: /RW      Read and write
+AUTH J: /W       Write only
+AUTH J: /NONE    Neither
+AUTH J3: NONE    Explicit denial of J3:
+AUTH J3: INHERIT Remove the DU override
+
+Each argument replaces the entire permission pair.
+Changing a drive does not erase its DU overrides. Be particularly
+careful with I:, whose private areas inherit the drive's setting
+unless explicitly denied.
+
+Changes take effect immediately. AUTH /SAVE saves the running map.
+See HELP POLICY for details.
+:C
+APPROVING EXECUTABLE PROGRAMS
+
+An ordinary COM file must be in a caller-readable, non-writable DU
+and have F4 set before a caller can run it.
+
+AUTH J2:EXAMPLE.COM      Examine executable status
+AUTH J2:EXAMPLE.COM +X   Approve
+AUTH J2:EXAMPLE.COM -X   Withdraw approval
+
+Use an exact DU and COM filename. F4 changes are written directly
+to disk and do not need AUTH /SAVE. F4 is not a substitute for
+the required DU permissions.
+
+Review the actual program, including its loaders and shell escapes.
+BYE is not a sandbox for arbitrary machine code. Clear inherited
+F4 flags on imported programs before deliberately approving them.

@@ -1,0 +1,32 @@
+;
+MAKING THE SYSTEM YOUR OWN
+
+A - The sign-on message
+B - Maintaining HELP
+:A
+THE SIGN-ON MESSAGE
+
+BYE displays A0:WELCOME.TXT when a caller calls.
+From private CP/M, enter:
+
+    SYSUTLS:ZDE A0:WELCOME.TXT
+
+ZDE uses WordStar editing keys.
+Ctrl-K S saves; Ctrl-K X saves and exits; Ctrl-K Q abandons edits.
+Keep the caller blanked until editing and saving are finished.
+The revised welcome appears on the next call.
+Keep it short enough that a regular caller won't dread reading it.
+:B
+MAINTAINING HELP
+
+HELP topics live in I14:HELP and use the HELPC plain-text format.
+HELP opens HELP.HLP; HELP topic opens the named topic directly.
+
+A semicolon on the first line starts the file. An index may link
+to another file with :A:AUTH.HLP or introduce a section with :A.
+Keep indexes within one screen and all lines within 78 columns.
+Information sections are paginated automatically.
+
+Use ASCII text with CRLF line endings and Ctrl-Z EOF. Maintain
+the source files as well as the installed copies. No passwords
+or private installation details belong in public HELP.

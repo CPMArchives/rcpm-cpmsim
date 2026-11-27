@@ -1,6 +1,10 @@
 ;
 READING ARCHIVES
 
+A - Read this topic
+:A
+READ THIS TOPIC
+
 DIR P0: lists SIG/M libraries; DIR P1: lists CPMUG libraries.
 LDIR lists the members of an LBR without extracting it.
 Example: LDIR P0:SIGMV011

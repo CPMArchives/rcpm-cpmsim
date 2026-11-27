@@ -1,0 +1,17 @@
+;
+RCP/M GLOSSARY
+
+A - System terms
+:A
+SYSTEM TERMS
+
+RCP/M    Remote CP/M, a CP/M computer available to callers.
+Sysop    System operator.
+Caller   Someone calling the remote computer.
+BYE      Resident remote-operation software; also the logoff command.
+DU       Drive and user area, such as J3:.
+NDR      Named directory register (Z-System).
+LBR      A library containing several files.
+RBBS     The bulletin board program.
+WORK     Temporary workspace, cleared at call boundaries.
+F4       File attribute used here for caller executable approval.

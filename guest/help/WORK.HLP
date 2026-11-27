@@ -1,6 +1,10 @@
 ;
 TEMPORARY WORKSPACE
 
+A - Read this topic
+:A
+READ THIS TOPIC
+
 I0:WORK is caller-readable and writable under the default policy.
 It is cleared when a call ends and before the next caller starts.
 Do not treat files in WORK as permanent storage.

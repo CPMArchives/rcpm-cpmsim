@@ -1,0 +1,38 @@
+;
+THE SYSOP'S CONSOLE
+
+A - Local BYE controls
+B - Between calls
+C - Answering a chat page
+:A
+LOCAL BYE CONTROLS
+
+During a call, the local keyboard can affect the caller's work.
+
+Ctrl-B   Blank or unblank the caller
+Ctrl-G   Toggle paging availability
+Ctrl-Q   Enter sysop message mode
+Ctrl-X   Leave sysop message mode
+Ctrl-N   Force caller disconnect
+
+While blanked, most control keys pass to the local application.
+Keep the caller blanked during private work. Leave private programs
+and return to A0: before unblanking. If using tmux, Ctrl-B Ctrl-B
+passes a literal Ctrl-B to the guest.
+:B
+BETWEEN CALLS
+
+At BYE's waiting prompt, local Ctrl-C opens its menu.
+Select J to enter CP/M with BYE still attached. This is the
+environment needed by AUTH. RETURN instead enters ordinary CP/M
+without the resident BYE interface.
+:C
+ANSWERING A CHAT PAGE
+
+A caller enters CHAT from CP/M. Answer with Escape on the local
+keyboard. The upper pane is yours; the lower pane is the caller's.
+Both ends need an 80x24 ANSI/VT100 terminal for split-screen CHAT.
+CHAT /S is the plain scrolling alternative.
+
+Ctrl-R redraws the split display. Ctrl-C or Ctrl-X ends chat.
+Local Ctrl-B ends split chat and enters private operation.

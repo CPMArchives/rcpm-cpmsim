@@ -1,6 +1,10 @@
 ;
 CHAT WITH THE SYSOP
 
+A - Read this topic
+:A
+READ THIS TOPIC
+
 Type CHAT at the CP/M prompt to page the operator.
 In RBBS, use C to return to CP/M first, then type CHAT.
 Wait for the operator to answer. An unanswered page returns to CP/M.

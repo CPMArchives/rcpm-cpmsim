@@ -1,6 +1,10 @@
 ;
 ONLINE GAMES
 
+A - Read this topic
+:A
+READ THIS TOPIC
+
 First type MOUNT GAMES at the CP/M prompt.
 Then choose J0:ADVENT, J0:ANIMALS or J0:MCHASE.
 ADVENT starts expanded Adventure; answer its instructions prompt.

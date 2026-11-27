@@ -1,6 +1,10 @@
 ;
 FILE TRANSFERS
 
+A - Read this topic
+:A
+READ THIS TOPIC
+
 YSEND sends files to your terminal client's YMODEM receiver.
 Example: YSEND A0:WELCOME.TXT
 Start the matching receive operation in your client when prompted.

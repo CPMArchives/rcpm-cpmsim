@@ -1,0 +1,31 @@
+;
+TROUBLESHOOTING AND NETWORK OPERATION
+
+A - Trouble at the CP/M prompt
+B - Making the board reachable
+:A
+TROUBLE AT THE CP/M PROMPT
+
+Commands work locally but not for callers: inspect AUTH and F4.
+A0: must be readable and not caller-writable for public COM loads.
+Old names after MOUNT: check the NDSCAN result and marker files.
+Missing WORK files: expected at call boundaries.
+AUTH changes lost at startup: check the saved AUTH.DAT.
+Garbled CHAT: check ANSI/VT100 or use CHAT /S.
+
+If WORK cleanup fails, the system will not answer. Stop and correct
+the I: image or its host write permissions before restarting.
+:B
+MAKING THE BOARD REACHABLE
+
+RCPM.CONF defaults to ADDRESS=127.0.0.1 and PORT=4000.
+For network calls, stop the board and choose an appropriate host
+IPv4 address or 0.0.0.0 (all interfaces), then restart.
+The host firewall and router must allow the caller port.
+
+Use raw TCP and press RETURN after connecting. Test from another
+computer before announcing the board. Raw TCP is not encrypted;
+callers should not reuse important passwords.
+
+Unattended service and monitoring are separate host administration
+matters. Consult the appropriate host documentation.

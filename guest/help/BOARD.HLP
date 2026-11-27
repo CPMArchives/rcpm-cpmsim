@@ -1,0 +1,32 @@
+;
+RUNNING THE BULLETIN BOARD
+
+A - Sysop access
+B - Looking after your board
+:A
+SYSOP ACCESS
+
+RBBS is the board's public entry command. It supports discussion
+forums and private mail between registered callers.
+
+Use private local CP/M for sysop business. The initial credentials
+are in the private host file SYSOP.DOC. Never enter them on a shared
+console. Use the board's supplied maintenance menus.
+
+A15: contains board programs and static files. I15: contains the
+accounts and message base. The public RBBS launcher has a controlled
+exception for these areas; callers need no direct access to them.
+:B
+LOOKING AFTER YOUR BOARD
+
+A few active forums are better than a dozen empty ones.
+Choose subjects that suit your callers and post a welcome message
+explaining the purpose of each forum. Check new accounts and keep
+an eye on the message base.
+
+Do not promise absolute confidentiality for private mail. The sysop
+controls the disks and backups; raw TCP is unencrypted.
+
+Back up the complete stopped installation before major changes.
+Exact maintenance menus can differ between board revisions; follow
+the instructions displayed by your installed RBBS.

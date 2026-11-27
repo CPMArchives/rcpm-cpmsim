@@ -1,6 +1,10 @@
 ;
 BASIC COMMANDS
 
+A - Read this topic
+:A
+READ THIS TOPIC
+
 DIR or SDZ lists files. Examples: DIR P:   DIR HELP:   DIR J1:
 LT reads text. Example: LT A0:WELCOME.TXT
 HELP topic displays instructions. Example: HELP MOUNT

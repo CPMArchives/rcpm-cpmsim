@@ -1,0 +1,38 @@
+;
+SHUTDOWN, BACKUP AND UPDATES
+
+A - Stopping the RCP/M
+B - Backing up and restoring
+C - Updating the system
+:A
+STOPPING THE RCP/M
+
+BYE logs off a caller, not the whole machine.
+Let a caller finish and save any work. Between calls, use local
+Ctrl-C at BYE's menu prompt, then RETURN to enter ordinary CP/M.
+At private local CP/M, enter:
+
+    SYSUTLS:BYEBYE
+
+Wait for the emulator to stop before copying or editing images.
+A blanked caller or idle listener does not mean the guest is stopped.
+:B
+BACKING UP AND RESTORING
+
+Copy the complete stopped installation to separate storage.
+Include disks/, library volumes, uploads/inbox/, state/, RCPM.CONF
+and private SYSOP.DOC. Protect backup credentials and mail.
+
+Restore into a new directory from a complete snapshot, not pieces
+of unrelated backups. Stop the original before using its port.
+A second copy on the same disk is not protection against disk loss.
+:C
+UPDATING THE SYSTEM
+
+Do not unpack a fresh release over a working board. Test it in
+a separate directory and follow that release's migration instructions.
+Preserve your accounts, messages, permissions, uploads and custom
+software. Keep emulator and BYE driver versions matched.
+
+Service installation, scheduled backups and monitoring are covered
+by separate host administration documentation.

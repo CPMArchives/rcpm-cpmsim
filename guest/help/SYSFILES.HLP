@@ -1,0 +1,28 @@
+;
+UPLOADS AND LIBRARY MAINTENANCE
+
+A - Trying a transfer
+B - Reviewing submissions
+:A
+TRYING A TRANSFER
+
+Try transfers yourself before helping callers with them.
+YSEND A0:WELCOME.TXT sends a file using YMODEM.
+UPLOAD FILE.EXT accepts an XMODEM/CRC upload.
+UPLOAD /Y accepts a YMODEM batch.
+
+Start the matching operation in the terminal program when prompted.
+Uploads go into the private host inbox, not the public library or
+the caller's WORK directory.
+:B
+REVIEWING SUBMISSIONS
+
+Look in uploads/inbox/ on the host for completed submissions.
+Check the integrity and contents of archives, retain author notices,
+and confirm redistribution is permitted before adding files to a
+public collection.
+
+Prepare or edit images while the system is stopped, using the
+matching disk format. Keep backups of images before changing them.
+Do not approve uploaded executables simply because they arrived
+from a registered caller. See HELP AUTH and HELP DISKS.

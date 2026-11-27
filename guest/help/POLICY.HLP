@@ -1,0 +1,30 @@
+;
+SAVING AND LOADING AUTH SETTINGS
+
+A - The startup policy
+B - Command files and recovery
+:A
+THE STARTUP POLICY
+
+AUTH /SAVE saves the live map; AUTH /LOAD restores a saved map.
+The default filename at either prompt is I13:AUTH.DAT.
+BYE reads that file when it initializes. Unsaved changes survive
+calls but are lost when the saved policy is reloaded or BYE restarts.
+
+The files contain the drive and DU map, not F4 approvals.
+An alternate file may be loaded without changing the startup name.
+:B
+COMMAND FILES AND RECOVERY
+
+AUTH /SAVE=I13:AUTH.DAT /Y
+AUTH /LOAD=I13:AUTH.DAT
+
+An explicit filename avoids interactive filename prompts.
+/Y permits overwriting an existing destination for SAVE only.
+Without /Y an explicit SAVE to an existing file fails.
+
+The previous saved policy is retained as AUTH.BAK. A failed write
+may leave a temporary file. Preserve it for inspection rather than
+blindly removing it. Use AUTH to manage binary policy files.
+
+Loading a policy does not undo F4 changes. See HELP AUTH.

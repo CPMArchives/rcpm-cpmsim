@@ -1,6 +1,10 @@
 ;
 BULLETIN BOARD
 
+A - Read this topic
+:A
+READ THIS TOPIC
+
 Type RBBS at the CP/M prompt to enter the bulletin board.
 Follow its sign-on and registration prompts and its command menus.
 Use the board's normal exit option to return to the CP/M prompt.

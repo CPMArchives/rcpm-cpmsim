@@ -1,6 +1,10 @@
 ;
 ENDING A CALL
 
+A - Read this topic
+:A
+READ THIS TOPIC
+
 Type BYE at the CP/M prompt to log off normally.
 Exit an active game or the bulletin board before typing BYE.
 Files in I0:WORK are cleared when the call ends.
