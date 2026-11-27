@@ -1,0 +1,27 @@
+;
+YSEND - DOWNLOAD A FILE USING YMODEM
+
+A - Download a file using YMODEM
+
+:A
+DOWNLOAD A FILE USING YMODEM
+
+    YSEND DU:filename
+
+Sends a file from a readable directory to your terminal using YMODEM.
+
+    YSEND A0:WELCOME.TXT
+    YSEND P0:SIGMV011.LBR
+
+Choose YMODEM receive in your terminal when the remote program is ready,
+unless reception starts automatically. Select your local download
+directory and wait for the transfer to finish.
+
+The file must be on the currently mounted disk. Download permission
+does not imply permission to execute that file on the RCP/M.
+
+If the transfer appears to stall, check that the terminal is receiving
+with YMODEM. Use its transfer-cancel facility and follow remote prompts
+before retrying. Do not use text capture for binary files.
+
+See HELP TRANSFER, HELP MOUNT and HELP LDIR.
