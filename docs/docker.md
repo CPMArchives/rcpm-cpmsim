@@ -8,7 +8,8 @@ One image tag supports both Linux ARM64 and x64; Docker selects the host
 architecture. The registry image adds identification labels only; it retains
 the released image filesystem. The archive downloads remain available.
 
-Once the package is public, installation is:
+The public [GHCR package](https://github.com/CPMArchives/rcpm-cpmsim/pkgs/container/rcpm-cpmsim)
+is available without signing in. Installation is:
 
 ```sh
 docker pull ghcr.io/cpmarchives/rcpm-cpmsim:1.2.1
