@@ -1,0 +1,21 @@
+;
+BYE - END YOUR CALL
+
+A - End your call
+
+:A
+END YOUR CALL
+
+    BYE
+
+Finish any transfer or message draft first. Leave the program you are
+using and enter BYE at the CP/M prompt. The connection closes and the
+system becomes available to the next caller.
+
+In RBBS, C returns to CP/M and G disconnects directly. WORK is cleared
+between calls; saved board messages, completed uploads and saved MESSAGE
+notes remain. The mounted library disks need not return to their defaults.
+
+BYE logs off a caller; it is not a command to shut down the host.
+
+See HELP LOGOFF and HELP WORK.
