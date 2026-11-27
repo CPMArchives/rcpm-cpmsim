@@ -51,25 +51,28 @@ this is a way to experience the software in its working environment.
 
 ## Get started
 
-**[Download RCP/M 1.2.1](https://github.com/CPMArchives/rcpm-cpmsim/releases/tag/v1.2.1)**
+**[Download RCP/M 1.2.2](https://github.com/CPMArchives/rcpm-cpmsim/releases/tag/v1.2.2)**
 
-Choose **macOS ARM64** for an Apple Silicon Mac. The **Windows x64** 1.2.1
-download is a test build; its rebuilt runtime has not repeated Windows live validation.
-Each platform ZIP contains the complete system; you do not need the separate
-common archive to run it.
+Choose macOS ARM64, Linux ARM64/x64, or Windows x64. The Windows bundle also
+runs on Windows 11 ARM64 through x64 emulation. Each platform archive contains
+the complete system; the optional common archive is for developers.
 
-**Linux ARM64 and x64** packages and **Docker image archives** are also available
-on the release page. Linux: extract the matching `.tar.gz` and run
-`./Start-RCPM.sh` in a terminal. For Docker, follow the
-[load, startup and persistent-volume instructions](docs/docker.md).
-Linux/Docker direct-TCP checks passed on Debian 12 containers; x64 was tested
-under CPU emulation on ARM64, not native x64 hardware.
+1. Unpack the complete archive into a writable folder.
+2. Run `Start-RCPM.command` on Mac, `Start-RCPM.sh` on Linux, or
+   `Start-RCPM.cmd` on Windows.
+3. Connect a raw TCP terminal to `127.0.0.1`, port `4000`. Press Enter to begin.
 
-1. Extract the whole ZIP into a writable folder.
-2. Start `Start-RCPM.command` on Mac or `Start-RCPM.cmd` on Windows.
-3. When the local console says `RCP/M modem ready.`, connect with a raw TCP
-   terminal client to `127.0.0.1`, port `4000`, on that computer. Press Enter
-   to begin.
+No initial configuration is required. The terminal is the local sysop console;
+first start saves unique private credentials in `SYSOP.DOC`. The external
+`RCPM.CONF` describes its settings in comments. Stop, edit and restart to change
+them. `MODE=ip232` uses the bundled tcpser virtual modem, started and stopped
+by the launcher; `MODE=direct` is the default. The caller port has the same
+meaning in either mode, and internal modem endpoints are automatic.
+
+Docker ARM64/x64 images are available from
+[GHCR](https://github.com/CPMArchives/rcpm-cpmsim/pkgs/container/rcpm-cpmsim)
+and as downloadable image archives. See the
+[Docker startup and persistent-volume instructions](docs/docker.md).
 
 At the CP/M prompt, try:
 
@@ -89,14 +92,12 @@ tools are unsigned; the included `docs/INSTALLATION.DOC` explains startup and ne
 setup. Start locally, then use that guide to make the system accessible from
 another computer.
 
-## Native Debian service prerelease
+## Optional host administration
 
-[v1.2.2-rc1](https://github.com/CPMArchives/rcpm-cpmsim/releases/tag/v1.2.2-rc1)
-adds a bundled tcpser/IP232 modem, private persistent console, systemd operation
-and verified stopped backups. Debian 12 ARM64 VM checks passed; x64 systemd VM
-qualification, sustained operation and public-VPS readiness remain pending.
-See the [prerelease notes](docs/RELEASE-NOTES-1.2.2-rc1.md) and
-[installation instructions](docs/INSTALLATION-NATIVE-SERVICE.md).
+The standard package runs locally or on a server through its launch script.
+Service installation, scheduled backups and monitoring are separate optional
+hosting facilities, outside the common sysop workflow. The administration
+add-on is being prepared independently and is not required for v1.2.2.
 
 ## Software
 

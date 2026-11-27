@@ -1,0 +1,64 @@
+name: Assemble and publish checked v1.2.2
+on:
+  workflow_dispatch:
+    inputs:
+      linux_run:
+        required: true
+        default: '45932211172'
+      desktop_run:
+        required: true
+        default: '45932889754'
+permissions:
+  contents: write
+  actions: read
+jobs:
+  release:
+    runs-on: ubuntu-22.04
+    timeout-minutes: 25
+    env:
+      GH_TOKEN: ${{ github.token }}
+      LINUX_RUN: ${{ inputs.linux_run }}
+      DESKTOP_RUN: ${{ inputs.desktop_run }}
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+      - name: Require successful jobs for all selected platforms
+        run: |
+          python3 - <<'PY'
+          import json,os,subprocess
+          for variable,names in [('LINUX_RUN',['native (linux-arm64, ubuntu-22.04-arm, arm64)','native (linux-x64, ubuntu-22.04, x64)']),('DESKTOP_RUN',['native (macos-arm64, macos-15)','windows','windows-arm64'])]:
+              number=os.environ[variable]
+              if not number.isdigit(): raise ValueError('Invalid run ID')
+              data=json.loads(subprocess.check_output(['gh','api','repos/'+os.environ['GITHUB_REPOSITORY']+'/actions/runs/'+number+'/jobs']))
+              jobs={j['name']:j for j in data['jobs']}
+              for name in names:
+                  assert jobs[name]['conclusion']=='success',(name,jobs[name]['conclusion'])
+          PY
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
+        with:
+          run-id: ${{ inputs.linux_run }}
+          github-token: ${{ github.token }}
+          pattern: v1.2.2-linux-*
+          path: inputs
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
+        with:
+          run-id: ${{ inputs.desktop_run }}
+          github-token: ${{ github.token }}
+          pattern: v1.2.2-*
+          path: inputs
+      - name: Finalize documentation, identities, common payload and checksums
+        run: |
+          RUNS=$(python3 -c 'import json,os;print(json.dumps([os.environ["LINUX_RUN"],os.environ["DESKTOP_RUN"]]))')
+          python3 finalize_release_1_2_2.py --inputs inputs --output dist --runs "$RUNS"
+      - name: Publish stable release without replacing any existing release
+        run: |
+          if gh release view v1.2.2 --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
+            echo 'v1.2.2 already exists; refusing to replace it.' >&2
+            exit 1
+          fi
+          gh release create v1.2.2 dist/* --repo "$GITHUB_REPOSITORY" --target "$GITHUB_SHA" --title 'RCP/M 1.2.2 — bundled virtual modem' --notes-file docs/RELEASE-NOTES-1.2.2.md --latest
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: v1.2.2-final-release-files
+          compression-level: 0
+          path: dist/*

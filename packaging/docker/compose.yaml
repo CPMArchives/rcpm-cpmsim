@@ -1,6 +1,6 @@
 services:
   rcpm:
-    image: ghcr.io/cpmarchives/rcpm-cpmsim:1.2.1
+    image: ghcr.io/cpmarchives/rcpm-cpmsim:1.2.2
     stdin_open: true
     tty: true
     ports:

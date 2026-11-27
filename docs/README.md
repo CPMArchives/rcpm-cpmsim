@@ -10,7 +10,7 @@ for daily administration, and [DISK-IMAGES.DOC](../packaging/DISK-IMAGES.DOC)
 for the supplied disks. These are the user manuals; the source documents below cover
 specific features and engineering details.
 
-- [Current release notes and supported platforms](RELEASE-NOTES-1.2.1.md)
+- [Current release notes and supported platforms](RELEASE-NOTES-1.2.2.md)
 - [Caller permissions and program approval](caller-execution.md)
 - [System utilities and named directories](zsystem-utilities.md)
 - [Online games](online-games.md)

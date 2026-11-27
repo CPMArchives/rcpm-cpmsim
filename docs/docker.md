@@ -12,9 +12,9 @@ The public [GHCR package](https://github.com/CPMArchives/rcpm-cpmsim/pkgs/contai
 is available without signing in. Installation is:
 
 ```sh
-docker pull ghcr.io/cpmarchives/rcpm-cpmsim:1.2.1
+docker pull ghcr.io/cpmarchives/rcpm-cpmsim:1.2.2
 docker run --name rcpm -it -p 127.0.0.1:4000:4000 \
-  -v rcpm-data:/data ghcr.io/cpmarchives/rcpm-cpmsim:1.2.1
+  -v rcpm-data:/data ghcr.io/cpmarchives/rcpm-cpmsim:1.2.2
 ```
 
 New published releases containing both Docker archives and checksums trigger
@@ -32,9 +32,9 @@ does not migrate the initialized installation in its persistent volume.
 
 ## CONTENTS
 
-The 1.2.1 release provides Docker image archives for ARM64 and x64. Download
-`rcpm-v1.2.1-docker-arm64.tar.gz` or `rcpm-v1.2.1-docker-x64.tar.gz` from
-https://github.com/CPMArchives/rcpm-cpmsim/releases/tag/v1.2.1.
+The 1.2.2 release provides Docker image archives for ARM64 and x64. Download
+`rcpm-v1.2.2-docker-arm64.tar.gz` or `rcpm-v1.2.2-docker-x64.tar.gz` from
+https://github.com/CPMArchives/rcpm-cpmsim/releases/tag/v1.2.2.
 
 ## STARTUP
 
@@ -43,17 +43,17 @@ These archives are loaded locally; no registry login or registry image is needed
 ### ARM64:
 
 ```sh
-docker load -i rcpm-v1.2.1-docker-arm64.tar.gz
+docker load -i rcpm-v1.2.2-docker-arm64.tar.gz
 docker run --name rcpm -it -p 127.0.0.1:4000:4000 \
-  -v rcpm-data:/data cpmarchives/rcpm:1.2.1-arm64
+  -v rcpm-data:/data cpmarchives/rcpm:1.2.2-arm64
 ```
 
 ### X64
 
 ```sh
-docker load -i rcpm-v1.2.1-docker-x64.tar.gz
+docker load -i rcpm-v1.2.2-docker-x64.tar.gz
 docker run --name rcpm -it -p 127.0.0.1:4000:4000 \
-  -v rcpm-data:/data cpmarchives/rcpm:1.2.1-x64
+  -v rcpm-data:/data cpmarchives/rcpm:1.2.2-x64
 ```
 
 Wait until you see the message `RCP/M modem ready.`. The system is now ready to accept callers.
@@ -79,10 +79,10 @@ port 5000 both externally and internally:
 docker run --name rcpm -it \
   -p 127.0.0.1:5000:5000 \
   -v rcpm-data:/data \
-  cpmarchives/rcpm:1.2.1-arm64 --port 5000
+  cpmarchives/rcpm:1.2.2-arm64 --port 5000
 ```
 
-For x64, replace the image tag with `cpmarchives/rcpm:1.2.1-x64`.
+For x64, replace the image tag with `cpmarchives/rcpm:1.2.2-x64`.
 The `--port 5000` option must follow the image name. Startup then reports
 `RCP/M is now running on port 5000.`; connect to `127.0.0.1:5000`.
 Choose an unused host port.
@@ -106,7 +106,7 @@ Start the first instance in one terminal:
 docker run --name rcpm-one -it \
   -p 127.0.0.1:4000:4000 \
   -v rcpm-one-data:/data \
-  cpmarchives/rcpm:1.2.1-arm64
+  cpmarchives/rcpm:1.2.2-arm64
 ```
 
 Start the second instance in another terminal:
@@ -115,10 +115,10 @@ Start the second instance in another terminal:
 docker run --name rcpm-two -it \
   -p 127.0.0.1:5000:5000 \
   -v rcpm-two-data:/data \
-  cpmarchives/rcpm:1.2.1-arm64 --port 5000
+  cpmarchives/rcpm:1.2.2-arm64 --port 5000
 ```
 
-For x64, use `cpmarchives/rcpm:1.2.1-x64` in both commands.
+For x64, use `cpmarchives/rcpm:1.2.2-x64` in both commands.
 Wait for each instance's ready message, then connect raw TCP callers to
 `127.0.0.1:4000` and `127.0.0.1:5000`, respectively. These examples publish
 only on your computer's loopback address. Each startup reports its own
@@ -220,10 +220,10 @@ set -euo pipefail
 
 docker buildx build --platform linux/arm64 --load \
   --build-arg PACKAGE=build/publish-linux/RCPM-linux-arm64 \
-  -f packaging/docker/Dockerfile -t cpmarchives/rcpm:1.2.1-arm64 .
-python3 check_docker_release.py cpmarchives/rcpm:1.2.1-arm64 \
+  -f packaging/docker/Dockerfile -t cpmarchives/rcpm:1.2.2-arm64 .
+python3 check_docker_release.py cpmarchives/rcpm:1.2.2-arm64 \
   --output build/docker-check-arm64
-docker save cpmarchives/rcpm:1.2.1-arm64 | gzip > rcpm-v1.2.1-docker-arm64.tar.gz
+docker save cpmarchives/rcpm:1.2.2-arm64 | gzip > rcpm-v1.2.2-docker-arm64.tar.gz
 ```
 
 ### X64
@@ -233,10 +233,10 @@ set -euo pipefail
 
 docker buildx build --platform linux/amd64 --load \
   --build-arg PACKAGE=build/publish-linux/RCPM-linux-x64 \
-  -f packaging/docker/Dockerfile -t cpmarchives/rcpm:1.2.1-x64 .
-python3 check_docker_release.py cpmarchives/rcpm:1.2.1-x64 \
+  -f packaging/docker/Dockerfile -t cpmarchives/rcpm:1.2.2-x64 .
+python3 check_docker_release.py cpmarchives/rcpm:1.2.2-x64 \
   --output build/docker-check-x64
-docker save cpmarchives/rcpm:1.2.1-x64 | gzip > rcpm-v1.2.1-docker-x64.tar.gz
+docker save cpmarchives/rcpm:1.2.2-x64 | gzip > rcpm-v1.2.2-docker-x64.tar.gz
 ```
 
 Release validation reports describe the tested environments. IP232 and native x64 hardware are outside this qualification pass. All inherited component terms and notices remain applicable; the Docker wrapper does not change them.

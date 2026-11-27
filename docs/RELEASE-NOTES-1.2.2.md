@@ -19,7 +19,9 @@ workflow; images are also published to GHCR automatically after release.
 
 Guest disk images, BYE/AUTH, RBBS, CHAT and emulator binaries are retained from
 v1.2.1. tcpser includes the recorded failed-dial recovery and batched control-event
-fixes. Host launchers, documentation and package metadata are updated.
+fixes. Host launchers, documentation and package metadata are updated. The Mac disk
+tools now use package-local disk definitions after relocation, matching the
+existing Linux fix; no build-machine path is required.
 
 The optional Linux hosting/administration add-on remains separate. No scheduled
 backups, service installer or monitoring components are added to standard
