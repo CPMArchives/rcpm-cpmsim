@@ -17,7 +17,7 @@ Contents:
   6. Uploads, staging and review
   7. Archives and swappable volumes
   8. Shutdown, backup and recovery
-  9. Updating this candidate
+  9. Updating RCP/M
 
 1. THE SHARED MACHINE
 
@@ -45,7 +45,7 @@ The file contains the same descriptions as comments. There is no setup
 wizard or required configuration step. Docker additionally publishes its
 container port and keeps the board in a persistent volume; see its guide.
 
-The current candidate uses a 4 MHz emulated CPU. CPU speed affects game
+The default emulated CPU speed is 4 MHz. CPU speed affects game
 loops and software timing, as well as console throughput. Client display
 pacing or an optional virtual modem is a separate way to reproduce a slow
 connection. Do not treat a CPU clock change as merely a baud-rate setting.
@@ -69,8 +69,8 @@ There is currently no named CP/M UPLDS: area in the distributed directory
 table. Incoming submissions are retained in the private host inbox instead.
 
 The -NAME files are directory markers, not an automatic naming service.
-The current named-directory table is configured separately. The marker
-scanner remains future work. NAME without a new name can delete a table
+NDSCAN refreshes named directories from the mounted volume markers; MOUNT
+runs it after changing a volume. NAME without a new name can delete a table
 entry; do not use a bare NAME command just to inspect directories. PWD and
 ZSHOW provide directory-table inspection.
 
@@ -615,7 +615,8 @@ a DU override denies access. Keeping an image under disks/library/offline/ preve
 MOUNT from listing it; it does not make its contents private if you mount it
 in a caller-readable J: slot. Restore a suitable image before unblanking.
 
-P: holds the permanent SIGM and CPMUG libraries. metadata/ARCHIVE.sha256 records all
+P: initially holds the SIGM and CPMUG libraries; MOUNT can select another
+compatible P: library image. metadata/ARCHIVE.sha256 records all
 403 file hashes; metadata/VOLUMES.json records the curated J: image contents. Preserve
 original library/member notices when rebuilding or adding to collections.
 
@@ -656,7 +657,7 @@ your host's administration documentation or a system administrator. A separate
 optional Linux hosting add-on supplies service, backup and monitoring tools
 with its own administration guide; it is not required to operate RCP/M.
 
-9. UPDATING THIS CANDIDATE
+9. UPDATING RCP/M
 
 Keep your existing installation and its backup. Test a new release in a
 separate directory first. Full migration of a live board is an operator task;
@@ -666,7 +667,7 @@ RCPM.CONF and restart to switch direct/IP232; do not change mounted drivers.
 
 Read docs/DISTRIBUTION-STATUS.DOC before redistributing this aggregate. Original
 Z3PLUS, BYE5, utility and archive notices have not been replaced with a uniform
-license. This local candidate has not been published as release 1.0.
+license. This guide accompanies RCP/M 1.2.2; retain the component notices.
 
 The package's disks/library/offline/BUILD.dsk retains the DRI development files. Microsoft
 M80/L80 and MicroPro WM (including WM.HLP) are separately supplied build inputs and are omitted
