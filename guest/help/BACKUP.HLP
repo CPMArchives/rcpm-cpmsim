@@ -1,38 +1,44 @@
 ;
 SHUTDOWN, BACKUP AND UPDATES
 
-A - Stopping the RCP/M
-B - Backing up and restoring
-C - Updating the system
-:A
-STOPPING THE RCP/M
+A - Backups, shutdown and recovery
+B - Keeping up with new releases
 
-BYE logs off a caller, not the whole machine.
-Let a caller finish and save any work. Between calls, use local
-Ctrl-C at BYE's menu prompt, then RETURN to enter ordinary CP/M.
-At private local CP/M, enter:
+:A
+BACKUPS, SHUTDOWN AND RECOVERY
+
+BYE logs off a caller; it does not stop the machine. Between calls, use local
+Ctrl-C at BYE's waiting prompt, then RETURN for ordinary CP/M. From private
+local CP/M enter:
 
     SYSUTLS:BYEBYE
 
-Wait for the emulator to stop before copying or editing images.
-A blanked caller or idle listener does not mean the guest is stopped.
+Wait until cpmsim has actually stopped. A blanked caller or an idle listener
+is not a stopped emulator.
+
+Copy the whole installation to separate storage: disks/, the library catalog,
+uploads/inbox/, state/, RCPM.CONF and private SYSOP.DOC. In Docker, preserve
+the complete persistent volume while the board is stopped. A copy on the same
+disk is useful for recovery from mistakes, but not a substitute for a backup
+on separate storage.
+
+Restore a complete snapshot into a new directory. Don't mix accounts and
+message files from unrelated dates. Stop the original before starting a
+restored copy on its port. Never bypass the installation lock or delete it to
+start a second guest on the same disks.
+
+If WORK cleanup fails, the machine refuses to answer. Stop and repair the I:
+image or host write permissions before restarting.
+
 :B
-BACKING UP AND RESTORING
+KEEPING UP WITH NEW RELEASES
 
-Copy the complete stopped installation to separate storage.
-Include disks/, library volumes, uploads/inbox/, state/, RCPM.CONF
-and private SYSOP.DOC. Protect backup credentials and mail.
+Don't unpack a new release over your board. Test it separately and follow its
+migration instructions. Preserve your accounts, messages, policy, credentials,
+uploads and custom software. Keep matching emulator and BYE driver versions
+together. Pulling a new Docker image doesn't automatically migrate an
+initialized volume.
 
-Restore into a new directory from a complete snapshot, not pieces
-of unrelated backups. Stop the original before using its port.
-A second copy on the same disk is not protection against disk loss.
-:C
-UPDATING THE SYSTEM
-
-Do not unpack a fresh release over a working board. Test it in
-a separate directory and follow that release's migration instructions.
-Preserve your accounts, messages, permissions, uploads and custom
-software. Keep emulator and BYE driver versions matched.
-
-Service installation, scheduled backups and monitoring are covered
-by separate host administration documentation.
+CPMNet is not part of released 1.2.2; this guide describes local forums and
+mail only. Preserve the original component and archive notices when
+redistributing material. See the distribution review.
