@@ -10,7 +10,7 @@ HUMONGOUS RCP/M is a working CP/M computer, not simply a bulletin board with a C
 
 This guide assumes you know your way around CP/M and a host command line. It deals with the peculiarities of running this particular RCP/M. For exact disk geometry and host-side image tools, keep the [Disk Images reference](../packaging/DISK-IMAGES.DOC) handy. The [Installation notes](../packaging/INSTALLATION.DOC) cover platform-specific startup matters.
 
-Under the bonnet is a customized version of Udo Munk's cpmsim, from the [z80pack project](https://github.com/udo-munk/z80pack), emulating a Z80 computer running banked CP/M 3. Our version adds facilities specifically for RCP/M, including the caller connection and shared sysop console, swappable library volumes, and the host-side services used to receive uploads and saved messages. These facilities work in conjunction with the adapted guest software. Use the cpmsim executable supplied with HUMONGOUS RCP/M rather than substituting a stock z80pack binary; the two are not interchangeable for this system. Z3PLUS supplies the command environment and named directories. BYE510 handles remote operation, AUTH administers caller permissions, and RBBS provides forums and private mail. The normal emulated CPU speed is 4 MHz; changing it affects program timing, not just the apparent speed of the connection.
+Under the bonnet is a customized version of Udo Munk's cpmsim, from the [z80pack project](https://github.com/udo-munk/z80pack), emulating a Z80 computer running banked [CP/M 3](https://www.cpm.z80.de/drilib.html). Our version adds facilities specifically for RCP/M, including the caller connection and shared sysop console, swappable library volumes, and the host-side services used to receive uploads and saved messages. These facilities work in conjunction with the adapted guest software. Use the cpmsim executable supplied with HUMONGOUS RCP/M rather than substituting a stock z80pack binary; the two are not interchangeable for this system. [Z3PLUS](https://www.gaby.de/emanuals.htm) supplies the command environment and named directories. [BYE510](https://dflund.se/~pi/cpm/files/ftp.mayn.de/pub/cpm/archive/bye5/bye510/) handles remote operation, [AUTH](#appendix-auth-command-reference) administers caller permissions, and [RBBS](#10-running-rbbs) provides forums and private mail. The normal emulated CPU speed is 4 MHz; changing it affects program timing, not just the apparent speed of the connection.
 
 You and the caller share this one machine. There is one caller at a time, alongside your local console. Bear that in mind whenever you sit down to do some maintenance.
 
@@ -20,7 +20,7 @@ Obtain the complete package for your host from the [release page](https://github
 
 The first startup generates the private file SYSOP.DOC in the installation directory. This contains your initial board credentials. It is **not** the Sysop's Guide and should never be made available to callers.
 
-When the modem is ready, call your own system using a terminal such as SyncTERM. Select raw TCP, address 127.0.0.1, port 4000. Press RETURN. Try:
+When the modem is ready, call your own system using a terminal such as [SyncTERM](https://syncterm.net/). Select raw TCP, address 127.0.0.1, port 4000. Press RETURN. Try:
 
     HELP
     DIR SIGM:
@@ -36,11 +36,11 @@ The external RCPM.CONF is deliberately small and commented. Stop the machine bef
 
 | Setting | Default | Purpose |
 | --- | --- | --- |
-| MODE | direct | Direct raw TCP; ip232 selects the bundled tcpser virtual modem |
+| MODE | direct | Direct raw TCP; ip232 selects the bundled [tcpser](https://github.com/go4retro/tcpser) virtual modem |
 | ADDRESS | 127.0.0.1 | Listener IPv4 address |
 | PORT | 4000 | Caller port in either mode |
 
-The launcher handles tcpser's internal endpoints automatically. Keep the distributed foreground terminal open while serving calls. If you use your own tmux wrapper, detaching is not shutting down. Docker uses its published port and persistent data volume; consult its guide before changing the container.
+The launcher handles tcpser's internal endpoints automatically. Keep the distributed foreground terminal open while serving calls. If you use your own [tmux](https://github.com/tmux/tmux) wrapper, detaching is not shutting down. Docker uses its published port and persistent data volume; consult its guide before changing the container.
 
 Running a second board is quite possible. Give it its own directory or Docker volume and a different caller port. Never share writable disk images between two running machines.
 
@@ -91,7 +91,7 @@ WORK is cleared before answering, including startup and call recovery. Never lea
 
 The default P: contains all 310 SIG/M and 93 CPMUG volumes. Browse a few of them before deciding what else your board ought to offer. You might specialize in a particular computer, programming language, or collection of games.
 
-Put small raw z80pack-hd images in `disks/library/` and large raw z80pack-hdb images in `disks/library/archives/`. Catalog names are one to eight letters, digits or underscores, followed by .dsk. A filename extension is no guarantee of disk geometry. Prepare images with the matching format in the Disk Images reference; simply padding or renaming an unrelated image won't convert it.
+Put small raw z80pack-hd images in `disks/library/` and large raw z80pack-hdb images in `disks/library/archives/`. Catalog names are one to eight letters, digits or underscores, followed by .dsk. A filename extension is no guarantee of disk geometry. Prepare images with the matching format in the [Disk Images reference](../packaging/DISK-IMAGES.DOC); simply padding or renaming an unrelated image won't convert it.
 
     MOUNT /L
     MOUNT J: /L
@@ -104,9 +104,9 @@ MOUNT chooses J: or P: by exact image size. If a name occurs in both catalogs, q
 
 Keep private media outside the public catalogs (the supplied offline directory is one such place). A private image mounted in a caller-readable DU is no longer private simply because of where it came from. AUTH permissions follow the drive/user slot, not the volume.
 
-Never host-edit an image while cpmsim has it open. Stop the board, keep a backup, and use the matching disk tools. Host file permissions and CP/M attributes are distinct from AUTH; an owner-writeable image does not by itself grant callers write access.
+Never host-edit an image while cpmsim has it open. Stop the board, keep a backup, and use the supplied disk tools (based on [cpmtools](https://www.moria.de/~michael/cpmtools/)). Host file permissions and CP/M attributes are distinct from AUTH; an owner-writeable image does not by itself grant callers write access.
 
-The GAMES collection has preparation launchers in J0: for Adventure, Animals and Maze Chase. Try MOUNT GAMES followed by J0:ADVENT, J0:ANIMALS or J0:MCHASE. The launchers need readable/writable WORK for data; the approved game itself runs from a protected DU. Games that insist on writing to the library disk are better left for download and local play.
+The [GAMES collection](online-games.md) has preparation launchers in J0: for Adventure, Animals and Maze Chase. Try MOUNT GAMES followed by J0:ADVENT, J0:ANIMALS or J0:MCHASE. The launchers need readable/writable WORK for data; the approved game itself runs from a protected DU. Games that insist on writing to the library disk are better left for download and local play.
 
 ## 7. Giving directories names
 
@@ -114,7 +114,7 @@ A caller will remember INFOCOM: more readily than J3:. Create an extensionless m
 
     NDSCAN J:
 
-NDSCAN rebuilds names for that drive alone, scanning users 0–15. MOUNT normally chains to NDSCAN after a swap. Areas without markers lose their old names. Duplicate names, multiple different markers in one user area, collisions with other drives or a full name table prevent the update. The supplied table holds 42 names.
+NDSCAN rebuilds names for that drive alone, scanning users 0–15. MOUNT normally chains to NDSCAN after a swap. Areas without markers lose their old names. Duplicate names, multiple different markers in one user area, collisions with other drives or a full name table prevent the update. The supplied table holds 42 names. See [MOUNT and NDSCAN](swappable-volumes.md) for additional details.
 
 If a mount succeeds but scanning fails, the new disk is mounted and the old names are still present. Use numeric DUs until you correct the markers and rerun NDSCAN, or restore the default volume. Callers need read access to every user area on a drive to scan it; private sysops can scan private drives.
 
@@ -135,7 +135,7 @@ Suppose you want to keep J3: out of sight:
 
 To remove that exception, use AUTH J3: /INHERIT. A drive change doesn't erase its DU overrides. Each permission argument replaces the entire pair: /W is write only, not an instruction to add write permission to read.
 
-AUTH changes take effect immediately and survive calls. Save the map with AUTH /SAVE, accepting I13:AUTH.DAT, if you want it at the next startup. AUTH /LOAD restores a saved map. The full reference in the appendix covers alternate policies, scripts and recovery.
+AUTH changes take effect immediately and survive calls. Save the map with AUTH /SAVE, accepting I13:AUTH.DAT, if you want it at the next startup. AUTH /LOAD restores a saved map. The [full reference in the appendix](#appendix-auth-command-reference) covers alternate policies, scripts and recovery.
 
 ## 9. Approving programs for online use
 
@@ -149,13 +149,13 @@ An ordinary caller COM load requires read access to its source DU, no caller wri
 
 Withdraw approval with AUTH J1:ADV.COM -X. These changes go straight to the disk directory; AUTH /SAVE and /LOAD affect permissions, not F4.
 
-Clear inherited F4 flags when importing software. Review the actual binary and its options, including shell escapes and secondary loaders. BYE is not a sandbox for hostile Z80 code. Approving a program means trusting it. Individual file R/O and SYS attributes do not replace AUTH.
+Clear inherited F4 flags when importing software. Review the actual binary and its options, including shell escapes and secondary loaders. BYE is not a sandbox for hostile Z80 code. See the [caller execution policy](caller-execution.md) and [security boundary](security-boundary.md) for details. Approving a program means trusting it. Individual file R/O and SYS attributes do not replace AUTH.
 
 Don't give callers write access to A0: in an attempt to make a program work. That will prevent ordinary public COM loads. If it happens, restore AUTH A0: /R. A caller in writable WORK can still load approved commands from read-only A0:.
 
 ## 10. Running RBBS
 
-The released 1.2.2 board uses RBBS 4.1 Edit 02. Fresh boards contain PERSONAL, GENERAL, CPM and TEST areas, with one SYSOP seed account. New callers can register and post without prior validation.
+The released 1.2.2 board uses RBBS 4.1 Edit 02. Our [RBBS integration notes](rbbs41-test.md) describe the adaptations to this version. Fresh boards contain PERSONAL, GENERAL, CPM and TEST areas, with one SYSOP seed account. New callers can register and post without prior validation.
 
 ### Getting in as sysop
 
@@ -197,9 +197,9 @@ From private CP/M:
 
     SYSUTLS:ZDE A0:WELCOME.TXT
 
-ZDE uses WordStar keys: Ctrl-K S saves, Ctrl-K X saves and exits, Ctrl-K Q abandons changes. If an unchanged buffer prompts after a previous save, N exits without saving again. Keep the caller blanked throughout editing and saving. BYE displays WELCOME.TXT on the next call, not its .BAK file.
+[ZDE](https://www.dflund.se/~pi/cpm/files/ftp.mayn.de/pub/cpm/archive/zsystem/zde16/) uses WordStar keys: Ctrl-K S saves, Ctrl-K X saves and exits, Ctrl-K Q abandons changes. If an unchanged buffer prompts after a previous save, N exits without saving again. Keep the caller blanked throughout editing and saving. BYE displays WELCOME.TXT on the next call, not its .BAK file.
 
-The HELP topics are in I14:HELP. DIR HELP: lists them; HELP GAMES opens a particular topic. The released 1.2.2 collection uses short ASCII topics beginning with a semicolon line, with CRLF and Ctrl-Z termination. HELPC can also handle linked menus and paginated sections, but the expanded collection is planned for a later release. Maintain HELP privately, and put no passwords or installation-specific secrets in public topics.
+The HELP topics are in I14:HELP. DIR HELP: lists them; HELP GAMES opens a particular topic. The released 1.2.2 collection uses short ASCII topics beginning with a semicolon line, with CRLF and Ctrl-Z termination. [HELPC](zsystem-utilities.md) can also handle linked menus and paginated sections, but the expanded collection is planned for a later release. Maintain HELP privately, and put no passwords or installation-specific secrets in public topics.
 
 ## 12. Transfers and incoming software
 
@@ -252,11 +252,11 @@ If WORK cleanup fails, the machine refuses to answer. Stop and repair the I: ima
 | Garbled CHAT | ANSI/VT100 setup, or CHAT /S |
 | WORK files vanish | Expected at call boundaries |
 
-Try to decide whether the trouble lies in the host, CP/M, BYE or a transient program. If a command works in private CP/M but not for a caller, look at permissions before rebuilding software. The AUTH appendix goes into more detail about recovering a bad policy.
+Try to decide whether the trouble lies in the host, CP/M, BYE or a transient program. If a command works in private CP/M but not for a caller, look at permissions before rebuilding software. The [AUTH appendix](#appendix-auth-command-reference) goes into more detail about recovering a bad policy.
 
 ## 16. Inviting callers from elsewhere
 
-Once you are happy with local calls, stop the system and change ADDRESS to the appropriate host IPv4 address, or 0.0.0.0 for all interfaces. Restart. The host firewall and router must permit the caller port. For Docker, arrange the host port publication instead; see its guide.
+Once you are happy with local calls, stop the system and change ADDRESS to the appropriate host IPv4 address, or 0.0.0.0 for all interfaces. Restart. The host firewall and router must permit the caller port. For Docker, arrange the host port publication instead; see the [Docker guide](docker.md).
 
 Make a call from another computer before announcing the board. Raw TCP provides no encryption; advise callers not to reuse important passwords. Keep administrative tools and credentials private, approve only reviewed software, and retain a good stopped backup. Guest permission checks are not a substitute for securing the host itself.
 
@@ -267,6 +267,10 @@ Automatic startup, scheduled backups, monitoring and other unattended hosting ar
 Don't unpack a new release over your board. Test it separately and follow its migration instructions. Preserve your accounts, messages, policy, credentials, uploads and custom software. Keep matching emulator and BYE driver versions together. Pulling a new Docker image doesn't automatically migrate an initialized volume.
 
 CPMNet is not part of released 1.2.2; this guide describes local forums and mail only. Preserve the original component and archive notices when redistributing material. See the [distribution review](distribution-review.md).
+
+## Further reading
+
+For further historical reading, see the [RCP/M archive](https://www.dflund.se/~pi/cpm/files/ftp.mayn.de/pub/cpm/archive/rcpm/), including Jon Schneider's 1985 RCP/M user's guide and period security notes. The [historical security review](historical-rcpm-security.md) explains how such material informs this distribution.
 
 ## Appendix: AUTH command reference
 
