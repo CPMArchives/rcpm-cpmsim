@@ -1,0 +1,26 @@
+;
+LT - READ TEXT AND LIBRARY MEMBERS
+
+A - Read text and library members
+
+:A
+READ TEXT AND LIBRARY MEMBERS
+
+    LT DU:filename
+    LT DU:library member
+
+LT is the supplied ZLT 1.5 text viewer. It reads ordinary text files,
+supported compressed text and text members within LBR libraries.
+
+    LT A0:WELCOME.TXT
+    LT P0:SIGMV011 ABSTRACT.011
+
+Use LDIR first to discover member names. The viewer can read supported
+compressed members without extracting them to a disk. For example,
+the original crunched HZP format is supported by this installation.
+
+Follow the viewer's display prompts; Ctrl-C aborts viewing. Do not use
+LT to display binary executables as text. To retain a binary library on
+your own machine, download it with YSEND.
+
+See HELP TYPE, HELP LDIR and HELP LIBRARY.
