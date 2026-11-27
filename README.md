@@ -124,7 +124,7 @@ It uses [CP/M 3](https://www.cpm.z80.de/source.html),
 on [Udo Munk’s z80pack emulator](https://github.com/udo-munk/z80pack), with tools
 for archive browsing, file transfers and system administration.
 
-Read the [HUMONGOUS RCP/M Sysop's Guide](docs/SYSOP-GUIDE.md) for everyday operation and administration. The release also includes `docs/INSTALLATION.DOC` and `docs/SYSOP-GUIDE.DOC`. For technical
+Read the [HUMONGOUS RCP/M User's Guide](docs/USER-GUIDE.md) for calling and exploring the system, and the [HUMONGOUS RCP/M Sysop's Guide](docs/SYSOP-GUIDE.md) for everyday operation and administration. The release also includes `docs/INSTALLATION.DOC` and `docs/SYSOP-GUIDE.DOC`. For technical
 details, source builds, the roadmap and the project’s development history,
 see the **[documentation index](docs/README.md)**.
 

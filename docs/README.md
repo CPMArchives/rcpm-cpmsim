@@ -4,6 +4,7 @@ New to the project? Start with the [RCP/M introduction and downloads](../README.
 
 ## Running the released system
 
+- [HUMONGOUS RCP/M User's Guide](USER-GUIDE.md) — the standalone manual for callers.
 - [HUMONGOUS RCP/M Sysop's Guide](SYSOP-GUIDE.md) — the standalone manual for operating your board.
 
 The platform downloads include [INSTALLATION.DOC](../packaging/INSTALLATION.DOC)
