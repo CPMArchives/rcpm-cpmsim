@@ -1,0 +1,23 @@
+;
+MESSAGE - LEAVE A NOTE FOR THE SYSOP
+
+A - Leave a note for the sysop
+
+:A
+LEAVE A NOTE FOR THE SYSOP
+
+    MESSAGE
+
+Enter a note at the prompts and save it when finished. This facility
+sends a direct submission to the sysop's private host review inbox.
+It does not require an RBBS account and is independent of private mail.
+
+Use it for questions, problem reports and notes accompanying uploads.
+Include the filename, command, mounted volume and other details needed
+to understand your report. A saved note survives logoff; an unsaved
+draft is discarded at call recovery.
+
+If you wish to speak live with the sysop, try CHAT. For messages to
+registered board users, use RBBS and its PERSONAL forum.
+
+See HELP CHAT, HELP RBBS and HELP UPLOAD.
