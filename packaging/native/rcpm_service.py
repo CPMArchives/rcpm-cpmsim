@@ -277,6 +277,7 @@ class Supervisor:
         if not self.command_lock.acquire(blocking=False):
             return dict(status='deferred', reason='operator_operation')
         reserved = False
+        phase = 'reserve'
         started = time.monotonic()
         try:
             with self.mutex:
@@ -286,6 +287,7 @@ class Supervisor:
                     return dict(status='deferred', reason='carrier_cleanup')
                 self.probing = reserved = True
             deadline = started + timeout
+            phase = 'connect'
             with socket.create_connection(('127.0.0.1', self.caller_port),
                                           timeout=min(3, timeout)) as caller:
                 caller.settimeout(.25)
@@ -304,16 +306,19 @@ class Supervisor:
                         if len(data) > 65536:
                             raise RuntimeError('Caller probe exceeded response limit')
                     return data
+                phase = 'login'
                 until_prompt()
                 for byte in b'HELP\r':
                     caller.sendall(bytes([byte]))
                     time.sleep(.03)
+                phase = 'HELP'
                 reply = until_prompt()
                 if len(reply) < 100 or b'HELP?' in reply:
                     raise RuntimeError('Caller HELP probe did not return help')
                 # Require a fresh carrier-loss acknowledgement, not boot history.
                 with self.condition:
                     self.output.clear()
+            phase = 'carrier_cleanup'
             with self.condition:
                 while MODEM_READY not in self.output:
                     if time.monotonic() >= deadline:
@@ -322,7 +327,7 @@ class Supervisor:
             result = dict(status='passed', scope='caller HELP and carrier cleanup')
         except (OSError, RuntimeError) as error:
             # Never include caller/console bytes in monitoring records.
-            result = dict(status='failed', error=str(error))
+            result = dict(status='failed', error=str(error), phase=phase)
         finally:
             if reserved:
                 with self.mutex:
