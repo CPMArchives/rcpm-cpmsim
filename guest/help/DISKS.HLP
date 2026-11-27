@@ -1,50 +1,97 @@
 ;
-DISKS AND NAMED DIRECTORIES
+DISKS, VOLUMES AND NAMED DIRECTORIES
 
-A - The disk layout
-B - Adding and mounting volumes
-C - Naming user areas
+A - A tour of the disks
+B - Putting together a software collection
+C - Giving directories names
+
 :A
-THE DISK LAYOUT
+A TOUR OF THE DISKS
 
-A0:    SYSTEM    Public commands, boot files and welcome text
-A15:             Private board executable and static files
-I0:    WORK      Temporary caller workspace
-I13:   SYSUTLS   Private maintenance programs
-I14:   HELP      Online documentation
-I15:   RBBS      Private accounts and message data
-J:               Swappable nominal 4 MB collections
-P:               Swappable 512 MiB archives
+Drive - Exact image bytes - Purpose
+  A: - 256256 - Boot and system disk
+  I: - 4177920 - Workspace, help, private utilities and board data
+  J: - 4177920 - Swappable software collections
+  P: - 536870912 - Large swappable archives
 
-P0:SIGM and P1:CPMUG are the default P: archive directories.
-WORK is cleared at call boundaries. Do not keep sysop files there.
+The named directories are more useful than the bare drive letters:
+
+  DU - Name - Contents
+  A0: - SYSTEM - Public commands, boot files and WELCOME.TXT
+  A15: - - - Trusted board executable and static files
+  I0: - WORK - Temporary caller workspace
+  I13: - SYSUTLS - Private tools, including AUTH, PIP, PPIP, SET and ZDE
+  I14: - HELP - Caller-readable online documentation
+  I15: - RBBS - Private board records and message base
+  P0: - SIGM - SIG/M libraries on the default P:
+  P1: - CPMUG - CPMUG libraries on the default P:
+  J0: - VOLUME - Default J: volume directory
+
+WORK is cleared before answering, including startup and call recovery. Never
+leave your only copy of a rescued edit or a sysop document there. Uploads go
+to a separate host inbox, not a permanent CP/M UPLDS: directory.
+
 :B
-ADDING AND MOUNTING VOLUMES
+PUTTING TOGETHER A SOFTWARE COLLECTION
 
-Place compatible J: images in disks/library/ and P: images in
-disks/library/archives/. Use 1-8 letters, digits or underscores
-for a catalog name, followed by .dsk.
+The default P: contains all 310 SIG/M and 93 CPMUG volumes. Browse a few of
+them before deciding what else your board ought to offer. You might specialize
+in a particular computer, programming language, or collection of games.
 
-J: z80pack-hd   4177920 bytes
-P: z80pack-hdb  536870912 bytes
+Put small raw z80pack-hd images in disks/library/ and large raw z80pack-hdb
+images in disks/library/archives/. Catalog names are one to eight letters,
+digits or underscores, followed by .dsk. A filename extension is no guarantee
+of disk geometry. Prepare images with the matching format in the Disk Images
+reference; simply padding or renaming an unrelated image won't convert it.
 
-MOUNT /L lists the catalogs; MOUNT NAME selects the correct drive.
-Use an explicit drive if names collide. MOUNT P: /DEFAULT restores
-the default large archive. MOUNT J: /DEFAULT restores the small one.
+    MOUNT /L
+    MOUNT J: /L
+    MOUNT P: /L
+    MOUNT GAMES
+    MOUNT P: /DEFAULT
+    MOUNT J: /DEFAULT
 
-Never edit a mounted image with host utilities. See DISK-IMAGES.DOC
-for image creation. Keep private images outside the public catalogs.
-Permissions follow the mounted DU, not the image's filename.
+MOUNT chooses J: or P: by exact image size. If a name occurs in both catalogs,
+qualify it with the drive. The old image remains mounted if selection or
+buffer flushing fails. A successful mount relogs the selected disk and
+refreshes its names. Default images return when the emulator restarts, not
+necessarily when a caller logs off.
+
+Keep private media outside the public catalogs (the supplied offline directory
+is one such place). A private image mounted in a caller-readable DU is no
+longer private simply because of where it came from. AUTH permissions follow
+the drive/user slot, not the volume.
+
+Never host-edit an image while cpmsim has it open. Stop the board, keep a
+backup, and use the supplied disk tools (based on cpmtools). Host file
+permissions and CP/M attributes are distinct from AUTH; an owner-writable
+image does not by itself grant callers write access.
+
+The GAMES collection has preparation launchers in J0: for Adventure, Animals
+and Maze Chase. Try MOUNT GAMES followed by J0:ADVENT, J0:ANIMALS or
+J0:MCHASE. The launchers need readable/writable WORK for data; the approved
+game itself runs from a protected DU. Games that insist on writing to the
+library disk are better left for download and local play.
+
 :C
-NAMING USER AREAS
+GIVING DIRECTORIES NAMES
 
-Create an extensionless marker such as -INFOCOM in the relevant DU.
-Names have up to seven letters, digits or underscores.
-NDSCAN J: rebuilds names for J: from its markers; MOUNT normally
-does this automatically after a swap.
+A caller will remember INFOCOM: more readily than J3:. Create an extensionless
+marker file named -INFOCOM in the intended user area. Its contents don't
+matter. Use up to seven letters, digits or underscores after the hyphen.
 
-Duplicate names or invalid markers cause a scan failure. A successful
-mount followed by a scan failure leaves the new image mounted with
-the old names. Use explicit DU addresses until corrected.
+    NDSCAN J:
 
-A directory name does not grant access. AUTH determines permissions.
+NDSCAN rebuilds names for that drive alone, scanning users 0-15. MOUNT
+normally chains to NDSCAN after a swap. Areas without markers lose their old
+names. Duplicate names, multiple different markers in one user area,
+collisions with other drives or a full name table prevent the update. The
+supplied table holds 42 names. See MOUNT and NDSCAN for additional details.
+
+If a mount succeeds but scanning fails, the new disk is mounted and the old
+names are still present. Use numeric DUs until you correct the markers and
+rerun NDSCAN, or restore the default volume. Callers need read access to every
+user area on a drive to scan it; private sysops can scan private drives.
+
+Use PWD or ZSHOW for inspection. Don't use a bare NAME command to inspect a
+name: it can delete an entry. Names do not grant access.
