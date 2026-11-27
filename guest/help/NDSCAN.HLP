@@ -1,0 +1,28 @@
+;
+NDSCAN - REFRESH NAMED DIRECTORIES
+
+A - Refresh named directories
+
+:A
+REFRESH NAMED DIRECTORIES
+
+    NDSCAN J:
+    NDSCAN P:
+    NDSCAN J: /Q
+
+Rebuilds named directories for one drive by examining its user areas
+0 through 15 for extensionless -NAME marker files. Areas without a
+marker lose their old names. Other drives' directory names are retained.
+
+MOUNT normally performs this operation automatically after a swap.
+/Q suppresses the success message, but not errors.
+
+Callers need read access to all sixteen user areas on the selected
+drive. Duplicate names, conflicting markers, disk errors or a full
+name table prevent the update. The previous names remain intact.
+
+If a mount succeeds but its scan fails, the new disk is already in
+place. Use numeric DUs until the scan succeeds or restore the default
+volume. NDSCAN does not change files or grant access permissions.
+
+See HELP MOUNT, HELP COMMANDS and HELP DISKS.
