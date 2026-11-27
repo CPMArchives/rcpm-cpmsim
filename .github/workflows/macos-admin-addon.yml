@@ -1,0 +1,41 @@
+name: Check optional macOS administration add-on
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  check:
+    runs-on: macos-15
+    timeout-minutes: 20
+    env:
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+      - name: Download and verify the standard Mac package
+        run: |
+          gh release download v1.2.2 --repo "$GITHUB_REPOSITORY" --pattern rcpm-v1.2.2-macos-arm64.zip --pattern SHA256SUMS --dir input
+          python3 - <<'PY'
+          from pathlib import Path
+          from assemble_release_1_2_2 import sha
+          expected={l.split()[1]:l.split()[0] for l in Path('input/SHA256SUMS').read_text().splitlines()}
+          assert sha(Path('input/rcpm-v1.2.2-macos-arm64.zip'))==expected['rcpm-v1.2.2-macos-arm64.zip']
+          PY
+      - name: Build optional add-on and unpack the base separately
+        run: |
+          python3 build_macos_admin.py --package input/rcpm-v1.2.2-macos-arm64.zip --output out
+          python3 - <<'PY'
+          from pathlib import Path
+          from check_release import extract_package
+          extract_package(Path('input/rcpm-v1.2.2-macos-arm64.zip'),Path('base'))
+          PY
+      - name: Check launchd lifecycle, caller, private console, backup and monitoring
+        run: python3 -B check_macos_admin.py --base base/RCPM-macOS-arm64 --addon out/RCPM-admin-macos-arm64 --output evidence
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: admin-macos-v0.1.0
+          compression-level: 0
+          path: |
+            out/*.zip
+            out/SHA256SUMS
+            evidence/*

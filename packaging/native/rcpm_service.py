@@ -476,7 +476,8 @@ class Supervisor:
                     fcntl.ioctl(self.slave, termios.TIOCSWINSZ, struct.pack('HHHH', 24, 80, 0, 0))
                     self.guest = subprocess.Popen([str(self.root / 'runtime/rcpm'), '--external-modem', '--mode', 'ip232',
                         '--address', '127.0.0.1', '--port', str(self.modem_port)], cwd=self.root,
-                        stdin=self.slave, stdout=self.slave, stderr=self.slave, start_new_session=True, preexec_fn=guard)
+                        stdin=self.slave, stdout=self.slave, stderr=self.slave,
+                        start_new_session=getattr(self, 'child_new_session', True), preexec_fn=guard)
                     threading.Thread(target=self.collect, daemon=True).start()
                     threading.Thread(target=self.accept_admin, args=(admin,), daemon=True).start()
                     self.wait_marker(MODEM_READY)
