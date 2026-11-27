@@ -130,7 +130,22 @@ class Guest:
             self.caller.sendall(bytes([char]))
             self.collect(.025)
         return self.wait(b'A0:SYSTEM>', remote=True, start=start)
-    def stop(self):
+    def help_topic(self, text, expected):
+        """Open a HELP menu and leave it with the viewer's abort key."""
+        start = len(self.remote)
+        for char in (text + '\r').encode():
+            self.caller.sendall(bytes([char]))
+            self.collect(.025)
+        self.wait(expected, remote=True, start=start)
+        self.collect(.3)
+        # Ctrl-C is the CP/M program-abort convention. Verify that the
+        # actual viewer returns to the command prompt rather than assuming it.
+        if b'A0:SYSTEM>' not in self.remote[start:]:
+            self.caller.sendall(b'\x03')
+            self.wait(b'A0:SYSTEM>', remote=True, start=start, timeout=10)
+        return bytes(self.remote[start:])
+
+
         print('Disconnecting caller and shutting down guest...', flush=True)
         if self.caller:
             self.caller.close()
@@ -237,7 +252,7 @@ def main():
             name = topic.stem
             expected = topic.read_text(encoding='ascii').splitlines()[1].encode('ascii')
             command = 'HELP' if name == 'HELP' else 'HELP ' + name
-            assert expected in guest.command(command), command
+            assert expected in guest.help_topic(command, expected), command
         result['shipped_caller_help_topics'] = len(topic_files)
         listing = guest.command('DIR SIGM:SIGMV001.LBR')
         assert b'SIGMV001' in listing
