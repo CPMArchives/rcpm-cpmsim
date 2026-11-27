@@ -37,8 +37,8 @@ write only, not an instruction to add write permission to read.
 
 AUTH changes take effect immediately and survive calls. Save the map with AUTH
 /SAVE, accepting I13:AUTH.DAT, if you want it at the next startup. AUTH /LOAD
-restores a saved map. The full reference in the appendix covers alternate
-policies, scripts and recovery.
+restores a saved map. HELP POLICY covers alternate policies,
+scripts and recovery.
 
 :B
 APPROVING PROGRAMS FOR ONLINE USE
@@ -132,7 +132,7 @@ write-only DU. RW is permission, not a supplied file-transfer or copy service:
 callers still have no general copy command or direct upload into WORK in this
 package. The game launchers seed WORK, and caller programs can create
 workspace data. UPLOAD continues to use the private host inbox described in
-Chapter 12.
+HELP SYSFILES.
 
 I0:WORK is cleared at startup and call recovery regardless of its AUTH
 setting. Changing its permissions does not turn it into permanent storage.
@@ -140,7 +140,7 @@ setting. Changing its permissions does not turn it into permanent storage.
 :E
 READING THE MAP AND QUERYING TARGETS
 
-AUTH                      All drives, users 0-15
+    AUTH                      All drives, users 0-15
     AUTH /MAP                 Same complete map
     AUTH J:                   Only the J: row, users 0-15
     AUTH J3:                  Same complete J: row
@@ -208,7 +208,7 @@ call boundaries. Individual file R/O does not override the writable-DU ban.
 All ordinary COM files use this rule, including public commands in A0:.
 Setting A0: to RW therefore stops callers loading DIR, SDZ, LT and the other
 COM commands there. Private sysop operation continues to work. To restore
-normal caller commands, set AUTH A0: /R. See A.10.
+normal caller commands, set AUTH A0: /R. See section H of this topic.
 
 Inspect, approve or revoke an existing exact filename:
 
@@ -281,8 +281,7 @@ Explicit /SAVE says the file exists:
 
 Save reports a staging file already exists:
     Inspect the same-basename .$$$ before removing it. It may contain a
-    complete
-    recoverable map from a previous interrupted save; see A.9.
+    complete recoverable map from an interrupted save. See HELP POLICY D.
 
 The optional host --caller-allow/deny/list helper is for stopped-image
 maintenance. Normal live administration uses AUTH inside CP/M.
