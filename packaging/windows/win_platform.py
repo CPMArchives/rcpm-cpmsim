@@ -14,6 +14,23 @@ def kernel():
     return c.WinDLL('kernel32', use_last_error=True)
 
 
+class Security(c.Structure):
+    _fields_=[('length',w.DWORD),('descriptor',c.c_void_p),('inherit',w.BOOL)]
+
+
+@contextlib.contextmanager
+def security(owner,directory=False):
+    adv=c.WinDLL('advapi32',use_last_error=True);k=kernel();descriptor=c.c_void_p()
+    adv.ConvertStringSecurityDescriptorToSecurityDescriptorW.argtypes=[w.LPCWSTR,w.DWORD,c.POINTER(c.c_void_p),c.c_void_p]
+    entry=';OICI;FA;;;' if directory else ';;GA;;;'
+    if not adv.ConvertStringSecurityDescriptorToSecurityDescriptorW(
+            'D:P(A'+entry+'SY)(A'+entry+owner+')',1,c.byref(descriptor),None):
+        raise c.WinError(c.get_last_error())
+    try:yield Security(c.sizeof(Security),descriptor,False)
+    finally:
+        k.LocalFree.argtypes=[c.c_void_p];k.LocalFree(descriptor)
+
+
 def sid():
     result=subprocess.run(['whoami','/user','/fo','csv','/nh'],check=True,
                           capture_output=True,text=True,creationflags=subprocess.CREATE_NO_WINDOW)
@@ -26,6 +43,7 @@ def private_directory(path,owner):
     path=Path(path)
     if not path.is_absolute() or str(path).startswith('\\\\'):
         raise ValueError('Use a local absolute administration directory')
+    path.parent.mkdir(parents=True,exist_ok=True)
     k=kernel();volume=c.create_unicode_buffer(1024)
     k.GetVolumePathNameW.argtypes=[w.LPCWSTR,w.LPWSTR,w.DWORD]
     if not k.GetVolumePathNameW(str(path.parent),volume,len(volume)):
@@ -36,10 +54,9 @@ def private_directory(path,owner):
     if not k.GetVolumeInformationW(volume.value,None,0,None,None,c.byref(flags),None,0):
         raise c.WinError(c.get_last_error())
     if not flags.value & 8:raise ValueError('The host volume must support persistent Windows ACLs')
-    path.mkdir(parents=True,exist_ok=False)
-    subprocess.run(['icacls',str(path),'/inheritance:r','/grant:r',
-                    '*'+owner+':(OI)(CI)F','*S-1-5-18:(OI)(CI)F'],check=True,
-                   capture_output=True,creationflags=subprocess.CREATE_NO_WINDOW)
+    k.CreateDirectoryW.argtypes=[w.LPCWSTR,c.POINTER(Security)]
+    with security(owner,directory=True) as attributes:
+        if not k.CreateDirectoryW(str(path),c.byref(attributes)):raise c.WinError(c.get_last_error())
 
 
 @contextlib.contextmanager
@@ -97,22 +114,14 @@ class PipeServer:
         self.pending=self.new_handle(True)
 
     def new_handle(self,first=False):
-        class Security(c.Structure):
-            _fields_=[('length',w.DWORD),('descriptor',c.c_void_p),('inherit',w.BOOL)]
-        adv=c.WinDLL('advapi32',use_last_error=True);k=kernel();descriptor=c.c_void_p()
-        adv.ConvertStringSecurityDescriptorToSecurityDescriptorW.argtypes=[w.LPCWSTR,w.DWORD,c.POINTER(c.c_void_p),c.c_void_p]
-        if not adv.ConvertStringSecurityDescriptorToSecurityDescriptorW(
-                'D:P(A;;GA;;;SY)(A;;GA;;;'+self.owner+')',1,c.byref(descriptor),None):
-            raise c.WinError(c.get_last_error())
-        sa=Security(c.sizeof(Security),descriptor,False)
+        k=kernel()
         k.CreateNamedPipeW.argtypes=[w.LPCWSTR,w.DWORD,w.DWORD,w.DWORD,w.DWORD,w.DWORD,w.DWORD,c.POINTER(Security)]
         k.CreateNamedPipeW.restype=w.HANDLE;k.LocalFree.argtypes=[c.c_void_p]
-        try:
+        with security(self.owner) as sa:
             handle=k.CreateNamedPipeW(self.address,3|0x40000000|(0x80000 if first else 0),
                                      4|2|8,255,65536,65536,0,c.byref(sa))
             if handle==w.HANDLE(-1).value:raise c.WinError(c.get_last_error())
             return handle
-        finally:k.LocalFree(descriptor)
 
     def accept(self):
         import _winapi
@@ -214,5 +223,11 @@ def terminal_output():
     handle=k.GetStdHandle(-11 & 0xffffffff);mode=w.DWORD()
     if not k.GetConsoleMode(handle,c.byref(mode)) or not k.SetConsoleMode(handle,mode.value|4):
         raise RuntimeError('Attach requires a Windows terminal with virtual-terminal output')
+    input_handle=k.GetStdHandle(-10 & 0xffffffff);input_mode=w.DWORD()
+    if not k.GetConsoleMode(input_handle,c.byref(input_mode)):
+        k.SetConsoleMode(handle,mode.value);raise RuntimeError('Attach requires a Windows console input')
+    if not k.SetConsoleMode(input_handle,input_mode.value & ~7):
+        k.SetConsoleMode(handle,mode.value);raise c.WinError(c.get_last_error())
     try:yield
-    finally:k.SetConsoleMode(handle,mode.value)
+    finally:
+        k.SetConsoleMode(input_handle,input_mode.value);k.SetConsoleMode(handle,mode.value)

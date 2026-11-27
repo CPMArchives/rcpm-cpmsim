@@ -52,7 +52,7 @@ def check(base,addon,output):
             quoted=str(home).replace("'","''")
             acl=json.loads(run('powershell.exe','-NoProfile','-NonInteractive','-Command',
                 "$a=Get-Acl -LiteralPath '"+quoted+"'; @{protected=$a.AreAccessRulesProtected;sids=@($a.Access | ForEach-Object {$_.IdentityReference.Translate([System.Security.Principal.SecurityIdentifier]).Value})} | ConvertTo-Json -Compress").stdout)
-            assert acl['protected'] and set(acl['sids'])=={cfg['owner_sid'],'S-1-5-18'}
+            assert acl['protected'] and set(acl['sids'])=={cfg['owner_sid'],'S-1-5-18'},acl
             for key in ('port','caller_port','modem_port'):cfg[key]=port()
             assert len({cfg[key] for key in ('port','caller_port','modem_port')})==3
             admin.store.atomic(home/'admin.json',cfg)

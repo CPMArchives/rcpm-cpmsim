@@ -83,13 +83,14 @@ def atomic(path,value):
 
 
 def snapshot(root,destination):
-    from win_platform import lease
+    from win_platform import lease,private_directory,sid
     root,destination=root.resolve(),destination.resolve()
     if destination.exists() or destination==root or root in destination.parents:
         raise ValueError('Snapshot requires a new destination outside the board')
     destination.parent.mkdir(parents=True,exist_ok=True)
     with lease(root/'.console.lock'),tempfile.TemporaryDirectory(prefix='.rcpm-backup-',dir=destination.parent) as tmp:
-        stage=Path(tmp);payload=stage/'instance';payload.mkdir();records={}
+        stage=Path(tmp)/'snapshot';private_directory(stage,sid())
+        payload=stage/'instance';payload.mkdir();records={}
         for path in sorted(root.rglob('*')):
             relative=path.relative_to(root)
             if relative.parts[0] in ('.console.lock','.service.lock'):continue
