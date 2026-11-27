@@ -1,0 +1,49 @@
+{
+  "platform": "macos-arm64",
+  "base_version": "v1.2.2",
+  "addon_version": "0.1.0",
+  "source_commit": "f817bec",
+  "workflow": "https://github.com/CPMArchives/rcpm-cpmsim/actions/runs/45943273087",
+  "workflow_conclusion": "success",
+  "archive_sha256": "de5b71256e95b5ff1e06d2831e80d6f4f424ff6c062052a8de9e3c82e6b37f83",
+  "archive_manifest_verified": true,
+  "archive_helpers_match_source": true,
+  "validation": {
+    "passed": true,
+    "read_only_preflight": true,
+    "per_user_install": true,
+    "repeat_install_refused": true,
+    "stopped_disabled_defaults": true,
+    "launchd_start": true,
+    "caller_HELP": true,
+    "probe": true,
+    "monitor": true,
+    "verified_backup_restore": true,
+    "backup_restarts_board": true,
+    "login_and_schedules_opt_in": true,
+    "schedules_plist_validated": true,
+    "attached_console_protected": true,
+    "clean_stop_and_disable": true,
+    "base_source_unchanged": true,
+    "scope": "User launchd agent, not a boot-time system daemon"
+  },
+  "probe_timings": {
+    "seconds": 38.664,
+    "login_seconds": 18.008,
+    "transaction_seconds": 28.81
+  },
+  "unit_tests": {
+    "run": 20,
+    "skipped": 1,
+    "failures": 0
+  },
+  "earlier_probe_cleanup_timeouts": [
+    45940322159,
+    45940672763,
+    45941044467,
+    45942339037,
+    45942775615
+  ],
+  "note": "Earlier runs intermittently timed out during probe cleanup. Final run passed with a 120-second Mac probe budget; the captured successful timing alone does not establish why every earlier run timed out.",
+  "published": false
+}
