@@ -17,6 +17,38 @@ native launcher, emulator and bundled POSIX cpmtools depend only on macOS system
 libraries, with deployment target 11.0. Other host packages are not yet built or
 qualified. Download quarantine/signing/notarization needs host release validation.
 
+## Documentation release gate (1.2.3 and later)
+
+Treat the manuals and online HELP as part of the released system, not as a
+separate writing project. Before approving any standard RCP/M release:
+
+1. Review the changes since the previous stable release against both
+   [the Sysop's Guide](SYSOP-GUIDE.md) and [the User's Guide](USER-GUIDE.md).
+   Update affected chapters, commands, examples, defaults, limitations and
+   version references. Record an explicit no-change finding for either
+   manual if the release does not affect it.
+2. Review the HELP topics in `guest/help/` against the manuals and actual
+   shipped behavior. Update affected topics and links; run the repository's
+   HELP format and integration checks. Do not claim planned features as
+   available. Test our content, not the unchanged HELPC implementation.
+3. Keep ordinary sysop operation separate from optional host administration.
+   Retain period terminology and the conversational handbook style.
+4. Generate or refresh the distributed manual editions from the reviewed
+   sources. Include both guides in every standard native and Docker package
+   (through the common payload as applicable), alongside installation and
+   disk-image references. Verify the packaged copies and installed HELP
+   against the reviewed source revision. Never include private SYSOP.DOC.
+5. Check the repository README, documentation index and website links.
+   Update release notes with documentation changes or an explicit no-change
+   finding, and record the source commit and packaging/HELP check results.
+
+The release maintainer must confirm this checklist before publication.
+Do not publish a new release with missing or stale manuals, or omit the
+documentation review because the changes appear to be host-only. This is
+a mandatory release procedure; automated enforcement should be added to
+the 1.2.3 packaging and qualification workflow when those packages are built.
+Existing published release assets are not retroactively replaced.
+
 ## Common payload
 
 - Fresh A: and I: are constructed from pinned inputs, never operator disks.
