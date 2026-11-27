@@ -126,8 +126,8 @@ prompts.
 To read your mail, enter PERSONAL and use the ordinary reading commands. The
 board restricts private messages to the appropriate accounts.
 
-Private mail belongs to this particular board. The released system does not
-yet exchange mail or forum messages with other RCP/Ms through CPMNet. Nor is
+Private mail belongs to this particular board. This system does not
+exchange mail or forum messages with other RCP/Ms. Nor is
 private mail encrypted: the sysop has custody of the board and its backups,
 and your raw TCP connection is unencrypted. Don't use it for confidential
 information that you wouldn't wish to entrust to the system operator.
