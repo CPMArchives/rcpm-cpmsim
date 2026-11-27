@@ -1,20 +1,78 @@
 ;
-BASIC COMMANDS
+BASIC COMMANDS AND DIRECTORIES
 
-A - Read this topic
+A - Finding your way around CP/M
+B - The drives and named directories
+
 :A
-READ THIS TOPIC
+FINDING YOUR WAY AROUND CP/M
 
-DIR or SDZ lists files. Examples: DIR P:   DIR HELP:   DIR J1:
-LT reads text. Example: LT A0:WELCOME.TXT
-HELP topic displays instructions. Example: HELP MOUNT
-MOUNT /L lists both catalogs. MOUNT name selects J: or P: by image size.
-NDSCAN drive: refreshes names from extensionless -NAME marker files.
-RBBS enters the bulletin board. CHAT pages the sysop. BYE ends your call.
+The CP/M prompt tells you where you are. On this system you may see a drive
+and user area, or a name associated with that location. For example, A0: and
+SYSTEM: refer to the same directory on a standard installation.
 
-A0:SYSTEM contains caller commands. I0:WORK is temporary workspace.
-I14:HELP contains these topics. J: is the selected swappable volume.
-The default P: has P0:SIGM and P1:CPMUG; P: can mount other archives.
-Use a DU prefix such as J1: to specify drive J, user area 1.
-Caller access is controlled by the sysop. A visible program is not
-necessarily approved for online execution.
+Unlike the directory tree of a modern computer, CP/M organizes files by drive
+and numbered user area. The combination of the two is often called a DU. J3:
+means drive J, user area 3. There are sixteen user areas per drive, numbered 0
+through 15.
+
+A command may refer to a file in another DU without moving you there. For
+example:
+
+    DIR J1:
+    LT A0:WELCOME.TXT
+
+To make a directory current, enter its DU or name followed by a colon:
+
+    SIGM:
+    DIR
+    A0:
+
+You can use upper or lower case for ordinary command and file names. Passwords
+in RBBS are a separate matter and are case-sensitive.
+
+CP/M filenames have up to eight characters, followed by an optional extension
+of up to three characters. You'll often see names such as README.TXT,
+PROGRAM.COM, GUIDE.DOC and SIGMV011.LBR.
+
+Two useful filename wildcards are the question mark, which matches a
+character, and the asterisk, which matches the remainder of a filename or
+extension. Try:
+
+    DIR P0:*.LBR
+    DIR J1:*.DOC
+
+Not every command accepts wildcards; use them where the command's instructions
+permit. If you have been away from CP/M for a while, HELP COMMANDS is a handy
+reminder.
+
+:B
+THE DRIVES AND NAMED DIRECTORIES
+
+A standard HUMONGOUS RCP/M has four drives. The sysop can customize their
+contents and the access you have to them.
+
+  Drive or directory - What you'll find
+  A0: / SYSTEM: - Public commands and the welcome message
+  I0: / WORK: - Temporary workspace for programs
+  I14: / HELP: - Online HELP topics
+  J: - The selected smaller software collection
+  P: - The selected large software archive
+  P0: / SIGM: - SIG/M libraries on the default P:
+  P1: / CPMUG: - CPMUG libraries on the default P:
+
+There are also private system and bulletin board areas. You cannot ordinarily
+read or change their files. Selecting a DU or knowing its name does not confer
+permission to use it.
+
+J: holds a nominal 4 MB collection; P: is a 512 MiB archive disk. Either can
+be exchanged using MOUNT. The SIGM and CPMUG names therefore describe the
+*default* P: disk, not every disk that can be mounted there.
+
+Named directories save a good deal of typing and remembering. If a volume
+gives one of its user areas the name INFOCOM, for instance, you can enter that
+directory by typing INFOCOM: rather than having to remember which J: user area
+contains it.
+
+The names are rebuilt automatically when you mount another volume. If a name
+isn't present, use the numeric DU or look at the volume's guide instead.
