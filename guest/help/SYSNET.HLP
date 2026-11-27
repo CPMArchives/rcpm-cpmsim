@@ -1,31 +1,46 @@
 ;
 TROUBLESHOOTING AND NETWORK OPERATION
 
-A - Trouble at the CP/M prompt
-B - Making the board reachable
+A - When something goes wrong
+B - Inviting callers from elsewhere
+
 :A
-TROUBLE AT THE CP/M PROMPT
+WHEN SOMETHING GOES WRONG
 
-Commands work locally but not for callers: inspect AUTH and F4.
-A0: must be readable and not caller-writable for public COM loads.
-Old names after MOUNT: check the NDSCAN result and marker files.
-Missing WORK files: expected at call boundaries.
-AUTH changes lost at startup: check the saved AUTH.DAT.
-Garbled CHAT: check ANSI/VT100 or use CHAT /S.
+Symptom - First things to examine
+  Launcher won't start - Host permissions, occupied port, another running copy
+  Caller connects but sees nothing - Raw TCP rather than Telnet; press RETURN
+  DIR or LT works locally but not remotely - A0: caller read-only permission
+  and F4
+  Game won't prepare its files - MOUNT GAMES; I0: RW; approval of the actual
+  game
+  Old names after MOUNT - NDSCAN errors, marker collisions
+  AUTH refuses to run - Private operation with BYE attached
+  AUTH settings vanish after restart - Saved I13:AUTH.DAT
+  HELP or board records missing - Correct I: image and DU permissions
+  Garbled CHAT - ANSI/VT100 setup, or CHAT /S
+  WORK files vanish - Expected at call boundaries
 
-If WORK cleanup fails, the system will not answer. Stop and correct
-the I: image or its host write permissions before restarting.
+Try to decide whether the trouble lies in the host, CP/M, BYE or a transient
+program. If a command works in private CP/M but not for a caller, look at
+permissions before rebuilding software. The AUTH appendix goes into more
+detail about recovering a bad policy.
+
 :B
-MAKING THE BOARD REACHABLE
+INVITING CALLERS FROM ELSEWHERE
 
-RCPM.CONF defaults to ADDRESS=127.0.0.1 and PORT=4000.
-For network calls, stop the board and choose an appropriate host
-IPv4 address or 0.0.0.0 (all interfaces), then restart.
-The host firewall and router must allow the caller port.
+Once you are happy with local calls, stop the system and change ADDRESS to the
+appropriate host IPv4 address, or 0.0.0.0 for all interfaces. Restart. The
+host firewall and router must permit the caller port. For Docker, arrange the
+host port publication instead; see the Docker guide.
 
-Use raw TCP and press RETURN after connecting. Test from another
-computer before announcing the board. Raw TCP is not encrypted;
-callers should not reuse important passwords.
+Make a call from another computer before announcing the board. Raw TCP
+provides no encryption; advise callers not to reuse important passwords. Keep
+administrative tools and credentials private, approve only reviewed software,
+and retain a good stopped backup. Guest permission checks are not a substitute
+for securing the host itself.
 
-Unattended service and monitoring are separate host administration
-matters. Consult the appropriate host documentation.
+Automatic startup, scheduled backups, monitoring and other unattended hosting
+arrangements are separate matters. Optional administration guides are
+available for Linux, macOS and Windows. None is needed for ordinary foreground
+operation.
