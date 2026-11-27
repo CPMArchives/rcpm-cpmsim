@@ -1,0 +1,98 @@
+{
+  "addon_version": "0.1.0",
+  "base_version": "v1.2.2",
+  "source_commit": "e5bb21a4079a3ae7c28ace589752bb843d0826dd",
+  "workflow": "https://github.com/CPMArchives/rcpm-cpmsim/actions/runs/45949937709",
+  "workflow_jobs": {
+    "windows_x64": "success",
+    "windows_11_arm64": "success"
+  },
+  "package": "rcpm-admin-v0.1.0-windows-x64.zip",
+  "arm64_scope": "The Windows x64 RCP/M bundle under Windows 11 ARM64 emulation; not a native ARM64 emulator build.",
+  "integrity": {
+    "published_base_sha256_checked": true,
+    "same_addon_archive_sha256_checked_on_arm64": true,
+    "addon_and_base_manifests_verified_on_both_hosts": true
+  },
+  "validation": {
+    "windows_x64": {
+      "passed": true,
+      "windows_build": 20348,
+      "architecture": "AMD64",
+      "read_only_preflight": true,
+      "private_per_user_install": true,
+      "private_directory_ACL": true,
+      "incorrect_control_key_refused": true,
+      "repeat_install_refused": true,
+      "defaults_stopped_disabled": true,
+      "background_console": true,
+      "caller_HELP": true,
+      "carrier_cleanup": true,
+      "active_caller_probe_deferred": true,
+      "idle_probe": {
+        "status": "passed",
+        "scope": "caller HELP and carrier cleanup",
+        "seconds": 14.781,
+        "login_seconds": 5.219,
+        "transaction_seconds": 8.656
+      },
+      "attached_console_protected": true,
+      "console_screen_frame": true,
+      "user_task_definitions": true,
+      "scheduled_backup_and_restart": true,
+      "verified_restore_and_credentials": true,
+      "scheduled_monitor": true,
+      "clean_stop_and_task_removal": true,
+      "child_processes_exited": true,
+      "base_package_unchanged": true,
+      "scope": "Per-user Windows administration, not a system service"
+    },
+    "windows_arm64": {
+      "passed": true,
+      "windows_build": 26200,
+      "architecture": "ARM64",
+      "read_only_preflight": true,
+      "private_per_user_install": true,
+      "private_directory_ACL": true,
+      "incorrect_control_key_refused": true,
+      "repeat_install_refused": true,
+      "defaults_stopped_disabled": true,
+      "background_console": true,
+      "caller_HELP": true,
+      "carrier_cleanup": true,
+      "active_caller_probe_deferred": true,
+      "idle_probe": {
+        "status": "passed",
+        "scope": "caller HELP and carrier cleanup",
+        "seconds": 14.852,
+        "login_seconds": 5.202,
+        "transaction_seconds": 8.65
+      },
+      "attached_console_protected": true,
+      "console_screen_frame": true,
+      "user_task_definitions": true,
+      "scheduled_backup_and_restart": true,
+      "verified_restore_and_credentials": true,
+      "scheduled_monitor": true,
+      "clean_stop_and_task_removal": true,
+      "child_processes_exited": true,
+      "base_package_unchanged": true,
+      "scope": "Per-user Windows administration, not a system service"
+    }
+  },
+  "artifacts": [
+    {
+      "id": 15177141175,
+      "name": "admin-windows-arm64-evidence",
+      "github_artifact_digest": "sha256:f91f37587d0f41bc066c88525c317b693e542c503a9a7b5e998eb174e4723049",
+      "url": "https://github.com/CPMArchives/rcpm-cpmsim/actions/runs/45949937709/artifacts/15177141175"
+    },
+    {
+      "id": 15176234017,
+      "name": "admin-windows-v0.1.0",
+      "github_artifact_digest": "sha256:b2a2cf8cb1fc523d86a4389ca2114e3d7c306d23761d30e6442160f43570a0d2",
+      "url": "https://github.com/CPMArchives/rcpm-cpmsim/actions/runs/45949937709/artifacts/15176234017"
+    }
+  ],
+  "published_as_release": false
+}
