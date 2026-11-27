@@ -10,8 +10,12 @@ F - Chatting with the sysop
 G - Online games
 H - Temporary workspace
 I - Logging off
-J - Glossary
-
+J - Glossary and acknowledgements
+K - Welcome and getting started
+L - Getting help and reading files
+M - Access and etiquette
+N - Command reference
+O - Troubleshooting
 :A:COMMANDS.HLP
 :B:MOUNT.HLP
 :C:LIBRARY.HLP
@@ -22,3 +26,8 @@ J - Glossary
 :H:WORK.HLP
 :I:LOGOFF.HLP
 :J:GLOSSARY.HLP
+:K:START.HLP
+:L:READING.HLP
+:M:ETIQUET.HLP
+:N:CMDREF.HLP
+:O:TROUBLE.HLP
