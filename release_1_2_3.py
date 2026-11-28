@@ -139,7 +139,7 @@ def build(platform, base, media, output):
   if sha(root/'disks'/n)!=record['base_images'][n]:raise ValueError('Platform guest media differs from the qualified base: '+n)
   shutil.copy2(media/n,root/'disks'/n)
  refresh_docs(root)
- readme=root/'README.txt';text=readme.read_text().replace('1.2.2','1.2.3');text+='\nHELPC 1.5r and 120 online HELP files are installed. Type HELP COMMANDS.\nRead docs/USER-GUIDE.DOC and docs/SYSOP-GUIDE.DOC for the complete manuals.\nFresh release media only: do not unpack over an existing board.\n';readme.write_text(text)
+ readme=root/'README.txt';text=readme.read_text().replace('1.2.2','1.2.3').replace('Guest media is unchanged from v1.2.1.', 'Guest media retains the verified base except for HELPC 1.5r and expanded help.');text+='\nHELPC 1.5r and 120 online HELP files are installed. Type HELP COMMANDS.\nRead docs/USER-GUIDE.DOC and docs/SYSOP-GUIDE.DOC for the complete manuals.\nFresh release media only: do not unpack over an existing board.\n';readme.write_text(text)
  for n in ['LINUX-README.txt','WINDOWS-README.txt']:
   if (root/n).exists():(root/n).write_text(text)
  commit=subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip()
