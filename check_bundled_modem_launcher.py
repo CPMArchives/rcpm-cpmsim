@@ -9,7 +9,7 @@ import shutil
 import socket
 import tempfile
 import time
-from check_help_release import open_topic, leave
+from check_help_release import open_topic, leave, prepare_windows_console
 
 if os.name != 'nt':
     from check_release import Guest
@@ -36,10 +36,7 @@ def check(package, output):
             if os.name == 'nt':
                 import ctypes
                 from check_windows_release import Guest as WindowsGuest
-                kernel = ctypes.WinDLL('kernel32', use_last_error=True)
-                kernel.FreeConsole()
-                if not kernel.AllocConsole():
-                    raise ctypes.WinError(ctypes.get_last_error())
+                prepare_windows_console()
                 guest = WindowsGuest(root, output / mode, port)
             else:
                 guest = Guest(root, output / mode)

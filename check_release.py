@@ -145,7 +145,7 @@ class Guest:
             self.wait(b'A0:SYSTEM>', remote=True, start=start, timeout=10)
         return bytes(self.remote[start:])
 
-
+    def stop(self):
         print('Disconnecting caller and shutting down guest...', flush=True)
         if self.caller:
             self.caller.close()

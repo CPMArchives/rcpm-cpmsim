@@ -10,6 +10,23 @@ import tempfile
 import time
 
 
+def prepare_windows_console():
+ import ctypes as c
+ from ctypes import wintypes as w
+ k=c.WinDLL('kernel32',use_last_error=True)
+ k.FreeConsole()
+ if not k.AllocConsole():raise c.WinError(c.get_last_error())
+ # Hosted shells can leave redirected/invalid standard handles even after
+ # AllocConsole. Bind explicit console devices before the guest inherits them.
+ k.CreateFileW.argtypes=[w.LPCWSTR,w.DWORD,w.DWORD,c.c_void_p,w.DWORD,w.DWORD,w.HANDLE]
+ k.CreateFileW.restype=w.HANDLE
+ k.SetStdHandle.argtypes=[w.DWORD,w.HANDLE];k.SetStdHandle.restype=w.BOOL
+ for number,device in [(-10,'CONIN$'),(-11,'CONOUT$'),(-12,'CONOUT$')]:
+  handle=k.CreateFileW(device,0xc0000000,3,None,3,0x80,None)
+  if handle==c.c_void_p(-1).value or not k.SetStdHandle(number & 0xffffffff,handle):raise c.WinError(c.get_last_error())
+ return k
+
+
 def send(guest, data):
  for b in data:
   guest.caller.sendall(bytes([b]));guest.collect(.015)
@@ -53,8 +70,7 @@ def check(package, output):
   if os.name=='nt':
    import ctypes
    from check_windows_release import Guest
-   k=ctypes.WinDLL('kernel32',use_last_error=True);k.FreeConsole()
-   if not k.AllocConsole():raise ctypes.WinError(ctypes.get_last_error())
+   prepare_windows_console()
    guest=Guest(root,output/'console',port)
   else:
    from check_release import Guest
