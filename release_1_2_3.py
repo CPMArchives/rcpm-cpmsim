@@ -73,7 +73,7 @@ def source_files():
 
 def refresh_docs(root):
  for name in ('USER-GUIDE','SYSOP-GUIDE'):
-  source=ROOT/'docs'/(name+'.md');(root/'docs'/(name+'.DOC')).write_text(plain_manual(source.read_text()),encoding='ascii');shutil.copy2(source,root/'docs'/(name+'.md'))
+  source=ROOT/'docs'/(name+'.md');(root/'docs'/(name+'.DOC')).write_text(plain_manual(source.read_text(encoding='utf-8')),encoding='ascii');shutil.copy2(source,root/'docs'/(name+'.md'))
  shutil.copy2(ROOT/'docs/RELEASE-NOTES-1.2.3.md',root/'docs/RELEASE-NOTES-1.2.3.md')
  shutil.copy2(ROOT/'docs/RELEASE-NOTES-1.2.3.md',root/'docs/RELEASE-NOTES.md')
  (root/'docs/HELPC-1.5r-NOTICES.txt').write_text('HELPC 1.5r: continuation of Howard Goldstein\'s HELPC 1.5.\nOriginal embedded notice is preserved:\nCopyright (c) Steven Greenberg 8/31/86  201-670-8724. May be reproduced for non-profit use only.\nNo replacement license or commercial permission is asserted.\nThe whole-program/library redistribution grant remains unestablished.\nThe maintainer authorized this binary distribution with that uncertainty disclosed.\nHistorical HELPC source, libraries and proprietary build tools are excluded.\nSee https://github.com/CPMArchives/HELPC/releases/tag/v1.5r for build/test evidence and rights findings.\n')

@@ -2,7 +2,7 @@
 """Collect only matching, successfully checked 1.2.3 artifacts for publication."""
 import argparse,json,shutil
 from pathlib import Path
-from release_1_2_3 import sha,unpack,plain_manual,ROOT
+from release_1_2_3 import sha,unpack,plain_manual,archive,ROOT
 
 
 def one(folder, pattern):
@@ -20,7 +20,17 @@ def finalize(inputs,output,commit,run,guest_update=False,local_mac=None,release_
    folder=inputs/('v1.2.3-'+platform);built=json.loads(one(folder,'BUILT.json').read_text());assert built['receipt']['source_commit']==commit
    name='rcpm-v1.2.3-'+platform+('.zip' if platform in ['common','macos-arm64','windows-x64'] else '.tar.gz');path=one(folder,name);assert sha(path)==built['sha256']
    root=unpack(path,Path(temporary)/platform,platform)
-   for n in ['USER-GUIDE','SYSOP-GUIDE']:assert (root/'docs'/(n+'.DOC')).read_text()==plain_manual((ROOT/'docs'/(n+'.md')).read_text())
+   doc_changes=[]
+   for n in ['USER-GUIDE','SYSOP-GUIDE']:
+    expected=plain_manual((ROOT/'docs'/(n+'.md')).read_text(encoding='utf-8'))
+    doc=root/'docs'/(n+'.DOC')
+    if doc.read_text(encoding='ascii')!=expected:
+     assert platform=='windows-x64','Unexpected manual drift: '+platform+'/'+n
+     assert (root/'docs'/(n+'.md')).read_text(encoding='utf-8')==(ROOT/'docs'/(n+'.md')).read_text(encoding='utf-8')
+     doc_changes.append({'file':'docs/'+n+'.DOC','before_sha256':sha(doc),'reason':'Regenerate plain-text edition from the identical reviewed UTF-8 source; Windows locale had garbled punctuation.'})
+     doc.write_text(expected,encoding='ascii')
+     doc_changes[-1]['after_sha256']=sha(doc)
+    assert doc.read_text(encoding='ascii')==expected
    receipt=json.loads((root/'metadata/RELEASE-1.2.3.json').read_text());assert receipt==built['receipt'] and receipt['runtime_and_drivers_unchanged']
    assert all(sha(root/'disks'/n)==h for n,h in receipt['media']['images'].items())
    if shared_images is None:shared_images=receipt['media']['images']
@@ -32,7 +42,16 @@ def finalize(inputs,output,commit,run,guest_update=False,local_mac=None,release_
     assert all(sha(root/n)==h for n,h in receipt['retained_runtime_driver_sha256'].items())
     helpcheck=json.loads(one(folder,'help-checks/result.json').read_text());assert helpcheck['passed'] and helpcheck['topics_opened']==120 and helpcheck['caller_restrictions'] and helpcheck['parent_and_root']
     built['checks']=checks;built['help']=helpcheck
-   shutil.copy2(path,output/name);report['platforms'][platform]={'artifact':name,'sha256':sha(path),'evidence':built}
+   if doc_changes:
+    manifest_path=root/'metadata/MANIFEST.json';manifest=json.loads(manifest_path.read_text())
+    for change in doc_changes:
+     group='common' if change['file'] in manifest['common'] else 'host';manifest[group][change['file']]=change['after_sha256']
+    manifest_path.write_text(json.dumps(manifest,indent=2)+'\n')
+    assert all(sha(root/n)==h for n,h in receipt['retained_runtime_driver_sha256'].items())
+    assert all(sha(root/'disks'/n)==h for n,h in receipt['media']['images'].items())
+    archive(root,output/name)
+   else:shutil.copy2(path,output/name)
+   report['platforms'][platform]={'artifact':name,'sha256':sha(output/name),'evidence':built,'documentation_only_corrections':doc_changes}
    if platform.startswith('linux-'):
     arch=platform.split('-',1)[1];modes={}
     for mode in ['direct','ip232']:
@@ -50,7 +69,7 @@ def finalize(inputs,output,commit,run,guest_update=False,local_mac=None,release_
   else:
    arm=inputs/'v1.2.3-windows-arm64-evidence';h=json.loads(one(arm,'help-arm64/result.json').read_text());c=json.loads(one(arm,'checks-arm64/result.json').read_text());assert h['passed'] and h['topics_opened']==120 and c['passed'];report['windows_arm64']={'execution':'x64 emulation','help':h,'launcher':c}
  (output/'VALIDATION.json').write_text(json.dumps(report,indent=2)+'\n');shutil.copy2(ROOT/'docs/RELEASE-NOTES-1.2.3.md',output/'RELEASE-NOTES.md')
- for n in ['USER-GUIDE','SYSOP-GUIDE']:(output/(n+'.DOC')).write_text(plain_manual((ROOT/'docs'/(n+'.md')).read_text()),encoding='ascii')
+ for n in ['USER-GUIDE','SYSOP-GUIDE']:(output/(n+'.DOC')).write_text(plain_manual((ROOT/'docs'/(n+'.md')).read_text(encoding='utf-8')),encoding='ascii')
  (output/'SHA256SUMS').write_text(''.join(sha(p)+'  '+p.name+'\n' for p in sorted(output.iterdir()) if p.is_file() and p.name!='SHA256SUMS'))
  print('Finalized',len(report['platforms']),'packages and',len(report['docker']),'Docker images')
 
