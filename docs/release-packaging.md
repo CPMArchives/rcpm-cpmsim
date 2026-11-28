@@ -161,3 +161,7 @@ around the frozen runtime files and regenerates the common/host manifests.
 It rejects changes to guest images, BYE drivers, native runtime executables or
 startup launchers relative to the tested candidates. A changed ZIP hash from
 updated documentation does not imply a rebuilt runtime.
+
+## Proportional checks for shared guest/documentation updates
+
+When native runtimes, modem binaries and drivers are unchanged and hash-verified against a qualified release, a shared guest viewer/help update requires content, navigation and access checks on a representative CP/M instance, plus exact guest-file and manual/manifest checks in every package. Retain the prior host qualification; do not require a fresh cross-platform transport matrix merely for shared help files. Record supplementary failures and retests not performed without relabeling them as passed. The maintainer explicitly selected this scope for 1.2.3. `finalize_release_1_2_3.py --guest-update` implements the collection gate; the broader workflow remains available for native host changes.

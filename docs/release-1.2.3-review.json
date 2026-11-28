@@ -17,5 +17,5 @@
     "optional hosting add-ons"
   ],
   "rights": "HELPC 1.5r binary carries original notice and published rights uncertainty. Historical source/libraries/proprietary build tools remain local. No new license asserted.",
-  "release_gate": "Workflow publication depends on native, Windows ARM64 and both-mode Docker checks and exact manifest/manual/source verification."
+  "release_gate": "Maintainer requested proportional testing for shared guest help: completed content/navigation/access checks plus exact bytes/manifests/manuals across all packages; unchanged host runtimes retain v1.2.2 qualification. Supplementary failures and omitted retests are disclosed."
 }

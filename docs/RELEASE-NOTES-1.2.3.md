@@ -47,14 +47,24 @@ Markdown sources in every native package and Docker image.
 
 ## Release checks
 
-The release workflow verifies pinned base archives and the published 1.5r
-binary, checks that only the two viewers and I14 help files change on guest
-media, and retains all native runtime/driver bytes. It reads all 120 packaged
-help menus as a caller on macOS ARM64, Linux ARM64/x64 and Windows x64, and
-checks the Windows bundle under Windows 11 ARM64 emulation. Each platform
-checks direct TCP and bundled-modem reconnect/shutdown. Linux Docker images
-are rebuilt with both manuals and tested in both modes with persistent data.
-VALIDATION.json records the exact source commit, assets and check results.
+This is a shared CP/M viewer/help and documentation update. The native host
+runtimes, modem binaries, drivers and archive volumes remain byte-identical
+to their qualified 1.2.2 bases. The release uses proportional checks: tested
+content/navigation and byte/manifest/manual verification across every package,
+with prior native compatibility qualification retained.
+
+All 120 packaged help menus, qualified navigation and normal-caller
+restrictions passed on macOS, Linux ARM64/x64 and Windows x64. Linux Docker
+images additionally passed direct/modem operation, manual presence and data
+persistence. A supplementary hosted macOS IP232 login check timed out; the
+same unchanged launcher/modem passed direct and IP232 checks locally. This
+release does not claim a fresh full native transport qualification or a new
+Windows ARM64 run. VALIDATION.json records completed checks, the timeout and
+the retained qualification basis without converting failed checks into passes.
+
+The downloadable packages retain their checked payload-source revision;
+the release tag also records the final collection policy and maintainer's
+request to avoid redundant host retesting. Historical HELPC source remains local.
 
 ## Earlier development verification
 

@@ -1,0 +1,30 @@
+{
+  "passed": true,
+  "results": [
+    {
+      "mode": "direct",
+      "passed": true,
+      "HELP": true,
+      "reconnect": true,
+      "clean_shutdown": true,
+      "caller_port_released": true
+    },
+    {
+      "mode": "ip232",
+      "passed": true,
+      "HELP": true,
+      "reconnect": true,
+      "clean_shutdown": true,
+      "caller_port_released": true
+    }
+  ],
+  "launcher_sha256": "5e6468c3e24be4389a576e3c524960089f6aa41719b43f2c2f27b85437da4a58",
+  "runtime_sha256": {
+    "runtime/rcpm": "5e6468c3e24be4389a576e3c524960089f6aa41719b43f2c2f27b85437da4a58",
+    "runtime/cpmsim": "1c1ea63abadb2b79389113dd2b03260e520567cf296071237bd102945683b576",
+    "runtime/tcpser": "c75cd8c63dc7ae0c9169cdc610c4877afdf0340325457c83e04b71b47cdc57c9",
+    "drivers/direct/BYEDRIV.COM": "68a4adb330f6490db2bdc2992ac8a7b899c80924928ea5c434e44d66a3f7b715",
+    "drivers/ip232/BYEDRIV.COM": "10faa716c688621ebd4024a4388babc3cfecf33c857a38b85a8878ba7d472b57"
+  },
+  "scope": "Supplementary local test on disposable staged media; native bytes are pinned v1.2.2 inputs. Not a claim that the hosted macOS modem check passed."
+}

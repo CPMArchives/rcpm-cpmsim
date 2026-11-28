@@ -1,0 +1,48 @@
+name: Collect and publish checked v1.2.3 shared-help update
+on:
+  workflow_dispatch:
+    inputs:
+      checked_run:
+        description: Run containing checked guest payloads and completed help reports
+        required: true
+        default: '46129277007'
+      payload_commit:
+        description: Exact source revision of the checked payload archives
+        required: true
+        default: c7920df21f400a9efbcbd2ee7e503872fca4b002
+permissions:
+  contents: write
+  actions: read
+jobs:
+  collect:
+    runs-on: ubuntu-22.04
+    timeout-minutes: 20
+    env:
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
+        with:
+          run-id: ${{ inputs.checked_run }}
+          github-token: ${{ github.token }}
+          pattern: v1.2.3-*
+          path: checked-inputs
+      - name: Verify shared bytes, manifests, reviewed manuals and completed help checks
+        env:
+          CHECKED_RUN: ${{ inputs.checked_run }}
+          PAYLOAD_COMMIT: ${{ inputs.payload_commit }}
+        run: |
+          python3 finalize_release_1_2_3.py --inputs checked-inputs --output dist --commit "$PAYLOAD_COMMIT" --release-commit "$GITHUB_SHA" --run "$CHECKED_RUN" --guest-update --local-mac docs/performance/macos-1.2.3-local-transports.json
+      - name: Publish with proportional qualification and disclosed limits
+        run: |
+          if gh release view v1.2.3 --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
+            echo 'Existing release; refusing to overwrite.' >&2
+            exit 1
+          fi
+          gh release create v1.2.3 dist/* --repo "$GITHUB_REPOSITORY" --target "$GITHUB_SHA" --title 'RCP/M 1.2.3 — HELPC 1.5r and complete command help' --notes-file docs/RELEASE-NOTES-1.2.3.md --latest
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: v1.2.3-final-release-files
+          compression-level: 0
+          path: dist/*
