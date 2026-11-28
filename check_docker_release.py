@@ -39,7 +39,8 @@ def check(image, output, docker, mode='direct'):
                         assert b'1.2.3' in data and len(data)>10000, manual
                     assert b'CHAT -' in guest.remote
                     assert b'HELP' in re.sub(rb'\x1b\[[0-9;]*m', b'', guest.command('DIR')).upper()
-                    assert b'CHAT' in open_topic(guest, 'HELP CHAT', b'CHAT -')
+                    chat_title = (Path(__file__).resolve().parent / 'guest/help/CHAT.HLP').read_text(encoding='ascii').splitlines()[1].encode('ascii')
+                    assert b'CHAT' in open_topic(guest, 'HELP CHAT', chat_title)
                     leave(guest)
                     assert b'SYSOP ONLY' in open_topic(guest, 'HELP COMMANDS', b'COMPLETE INSTALLED COMMAND REFERENCE')
                     leave(guest)
