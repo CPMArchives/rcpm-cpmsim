@@ -33,7 +33,7 @@ def check(image, output, docker, mode='direct'):
                     guest.wait(b'RCP/M modem ready.' if mode == 'direct' else
                                b'ATE0Q0V0S0=0M0S10=25X1H0', timeout=120)
                     if mode == 'ip232': guest.collect(3)
-                    guest.connect(14000, kick=mode == 'direct')
+                    guest.connect(14000, kick=mode == 'direct', timeout=60 if mode == 'ip232' else 25)
                     for manual in ('USER-GUIDE.DOC', 'SYSOP-GUIDE.DOC'):
                         data = run('exec', name, 'cat', '/opt/rcpm-seed/docs/'+manual)
                         assert b'1.2.3' in data and len(data)>10000, manual

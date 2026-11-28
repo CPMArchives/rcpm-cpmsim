@@ -113,10 +113,10 @@ class Guest:
                 raise AssertionError('Waiting for ' + repr(marker) + ': ' + repr(bytes(stream[-1800:])))
             self.collect()
         return bytes(stream[start:])
-    def connect(self, port, kick=True):
+    def connect(self, port, kick=True, timeout=25):
         print('Connecting caller on port ' + str(port) + '...', flush=True)
         self.caller = socket.create_connection(('127.0.0.1', port), timeout=5)
-        deadline = time.monotonic() + 25
+        deadline = time.monotonic() + timeout
         while b'A0:SYSTEM>' not in self.remote:
             if time.monotonic() > deadline:
                 raise AssertionError('Caller login: ' + repr(bytes(self.remote[-1800:])))

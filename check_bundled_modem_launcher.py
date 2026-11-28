@@ -49,13 +49,13 @@ def check(package, output):
                     guest.collect(3)
                 if os.name == 'nt':
                     guest.caller = socket.create_connection(('127.0.0.1', port), timeout=5)
-                    deadline = time.monotonic() + 35
+                    deadline = time.monotonic() + (60 if mode == 'ip232' else 35)
                     while b'A0:SYSTEM>' not in guest.remote:
                         if time.monotonic() > deadline: raise RuntimeError('Caller login timed out')
                         if mode == 'direct': guest.caller.sendall(b'\r')
                         guest.collect(.4)
                 else:
-                    guest.connect(port, kick=mode == 'direct')
+                    guest.connect(port, kick=mode == 'direct', timeout=60 if mode == 'ip232' else 25)
                 assert len(open_topic(guest, 'HELP', b'HUMONGOUS RCP/M - ONLINE HELP')) > 100
                 leave(guest)
                 local_start = len(guest.local)
@@ -67,13 +67,13 @@ def check(package, output):
                 guest.remote.clear()
                 if os.name == 'nt':
                     guest.caller = socket.create_connection(('127.0.0.1', port), timeout=5)
-                    deadline = time.monotonic() + 35
+                    deadline = time.monotonic() + (60 if mode == 'ip232' else 35)
                     while b'A0:SYSTEM>' not in guest.remote:
                         if time.monotonic() > deadline: raise RuntimeError('Caller reconnect timed out')
                         if mode == 'direct': guest.caller.sendall(b'\r')
                         guest.collect(.4)
                 else:
-                    guest.connect(port, kick=mode == 'direct')
+                    guest.connect(port, kick=mode == 'direct', timeout=60 if mode == 'ip232' else 25)
                 assert len(open_topic(guest, 'HELP', b'HUMONGOUS RCP/M - ONLINE HELP')) > 100
                 leave(guest)
                 if mode == 'ip232':

@@ -11,7 +11,7 @@ def one(folder, pattern):
  return found[0]
 
 
-def finalize(inputs,output,commit,run,guest_update=False,local_mac=None,release_commit=None):
+def finalize(inputs,output,commit,run,guest_update=False,local_mac=None,release_commit=None,timing_report=None):
  output.mkdir(parents=True,exist_ok=False);report={'version':'v1.2.3','source_commit':commit,'qualification_run':run,'release_commit':release_commit or commit,'scope':'shared guest viewer/help and manuals; retained host runtimes' if guest_update else 'full platform qualification','platforms':{},'docker':{}}
  import tempfile
  with tempfile.TemporaryDirectory() as temporary:
@@ -42,7 +42,9 @@ def finalize(inputs,output,commit,run,guest_update=False,local_mac=None,release_
     docker=one(folder,'rcpm-v1.2.3-docker-'+arch+'.tar.gz');shutil.copy2(docker,output/docker.name);report['docker'][arch]={'artifact':docker.name,'sha256':sha(docker),'modes':modes}
   if guest_update:
    report['windows_arm64']={'execution':'x64 emulation','new_run':False,'basis':'Unchanged runtime qualification retained from v1.2.2; new shared guest bytes validated across packages.'}
-   report['qualification_limits']=['Hosted macOS IP232 caller-login timeout in supplementary host retest; no native runtime or driver changed.','Windows ARM64 compatibility suite not repeated for this guest/documentation update.']
+   report['qualification_limits']=['An earlier 25-second macOS modem test cutoff was exceeded; the focused baseline/candidate comparison connected successfully in 22.33/26.55 seconds. Test allowance corrected to 60 seconds without binary changes.','Windows ARM64 compatibility suite not repeated for this guest/documentation update.']
+   if timing_report:
+    timing=json.loads(Path(timing_report).read_text());assert all(x['passed'] for x in timing['observations']);assert all(all(report['platforms']['macos-arm64']['evidence']['receipt']['retained_runtime_driver_sha256'][n]==h for n,h in x['native_sha256'].items()) for x in timing['observations']);report['supplementary_hosted_macos_timing']=timing
    if local_mac:
     local=json.loads(Path(local_mac).read_text());assert local['passed'];assert local['launcher_sha256']==report['platforms']['macos-arm64']['evidence']['receipt']['retained_runtime_driver_sha256']['runtime/rcpm'];assert all(report['platforms']['macos-arm64']['evidence']['receipt']['retained_runtime_driver_sha256'][n]==h for n,h in local['runtime_sha256'].items());report['supplementary_local_macos_transports']=local
   else:
@@ -54,4 +56,4 @@ def finalize(inputs,output,commit,run,guest_update=False,local_mac=None,release_
 
 
 if __name__=='__main__':
- p=argparse.ArgumentParser();p.add_argument('--inputs',type=Path,required=True);p.add_argument('--output',type=Path,required=True);p.add_argument('--commit',required=True);p.add_argument('--run',required=True);p.add_argument('--guest-update',action='store_true');p.add_argument('--local-mac',type=Path);p.add_argument('--release-commit');a=p.parse_args();finalize(a.inputs.resolve(),a.output.resolve(),a.commit,a.run,a.guest_update,a.local_mac,a.release_commit)
+ p=argparse.ArgumentParser();p.add_argument('--inputs',type=Path,required=True);p.add_argument('--output',type=Path,required=True);p.add_argument('--commit',required=True);p.add_argument('--run',required=True);p.add_argument('--guest-update',action='store_true');p.add_argument('--local-mac',type=Path);p.add_argument('--release-commit');p.add_argument('--timing-report',type=Path);a=p.parse_args();finalize(a.inputs.resolve(),a.output.resolve(),a.commit,a.run,a.guest_update,a.local_mac,a.release_commit,a.timing_report)

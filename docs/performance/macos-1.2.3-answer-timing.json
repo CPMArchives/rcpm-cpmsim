@@ -1,0 +1,44 @@
+{
+  "run_id": 46134509019,
+  "scope": "Unchanged published macOS baseline versus help candidate; no caller Return injected; same native binaries.",
+  "observations": [
+    {
+      "label": "baseline-1.2.2",
+      "timeout_seconds": 120,
+      "native_sha256": {
+        "runtime/rcpm": "5e6468c3e24be4389a576e3c524960089f6aa41719b43f2c2f27b85437da4a58",
+        "runtime/cpmsim": "1c1ea63abadb2b79389113dd2b03260e520567cf296071237bd102945683b576",
+        "runtime/tcpser": "c75cd8c63dc7ae0c9169cdc610c4877afdf0340325457c83e04b71b47cdc57c9",
+        "drivers/ip232/BYEDRIV.COM": "10faa716c688621ebd4024a4388babc3cfecf33c857a38b85a8878ba7d472b57"
+      },
+      "boot_seconds": 27.79044783400002,
+      "milestones_seconds": {
+        "answer_command": 13.965203040999995,
+        "connect_code": 13.965203040999995,
+        "welcome": 21.763646249999994
+      },
+      "welcome_seconds": 22.334623041000015,
+      "passed": true,
+      "within_old_25s_limit": true
+    },
+    {
+      "label": "candidate-1.2.3",
+      "timeout_seconds": 120,
+      "native_sha256": {
+        "runtime/rcpm": "5e6468c3e24be4389a576e3c524960089f6aa41719b43f2c2f27b85437da4a58",
+        "runtime/cpmsim": "1c1ea63abadb2b79389113dd2b03260e520567cf296071237bd102945683b576",
+        "runtime/tcpser": "c75cd8c63dc7ae0c9169cdc610c4877afdf0340325457c83e04b71b47cdc57c9",
+        "drivers/ip232/BYEDRIV.COM": "10faa716c688621ebd4024a4388babc3cfecf33c857a38b85a8878ba7d472b57"
+      },
+      "boot_seconds": 29.126966040999946,
+      "milestones_seconds": {
+        "answer_command": 15.206319749999977,
+        "connect_code": 15.206319749999977,
+        "welcome": 25.300446040999987
+      },
+      "welcome_seconds": 26.548078083000007,
+      "passed": true,
+      "within_old_25s_limit": false
+    }
+  ]
+}

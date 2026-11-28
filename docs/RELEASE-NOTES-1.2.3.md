@@ -56,10 +56,13 @@ with prior native compatibility qualification retained.
 All 120 packaged help menus, qualified navigation and normal-caller
 restrictions passed on macOS, Linux ARM64/x64 and Windows x64. Linux Docker
 images additionally passed direct/modem operation, manual presence and data
-persistence. A supplementary hosted macOS IP232 login check timed out; the
-same unchanged launcher/modem passed direct and IP232 checks locally. This
+persistence. A supplementary hosted macOS IP232 check hit its 25-second test deadline.
+A focused comparison then reached valid caller prompts in 22.33 seconds on
+the published 1.2.2 baseline and 26.55 seconds on the 1.2.3 candidate, with
+identical native binaries. The modem test allowance is now 60 seconds; no
+runtime fix was needed. Local direct/IP232 checks also passed. This
 release does not claim a fresh full native transport qualification or a new
-Windows ARM64 run. VALIDATION.json records completed checks, the timeout and
+Windows ARM64 run. VALIDATION.json records completed checks, the timing diagnosis and
 the retained qualification basis without converting failed checks into passes.
 
 The downloadable packages retain their checked payload-source revision;

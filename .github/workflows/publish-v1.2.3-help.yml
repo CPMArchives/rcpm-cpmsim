@@ -32,7 +32,7 @@ jobs:
           CHECKED_RUN: ${{ inputs.checked_run }}
           PAYLOAD_COMMIT: ${{ inputs.payload_commit }}
         run: |
-          python3 finalize_release_1_2_3.py --inputs checked-inputs --output dist --commit "$PAYLOAD_COMMIT" --release-commit "$GITHUB_SHA" --run "$CHECKED_RUN" --guest-update --local-mac docs/performance/macos-1.2.3-local-transports.json
+          python3 finalize_release_1_2_3.py --inputs checked-inputs --output dist --commit "$PAYLOAD_COMMIT" --release-commit "$GITHUB_SHA" --run "$CHECKED_RUN" --guest-update --local-mac docs/performance/macos-1.2.3-local-transports.json --timing-report docs/performance/macos-1.2.3-answer-timing.json
       - name: Publish with proportional qualification and disclosed limits
         run: |
           if gh release view v1.2.3 --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
