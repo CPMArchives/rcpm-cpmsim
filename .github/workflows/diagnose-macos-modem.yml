@@ -1,0 +1,33 @@
+name: Focused macOS baseline and candidate modem comparison
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+jobs:
+  compare:
+    runs-on: macos-15
+    timeout-minutes: 15
+    env:
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
+        with:
+          run-id: '46129277007'
+          github-token: ${{ github.token }}
+          name: v1.2.3-macos-arm64
+          path: candidate
+      - name: Download and verify unchanged published baseline
+        run: |
+          mkdir baseline
+          gh release download v1.2.2 --repo "$GITHUB_REPOSITORY" --pattern rcpm-v1.2.2-macos-arm64.zip --dir baseline
+          python3 -c "from pathlib import Path; from release_1_2_3 import sha,BASES; assert sha(Path('baseline/rcpm-v1.2.2-macos-arm64.zip'))==BASES['macos-arm64'][1]"
+      - name: Compare modem answer timing without changing native binaries
+        run: |
+          python3 diagnose_macos_modem.py --baseline baseline/rcpm-v1.2.2-macos-arm64.zip --candidate candidate/package/rcpm-v1.2.3-macos-arm64.zip --output observations --timeout 120
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: macos-modem-comparison
+          path: observations/*
