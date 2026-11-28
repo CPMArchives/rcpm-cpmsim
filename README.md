@@ -51,7 +51,7 @@ this is a way to experience the software in its working environment.
 
 ## Get started
 
-**[Download RCP/M 1.2.2](https://github.com/CPMArchives/rcpm-cpmsim/releases/tag/v1.2.2)**
+**[Download RCP/M 1.2.3](https://github.com/CPMArchives/rcpm-cpmsim/releases/tag/v1.2.3)**
 
 Choose macOS ARM64, Linux ARM64/x64, or Windows x64. The Windows bundle also
 runs on Windows 11 ARM64 through x64 emulation. Each platform archive contains
@@ -99,7 +99,7 @@ another computer.
 The standard package runs locally or on a server through its launch script.
 Service installation, scheduled backups and monitoring are separate optional
 hosting facilities, outside the common sysop workflow. Each add-on is a separate
-download with its own administration guide. None is required for RCP/M 1.2.2.
+download with its own administration guide. None is required for RCP/M 1.2.3.
 
 | Platform | Administration add-on 0.1.0 | Guide |
 | --- | --- | --- |
