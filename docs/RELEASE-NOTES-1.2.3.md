@@ -1,7 +1,9 @@
-# RCP/M 1.2.3 — help integration
+# RCP/M 1.2.3 — HELPC 1.5r and complete command help
 
-This source update merges `qualified-help-links` and the completed command
-reference. It does not publish a v1.2.3 tag or replace existing release archives.
+This release includes HELPC 1.5r, qualified internal links and the completed
+command reference. It retains the native runtimes, bundled virtual modem,
+BYE drivers, RBBS 4.1 board and archive volumes from the verified 1.2.2 base.
+Use a fresh directory; do not extract a new release over an existing board.
 
 The online collection now has 120 HLP files. It covers 63 installed COM
 programs and 24 resident CCP/RCP/FCP entries, with separate public, resident,
@@ -37,12 +39,24 @@ existing live installations use the separate guarded local updater.
 
 Without a compatible installed viewer or the explicit local input, assembly
 fails before installing qualified-link topics. This prevents apparently
-successful packages with links that HELPC 1.4 cannot follow. Producing a public
-binary release still requires the component distribution review and the
+successful packages with links that HELPC 1.4 cannot follow. Package qualification enforces the component distribution review and the
 [1.2.3 documentation/release gate](release-packaging.md#documentation-release-gate-123-and-later),
 including refreshed distributed manual editions and platform package checks.
+Both complete manuals are included as readable .DOC text and maintained
+Markdown sources in every native package and Docker image.
 
-## Verification
+## Release checks
+
+The release workflow verifies pinned base archives and the published 1.5r
+binary, checks that only the two viewers and I14 help files change on guest
+media, and retains all native runtime/driver bytes. It reads all 120 packaged
+help menus as a caller on macOS ARM64, Linux ARM64/x64 and Windows x64, and
+checks the Windows bundle under Windows 11 ARM64 emulation. Each platform
+checks direct TCP and bundled-modem reconnect/shutdown. Linux Docker images
+are rebuilt with both manuals and tested in both modes with persistent data.
+VALIDATION.json records the exact source commit, assets and check results.
+
+## Earlier development verification
 
 The tested local collection opened all 120 help files, followed 145 qualified
 links and returned to their parents, and exercised nested root navigation.

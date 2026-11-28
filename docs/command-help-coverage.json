@@ -11,7 +11,7 @@
     "kind": "COM",
     "topic": "BYEDRIV",
     "access": "SYSOP ONLY",
-    "binary_sha256": "323151e15e0c6caefeefa708b5577ab4ca02fcba51542af4cd578783c42ce3e2"
+    "binary_sha256": "68a4adb330f6490db2bdc2992ac8a7b899c80924928ea5c434e44d66a3f7b715"
   },
   {
     "invocation": "A0:CHAT",
@@ -158,7 +158,7 @@
     "kind": "COM",
     "topic": "RBBSBACK",
     "access": "SYSOP ONLY",
-    "binary_sha256": "682920301c4ead2f56e64d83134f60c6d2d7c4b5f2ec521053103c780badc24b"
+    "binary_sha256": "a5ea4ac4e258b90236a44b6eaea11bca6da344cde1bc46883aa18cf435d62e8d"
   },
   {
     "invocation": "I13:ARUNZ",
@@ -347,7 +347,7 @@
     "kind": "COM",
     "topic": "RBUTIL41",
     "access": "SYSOP ONLY",
-    "binary_sha256": "1bc58990473fe51aac6d860422ebd2dce0dfb21d87e4e20f44b6647df535a767"
+    "binary_sha256": "9050257f8be73c2bc9e9ad096a5ef0f26897f3b3e50a995d7559b9cc1bcd80b6"
   },
   {
     "invocation": "I13:RENAME",

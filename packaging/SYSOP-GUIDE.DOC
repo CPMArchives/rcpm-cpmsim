@@ -1,137 +1,587 @@
-RCP/M - SYSOP'S GUIDE
+HUMONGOUS RCP/M  -  Sysop's Guide
 
-Read docs/INSTALLATION.DOC for first startup, client connections, listener
-configuration and the optional tcpser/IP232 arrangement. This guide covers
-routine administration. docs/DISK-IMAGES.DOC gives raw disk geometries and
-format/edit commands.
+*For RCP/M 1.2.3 * November 2026*
 
-SYSOP.DOC is a different, PRIVATE file generated locally at first start.
-It contains your RBBS passwords. Do not publish it with these manuals.
+This is the maintained edition of the manual. It describes the released
+system, not features still under development. Check the release notes
+(RELEASE-NOTES-1.2.3.md) if your installation differs.
 
-Contents:
-  1. The shared machine
-  2. Disk and directory layout
-  3. Local control, privileges and editing
-  4. AUTH: caller permissions and executable approval
-  5. RBBS administration
-  6. Uploads, staging and review
-  7. Archives and swappable volumes
-  8. Shutdown, backup and recovery
-  9. Updating RCP/M
+Contents
 
-1. THE SHARED MACHINE
+- 1. So you've decided to run an RCP/M (#1-so-youve-decided-to-run-an-rcpm)
+- 2. Making the first call (#2-making-the-first-call)
+- 3. Host configuration (#3-host-configuration)
+- 4. At the sysop's console (#4-at-the-sysops-console)
+- 5. A tour of the disks (#5-a-tour-of-the-disks)
+- 6. Putting together a software collection
+(#6-putting-together-a-software-collection)
+- 7. Giving directories names (#7-giving-directories-names)
+- 8. Deciding what callers may do (#8-deciding-what-callers-may-do)
+- 9. Approving programs for online use (#9-approving-programs-for-online-use)
+- 10. Running RBBS (#10-running-rbbs)
+- 11. Making the system your own (#11-making-the-system-your-own)
+- 12. Transfers and incoming software (#12-transfers-and-incoming-software)
+- 13. A word with the caller (#13-a-word-with-the-caller)
+- 14. Backups, shutdown and recovery (#14-backups-shutdown-and-recovery)
+- 15. When something goes wrong (#15-when-something-goes-wrong)
+- 16. Inviting callers from elsewhere (#16-inviting-callers-from-elsewhere)
+- 17. Keeping up with new releases (#17-keeping-up-with-new-releases)
+- Further reading (#further-reading)
+- Acknowledgements (#acknowledgements)
+- Appendix: AUTH command reference (#appendix-auth-command-reference)
+  - A.1 Starting AUTH safely (#a1-starting-auth-safely)
+  - A.2 The permission model and shipped defaults
+(#a2-the-permission-model-and-shipped-defaults)
+  - A.3 Reading the map and querying targets
+(#a3-reading-the-map-and-querying-targets)
+  - A.4 Setting drive and DU permissions
+(#a4-setting-drive-and-du-permissions)
+  - A.5 COM-file execution and F4 (#a5-com-file-execution-and-f4)
+  - A.6 Live settings, saved files and startup
+(#a6-live-settings-saved-files-and-startup)
+  - A.7 Scripts, explicit filenames and overwrite authorization
+(#a7-scripts-explicit-filenames-and-overwrite-authorization)
+  - A.8 Worked policy workflows (#a8-worked-policy-workflows)
+  - A.9 Backups, failed saves and recovery
+(#a9-backups-failed-saves-and-recovery)
+  - A.10 Troubleshooting (#a10-troubleshooting)
 
-One cpmsim process runs CP/M 3, Z3PLUS and BYE510. The local terminal and
-one connected caller share that guest; they are not independent sessions.
-Keep the terminal open while serving calls. The distributed launcher has
-no tmux dependency and does not create a background daemon.
+1. So you've decided to run an RCP/M
 
-The external RCPM.CONF selects direct TCP or bundled tcpser/IP232 and the
-caller address/port. It includes descriptions and working local defaults:
-direct raw TCP on 127.0.0.1 port 4000. No initial editing is required.
-Set MODE=ip232 while stopped to have the launcher manage the virtual modem.
-PORT remains the caller port; internal modem settings are automatic.
-No system service, scheduled job or monitoring configuration is required.
+Forty years ago, this would have meant setting aside a computer, buying a
+modem, arranging for a telephone line and spending a good many evenings
+persuading the various pieces of software to cooperate. Fortunately, most of
+that work has already been done for you.
 
-Optional host settings (edit RCPM.CONF while stopped, then restart):
+HUMONGOUS RCP/M is a working CP/M computer, not simply a bulletin board with a
+CP/M theme. Callers can explore its disks, read documentation, exchange
+software, play approved games and visit the board. What sort of collection and
+community you build is up to you.
 
-    MODE       direct (default), or ip232 for the bundled virtual modem.
-    ADDRESS    127.0.0.1 (default) for local callers. Use the host's network
-               IPv4 address or 0.0.0.0 for callers from other computers.
-    PORT       4000 (default). This is the caller port in either mode.
-               Choose another unused port when running multiple boards.
+This guide assumes you know your way around CP/M and a host command line. If
+you would like a refresher on the caller's side of the system, see the
+companion User's Guide (USER-GUIDE.md). It deals with the peculiarities of
+running this particular RCP/M. For exact disk geometry and host-side image
+tools, keep the Disk Images reference (../packaging/DISK-IMAGES.DOC) handy.
+The Installation notes (../packaging/INSTALLATION.DOC) cover platform-specific
+startup matters.
 
-The file contains the same descriptions as comments. There is no setup
-wizard or required configuration step. Docker additionally publishes its
-container port and keeps the board in a persistent volume; see its guide.
+Under the bonnet is a customized version of Udo Munk's cpmsim, from the
+z80pack project (https://github.com/udo-munk/z80pack), emulating a Z80
+computer running banked CP/M 3 (https://www.cpm.z80.de/drilib.html). Our
+version adds facilities specifically for RCP/M, including the caller
+connection and shared sysop console, swappable library volumes, and the
+host-side services used to receive uploads and saved messages. These
+facilities work in conjunction with the adapted guest software. Use the cpmsim
+executable supplied with HUMONGOUS RCP/M rather than substituting a stock
+z80pack binary; the two are not interchangeable for this system. Z3PLUS
+(https://manualzilla.com/doc/6919195/z3plus-user-s-manual) supplies the
+command environment and named directories. BYE510
+(https://dflund.se/~pi/cpm/files/ftp.mayn.de/pub/cpm/archive/bye5/bye510/)
+handles remote operation, and RBBS (#10-running-rbbs) provides forums and
+private mail.
 
-The default emulated CPU speed is 4 MHz. CPU speed affects game
-loops and software timing, as well as console throughput. Client display
-pacing or an optional virtual modem is a separate way to reproduce a slow
-connection. Do not treat a CPU clock change as merely a baud-rate setting.
+We've also written several utilities specifically for HUMONGOUS RCP/M. AUTH
+(#appendix-auth-command-reference) gives the sysop control over caller
+permissions and program approval. MOUNT
+(#6-putting-together-a-software-collection) lets callers exchange software
+library volumes without restarting CP/M, and NDSCAN
+(#7-giving-directories-names) updates the named directories to reflect the
+contents of a mounted disk. These three utilities are original contributions
+of this project, rather than adaptations of historical CP/M programs.
 
-2. DISK AND DIRECTORY LAYOUT
+The normal emulated CPU speed is 4 MHz; changing it affects program timing,
+not just the apparent speed of the connection.
 
-    A0:SYSTEM   Public commands, boot/support files and WELCOME.TXT
-    A15:        Trusted RBBS executable and static board/display files
-    I0:WORK     Temporary caller workspace
-    I13:SYSUTLS  Private system utilities, including PIP, PPIP, SET and ZDE
-    I14:HELP     Caller-readable help area; basic caller topics installed
-    I15:RBBS     Private board users/messages/counters
-    P0:SIGM     SIGMV001.LBR through SIGMV310.LBR
-    P1:CPMUG    CPMUG001.LBR through CPMUG093.LBR
-    J0:VOLUME   The currently mounted archive; caller read-only by default
+You and the caller share this one machine. There is one caller at a time,
+alongside your local console. Bear that in mind whenever you sit down to do
+some maintenance.
 
-I0:WORK is cleared before answering, including startup and call recovery.
-Do not keep sysop documents, rescued edits or completed submissions there.
-Other I: areas and the host upload inbox are not cleared by this routine.
-There is currently no named CP/M UPLDS: area in the distributed directory
-table. Incoming submissions are retained in the private host inbox instead.
+2. Making the first call
 
-The -NAME files are directory markers, not an automatic naming service.
-NDSCAN refreshes named directories from the mounted volume markers; MOUNT
-runs it after changing a volume. NAME without a new name can delete a table
-entry; do not use a bare NAME command just to inspect directories. PWD and
-ZSHOW provide directory-table inspection.
+Obtain the complete package for your host from the release page
+(https://github.com/CPMArchives/rcpm-cpmsim/releases/tag/v1.2.3). Unpack it
+into a writable directory. On macOS run Start-RCPM.command, on Linux
+Start-RCPM.sh, and on Windows Start-RCPM.cmd. There is no setup wizard and no
+initial configuration is required. Docker users should follow the Docker
+instructions (docker.md); the CP/M side is the same.
 
-Caller HELP topics live in I14:. HELP opens HELP.HLP by default; HELP GAMES
-opens GAMES.HLP. DIR HELP: lists the topic filenames. Fresh builds include
-commands, mounting, library browsing, transfers, RBBS, games, WORK and logoff.
-These are plain-text topics for the preserved HELPC viewer, not Markdown.
-Use a semicolon on the first line, CP/M CR/LF text and a Ctrl-Z end marker.
-Keep the supplied topics short enough for one screen. Maintain them privately
-with the caller blanked; caller read access does not permit editing HELP.
+The first startup generates the private file SYSOP.DOC in the installation
+directory. This contains your initial board credentials. It is not the Sysop's
+Guide and should never be made available to callers.
 
-3. LOCAL CONTROL, PRIVILEGES AND EDITING
+When the modem is ready, call your own system using a terminal such as
+SyncTERM (https://syncterm.net/). Select raw TCP, address 127.0.0.1, port
+4000. Press RETURN. Try:
 
-With a caller connected, local Ctrl-B blanks the caller and enables private
-sysop operation. Ctrl-B again restores shared operation and restrictions.
-Private output stays local. Return to A0:SYSTEM or another public directory
-before unblanking. Selecting a drive/user area does not grant file access;
-the shared permission checks apply to file operations in caller mode.
+    HELP
+    DIR SIGM:
+    DIR CPMUG:
+    MOUNT /L
+    RBBS
 
-While private, local control keys reach the application except Ctrl-B.
-In shared mode, historic BYE controls remain: Ctrl-Q enters 'Message from
-Sysop', Ctrl-X leaves that message mode, and Ctrl-N forces caller hangup.
-These are BYE controls, not editor commands. Leave private editors before
-unblanking. A private directory must not become caller-readable merely
-because the sysop selected it.
+Register an ordinary account, enter a message, read it back and leave the
+board with C. At CP/M, type BYE. Call again. You have now seen the machine
+from the other end of the connection, which is a useful habit for a sysop to
+cultivate.
 
-Live chat: a caller types CHAT at the CP/M prompt (leave RBBS with C first).
-Answer with Escape on the local console. Both terminals need 80x24 ANSI/VT100:
-SYSOP uses the upper pane; CALLER uses the lower pane. Each pane wraps and
-scrolls independently. Backspace erases on the current line; Tab adds spaces.
-Ctrl-R redraws both panes; Ctrl-C or Ctrl-X from either keyboard ends chat.
-CHAT /S retains the plain scrolling display for simpler terminals.
-Local Ctrl-B ends split chat and enters private-console mode. Subsequent
-private input is not stored in chat buffers. Ctrl-G toggles BYE's page bell
-and paging availability. An unanswered page returns to CP/M. HELP CHAT gives
-caller instructions. See CHAT46.md for build details and validation.
+3. Host configuration
 
-If using your own tmux wrapper, Ctrl-B Ctrl-B passes one Ctrl-B through tmux.
-The distributed launcher itself uses no tmux and takes a single Ctrl-B.
+The external RCPM.CONF is deliberately small and commented. Stop the machine
+before editing it.
 
-Use SYSUTLS:ZDE A0:WELCOME.TXT to edit the caller sign-on banner privately.
-ZDE uses Ctrl-K then S to save, Ctrl-K then X to save/exit, and Ctrl-K then Q
-to abandon changes. If an unchanged buffer prompts to save after an earlier
-save, answer N to exit without repeating the save. WELCOME.TXT is selected
-exactly; an editor's WELCOME.BAK should not replace it as the sign-on file.
+| Setting | Default | Purpose |
+| --- | --- | --- |
+| MODE | direct | Direct raw TCP; ip232 selects the bundled tcpser
+(https://github.com/go4retro/tcpser) virtual modem |
+| ADDRESS | 127.0.0.1 | Listener IPv4 address |
+| PORT | 4000 | Caller port in either mode |
 
-Public commands are deliberately reviewed and limited. AUTH controls caller
-read/write permissions by drive and user area. Caller COM execution also
-requires F4 approval and a caller-read-only source DU; see section 4. Copying
-a COM file to writable WORK does not make it executable. SYS affects directory
-display, not execution authority. The fixed A0:RBBS launcher has a narrow
-exception for its trusted private A15: board and I15: data, without granting
-wheel privileges or general caller access to those directories.
+The launcher handles tcpser's internal endpoints automatically. Keep the
+distributed foreground terminal open while serving calls. If you use your own
+tmux (https://github.com/tmux/tmux) wrapper, detaching is not shutting down.
+Docker uses its published port and persistent data volume; consult its guide
+before changing the container.
 
-4. AUTH: CALLER PERMISSIONS AND EXECUTABLE APPROVAL
+Running a second board is quite possible. Give it its own directory or Docker
+volume and a different caller port. Never share writable disk images between
+two running machines.
 
-AUTH.COM resides in I13:SYSUTLS. It administers the running BYE permission
-table and individual COM-file approvals. You do not need to stop the server,
-rebuild BYE, or remount an image after using AUTH inside CP/M.
+4. At the sysop's console
 
-4.1 Starting AUTH safely
+When a caller is online, your local keyboard and his remote keyboard
+ordinarily feed the same computer. Don't start a disk operation while someone
+is composing a message.
+
+Use the following local BYE controls in shared mode:
+
+| Key | Action |
+| --- | --- |
+| Ctrl-B | Blank the caller and enter private operation; again to unblank |
+| Ctrl-G | Toggle the page bell and paging availability |
+| Ctrl-Q | Enter sysop message mode |
+| Ctrl-X | Leave message mode |
+| Ctrl-N | Force caller hangup |
+
+While blanked, most local control keys go to the application rather than BYE,
+except Ctrl-B. Finish private work, leave the application and return to A0:
+before unblanking. With a tmux wrapper, Ctrl-B Ctrl-B sends a literal Ctrl-B
+to the guest; the distributed launcher needs only one.
+
+Between calls, local Ctrl-C opens BYE's menu. Select J to jump to CP/M with
+BYE attached if you intend to use AUTH. RETURN instead enters ordinary,
+unpatched CP/M; AUTH needs the resident interface, so don't confuse the two
+choices.
+
+5. A tour of the disks
+
+| Drive | Exact image bytes | Purpose |
+| --- | ---: | --- |
+| A: | 256256 | Boot and system disk |
+| I: | 4177920 | Workspace, help, private utilities and board data |
+| J: | 4177920 | Swappable software collections |
+| P: | 536870912 | Large swappable archives |
+
+The named directories are more useful than the bare drive letters:
+
+| DU | Name | Contents |
+| --- | --- | --- |
+| A0: | SYSTEM | Public commands, boot files and WELCOME.TXT |
+| A15: |  -  | Trusted board executable and static files |
+| I0: | WORK | Temporary caller workspace |
+| I13: | SYSUTLS | Private tools, including AUTH, PIP, PPIP, SET and ZDE |
+| I14: | HELP | Caller-readable online documentation |
+| I15: | RBBS | Private board records and message base |
+| P0: | SIGM | SIG/M libraries on the default P: |
+| P1: | CPMUG | CPMUG libraries on the default P: |
+| J0: | VOLUME | Default J: volume directory |
+
+WORK is cleared before answering, including startup and call recovery. Never
+leave your only copy of a rescued edit or a sysop document there. Uploads go
+to a separate host inbox, not a permanent CP/M UPLDS: directory.
+
+6. Putting together a software collection
+
+The default P: contains all 310 SIG/M and 93 CPMUG volumes. Browse a few of
+them before deciding what else your board ought to offer. You might specialize
+in a particular computer, programming language, or collection of games.
+
+Put small raw z80pack-hd images in disks/library/ and large raw z80pack-hdb
+images in disks/library/archives/. Catalog names are one to eight letters,
+digits or underscores, followed by .dsk. A filename extension is no guarantee
+of disk geometry. Prepare images with the matching format in the Disk Images
+reference (../packaging/DISK-IMAGES.DOC); simply padding or renaming an
+unrelated image won't convert it.
+
+    MOUNT /L
+    MOUNT J: /L
+    MOUNT P: /L
+    MOUNT GAMES
+    MOUNT P: /DEFAULT
+    MOUNT J: /DEFAULT
+
+MOUNT chooses J: or P: by exact image size. If a name occurs in both catalogs,
+qualify it with the drive. The old image remains mounted if selection or
+buffer flushing fails. A successful mount relogs the selected disk and
+refreshes its names. Default images return when the emulator restarts, not
+necessarily when a caller logs off.
+
+Keep private media outside the public catalogs (the supplied offline directory
+is one such place). A private image mounted in a caller-readable DU is no
+longer private simply because of where it came from. AUTH permissions follow
+the drive/user slot, not the volume.
+
+Never host-edit an image while cpmsim has it open. Stop the board, keep a
+backup, and use the supplied disk tools (based on cpmtools
+(https://www.moria.de/~michael/cpmtools/)). Host file permissions and CP/M
+attributes are distinct from AUTH; an owner-writable image does not by itself
+grant callers write access.
+
+The GAMES collection (online-games.md) has preparation launchers in J0: for
+Adventure, Animals and Maze Chase. Try MOUNT GAMES followed by J0:ADVENT,
+J0:ANIMALS or J0:MCHASE. The launchers need readable/writable WORK for data;
+the approved game itself runs from a protected DU. Games that insist on
+writing to the library disk are better left for download and local play.
+
+7. Giving directories names
+
+A caller will remember INFOCOM: more readily than J3:. Create an extensionless
+marker file named -INFOCOM in the intended user area. Its contents don't
+matter. Use up to seven letters, digits or underscores after the hyphen.
+
+    NDSCAN J:
+
+NDSCAN rebuilds names for that drive alone, scanning users 0-15. MOUNT
+normally chains to NDSCAN after a swap. Areas without markers lose their old
+names. Duplicate names, multiple different markers in one user area,
+collisions with other drives or a full name table prevent the update. The
+supplied table holds 42 names. See MOUNT and NDSCAN (swappable-volumes.md) for
+additional details.
+
+If a mount succeeds but scanning fails, the new disk is mounted and the old
+names are still present. Use numeric DUs until you correct the markers and
+rerun NDSCAN, or restore the default volume. Callers need read access to every
+user area on a drive to scan it; private sysops can scan private drives.
+
+Use PWD or ZSHOW for inspection. Don't use a bare NAME command to inspect a
+name: it can delete an entry. Names do not grant access.
+
+8. Deciding what callers may do
+
+An RCP/M gives strangers the use of a real computer. That's its attraction,
+and also the reason for taking permissions seriously.
+
+AUTH lives in SYSUTLS:. With the caller blanked, or between calls with BYE
+attached, type AUTH /MAP. The map shows the effective read/write pair for each
+DU. An asterisk marks an explicit override; without it the DU follows the
+drive setting.
+
+The shipped policy gives read access to A0:, I14:, J: and P:, read/write
+access to I0:, and denies other areas. In particular, I13: and I15: inherit
+I:'s denial. Don't casually grant access to all of I:; you would expose
+inherited private areas unless you explicitly protect them first.
+
+Suppose you want to keep J3: out of sight:
+
+    AUTH J: /R
+    AUTH J3: /NONE
+
+To remove that exception, use AUTH J3: /INHERIT. A drive change doesn't erase
+its DU overrides. Each permission argument replaces the entire pair: /W is
+write only, not an instruction to add write permission to read.
+
+AUTH changes take effect immediately and survive calls. Save the map with AUTH
+/SAVE, accepting I13:AUTH.DAT, if you want it at the next startup. AUTH /LOAD
+restores a saved map. The full reference in the appendix
+(#appendix-auth-command-reference) covers alternate policies, scripts and
+recovery.
+
+9. Approving programs for online use
+
+A disk full of useful CP/M programs is not necessarily a disk full of programs
+suitable for remote execution. Debuggers, memory editors and arbitrary loaders
+are obvious examples.
+
+An ordinary caller COM load requires read access to its source DU, no caller
+write access to that DU, and F4 on the actual file. F4 is our approval
+convention, not a universal CP/M rule. For example, after reviewing Adventure
+on the mounted GAMES disk:
+
+    AUTH J1:ADV.COM
+    AUTH J1:ADV.COM +X
+    AUTH J1:ADV.COM
+
+Withdraw approval with AUTH J1:ADV.COM -X. These changes go straight to the
+disk directory; AUTH /SAVE and /LOAD affect permissions, not F4.
+
+Clear inherited F4 flags when importing software. Review the actual binary and
+its options, including shell escapes and secondary loaders. BYE is not a
+sandbox for hostile Z80 code. See the caller execution policy
+(caller-execution.md) and security boundary (security-boundary.md) for
+details. Approving a program means trusting it. Individual file R/O and SYS
+attributes do not replace AUTH.
+
+Don't give callers write access to A0: in an attempt to make a program work.
+That will prevent ordinary public COM loads. If it happens, restore AUTH A0:
+/R. A caller in writable WORK can still load approved commands from read-only
+A0:.
+
+10. Running RBBS
+
+The 1.2.3 board retains RBBS 4.1 Edit 02. Our RBBS integration notes
+(rbbs41-test.md) describe the adaptations to this version. Fresh boards
+contain PERSONAL, GENERAL, CPM and TEST areas, with one SYSOP seed account.
+New callers can register and post without prior validation.
+
+Getting in as sysop
+
+Work at the private local console, not with the caller looking over your
+shoulder. Enter RBBS, give the name SYSOP and use the generated six-character
+password recorded in private SYSOP.DOC. Passwords are case-sensitive. The
+displayed 123456 is a character counter, not a password.
+
+Normal menus accept a single key. Text, names and message numbers still
+require RETURN. Expert mode retains line commands and semicolon sequences such
+as R;1 and R;1+. End a message with a period on its own line, then S to save.
+
+| Key | Main board function |
+| --- | --- |
+| F | Select forum |
+| R | Read messages |
+| S | Summarize |
+| N | Read new messages |
+| K | Delete an authorized message |
+| C | Return to CP/M |
+| G | Disconnect |
+
+Looking after the forums and accounts
+
+From private CP/M run:
+
+    SYSUTLS:RBUTIL41
+
+The numbered maintenance menu offers 4 to select a forum, 5 to add a forum, 6
+to manage users, and 9 to quit. Option 3 resets the account database. It is
+not an ordinary account-maintenance command. Back up before making significant
+changes.
+
+Forum names have at most eight characters, and this released board supports
+eight areas total, including PERSONAL. Later RBBS revisions may differ; use
+their own documentation. A few active forums are much more inviting than a
+long list of empty ones. Choose subjects your callers are likely to care
+about, and put a welcoming message in each new forum.
+
+Check new accounts and look in on the discussions. Answer questions when you
+can. Few things make a board seem more deserted than a question left
+unanswered for weeks.
+
+The protected executable is A15:RBBS41.COM; accounts, callers, subjects,
+messages and associated data reside in I15:. The fixed public RBBS launcher
+grants only the access needed for the board. Do not make those areas public.
+Private mail is private from ordinary callers, not from the sysop or anyone
+with access to backups. Raw TCP is unencrypted.
+
+Do not delete state/initialized to reset credentials. SYSOP.DOC records the
+original generated password. RBBS 3.7 and 4.1 data files differ; fresh release
+disks are not an in-place migration.
+
+11. Making the system your own
+
+The sign-on message should tell the caller where he's arrived and what he
+might find there. A few lines are often sufficient; regular callers needn't
+read several screens of announcements every time.
+
+From private CP/M:
+
+    SYSUTLS:ZDE A0:WELCOME.TXT
+
+ZDE
+(https://www.dflund.se/~pi/cpm/files/ftp.mayn.de/pub/cpm/archive/zsystem/zde16/)
+uses WordStar keys: Ctrl-K S saves, Ctrl-K X saves and exits, Ctrl-K Q
+abandons changes. If an unchanged buffer prompts after a previous save, N
+exits without saving again. Keep the caller blanked throughout editing and
+saving. BYE displays WELCOME.TXT on the next call, not its .BAK file.
+
+The HELP topics are in I14:HELP. DIR HELP: lists them; HELP GAMES opens a
+particular topic. The released 1.2.2 collection uses short ASCII topics
+beginning with a semicolon line, with CRLF and Ctrl-Z termination. The 1.2.3
+collection expands this to 120 linked and paginated help files, covering 63
+installed command programs and 24 resident command entries. Its qualified
+links require the tested HELPC 1.5r viewer. HELP COMMANDS separates public and
+resident caller commands from * SYSOP ONLY utilities, resident commands and
+startup backends. HELP GET distinguishes the two private GET implementations;
+HELP R and HELP RESET distinguish disk reset from whole-machine reset. The
+labels document access; BYE policy and wheel restrictions enforce it. Maintain
+HELP privately, and put no passwords or installation-specific secrets in
+public topics.
+
+12. Transfers and incoming software
+
+Try at least one download and one upload yourself. There is no substitute for
+having seen the process from the caller's side when someone says his terminal
+has hung.
+
+    YSEND A0:WELCOME.TXT
+    UPLOAD EXAMPLE.LBR
+    UPLOAD /Y
+
+YSEND sends YMODEM; start the corresponding receive operation in your
+terminal. UPLOAD filename receives one file using XMODEM/CRC; UPLOAD /Y
+receives a YMODEM batch. Start the matching send operation at the terminal
+when prompted.
+
+Completed submissions go to uploads/inbox/ on the host. In-progress files go
+to uploads/staging/. Keep both on the same filesystem: completion uses an
+atomic hard link. Duplicate names receive unique suffixes, rather than
+overwriting earlier submissions. Interrupted partial files are discarded;
+previously completed batch members remain. XMODEM retains record padding,
+while YMODEM retains the declared length.
+
+MESSAGE notes saved by callers also arrive in the inbox. Unsaved drafts are
+discarded at call recovery. These files survive WORK cleanup and ordinary
+restarts.
+
+Examine the actual contents of a submission, not just its filename. Check
+archive members, accompanying documentation and redistribution terms. Retain
+the original. Stop the board and back up the destination disk before importing
+reviewed files using the correct image format. Never place arbitrary uploaded
+files directly in the disk catalog, or automatically approve an uploaded COM
+file for caller execution.
+
+13. A word with the caller
+
+When paged by CHAT, answer with Escape on the local console. Both ends need an
+80-column, 24-row ANSI/VT100 terminal for the split display. Your text appears
+above the caller's; the panes wrap and scroll separately. Backspace erases
+within the current line, Tab inserts spaces, and Ctrl-R redraws. Ctrl-C or
+Ctrl-X ends chat. CHAT /S provides the plain scrolling alternative.
+
+A caller in RBBS must return to CP/M with C before invoking CHAT. Ctrl-G at
+the local console toggles paging availability. If you need to attend to
+private business, local Ctrl-B ends split chat and blanks the caller.
+
+14. Backups, shutdown and recovery
+
+BYE logs off a caller; it does not stop the machine. Between calls, use local
+Ctrl-C at BYE's waiting prompt, then RETURN for ordinary CP/M. From private
+local CP/M enter:
+
+    SYSUTLS:BYEBYE
+
+Wait until cpmsim has actually stopped. A blanked caller or an idle listener
+is not a stopped emulator.
+
+Copy the whole installation to separate storage: disks/, the library catalog,
+uploads/inbox/, state/, RCPM.CONF and private SYSOP.DOC. In Docker, preserve
+the complete persistent volume while the board is stopped. A copy on the same
+disk is useful for recovery from mistakes, but not a substitute for a backup
+on separate storage.
+
+Restore a complete snapshot into a new directory. Don't mix accounts and
+message files from unrelated dates. Stop the original before starting a
+restored copy on its port. Never bypass the installation lock or delete it to
+start a second guest on the same disks.
+
+If WORK cleanup fails, the machine refuses to answer. Stop and repair the I:
+image or host write permissions before restarting.
+
+15. When something goes wrong
+
+| Symptom | First things to examine |
+| --- | --- |
+| Launcher won't start | Host permissions, occupied port, another running copy
+|
+| Caller connects but sees nothing | Raw TCP rather than Telnet; press RETURN
+|
+| DIR or LT works locally but not remotely | A0: caller read-only permission
+and F4 |
+| Game won't prepare its files | MOUNT GAMES; I0: RW; approval of the actual
+game |
+| Old names after MOUNT | NDSCAN errors, marker collisions |
+| AUTH refuses to run | Private operation with BYE attached |
+| AUTH settings vanish after restart | Saved I13:AUTH.DAT |
+| HELP or board records missing | Correct I: image and DU permissions |
+| Garbled CHAT | ANSI/VT100 setup, or CHAT /S |
+| WORK files vanish | Expected at call boundaries |
+
+Try to decide whether the trouble lies in the host, CP/M, BYE or a transient
+program. If a command works in private CP/M but not for a caller, look at
+permissions before rebuilding software. The AUTH appendix
+(#appendix-auth-command-reference) goes into more detail about recovering a
+bad policy.
+
+16. Inviting callers from elsewhere
+
+Once you are happy with local calls, stop the system and change ADDRESS to the
+appropriate host IPv4 address, or 0.0.0.0 for all interfaces. Restart. The
+host firewall and router must permit the caller port. For Docker, arrange the
+host port publication instead; see the Docker guide (docker.md).
+
+Make a call from another computer before announcing the board. Raw TCP
+provides no encryption; advise callers not to reuse important passwords. Keep
+administrative tools and credentials private, approve only reviewed software,
+and retain a good stopped backup. Guest permission checks are not a substitute
+for securing the host itself.
+
+Automatic startup, scheduled backups, monitoring and other unattended hosting
+arrangements are separate matters. Optional administration guides are
+available for Linux (hosting-addon.md), macOS (ADMINISTRATION-MACOS.md) and
+Windows (ADMINISTRATION-WINDOWS.md). None is needed for ordinary foreground
+operation.
+
+17. Keeping up with new releases
+
+Don't unpack a new release over your board. Test it separately and follow its
+migration instructions. Preserve your accounts, messages, policy, credentials,
+uploads and custom software. Keep matching emulator and BYE driver versions
+together. Pulling a new Docker image doesn't automatically migrate an
+initialized volume.
+
+CPMNet is not part of 1.2.3; this guide describes local forums and mail only.
+Preserve the original component and archive notices when redistributing
+material. See the distribution review (distribution-review.md).
+
+Further reading
+
+For further historical reading, see the RCP/M archive
+(https://www.dflund.se/~pi/cpm/files/ftp.mayn.de/pub/cpm/archive/rcpm/),
+including Jon Schneider's 1985 RCP/M user's guide and period security notes.
+The historical security review (historical-rcpm-security.md) explains how such
+material informs this distribution.
+
+Acknowledgements
+
+HUMONGOUS RCP/M owes its existence to the work of a great many people, some of
+whom made their contributions more than forty years ago. Much of our work has
+been to bring their software together, adapt it to present-day computers and
+make it available to another generation of CP/M enthusiasts.
+
+Our particular thanks go to Gary Kildall and the team at Digital Research for
+CP/M; Udo Munk for z80pack and cpmsim; Richard Conn for his pioneering work on
+ZCPR; and Jay Sage and Bridger Mitchell for Z3PLUS, with Joe Wright for his
+contributions to the Z-System.
+
+We also owe a debt to Dave Jaffe, the original author of BYE, and to Wayne
+Masters, Irv Hoff, George Peace and the other contributors who carried its
+development forward; to the authors and maintainers of CP/M RBBS, whose work
+gives our callers a place to exchange messages; and to Jim Brain for tcpser,
+which allows us to recreate the modem connection without a telephone line.
+
+Finally, our thanks to the many authors of CP/M utilities, the SIG/M and CPMUG
+librarians and contributors, and the archivists and volunteers who have kept
+this remarkable body of software and documentation accessible. Without their
+generosity and persistence, there would be very little for an RCP/M such as
+ours to offer.
+
+The individual software distributions retain their original credits and
+notices.
+
+Appendix: AUTH command reference
+
+This appendix gives the complete AUTH command reference for the released
+system, including policy recovery and scripting.
+
+A.1 Starting AUTH safely
 
 With a caller connected, use local Ctrl-B to blank the caller and enter
 private sysop mode. Then use SYSUTLS:AUTH, or simply AUTH if the private
@@ -155,9 +605,10 @@ Display help with:
 Commands and filenames are case-insensitive. AUTH accepts one target per
 invocation; use several commands in a SUBMIT file or alias for a sequence.
 
-4.2 The permission model and shipped defaults
+A.2 The permission model and shipped defaults
 
-D: means a drive, for example J:. DU: means a drive plus user area, for example
+D: means a drive, for example J:. DU: means a drive plus user area, for
+example
 J3:. Each drive has a caller permission pair. Each DU either inherits that
 pair or has an explicit replacement. The order is:
 
@@ -166,7 +617,8 @@ pair or has an explicit replacement. The order is:
 An explicit DU setting always takes precedence, including an explicit NONE.
 A drive change preserves existing DU overrides. There are no automatic private
 exceptions for particular drive letters: SYSUTLS and RBBS data are private
-because of the configured policy, with a separate controlled RBBS service grant.
+because of the configured policy, with a separate controlled RBBS service
+grant.
 
 The supplied startup policy grants:
 
@@ -177,23 +629,27 @@ The supplied startup policy grants:
     I14:HELP                  R-  (help topics)
     Other DUs                 --  (neither read nor write)
 
-I13:SYSUTLS and I15:RBBS inherit I:'s NONE setting in that policy. If you grant
+I13:SYSUTLS and I15:RBBS inherit I:'s NONE setting in that policy. If you
+grant
 access to all of I:, those inherited DUs follow it too. To keep particular DUs
 private under a broader drive grant, give them explicit NONE overrides first.
 Keep the policy files and private board data protected against caller writes.
 
 R permits file reading and directory browsing. W permits file mutations
-through available programs. Write-only settings deny reading/listing; utilities
+through available programs. Write-only settings deny reading/listing;
+utilities
 that require read access for file lookup may not work with a write-only DU.
 RW is permission, not a supplied file-transfer or copy service: callers still
 have no general copy command or direct upload into WORK in this package.
 The game launchers seed WORK, and caller programs can create workspace data.
-UPLOAD continues to use the private host inbox described in section 6.
+UPLOAD continues to use the private host inbox described in Chapter 12
+(#12-transfers-and-incoming-software).
 
-I0:WORK is cleared at startup and call recovery regardless of its AUTH setting.
+I0:WORK is cleared at startup and call recovery regardless of its AUTH
+setting.
 Changing its permissions does not turn it into permanent storage.
 
-4.3 Reading the map and querying targets
+A.3 Reading the map and querying targets
 
     AUTH                      All drives, users 0-15
     AUTH /MAP                 Same complete map
@@ -214,7 +670,7 @@ A missing asterisk means inheritance, even when the inherited value is --.
 The map does not show whether a disk is mounted or whether a particular file
 exists. You can configure G3: even if no G: image is currently attached.
 
-4.4 Setting drive and DU permissions
+A.4 Setting drive and DU permissions
 
 Both slash syntax and map-style pairs are supported:
 
@@ -235,7 +691,8 @@ Do not type the map's asterisk as part of a permission argument.
     AUTH J3: INHERIT           Remove its override; follow J: again
 
 /INHERIT is equivalent to INHERIT and applies only to a DU. With J: set to R-,
-J3: INHERIT becomes R- and loses its asterisk. Explicit J3: NONE remains denied
+J3: INHERIT becomes R- and loses its asterisk. Explicit J3: NONE remains
+denied
 and keeps its asterisk even if the drive is readable. To deny a drive's base
 permissions, use AUTH J: /NONE; that does not erase its explicit DU overrides.
 
@@ -243,7 +700,7 @@ Changes take effect in BYE's resident map immediately and survive caller
 hangups. They remain unsaved until you use /SAVE. They are replaced by /LOAD
 or by the next startup's saved map.
 
-4.5 COM-file execution and F4
+A.5 COM-file execution and F4
 
 Normal caller execution requires ALL of the following:
 
@@ -260,7 +717,7 @@ at call boundaries. Individual file R/O does not override the writable-DU ban.
 All ordinary COM files use this rule, including public commands in A0:.
 Setting A0: to RW therefore stops callers loading DIR, SDZ, LT and the other
 COM commands there. Private sysop operation continues to work. To restore
-normal caller commands, set AUTH A0: /R. See troubleshooting below.
+normal caller commands, set AUTH A0: /R. See A.10 (#a10-troubleshooting).
 
 Inspect, approve or revoke an existing exact filename:
 
@@ -268,8 +725,10 @@ Inspect, approve or revoke an existing exact filename:
     AUTH J1:ADV.COM +X         Set F4; preserve other file attributes
     AUTH J1:ADV.COM -X         Clear F4; preserve other file attributes
 
-The target comes first. AUTH +X J1:ADV.COM is not supported. These file commands
-require a DU prefix, a COM extension and an exact name; wildcards are rejected.
+The target comes first. AUTH +X J1:ADV.COM is not supported. These file
+commands
+require a DU prefix, a COM extension and an exact name; wildcards are
+rejected.
 
 Examples of status output:
 
@@ -279,9 +738,11 @@ Examples of status output:
     J1:ADV.COM is not executable: no caller read access.
     J1:ADV.COM not found.
 
-+X is approval, not a way to override DU permissions. F4 is our caller-approval
++X is approval, not a way to override DU permissions. F4 is our
+caller-approval
 convention, not a universal meaning imposed by CP/M. Clear inherited F4 flags
-when importing software, then approve reviewed programs deliberately. Individual
+when importing software, then approve reviewed programs deliberately.
+Individual
 file R/O is optional for execution and retains its normal CP/M meaning. SET
 can also manage F4 in private mode. SYS controls directory display, not
 approval.
@@ -295,7 +756,7 @@ shell escapes and direct memory/disk operations it may provide. BYE is not a
 sandbox for hostile Z80 code. The reviewed RBBS entry has its own narrow grant
 for the private board executable/data; do not make those DUs public to run it.
 
-4.6 Live settings, saved files and startup
+A.6 Live settings, saved files and startup
 
 BYE reads I13:AUTH.DAT into memory when its resident policy is initialized.
 File checks use that memory table. AUTH's drive/DU commands update only that
@@ -307,7 +768,8 @@ table; they do not silently rewrite the startup file.
 Saved files include drive settings and DU overrides. They do not contain
 COM-file F4 approvals, accounts, passwords or disk images. Startup always uses
 I13:AUTH.DAT; loading an alternate file does not change that startup filename.
-Each interactive prompt still defaults to I13:AUTH.DAT, not the last-used file.
+Each interactive prompt still defaults to I13:AUTH.DAT, not the last-used
+file.
 SAVE/LOAD always handle the entire map, not only the last drive you queried.
 Policy files are binary; manage them with AUTH rather than a text editor.
 Changing a saved file alone does not change the resident map until LOAD or
@@ -331,7 +793,7 @@ DU selects that area. Scripts should use explicit DU filenames for clarity.
 Names use exact CP/M 8.3 format and do not accept wildcards. These are CP/M
 disk filenames, not host operating-system paths.
 
-4.7 Scripts, explicit filenames and overwrite authorization
+A.7 Scripts, explicit filenames and overwrite authorization
 
     AUTH /SAVE=I13:PUBLIC.DAT
     AUTH /SAVE=I13:PUBLIC.DAT /Y
@@ -358,7 +820,7 @@ AUTH flushes pending CP/M disk buffers before changing live DU permissions,
 including /LOAD. If flushing fails, the live permissions remain unchanged.
 There is no added delay or restriction on sysop permission choices.
 
-4.8 Worked policy workflows
+A.8 Worked policy workflows
 
 Restore the normal public system directory and temporary workspace:
 
@@ -389,35 +851,41 @@ only. To use that live map after restart as well:
 
     AUTH /SAVE=I13:AUTH.DAT /Y
 
-Approve Adventure, with GAMES already selected on J::
+Approve Adventure, with GAMES already selected on J:
 
     AUTH J1:ADV.COM
     AUTH J1:ADV.COM +X
     AUTH J1:ADV.COM
 
-No remount or BYE rebuild is required. Restoring caller mode applies the normal
-DU/F4 checks. A writable game-data workspace does not require making J: writable
+No remount or BYE rebuild is required. Restoring caller mode applies the
+normal
+DU/F4 checks. A writable game-data workspace does not require making J:
+writable
 to the caller. Games that insist on writes to J: remain download/local-play
 software, not online games we must accommodate.
 
-4.9 Backups, failed saves and recovery
+A.9 Backups, failed saves and recovery
 
 For a destination such as PUBLIC.DAT, SAVE first writes a complete PUBLIC.$$$
-in the same DU. It closes and flushes that file, renames an existing destination
+in the same DU. It closes and flushes that file, renames an existing
+destination
 to PUBLIC.BAK (replacing the older backup), then installs the new PUBLIC.DAT.
 The ordinary AUTH.DAT backup is AUTH.BAK. This backup is a policy-file backup,
 not a backup of the board or its disk images.
 
 .BAK and .$$$ are reserved SAVE extensions. LOAD can read such files if their
-contents are a valid policy. An existing temporary file is not silently erased,
+contents are a valid policy. An existing temporary file is not silently
+erased,
 even with /Y. After an I/O error retain all temporary/backup files for
 inspection.
 If installing the new destination fails, AUTH attempts to rename the backup
 back into place. Failure of that recovery or a power loss can still leave a
-missing startup file; keep whole-installation backups as described in section 8.
+missing startup file; keep whole-installation backups as described in Chapter
+14 (#14-backups-shutdown-and-recovery).
 
 LOAD validates the signature, complete required records and every permission
-byte before changing the resident table. An invalid, incomplete or missing file
+byte before changing the resident table. An invalid, incomplete or missing
+file
 leaves the current live map unchanged. If BYE cannot load a valid startup
 policy, caller file access stays denied and a local diagnostic is displayed.
 BYE does not automatically select AUTH.BAK or another alternate policy.
@@ -430,15 +898,18 @@ Recover a valid backup through private AUTH, without restarting:
 
 Use an unused name for RESCUE.DAT. Preserve that good copy before overwriting
 AUTH.DAT: the final save rotates the old (possibly corrupt) AUTH.DAT into
-AUTH.BAK, replacing the backup you just loaded. If a leftover AUTH.$$$ prevents
+AUTH.BAK, replacing the backup you just loaded. If a leftover AUTH.$$$
+prevents
 saving, first secure a valid policy under a different basename, then inspect
 and clear only the stale staging file using private maintenance tools.
 
 If no valid policy file remains, use private AUTH to rebuild the desired drive
-and DU grants, inspect /MAP, then save them as I13:AUTH.DAT. The defaults table
-in section 4.2 is a reference, not an automatic reset command.
+and DU grants, inspect /MAP, then save them as I13:AUTH.DAT. The defaults
+table
+in A.2 (#a2-the-permission-model-and-shipped-defaults) is a reference, not an
+automatic reset command.
 
-4.10 Troubleshooting
+A.10 Troubleshooting
 
 DIR?, SDZ? or LT? after making A0: RW:
     Caller-writable DUs cannot supply caller executables. Blank the caller and
@@ -471,206 +942,7 @@ Explicit /SAVE says the file exists:
 
 Save reports a staging file already exists:
     Inspect the same-basename .$$$ before removing it. It may contain a complete
-    recoverable map from a previous interrupted save; see section 4.9.
+    recoverable map from a previous interrupted save; see A.9 (#a9-backups-failed-saves-and-recovery).
 
 The optional host --caller-allow/deny/list helper is for stopped-image
 maintenance. Normal live administration uses AUTH inside CP/M.
-
-5. RBBS 4.1 ADMINISTRATION
-
-Fresh packages contain empty PERSONAL, GENERAL, CPM and TEST areas and only
-one SYSOP seed account. First start generates a unique six-character password
-in private SYSOP.DOC. Enter SYSOP at "Enter your name", then that password.
-Passwords are case-sensitive. The displayed 123456 is a character counter.
-New callers can register and post without validation.
-
-Normal menus act on a single key. Text and message numbers still use Return.
-Expert mode retains line commands and semicolon sequences (R;1, R;1+).
-End message text with a period on its own line, then S to save.
-F selects a forum; R reads; S summarizes; K deletes an authorized message.
-N reads new messages. C returns to CP/M; G disconnects.
-
-Use the local console for maintenance. Ctrl-B blanks a connected caller and
-permits private operation. Run SYSUTLS:RBUTIL41, then use its numbered menu:
-4 selects a forum; 5 adds a forum; 6 manages users; 9 quits.
-Option 3 RESETS THE ACCOUNT DATABASE. It is not routine maintenance.
-Forum names have at most eight characters; capacity is eight areas total,
-including PERSONAL. Back up before adding areas or changing user privileges.
-Restore caller access with Ctrl-B after maintenance.
-
-The protected program is A15:RBBS41.COM. The users, callers, subject list,
-message files and display files are on I15:. SYSUTLS:RBUTIL41 is private.
-Stop the system before host-side editing. Back up the entire installation,
-including SYSOP.DOC, state/ and disks/. Do not remove state/initialized to
-reset credentials. SYSOP.DOC records the original generated password.
-
-RBBS 4.1 uses different data files from 3.7. Fresh release disks are not an
-in-place migration and must not replace a running board's account/message
-files. Keep existing installations and backups separately.
-
-6. UPLOADS, STAGING AND REVIEW
-
-UPLOAD filename.ext receives XMODEM/CRC; UPLOAD /Y receives a YMODEM batch.
-Completed files are saved OUTSIDE the CP/M disks in the host directory:
-
-    uploads/inbox/
-
-In-progress files use:
-
-    uploads/staging/
-
-These directories sit beside disks/, runtime/ and RCPM.CONF in the unpacked
-installation. They are private operator storage, not a mounted CP/M drive.
-The caller cannot browse them through DIR, and uploading does not create an
-executable file in WORK or another CP/M user area. No UPLDS: alias is currently
-provided for this host inbox.
-
-The service uses unique filename suffixes and does not overwrite an earlier
-submission of the same name. Completed files are flushed and committed before
-success is reported. Interrupted partial files are discarded from staging;
-a completed file from an earlier part of a YMODEM batch remains even if a
-later file is interrupted. XMODEM retains record padding; YMODEM retains the
-declared file length. Leave staging and inbox on the same host filesystem,
-because committing a submission uses an atomic hard-link operation.
-
-MESSAGE submissions are also saved in uploads/inbox/ when the caller saves
-the note. Unsaved drafts are discarded at call recovery. Completed uploads
-and saved messages survive disconnect, WORK cleanup and normal restart.
-
-Review procedure:
-
-  1. Inspect the completed inbox file and its accompanying documentation.
-  2. Check the real content, archive members, naming and distribution notices.
-     Do not infer trust solely from a filename or the upload protocol.
-  3. Keep a copy of the original submission. Decide where an accepted file
-     belongs; completed uploads are not automatically public publications.
-  4. Stop RCP/M and back up the target image before host-side disk editing.
-  5. Import reviewed files into a suitable archive image using the bundled
-     cpmtools and exact geometry described in docs/DISK-IMAGES.DOC.
-  6. Retain owner-writable image permissions for private sysop maintenance,
-     restart, and verify caller access with AUTH and the intended contents.
-
-Do not publish by placing an arbitrary file in disks/library/: that catalog contains
-complete, correctly formatted J: disk images. To build a new public volume,
-prepare it outside the catalog, inspect it, then add the finished image under
-an uppercase 1-8 character name such as GAMES.dsk. Never host-edit a mounted
-image while cpmsim is running.
-
-7. ARCHIVES AND SWAPPABLE VOLUMES
-
-MOUNT /L lists both J: and P: catalogs and their current images.
-MOUNT NAME finds a name in either catalog, then uses its exact size to select
-J: (4177920 bytes) or P: (536870912 bytes). For example, MOUNT WALNUT
-reports: Volume WALNUT mounted on P:
-MOUNT J: /L and MOUNT P: /L list only the selected catalog.
-If both catalogs contain the same name, use MOUNT J: NAME or MOUNT P: NAME;
-an unqualified ambiguous name leaves both drives unchanged.
-MOUNT J: /DEFAULT and MOUNT P: /DEFAULT restore the startup images.
-J: requires 4177920-byte images; P: requires 536870912-byte images. Wrong
-sizes are rejected before replacing the mounted image. AUTH rules are the same
-on both drives; grants apply to drive/user slots, not image names.
-
-After a successful swap and relog, MOUNT chains to A0:NDSCAN drive: /Q. NDSCAN
-can also run directly. It rebuilds only that drive's names from extensionless
--NAME files in user areas 0-15, clearing names where no marker exists. Other
-drives and AUTH settings are unchanged. Use 1-7 uppercase letters/digits or
-underscores after the hyphen; -CATALOG.011 is not a marker. Multiple markers,
-name collisions, disk errors or a full name table abort the name update.
-The prepared Z3PLUS table holds 42 names (768 bytes).
-
-MOUNT suppresses the scanner success message; scan errors are still displayed.
-Callers may run NDSCAN on fully readable drives; private sysops may scan private
-drives. A denied user area aborts scanning rather than clearing unseen names.
-If NDSCAN fails after MOUNT, the new media remains mounted but names stay as
-before: correct the problem and rerun NDSCAN or restore /DEFAULT. Use explicit
-drive/user addresses while names are stale. SYSOP permissions remain unchanged.
-Before replacing the mounted image, MOUNT flushes pending CP/M disk buffers.
-If flushing fails, it leaves the existing image mounted. Catalog listing alone
-does not flush or change media. After a successful swap, MOUNT resets/relogs
-the selected drive.
-DIR J: lists files; LT J:README.TXT reads a volume guide. LDIR lists LBR members
-and LT reads text members. YSEND downloads through guest BDOS using YMODEM.
-
-GAMES contains playable games, required data and playing instructions:
-  J0: guide and preparation launchers; J1: expanded Adventure;
-  J8: Animals; J3: Maze Chase. The optional expanded edition adds 73 titles.
-Source-only and unqualified sets formerly on J4-J7, source files, old catalogs
-and MCHORIG.COM are excluded. Original archives remain separately on P:.
-After MOUNT GAMES, type J0:ADVENT, J0:ANIMALS or J0:MCHASE. Launchers copy
-needed data into WORK and run the approved game on J:. Maze Chase uses
-ANSI/VT100. WORK saves and high scores last only until logoff.
-J0:ADVENT, ANIMALS and MCHASE are our preparation launchers, rather than the
-original game executables. No game-specific wrappers occupy A0:.
-ADVENT starts the unchanged Adventure program at
-J1:ADV.COM after preparing its data in WORK. Games that require writes to the
-protected J: collection are for download and local play. We do not promise
-online compatibility for every game in a collection.
-GUIDES contains documentation only. There is no public development-tool volume.
-Private tools belong in I13:SYSUTLS or offline media.
-
-AUTH permissions on J: apply to the mounted drive/user slots, not to a catalog
-image name. Replacing GAMES with another image does not reset those permissions.
-Under the default J: read grant, every mounted image is caller-readable unless
-a DU override denies access. Keeping an image under disks/library/offline/ prevents caller
-MOUNT from listing it; it does not make its contents private if you mount it
-in a caller-readable J: slot. Restore a suitable image before unblanking.
-
-P: initially holds the SIGM and CPMUG libraries; MOUNT can select another
-compatible P: library image. metadata/ARCHIVE.sha256 records all
-403 file hashes; metadata/VOLUMES.json records the curated J: image contents. Preserve
-original library/member notices when rebuilding or adding to collections.
-
-8. SHUTDOWN, BACKUP AND RECOVERY
-
-BYE ends the caller's connection and leaves the server waiting.
-To stop between calls, use the local console: Ctrl-C opens BYE's menu;
-Return enters normal local CP/M. Wait for the prompt, then enter
-SYSUTLS:BYEBYE. If already at a private CP/M prompt, the same command stops
-the emulator. Let the shutdown finish before copying images or restarting.
-
-While stopped, copy the whole installation directory to separate storage.
-Include disks/, disks/library/, uploads/inbox/, state/, RCPM.CONF and private
-SYSOP.DOC. The emulator must remain stopped during the snapshot. An idle
-caller connection or a blanked caller is not the same as a stopped emulator.
-
-Restore into a NEW directory from one complete snapshot, not by mixing
-database pieces from different dates. Stop any original instance using the
-same listener port before starting the restored copy. Do not unpack a fresh
-release over an installation that contains your active board and credentials.
-A fresh unpack is a new board with new first-start passwords.
-
-The launcher holds .console.lock through cpmsim's lifetime to refuse another
-process on the same installation. Do not delete lock files or bypass the
-launcher to open those disks concurrently. For public-service backups, retain
-an additional offline copy; another folder on the same disk does not protect
-against loss of that disk.
-
-If WORK cleanup reports failure, answering remains disabled. Stop and repair
-the I: image or its host write permissions before trying again. Read-only
-system attributes inside CP/M and read-only host filesystem permissions are
-different mechanisms; consult docs/DISK-IMAGES.DOC when diagnosing either one.
-
-Internet-facing or unattended hosts may benefit from automatic startup,
-scheduled backups, host updates, firewall configuration and failure notices.
-These host-administration choices are outside this manual's scope. Consult
-your host's administration documentation or a system administrator. A separate
-optional Linux hosting add-on supplies service, backup and monitoring tools
-with its own administration guide; it is not required to operate RCP/M.
-
-9. UPDATING RCP/M
-
-Keep your existing installation and its backup. Test a new release in a
-separate directory first. Full migration of a live board is an operator task;
-do not replace I: with a fresh image if you intend to retain its accounts.
-Install matching emulator and BYE driver versions together. Select MODE in
-RCPM.CONF and restart to switch direct/IP232; do not change mounted drivers.
-
-Read docs/DISTRIBUTION-STATUS.DOC before redistributing this aggregate. Original
-Z3PLUS, BYE5, utility and archive notices have not been replaced with a uniform
-license. This guide accompanies RCP/M 1.2.2; retain the component notices.
-
-The package's disks/library/offline/BUILD.dsk retains the DRI development files. Microsoft
-M80/L80 and MicroPro WM (including WM.HLP) are separately supplied build inputs and are omitted
-from that image and from the source bundle's original toolchain-disk copies.
-They are not required to run the system. metadata/DEVELOPMENT-MEDIA.json records the
-separation; source/BUILDING.DOC explains how builders supply their own inputs.

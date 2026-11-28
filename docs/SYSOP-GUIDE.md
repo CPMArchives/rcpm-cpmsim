@@ -1,8 +1,8 @@
 # HUMONGOUS RCP/M — Sysop's Guide
 
-*For the released RCP/M 1.2.2 system • November 2026*
+*For RCP/M 1.2.3 • November 2026*
 
-This is the maintained edition of the manual. It describes the released system, not features still under development. Check the [release notes](RELEASE-NOTES-1.2.2.md) if your installation differs.
+This is the maintained edition of the manual. It describes the released system, not features still under development. Check the [release notes](RELEASE-NOTES-1.2.3.md) if your installation differs.
 
 ## Contents
 
@@ -55,7 +55,7 @@ You and the caller share this one machine. There is one caller at a time, alongs
 
 ## 2. Making the first call
 
-Obtain the complete package for your host from the [release page](https://github.com/CPMArchives/rcpm-cpmsim/releases/tag/v1.2.2). Unpack it into a writable directory. On macOS run `Start-RCPM.command`, on Linux `Start-RCPM.sh`, and on Windows `Start-RCPM.cmd`. There is no setup wizard and no initial configuration is required. Docker users should follow the [Docker instructions](docker.md); the CP/M side is the same.
+Obtain the complete package for your host from the [release page](https://github.com/CPMArchives/rcpm-cpmsim/releases/tag/v1.2.3). Unpack it into a writable directory. On macOS run `Start-RCPM.command`, on Linux `Start-RCPM.sh`, and on Windows `Start-RCPM.cmd`. There is no setup wizard and no initial configuration is required. Docker users should follow the [Docker instructions](docker.md); the CP/M side is the same.
 
 The first startup generates the private file SYSOP.DOC in the installation directory. This contains your initial board credentials. It is **not** the Sysop's Guide and should never be made available to callers.
 
@@ -194,7 +194,7 @@ Don't give callers write access to A0: in an attempt to make a program work. Tha
 
 ## 10. Running RBBS
 
-The released 1.2.2 board uses RBBS 4.1 Edit 02. Our [RBBS integration notes](rbbs41-test.md) describe the adaptations to this version. Fresh boards contain PERSONAL, GENERAL, CPM and TEST areas, with one SYSOP seed account. New callers can register and post without prior validation.
+The 1.2.3 board retains RBBS 4.1 Edit 02. Our [RBBS integration notes](rbbs41-test.md) describe the adaptations to this version. Fresh boards contain PERSONAL, GENERAL, CPM and TEST areas, with one SYSOP seed account. New callers can register and post without prior validation.
 
 ### Getting in as sysop
 
@@ -238,7 +238,7 @@ From private CP/M:
 
 [ZDE](https://www.dflund.se/~pi/cpm/files/ftp.mayn.de/pub/cpm/archive/zsystem/zde16/) uses WordStar keys: Ctrl-K S saves, Ctrl-K X saves and exits, Ctrl-K Q abandons changes. If an unchanged buffer prompts after a previous save, N exits without saving again. Keep the caller blanked throughout editing and saving. BYE displays WELCOME.TXT on the next call, not its .BAK file.
 
-The HELP topics are in I14:HELP. DIR HELP: lists them; HELP GAMES opens a particular topic. The released 1.2.2 collection uses short ASCII topics beginning with a semicolon line, with CRLF and Ctrl-Z termination. The 1.2.3 source collection expands this to 120 linked and paginated help files, covering 63 installed command programs and 24 resident command entries. Its qualified links require the tested HELPC 1.5r viewer. `HELP COMMANDS` separates public and resident caller commands from `* SYSOP ONLY` utilities, resident commands and startup backends. `HELP GET` distinguishes the two private GET implementations; `HELP R` and `HELP RESET` distinguish disk reset from whole-machine reset. The labels document access; BYE policy and wheel restrictions enforce it. Maintain HELP privately, and put no passwords or installation-specific secrets in public topics.
+The HELP topics are in I14:HELP. DIR HELP: lists them; HELP GAMES opens a particular topic. The released 1.2.2 collection uses short ASCII topics beginning with a semicolon line, with CRLF and Ctrl-Z termination. The 1.2.3 collection expands this to 120 linked and paginated help files, covering 63 installed command programs and 24 resident command entries. Its qualified links require the tested HELPC 1.5r viewer. `HELP COMMANDS` separates public and resident caller commands from `* SYSOP ONLY` utilities, resident commands and startup backends. `HELP GET` distinguishes the two private GET implementations; `HELP R` and `HELP RESET` distinguish disk reset from whole-machine reset. The labels document access; BYE policy and wheel restrictions enforce it. Maintain HELP privately, and put no passwords or installation-specific secrets in public topics.
 
 ## 12. Transfers and incoming software
 
@@ -305,7 +305,7 @@ Automatic startup, scheduled backups, monitoring and other unattended hosting ar
 
 Don't unpack a new release over your board. Test it separately and follow its migration instructions. Preserve your accounts, messages, policy, credentials, uploads and custom software. Keep matching emulator and BYE driver versions together. Pulling a new Docker image doesn't automatically migrate an initialized volume.
 
-CPMNet is not part of released 1.2.2; this guide describes local forums and mail only. Preserve the original component and archive notices when redistributing material. See the [distribution review](distribution-review.md).
+CPMNet is not part of 1.2.3; this guide describes local forums and mail only. Preserve the original component and archive notices when redistributing material. See the [distribution review](distribution-review.md).
 
 ## Further reading
 

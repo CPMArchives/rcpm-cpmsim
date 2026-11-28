@@ -1,8 +1,8 @@
 # HUMONGOUS RCP/M — User's Guide
 
-*For the released RCP/M 1.2.2 system • November 2026*
+*For RCP/M 1.2.3 • November 2026*
 
-This is the maintained edition of the manual. It describes the released system, not facilities still under development. Individual sysops may provide different software collections, forums and access permissions. See the [release notes](RELEASE-NOTES-1.2.2.md) if your system differs.
+This is the maintained edition of the manual. It describes the released system, not facilities still under development. Individual sysops may provide different software collections, forums and access permissions. See the [release notes](RELEASE-NOTES-1.2.3.md) if your system differs.
 
 ## Contents
 
@@ -140,9 +140,9 @@ The HELP command is worth remembering. A copy of the essential caller instructio
     HELP RBBS
     DIR HELP:
 
-An unqualified HELP opens the main topic. In the released 1.2.2 system, topics are short text files. HELP followed by a topic name opens that topic directly. HELP // gives the preserved viewer's own usage information.
+An unqualified HELP opens the main menu. HELP followed by a topic name opens that topic directly. HELP // reports the HELPC 1.5r version and defaults. The viewer supports linked menus, paginated text and qualified internal links across named directories.
 
-The expanded hierarchical online guides are planned for a subsequent release; don't be surprised if a stock 1.2.2 installation has simpler HELP screens.
+Choose a menu letter to read a topic. Press ^ to return to its parent, or period to return to the root of the current help session. HELP COMMANDS separates public commands, resident caller commands and entries marked * SYSOP ONLY. Reading private-command documentation does not grant execution permission. Older 1.2.2 installations have simpler HELP screens.
 
 To examine an ordinary text file, try LT:
 
@@ -403,7 +403,7 @@ WORK is cleared at call boundaries. Saved RBBS messages and your board account r
 
 ## 18. Command reference
 
-For the expanded 1.2.3 online reference, enter `HELP COMMANDS`. Its menus separate public disk programs, resident caller commands and sysop tools. An asterisk (`*`) means **SYSOP ONLY**. Reading a sysop help page does not grant execution permission. Use `^` to return to the parent menu and `.` to return to the root of the current help session.
+For the 1.2.3 online reference, enter `HELP COMMANDS`. Its menus separate public disk programs, resident caller commands and sysop tools. An asterisk (`*`) means **SYSOP ONLY**. Reading a sysop help page does not grant execution permission. Use `^` to return to the parent menu and `.` to return to the root of the current help session.
 
 The following is the standard public transient command set. Sysops may add or restrict programs, and some commands have additional options documented in HELP or their original instructions.
 

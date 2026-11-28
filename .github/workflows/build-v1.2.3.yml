@@ -1,0 +1,154 @@
+name: Build and check v1.2.3 help release
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  media:
+    runs-on: macos-15
+    timeout-minutes: 25
+    env:
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+      - name: Validate authored help and build pinned guest media
+        run: |
+          python3 -m unittest test_caller_help
+          mkdir inputs
+          gh release download v1.2.2 --repo "$GITHUB_REPOSITORY" --pattern rcpm-v1.2.2-macos-arm64.zip --dir inputs
+          gh release download v1.5r --repo CPMArchives/HELPC --pattern HELPC15R.COM --dir inputs
+          python3 release_1_2_3.py media --base inputs/rcpm-v1.2.2-macos-arm64.zip --viewer inputs/HELPC15R.COM --output prepared
+          python3 release_1_2_3.py package --platform common --media prepared/media --inputs inputs --output common
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: v1.2.3-media
+          path: prepared/media/*
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: v1.2.3-common
+          compression-level: 0
+          path: |
+            common/*.zip
+            common/BUILT.json
+  native:
+    needs: media
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - platform: macos-arm64
+            runner: macos-15
+            python: python3
+          - platform: linux-x64
+            runner: ubuntu-22.04
+            docker_arch: x64
+            python: python3
+          - platform: linux-arm64
+            runner: ubuntu-22.04-arm
+            docker_arch: arm64
+            python: python3
+          - platform: windows-x64
+            runner: windows-2022
+            python: python
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 30
+    env:
+      GH_TOKEN: ${{ github.token }}
+      RCPM_PLATFORM: ${{ matrix.platform }}
+      DOCKER_ARCH: ${{ matrix.docker_arch }}
+      PYTHON: ${{ matrix.python }}
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
+        with:
+          name: v1.2.3-media
+          path: media
+      - name: Assemble verified platform overlay and refreshed manuals
+        shell: bash
+        run: |
+          "$PYTHON" release_1_2_3.py package --platform "$RCPM_PLATFORM" --media media --output out/package
+      - name: Verify actual packaged help and caller restrictions
+        shell: bash
+        run: |
+          PACKAGE=$("$PYTHON" -c 'import json;print(json.load(open("out/package/BUILT.json"))["package"])')
+          "$PYTHON" check_help_release.py --package "$PACKAGE" --output out/help-checks
+      - name: Check direct and bundled modem, reconnect and shutdown
+        shell: bash
+        run: |
+          PACKAGE=$("$PYTHON" -c 'import json;print(json.load(open("out/package/BUILT.json"))["package"])')
+          "$PYTHON" check_bundled_modem_launcher.py --package "$PACKAGE" --output out/checks
+      - name: Build and check both Docker modes
+        if: matrix.docker_arch != ''
+        shell: bash
+        run: |
+          PACKAGE=$("$PYTHON" -c 'import json,pathlib;print(pathlib.Path(json.load(open("out/package/BUILT.json"))["package"]).relative_to(pathlib.Path.cwd()))')
+          IMAGE="cpmarchives/rcpm:1.2.3-$DOCKER_ARCH"
+          docker build --build-arg "PACKAGE=$PACKAGE" --label "org.opencontainers.image.source=https://github.com/$GITHUB_REPOSITORY" -t "$IMAGE" -f packaging/docker/Dockerfile .
+          "$PYTHON" check_docker_release.py "$IMAGE" --mode direct --output out/docker-direct
+          "$PYTHON" check_docker_release.py "$IMAGE" --mode ip232 --output out/docker-ip232
+          docker save "$IMAGE" | gzip > "out/rcpm-v1.2.3-docker-$DOCKER_ARCH.tar.gz"
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: v1.2.3-${{ matrix.platform }}
+          compression-level: 0
+          path: |
+            out/package/*.zip
+            out/package/*.tar.gz
+            out/package/BUILT.json
+            out/checks/*
+            out/help-checks/*
+            out/rcpm-v1.2.3-docker-*.tar.gz
+            out/docker-*/*.json
+  windows-arm64:
+    needs: native
+    runs-on: windows-11-arm
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
+        with:
+          name: v1.2.3-windows-x64
+          path: input
+      - name: Check x64 Windows bundle under ARM64 emulation
+        shell: pwsh
+        run: |
+          python -c "from pathlib import Path; from check_windows_release import unpack; unpack(next(Path('input').rglob('rcpm-v1.2.3-windows-x64.zip')),Path('unpacked'))"
+          python check_help_release.py --package unpacked/RCPM-windows-x64 --output help-arm64
+          python check_bundled_modem_launcher.py --package unpacked/RCPM-windows-x64 --output checks-arm64
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: v1.2.3-windows-arm64-evidence
+          path: |
+            help-arm64/*
+            checks-arm64/*
+  publish:
+    needs: [media, native, windows-arm64]
+    runs-on: ubuntu-22.04
+    timeout-minutes: 25
+    permissions:
+      contents: write
+    env:
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
+        with:
+          pattern: v1.2.3-*
+          path: checked-inputs
+      - name: Enforce manual, package and complete qualification gates
+        run: python3 finalize_release_1_2_3.py --inputs checked-inputs --output dist --commit "$GITHUB_SHA" --run "$GITHUB_RUN_ID"
+      - name: Tag and publish only checked, immutable assets
+        run: |
+          if gh release view v1.2.3 --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
+            echo 'v1.2.3 already exists; refusing to overwrite it.' >&2
+            exit 1
+          fi
+          gh release create v1.2.3 dist/* --repo "$GITHUB_REPOSITORY" --target "$GITHUB_SHA" --title 'RCP/M 1.2.3 — HELPC 1.5r and complete command help' --notes-file docs/RELEASE-NOTES-1.2.3.md --latest
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: v1.2.3-final-release-files
+          compression-level: 0
+          path: dist/*

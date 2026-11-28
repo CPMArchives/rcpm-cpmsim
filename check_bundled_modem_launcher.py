@@ -9,6 +9,7 @@ import shutil
 import socket
 import tempfile
 import time
+from check_help_release import open_topic, leave
 
 if os.name != 'nt':
     from check_release import Guest
@@ -58,7 +59,8 @@ def check(package, output):
                         guest.collect(.4)
                 else:
                     guest.connect(port, kick=mode == 'direct')
-                assert len(guest.command('HELP')) > 100
+                assert len(open_topic(guest, 'HELP', b'HUMONGOUS RCP/M - ONLINE HELP')) > 100
+                leave(guest)
                 local_start = len(guest.local)
                 guest.caller.close(); guest.caller = None
                 if mode == 'ip232':
@@ -75,7 +77,8 @@ def check(package, output):
                         guest.collect(.4)
                 else:
                     guest.connect(port, kick=mode == 'direct')
-                assert len(guest.command('HELP')) > 100
+                assert len(open_topic(guest, 'HELP', b'HUMONGOUS RCP/M - ONLINE HELP')) > 100
+                leave(guest)
                 if mode == 'ip232':
                     local_start = len(guest.local)
                     guest.caller.close(); guest.caller = None

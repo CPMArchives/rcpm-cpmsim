@@ -1,0 +1,21 @@
+{
+  "version": "v1.2.3",
+  "date": "2026-11-28",
+  "previous_stable": "v1.2.2",
+  "authorization": "Maintainer requested completion of release checks, then tagging and publication with HELPC 1.5r and completed command help.",
+  "manuals": {
+    "USER-GUIDE.md": "Updated version, hierarchical help, qualified links, navigation and command access labels.",
+    "SYSOP-GUIDE.md": "Updated version, viewer requirement, command help and explicit unchanged RBBS 4.1 boundary."
+  },
+  "help_review": "120 files validated; RBUTIL41 version wording corrected to match actual 1.2.2 base; 63 COM fingerprints refreshed against release media; 24 resident entries retained.",
+  "distributed_editions": "Generated deterministically from both reviewed Markdown manuals; finalizer compares every packaged edition against source.",
+  "unchanged_components": [
+    "native runtime and bundled modem",
+    "BYE drivers and authorization policy",
+    "RBBS 4.1 and fresh account seed",
+    "archive disks and volume contents",
+    "optional hosting add-ons"
+  ],
+  "rights": "HELPC 1.5r binary carries original notice and published rights uncertainty. Historical source/libraries/proprietary build tools remain local. No new license asserted.",
+  "release_gate": "Workflow publication depends on native, Windows ARM64 and both-mode Docker checks and exact manifest/manual/source verification."
+}

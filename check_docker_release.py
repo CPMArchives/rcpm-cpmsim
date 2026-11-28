@@ -9,6 +9,7 @@ import shutil
 import subprocess
 import tempfile
 from check_release import Guest
+from check_help_release import open_topic, leave
 
 
 def check(image, output, docker, mode='direct'):
@@ -33,9 +34,15 @@ def check(image, output, docker, mode='direct'):
                                b'ATE0Q0V0S0=0M0S10=25X1H0', timeout=120)
                     if mode == 'ip232': guest.collect(3)
                     guest.connect(14000, kick=mode == 'direct')
+                    for manual in ('USER-GUIDE.DOC', 'SYSOP-GUIDE.DOC'):
+                        data = run('exec', name, 'cat', '/opt/rcpm-seed/docs/'+manual)
+                        assert b'1.2.3' in data and len(data)>10000, manual
                     assert b'CHAT -' in guest.remote
                     assert b'HELP' in re.sub(rb'\x1b\[[0-9;]*m', b'', guest.command('DIR')).upper()
-                    assert b'CHAT' in guest.command('HELP CHAT')
+                    assert b'CHAT' in open_topic(guest, 'HELP CHAT', b'CHAT -')
+                    leave(guest)
+                    assert b'SYSOP ONLY' in open_topic(guest, 'HELP COMMANDS', b'COMPLETE INSTALLED COMMAND REFERENCE')
+                    leave(guest)
                     start = len(guest.remote)
                     for char in b'RBBS\r':
                         guest.caller.sendall(bytes([char])); guest.collect(.04)
@@ -55,7 +62,7 @@ def check(image, output, docker, mode='direct'):
                 finally:
                     guest.close()
                     subprocess.run([docker, 'rm', '-f', name], capture_output=True)
-            result = dict(image=image, mode=mode, published_tcp_login=True, caller_help=True,
+            result = dict(image=image, mode=mode, published_tcp_login=True, caller_help=True, expanded_command_help=True, manuals_present=True,
                           rbbs_entry=True, orderly_shutdown=True,
                           container_replacement_preserves_credentials=True,
                           persistent_volume=True)
