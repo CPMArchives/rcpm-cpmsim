@@ -1,0 +1,23 @@
+;
+* LBRHELP - HELP FROM A LIBRARY
+
+SYSOP ONLY. Private utility; use the local sysop console.
+
+A - Purpose, syntax and examples
+
+:A
+* LBRHELP - HELP FROM A LIBRARY
+
+SYSOP ONLY. Private utility; use the local sysop console.
+
+Syntax:
+    SYSUTLS:LBRHELP [-[dir:]library] [helpname]
+
+Displays compatible help members stored in an LBR. The optional library
+selector chooses a library instead of the configured default.
+
+This is a separate historical help reader; it does not replace public
+HELPC or implement the new cross-directory HELPC link syntax. Use LDIR to
+inspect a library and LT to read ordinary text members.
+
+See HELP COMMANDS for the command index.

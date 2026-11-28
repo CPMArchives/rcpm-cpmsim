@@ -1,0 +1,23 @@
+;
+* LX - RUN A PROGRAM FROM AN LBR
+
+SYSOP ONLY. Private utility; use the local sysop console.
+
+A - Purpose, syntax and examples
+
+:A
+* LX - RUN A PROGRAM FROM AN LBR
+
+SYSOP ONLY. Private utility; use the local sysop console.
+
+Syntax:
+    SYSUTLS:LX [-[dir:]library] command-line
+
+Finds and runs a COM member from a command library. Without an explicit
+library it uses its configured command libraries/search rules.
+
+Running a member executes code, unlike listing with LDIR. Inspect the
+source and origin of the library first. This launcher remains private and
+does not bypass BYE caller execution rules.
+
+See HELP COMMANDS for the command index.

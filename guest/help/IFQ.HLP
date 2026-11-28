@@ -1,0 +1,23 @@
+;
+IFQ - DISPLAY CONDITIONAL STATE
+
+CALLER. Subject to the current caller access policy.
+
+A - Purpose, syntax and examples
+
+:A
+IFQ - DISPLAY CONDITIONAL STATE
+
+CALLER. Subject to the current caller access policy.
+
+Syntax:
+    IFQ
+
+Displays the active IF tree, current level first. For example IF FTT means
+the current third level is false and its two parent levels are true. IF
+None means there is no active IF.
+
+It reports flow-control state without changing file permissions or wheel
+privileges.
+
+See HELP COMMANDS for the command index.

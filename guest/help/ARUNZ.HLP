@@ -1,0 +1,22 @@
+;
+* ARUNZ - RUN A NAMED TEXT ALIAS
+
+SYSOP ONLY. Private utility; use the local sysop console.
+
+A - Purpose, syntax and examples
+
+:A
+* ARUNZ - RUN A NAMED TEXT ALIAS
+
+SYSOP ONLY. Private utility; use the local sysop console.
+
+Syntax:
+    SYSUTLS:ARUNZ alias [parameters]
+
+Finds a named command sequence in ALIAS.CMD and expands its parameters.
+The alias can run several commands, so inspect it before use.
+
+This is the text-alias interpreter, not SUBMIT. The installed command
+search path determines where it finds its alias file.
+
+See HELP COMMANDS for the command index.

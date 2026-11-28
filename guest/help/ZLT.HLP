@@ -1,0 +1,24 @@
+;
+* ZLT - TEXT AND LIBRARY VIEWER
+
+SYSOP ONLY. Private utility; use the local sysop console.
+
+A - Purpose, syntax and examples
+
+:A
+* ZLT - TEXT AND LIBRARY VIEWER
+
+SYSOP ONLY. Private utility; use the local sysop console.
+
+Syntax:
+    SYSUTLS:ZLT [dir:]filespec [. options]
+    SYSUTLS:ZLT [dir:]library member [options]
+
+Private library/text viewer supporting ordinary text and its compiled
+compression formats. Space advances a line; other ordinary keys advance a
+page; Ctrl-X moves to the next file; Ctrl-Z toggles paging; Ctrl-C exits.
+
+Use public LT for normal caller reading. Listing or reading a library
+member does not authorize executing a program from that library.
+
+See HELP COMMANDS for the command index.

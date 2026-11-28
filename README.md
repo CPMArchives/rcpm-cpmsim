@@ -84,6 +84,8 @@ MOUNT /L
 RBBS
 ```
 
+The upcoming 1.2.3 help expansion adds `HELP COMMANDS`, with separate public, resident and `* SYSOP ONLY` command menus; see the [1.2.3 integration notes](docs/RELEASE-NOTES-1.2.3.md).
+
 `HELP` introduces the commands and activities. `BYE` ends your call and leaves
 the system ready for the next caller.
 

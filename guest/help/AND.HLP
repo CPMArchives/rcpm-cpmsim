@@ -1,0 +1,24 @@
+;
+AND - ADD A TEST TO THE CURRENT IF LEVEL
+
+CALLER. Subject to the current caller access policy.
+
+A - Purpose, syntax and examples
+
+:A
+AND - ADD A TEST TO THE CURRENT IF LEVEL
+
+CALLER. Subject to the current caller access policy.
+
+Syntax:
+    AND condition [arguments]
+
+Combines the current condition with another test using logical AND. Unlike
+a nested IF, it updates the current level. If there is no active IF, it
+starts a level.
+
+Example: IF NULL;AND NULL;ECHO BOTH TRUE;FI
+
+The same test availability and access limits as IF apply.
+
+See HELP COMMANDS for the command index.

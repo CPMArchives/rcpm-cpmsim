@@ -1,0 +1,23 @@
+;
+* ERASE - DELETE DISK FILES
+
+SYSOP ONLY. Private utility; use the local sysop console.
+
+A - Purpose, syntax and examples
+
+:A
+* ERASE - DELETE DISK FILES
+
+SYSOP ONLY. Private utility; use the local sysop console.
+
+Syntax:
+    SYSUTLS:ERASE filespec
+
+Deletes matching files; wildcards can select multiple files. Example on a
+disposable scratch file: SYSUTLS:ERASE I0:TEST.TMP
+
+Read the complete filespec and any confirmation prompt before agreeing.
+There is no undelete guarantee. This private CP/M 3 program is separate
+from resident ERA; neither is a public caller command here.
+
+See HELP COMMANDS for the command index.

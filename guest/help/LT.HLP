@@ -1,6 +1,8 @@
 ;
 LT - READ TEXT AND LIBRARY MEMBERS
 
+CALLER. Subject to current caller access policy.
+
 A - Read text and library members
 
 :A

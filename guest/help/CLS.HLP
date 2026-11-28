@@ -1,6 +1,8 @@
 ;
 CLS - CLEAR THE TERMINAL DISPLAY
 
+CALLER. Subject to current caller access policy.
+
 A - Clear the terminal display
 
 :A
@@ -15,3 +17,6 @@ Use an ANSI/VT100-compatible terminal for the supplied screen-oriented
 programs. If the display remains garbled, check your terminal settings.
 
 See HELP READING.
+
+CLS also exists in the resident command package and uses the installed
+terminal definition. Both clear the screen; neither deletes disk files.

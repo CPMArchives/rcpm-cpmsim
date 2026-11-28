@@ -1,0 +1,26 @@
+;
+* RBUTIL41 - BOARD DATABASE MAINTENANCE
+
+SYSOP ONLY. Private utility; use the local sysop console.
+
+A - Purpose, syntax and examples
+
+:A
+* RBUTIL41 - BOARD DATABASE MAINTENANCE
+
+SYSOP ONLY. Private utility; use the local sysop console.
+
+Syntax:
+    SYSUTLS:RBUTIL41
+
+Opens the installed board maintenance menu, which identifies itself as
+RBBS 4.2.0 despite this compatibility filename. It can compact or read
+messages, select/add forums, edit/compact users, import text and reset the
+database.
+
+STOP caller activity and back up I15: before maintenance. Menu choice 3
+RESET DATABASE deletes existing accounts; it is not a routine refresh.
+Prefer the normal board sysop workflow for ordinary administration. Exit
+with the displayed Return to CP/M choice.
+
+See HELP COMMANDS for the command index.

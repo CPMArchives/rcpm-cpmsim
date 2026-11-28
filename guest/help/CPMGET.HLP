@@ -1,0 +1,28 @@
+;
+* GET.COM - REDIRECT CONSOLE INPUT
+
+SYSOP ONLY. Private utility; use the local sysop console.
+
+A - Purpose, syntax and examples
+
+:A
+* GET.COM - REDIRECT CONSOLE INPUT
+
+SYSOP ONLY. Private utility; use the local sysop console.
+
+Syntax:
+    SYSUTLS:GET FILE filespec [options]
+    SYSUTLS:GET CONSOLE
+
+Directs console input for the next program to a text file. Without SYSTEM,
+input reverts to the console when that program ends. [NO ECHO] suppresses
+input echo. [SYSTEM] starts reading system commands immediately from the
+file until EOF or GET CONSOLE.
+
+Example: SYSUTLS:GET FILE I0:INPUT.TXT
+
+To restore terminal input explicitly, use SYSUTLS:GET CONSOLE. This is not
+resident GET, which loads a file into memory. The supplied startup alias
+uses the console-restoration form.
+
+See HELP COMMANDS for the command index.

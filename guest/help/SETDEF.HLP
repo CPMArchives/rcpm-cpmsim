@@ -1,0 +1,23 @@
+;
+* SETDEF - CP/M 3 DEFAULT SETTINGS
+
+SYSOP ONLY. Private utility; use the local sysop console.
+
+A - Purpose, syntax and examples
+
+:A
+* SETDEF - CP/M 3 DEFAULT SETTINGS
+
+SYSOP ONLY. Private utility; use the local sysop console.
+
+Syntax:
+    SYSUTLS:SETDEF [search-drive-list] [options]
+
+With no arguments, displays CP/M 3 default settings. Options control such
+defaults as command search behavior, COM/SUB order, paging and display.
+
+Z3PLUS also has its own Z-System PATH, so SETDEF and PATH are different
+layers. Keep the supplied startup configuration unless deliberately
+maintaining a private test installation.
+
+See HELP COMMANDS for the command index.

@@ -1,34 +1,20 @@
 ;
-PUBLIC COMMAND REFERENCE
+COMPLETE INSTALLED COMMAND REFERENCE
+* = SYSOP ONLY. Other entries remain subject to caller policy.
 
-A - BYE      Log off
-B - CHAT     Page the sysop
-C - CLS      Clear display
-D - DIR      List files
-E - HELP     Online help (main index)
-F - LDIR     List library members
-G - LT       Read text and library members
-H - MESSAGE  Leave a note for the sysop
-I - MOUNT    List or exchange library volumes
-J - NDSCAN   Refresh named directories
-K - RBBS     Enter the bulletin board
-L - SDZ      Super Directory
-M - TYPE     Display ordinary text
-N - UPLOAD   Send files to the sysop
-O - YSEND    Download using YMODEM
-
-:A:BYE.HLP
-:B:CHAT.HLP
-:C:CLS.HLP
-:D:DIR.HLP
-:E:HELP.HLP
-:F:LDIR.HLP
-:G:LT.HLP
-:H:MESSAGE.HLP
-:I:MOUNT.HLP
-:J:NDSCAN.HLP
-:K:RBBS.HLP
-:L:SDZ.HLP
-:M:TYPE.HLP
-:N:UPLOAD.HLP
-:O:YSEND.HLP
+A - Public disk commands
+B - Resident caller commands
+C - * Sysop resident commands
+D - * Private utilities ARUNZ-HEXCOM
+E - * Private utilities HIST-RENAME
+F - * Private utilities RESET-ZSHOW
+G - * Startup and board backends
+H - Names, permissions and the * legend
+:A:HELP:PUBCMDS.HLP
+:B:HELP:RESCMDS.HLP
+:C:HELP:SYSRES.HLP
+:D:HELP:SYSUTIL1.HLP
+:E:HELP:SYSUTIL2.HLP
+:F:HELP:SYSUTIL3.HLP
+:G:HELP:SYSBOOT.HLP
+:H:HELP:CMDNAMES.HLP

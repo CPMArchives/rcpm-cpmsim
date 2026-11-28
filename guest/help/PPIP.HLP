@@ -1,0 +1,24 @@
+;
+* PPIP - VERIFIED FILE COPY
+
+SYSOP ONLY. Private utility; use the local sysop console.
+
+A - Purpose, syntax and examples
+
+:A
+* PPIP - VERIFIED FILE COPY
+
+SYSOP ONLY. Private utility; use the local sysop console.
+
+Syntax:
+    SYSUTLS:PPIP [dir:]source [[dir:]destination]
+    SYSUTLS:PPIP [destination=]source [options]
+
+Copies a single specified file, with CRC verification by default in the
+installed version. Example: SYSUTLS:PPIP I0:SOURCE.TXT I0:COPY.TXT
+
+Do not use wildcards with this version. Some options move files or change
+overwrite behavior; use the simple copy form unless deliberately
+maintaining media. It is separate from DRI PIP and remains private.
+
+See HELP COMMANDS for the command index.

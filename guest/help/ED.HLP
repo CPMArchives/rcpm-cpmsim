@@ -1,0 +1,25 @@
+;
+* ED - CP/M CONTEXT TEXT EDITOR
+
+SYSOP ONLY. Private utility; use the local sysop console.
+
+A - Purpose, syntax and examples
+
+:A
+* ED - CP/M CONTEXT TEXT EDITOR
+
+SYSOP ONLY. Private utility; use the local sysop console.
+
+Syntax:
+    SYSUTLS:ED filespec
+
+Edits a text file using numbered line and character commands. This is the
+original context editor, not the full-screen ZDE editor.
+
+I enters insertion mode; Ctrl-Z ends insertion. L lists lines, B returns
+to the start of the buffer, E writes the edited file and exits, and Q
+abandons editing after confirmation. Work on a copy until familiar with
+its buffer and disk-file behavior. For normal full-screen text editing,
+use SYSUTLS:ZDE.
+
+See HELP COMMANDS for the command index.

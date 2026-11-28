@@ -12,14 +12,18 @@ H - Uploads and library maintenance
 I - Shutdown, backup and updates
 J - Troubleshooting and network operation
 K - Glossary and acknowledgements
-:A:SYSSTART.HLP
-:B:CONSOLE.HLP
-:C:DISKS.HLP
-:D:AUTH.HLP
-:E:POLICY.HLP
-:F:BOARD.HLP
-:G:BANNER.HLP
-:H:SYSFILES.HLP
-:I:BACKUP.HLP
-:J:SYSNET.HLP
-:K:GLOSSARY.HLP
+L - * Sysop command reference
+
+:A:HELP:SYSSTART.HLP
+:B:HELP:CONSOLE.HLP
+:C:HELP:DISKS.HLP
+:D:HELP:AUTH.HLP
+:E:HELP:POLICY.HLP
+:F:HELP:BOARD.HLP
+:G:HELP:BANNER.HLP
+:H:HELP:SYSFILES.HLP
+:I:HELP:BACKUP.HLP
+:J:HELP:SYSNET.HLP
+:K:HELP:GLOSSARY.HLP
+
+:L:HELP:SYSRES.HLP

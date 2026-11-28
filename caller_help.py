@@ -6,7 +6,7 @@ import tempfile
 
 
 def validate_topics(topics):
-    """Validate the authored subset of the HELPC 1.4 text format."""
+    """Validate the authored HELPC 1.5r format with qualified internal links."""
     names = set(topics)
     for name, text in topics.items():
         if not re.fullmatch(r'[A-Z0-9_]{1,8}\.HLP', name):
@@ -21,11 +21,13 @@ def validate_topics(topics):
             raise ValueError('Invalid HELP character: ' + name)
         selections = set()
         displayed = set()
-        menu_lines = 0
+        menu_lines = 1
         in_section = False
-        for line in lines[1:]:
+        # The mandatory title can itself begin with a one-letter command
+        # (H - ..., R - ...); it is not a selectable menu item.
+        for line in lines[2:]:
             if line.startswith(':'):
-                match = re.fullmatch(r':([A-Z0-9])(?::([A-Z0-9_]{1,8}\.HLP))?', line)
+                match = re.fullmatch(r':([A-Z0-9])(?::HELP:([A-Z0-9_]{1,8}\.HLP))?', line)
                 if not match:
                     raise ValueError('Invalid HELP directive: ' + name + ': ' + line)
                 key, target = match.groups()
@@ -54,13 +56,15 @@ def validate_topics(topics):
             raise ValueError('Oversized HELP index: ' + name)
 
 
-def install(instance, tools):
+def install(instance, tools, viewer=None):
     topics = Path(__file__).resolve().parent / 'guest/help'
     image = Path(instance) / 'disks/drivei.dsk'
     installed = []
     authored = {p.name: p.read_text(encoding='ascii')
                 for p in sorted(topics.glob('*.HLP'))}
     validate_topics(authored)
+    from helpc_viewer import ensure_qualified_viewer
+    ensure_qualified_viewer(instance, tools, viewer)
     # List once before removing existing files; new topics need no removal.
     listing = subprocess.run([str(Path(tools)/'cpmls'), '-f', 'z80pack-hd',
                               str(image), '14:*.*'], check=True,

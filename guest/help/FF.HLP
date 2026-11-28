@@ -1,0 +1,25 @@
+;
+* FF - FIND FILES
+
+SYSOP ONLY. Private utility; use the local sysop console.
+
+A - Purpose, syntax and examples
+
+:A
+* FF - FIND FILES
+
+SYSOP ONLY. Private utility; use the local sysop console.
+
+Syntax:
+    SYSUTLS:FF [dir:]filespec[,filespec...] [drives][/options]
+
+Searches directories for matching filenames. This installed version
+expands abbreviated name patterns automatically; /E toggles exact matching
+and /P toggles paging.
+
+Example: SYSUTLS:FF HELP:USER.HLP
+
+Results describe locations, not permission to read or execute them. This
+private search utility does not grant caller access.
+
+See HELP COMMANDS for the command index.

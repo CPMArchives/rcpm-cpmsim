@@ -1,0 +1,25 @@
+;
+* DEVICE - INSPECT OR ASSIGN CP/M DEVICES
+
+SYSOP ONLY. Private utility; use the local sysop console.
+
+A - Purpose, syntax and examples
+
+:A
+* DEVICE - INSPECT OR ASSIGN CP/M DEVICES
+
+SYSOP ONLY. Private utility; use the local sysop console.
+
+Syntax:
+    SYSUTLS:DEVICE
+    SYSUTLS:DEVICE logical-device=physical-device [options]
+
+Lists physical devices and their logical assignments when used without
+arguments. Assignments change which devices supply console, auxiliary or
+list I/O.
+
+DEVICE CONSOLE displays console information. DEVICE CONSOLE [COLUMNS=80
+LINES=24] sets console dimensions. Do not redirect the active remote
+console without a recovery path.
+
+See HELP COMMANDS for the command index.

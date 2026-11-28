@@ -1,6 +1,8 @@
 ;
 NDSCAN - REFRESH NAMED DIRECTORIES
 
+CALLER. Subject to current caller access policy.
+
 A - Refresh named directories
 
 :A
@@ -25,4 +27,4 @@ If a mount succeeds but its scan fails, the new disk is already in
 place. Use numeric DUs until the scan succeeds or restore the default
 volume. NDSCAN does not change files or grant access permissions.
 
-See HELP MOUNT, HELP COMMANDS and HELP DISKS.
+See HELP MOUNT, HELP CPM and HELP DISKS.

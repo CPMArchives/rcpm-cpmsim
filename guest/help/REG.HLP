@@ -1,0 +1,27 @@
+;
+* REG - Z-SYSTEM USER REGISTERS
+
+SYSOP ONLY. Private utility; use the local sysop console.
+
+A - Purpose, syntax and examples
+
+:A
+* REG - Z-SYSTEM USER REGISTERS
+
+SYSOP ONLY. Private utility; use the local sysop console.
+
+Syntax:
+    REG
+    REG register-number
+    REG Sregister-number value
+
+Displays or changes Z-System user registers used by aliases and condition
+tests. REG alone displays values. The S form sets a register; other
+compiled forms print or modify values.
+
+Example inspection: REG 0
+
+Changing registers can affect later command sequences. These are Z-System
+environment registers, not a debugger display of CPU registers.
+
+See HELP COMMANDS for the command index.

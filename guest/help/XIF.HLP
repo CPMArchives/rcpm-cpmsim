@@ -1,0 +1,22 @@
+;
+XIF - END ALL IFS WHEN CURRENT STATE IS TRUE
+
+CALLER. Subject to the current caller access policy.
+
+A - Purpose, syntax and examples
+
+:A
+XIF - END ALL IFS WHEN CURRENT STATE IS TRUE
+
+CALLER. Subject to the current caller access policy.
+
+Syntax:
+    XIF
+
+Ends all active IF levels only when the current IF state is true. In a
+false state it leaves the conditional tree in place.
+
+Use FI to close one level. ZIF clears the whole tree regardless of state,
+so it is the deliberate recovery command for a stuck false branch.
+
+See HELP COMMANDS for the command index.

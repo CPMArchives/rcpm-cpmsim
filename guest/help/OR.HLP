@@ -1,0 +1,24 @@
+;
+OR - ALTERNATIVE TEST AT THE CURRENT IF LEVEL
+
+CALLER. Subject to the current caller access policy.
+
+A - Purpose, syntax and examples
+
+:A
+OR - ALTERNATIVE TEST AT THE CURRENT IF LEVEL
+
+CALLER. Subject to the current caller access policy.
+
+Syntax:
+    OR condition [arguments]
+
+Combines the current condition with another test using logical OR. Unlike
+a nested IF, it updates the current level. If there is no active IF, it
+starts a level.
+
+Example: IF NULL X;OR NULL;ECHO ONE TRUE;FI
+
+The same test availability and access limits as IF apply.
+
+See HELP COMMANDS for the command index.

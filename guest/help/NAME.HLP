@@ -1,0 +1,25 @@
+;
+* NAME.COM - CHANGE A NAMED DIRECTORY
+
+SYSOP ONLY. Private utility; use the local sysop console.
+
+A - Purpose, syntax and examples
+
+:A
+* NAME.COM - CHANGE A NAMED DIRECTORY
+
+SYSOP ONLY. Private utility; use the local sysop console.
+
+Syntax:
+    SYSUTLS:NAME [du:|dir:][newname] [password]
+
+Changes a named-directory table entry. Supplying only a location and
+omitting the new name deletes that entry; do not use a bare invocation as
+a harmless listing request. Use SYSUTLS:PWD for inspection.
+
+This NAME.COM program is distinct from typing an existing NAME: to select
+a directory. NDSCAN can rebuild the table from directory marker files, so
+a manual table edit may not survive a refresh. Never publish directory
+passwords in help examples.
+
+See HELP COMMANDS for the command index.

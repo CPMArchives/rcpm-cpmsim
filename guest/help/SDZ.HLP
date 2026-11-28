@@ -1,6 +1,8 @@
 ;
 SDZ - SUPER DIRECTORY
 
+CALLER. Subject to current caller access policy.
+
 A - Super Directory
 
 :A
@@ -21,4 +23,4 @@ Some original SD options are reserved to the private sysop, including
 printer or disk output, disk reset and privileged attribute listings.
 A caller cannot use SDZ to bypass directory permissions.
 
-See HELP DIR for more examples and HELP COMMANDS for DU conventions.
+See HELP DIR for more examples and HELP CPM for DU conventions.

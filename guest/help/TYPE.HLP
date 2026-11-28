@@ -1,6 +1,8 @@
 ;
 TYPE - DISPLAY AN ORDINARY TEXT FILE
 
+CALLER. Subject to current caller access policy.
+
 A - Display an ordinary text file
 
 :A
@@ -21,3 +23,7 @@ data can confuse your terminal. If you want to keep a file on your own
 computer, use the download command rather than screen capture.
 
 See HELP LT, HELP READING and HELP YSEND.
+
+Resident TYPE is a separate wheel-protected RCP implementation. The public
+A0:TYPE.COM program documented above is the caller text viewer. To select
+the public program explicitly at the console, use A0:TYPE filespec.

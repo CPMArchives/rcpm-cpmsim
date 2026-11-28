@@ -1,0 +1,21 @@
+;
+ECHO - DISPLAY COMMAND-LINE TEXT
+
+CALLER. Subject to the current caller access policy.
+
+A - Purpose, syntax and examples
+
+:A
+ECHO - DISPLAY COMMAND-LINE TEXT
+
+CALLER. Subject to the current caller access policy.
+
+Syntax:
+    ECHO text
+
+Writes the supplied text to the console. Example: ECHO HELLO
+
+Useful in aliases and command sequences. It does not save a message or
+contact the sysop. Use MESSAGE for a stored note and CHAT for a page.
+
+See HELP COMMANDS for the command index.

@@ -1,0 +1,32 @@
+;
+HELP - THE ONLINE HELP COMMAND
+
+CALLER. Subject to the current caller access policy.
+
+A - Purpose, syntax and examples
+
+:A
+HELP - THE ONLINE HELP COMMAND
+
+CALLER. Subject to the current caller access policy.
+
+Syntax:
+    HELP [dir:][helpname]
+    HELP //
+
+Without a name, opens the online help root. Example: HELP HELP:USER
+
+Select the displayed menu letter. ^ returns one level; period returns to
+the root of the current help session. When opened directly, that file is
+the root. Space/pages and the displayed prompts control long text; Ctrl-C
+exits.
+
+Qualified links can open HELP:USER.HLP or GAMES:GAMES.HLP while
+parent/root navigation remembers their directories. The viewer supports
+ordinary HLP and its supported compressed HZP files. // reports the
+installed version/defaults.
+
+CPMHELP and LBRHELP are different private historical help readers. This
+page describes public HELPC.
+
+See HELP COMMANDS for the command index.

@@ -1,0 +1,24 @@
+;
+* WHL - WHEEL PRIVILEGE CONTROL
+
+SYSOP ONLY. Private utility; use the local sysop console.
+
+A - Purpose, syntax and examples
+
+:A
+* WHL - WHEEL PRIVILEGE CONTROL
+
+SYSOP ONLY. Private utility; use the local sysop console.
+
+Syntax:
+    WHL
+
+Controls the Z-System wheel privilege flag. The installed command itself
+is wheel-protected. It is not a public privilege request or caller login
+command.
+
+Use the established private sysop workflow and AUTH policy controls. Never
+publish privilege credentials, enable wheel for callers, or treat a help
+page as execution permission.
+
+See HELP COMMANDS for the command index.

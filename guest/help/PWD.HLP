@@ -1,0 +1,24 @@
+;
+* PWD - DISPLAY NAMED DIRECTORIES
+
+SYSOP ONLY. Private utility; use the local sysop console.
+
+A - Purpose, syntax and examples
+
+:A
+* PWD - DISPLAY NAMED DIRECTORIES
+
+SYSOP ONLY. Private utility; use the local sysop console.
+
+Syntax:
+    SYSUTLS:PWD [name-patterns | drives: | ~drives: | /options]
+
+Displays the Z-System named-directory table. Name patterns are
+automatically expanded for matching. Without arguments, displays the
+configured entries.
+
+The /P option can include directory passwords when wheel access permits
+it. Do not use that option in caller-visible output or shared logs. PWD is
+private here even though ordinary listing is read-only.
+
+See HELP COMMANDS for the command index.

@@ -14,6 +14,7 @@ for the supplied disks. These are the user manuals; the source documents below c
 specific features and engineering details.
 
 - [Current release notes and supported platforms](RELEASE-NOTES-1.2.2.md)
+- [Upcoming 1.2.3 help integration](RELEASE-NOTES-1.2.3.md)
 - [Caller permissions and program approval](caller-execution.md)
 - [System utilities and named directories](zsystem-utilities.md)
 - [Online games](online-games.md)

@@ -1,0 +1,23 @@
+;
+ZIF - CLEAR ALL CONDITIONAL LEVELS
+
+CALLER. Subject to the current caller access policy.
+
+A - Purpose, syntax and examples
+
+:A
+ZIF - CLEAR ALL CONDITIONAL LEVELS
+
+CALLER. Subject to the current caller access policy.
+
+Syntax:
+    ZIF
+
+Clears every active IF level, even if the current state is false. Use
+deliberately to recover from an unfinished conditional sequence.
+
+It can make following commands execute that would otherwise have been
+skipped. In scripts, prefer correctly matched IF/ELSE/FI rather than
+relying on global cleanup.
+
+See HELP COMMANDS for the command index.

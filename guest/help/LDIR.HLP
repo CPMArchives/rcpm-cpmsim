@@ -1,6 +1,8 @@
 ;
 LDIR - LIST THE MEMBERS OF A LIBRARY
 
+CALLER. Subject to current caller access policy.
+
 A - List the members of a library
 
 :A

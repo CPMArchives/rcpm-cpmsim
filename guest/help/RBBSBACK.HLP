@@ -1,0 +1,25 @@
+;
+* RBBS/RBBS41 - PRIVATE BOARD BACKENDS
+
+SYSOP ONLY. Private utility; use the local sysop console.
+
+A - Purpose, syntax and examples
+
+:A
+* RBBS/RBBS41 - PRIVATE BOARD BACKENDS
+
+SYSOP ONLY. Private utility; use the local sysop console.
+
+Syntax:
+    SYSUTLS:RBBS
+    A15:RBBS41
+
+SYSUTLS:RBBS is the private launcher that selects A15: and runs RBBS41.
+RBBS41 is a retained compatibility filename; the current board identifies
+itself by its own version banner.
+
+Callers use the public A0:RBBS launcher, which establishes the intended
+service context. Do not bypass that launcher for caller sessions or expose
+A15:. Back up I15: before database maintenance; see HELP RBUTIL41.
+
+See HELP COMMANDS for the command index.

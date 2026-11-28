@@ -1,0 +1,22 @@
+;
+* HISTCL - CLEAR CONSOLE COMMAND HISTORY
+
+SYSOP ONLY. Private utility; use the local sysop console.
+
+A - Purpose, syntax and examples
+
+:A
+* HISTCL - CLEAR CONSOLE COMMAND HISTORY
+
+SYSOP ONLY. Private utility; use the local sysop console.
+
+Syntax:
+    SYSUTLS:HISTCL
+
+Requests the History RSX command-line clear operation. If the RSX is
+absent, reports History RSX not found. It does not install the RSX.
+
+Clears console command history, not board messages, accounts, disk files
+or HELPC navigation history. Keep history extensions private.
+
+See HELP COMMANDS for the command index.

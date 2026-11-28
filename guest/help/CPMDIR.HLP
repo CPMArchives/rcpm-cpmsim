@@ -1,0 +1,23 @@
+;
+* CPMDIR - CP/M 3 DIRECTORY LISTING
+
+SYSOP ONLY. Private utility; use the local sysop console.
+
+A - Purpose, syntax and examples
+
+:A
+* CPMDIR - CP/M 3 DIRECTORY LISTING
+
+SYSOP ONLY. Private utility; use the local sysop console.
+
+Syntax:
+    SYSUTLS:CPMDIR [filespec] [options]
+
+Lists files using the original CP/M 3 directory program. Example:
+SYSUTLS:CPMDIR I14:*.HLP
+
+Options use square brackets, for example [FULL] for detailed information
+or [SYS] for system files. This utility differs from public DIR, which is
+the supplied directory front end. It does not change caller access policy.
+
+See HELP COMMANDS for the command index.

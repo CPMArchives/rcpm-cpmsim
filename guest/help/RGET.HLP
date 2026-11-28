@@ -1,0 +1,23 @@
+;
+* GET - RESIDENT LOAD INTO MEMORY
+
+SYSOP ONLY. Private utility; use the local sysop console.
+
+A - Purpose, syntax and examples
+
+:A
+* GET - RESIDENT LOAD INTO MEMORY
+
+SYSOP ONLY. Private utility; use the local sysop console.
+
+Syntax:
+    GET hex-address filespec
+
+Loads a file at the specified hexadecimal address without executing it. It
+searches according to the configured Z-System file lookup.
+
+This can overwrite program or resident memory. Use only in private
+development on copied media. It differs completely from SYSUTLS:GET, which
+redirects console input.
+
+See HELP COMMANDS for the command index.

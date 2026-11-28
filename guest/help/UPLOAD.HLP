@@ -1,6 +1,8 @@
 ;
 UPLOAD - SEND FILES TO THE SYSOP
 
+CALLER. Subject to current caller access policy.
+
 A - Send files to the sysop
 
 :A

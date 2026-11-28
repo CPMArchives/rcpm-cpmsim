@@ -15,9 +15,11 @@ instructions is always available on the machine itself.
     HELP RBBS
     DIR HELP:
 
-An unqualified HELP opens the main topic. HELP followed by a topic name opens
-that topic directly. HELP // gives the preserved viewer's own usage
-information.
+HELP looks for HELP.HLP in the current DU before falling back to the
+system HELP directory. A software collection may supply its own index.
+HELP HELP:HELP explicitly opens the system index from any directory.
+HELP followed by a topic name opens that topic; you can also specify a
+named directory, as in HELP HELP:DIR. HELP // gives viewer usage.
 
 Select a letter from a menu to open another topic or an information section.
 Use ^ to return to the preceding menu and . to return to the root. Long

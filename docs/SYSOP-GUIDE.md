@@ -238,7 +238,7 @@ From private CP/M:
 
 [ZDE](https://www.dflund.se/~pi/cpm/files/ftp.mayn.de/pub/cpm/archive/zsystem/zde16/) uses WordStar keys: Ctrl-K S saves, Ctrl-K X saves and exits, Ctrl-K Q abandons changes. If an unchanged buffer prompts after a previous save, N exits without saving again. Keep the caller blanked throughout editing and saving. BYE displays WELCOME.TXT on the next call, not its .BAK file.
 
-The HELP topics are in I14:HELP. DIR HELP: lists them; HELP GAMES opens a particular topic. The released 1.2.2 collection uses short ASCII topics beginning with a semicolon line, with CRLF and Ctrl-Z termination. [HELPC](zsystem-utilities.md) can also handle linked menus and paginated sections, but the expanded collection is planned for a later release. Maintain HELP privately, and put no passwords or installation-specific secrets in public topics.
+The HELP topics are in I14:HELP. DIR HELP: lists them; HELP GAMES opens a particular topic. The released 1.2.2 collection uses short ASCII topics beginning with a semicolon line, with CRLF and Ctrl-Z termination. The 1.2.3 source collection expands this to 120 linked and paginated help files, covering 63 installed command programs and 24 resident command entries. Its qualified links require the tested HELPC 1.5r viewer. `HELP COMMANDS` separates public and resident caller commands from `* SYSOP ONLY` utilities, resident commands and startup backends. `HELP GET` distinguishes the two private GET implementations; `HELP R` and `HELP RESET` distinguish disk reset from whole-machine reset. The labels document access; BYE policy and wheel restrictions enforce it. Maintain HELP privately, and put no passwords or installation-specific secrets in public topics.
 
 ## 12. Transfers and incoming software
 

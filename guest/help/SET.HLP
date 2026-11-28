@@ -1,0 +1,25 @@
+;
+* SET - CP/M FILE AND DISK ATTRIBUTES
+
+SYSOP ONLY. Private utility; use the local sysop console.
+
+A - Purpose, syntax and examples
+
+:A
+* SET - CP/M FILE AND DISK ATTRIBUTES
+
+SYSOP ONLY. Private utility; use the local sysop console.
+
+Syntax:
+    SYSUTLS:SET filespec [attributes]
+    SYSUTLS:SET drive: [options]
+
+Displays or changes CP/M attributes, disk labels, modes, timestamps and
+password-related settings. Example inspection: SYSUTLS:SET I0:TEST.TXT
+
+[RO] and [RW] change file write protection; [SYS] and [DIR] change
+directory visibility. CP/M file attributes are distinct from the BYE DU
+permission map. Use AUTH to review caller authorization; do not make a
+private utility public merely by changing visibility.
+
+See HELP COMMANDS for the command index.

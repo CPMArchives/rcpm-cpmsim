@@ -1,0 +1,23 @@
+;
+* A15:BYE - PRIVATE BYE BACKEND
+
+SYSOP ONLY. Private utility; use the local sysop console.
+
+A - Purpose, syntax and examples
+
+:A
+* A15:BYE - PRIVATE BYE BACKEND
+
+SYSOP ONLY. Private utility; use the local sysop console.
+
+Syntax:
+    A15:BYE
+
+Private service component in the SYSTEM high user area. The public A0:BYE
+entry point has a different role and authorization. Do not add A15: to the
+caller search path or launch a second service inside an active session.
+
+For normal caller logoff use BYE from A0. For local host shutdown use
+SYSUTLS:BYEBYE after callers disconnect.
+
+See HELP COMMANDS for the command index.

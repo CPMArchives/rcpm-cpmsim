@@ -1,0 +1,32 @@
+;
+RESIDENT CALLER COMMANDS
+These are built into the installed resident packages.
+
+A - H - List resident commands
+B - CLS - Clear the terminal display
+C - ECHO - Display command-line text
+D - NOTE - Command-sequence comment
+E - R - Resident disk reset
+F - SP - Display free disk space
+G - IF - Start a conditional command level
+H - ELSE - Select the other if branch
+I - FI - End one if level
+J - XIF - End all ifs when current state is true
+K - AND - Add a test to the current if level
+L - OR - Alternative test at the current if level
+M - IFQ - Display conditional state
+N - ZIF - Clear all conditional levels
+:A:HELP:H.HLP
+:B:HELP:CLS.HLP
+:C:HELP:ECHO.HLP
+:D:HELP:NOTE.HLP
+:E:HELP:R.HLP
+:F:HELP:SP.HLP
+:G:HELP:IF.HLP
+:H:HELP:ELSE.HLP
+:I:HELP:FI.HLP
+:J:HELP:XIF.HLP
+:K:HELP:AND.HLP
+:L:HELP:OR.HLP
+:M:HELP:IFQ.HLP
+:N:HELP:ZIF.HLP

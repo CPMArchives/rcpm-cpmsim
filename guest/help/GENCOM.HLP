@@ -1,0 +1,24 @@
+;
+* GENCOM - ATTACH RSX MODULES TO A PROGRAM
+
+SYSOP ONLY. Private utility; use the local sysop console.
+
+A - Purpose, syntax and examples
+
+:A
+* GENCOM - ATTACH RSX MODULES TO A PROGRAM
+
+SYSOP ONLY. Private utility; use the local sysop console.
+
+Syntax:
+    SYSUTLS:GENCOM program [rsx-module ...]
+
+Builds or changes a CP/M 3 COM program with resident extension modules.
+This rewrites executable files and can affect loading and memory
+allocation.
+
+Work on a backed-up copy and retain the corresponding RSX sources and
+configuration. It is a maintenance/build tool, not the command to start an
+ordinary program.
+
+See HELP COMMANDS for the command index.

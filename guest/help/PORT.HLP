@@ -1,0 +1,22 @@
+;
+* PORT - READ OR WRITE AN I/O PORT
+
+SYSOP ONLY. Private utility; use the local sysop console.
+
+A - Purpose, syntax and examples
+
+:A
+* PORT - READ OR WRITE AN I/O PORT
+
+SYSOP ONLY. Private utility; use the local sysop console.
+
+Syntax:
+    PORT hex-port [hex-value]
+
+Reads an I/O port when no value is supplied, or writes the given
+hexadecimal value.
+
+I/O ports control devices and cpmsim hardware functions. A write can halt
+or reset the emulator. Do not experiment on the live service.
+
+See HELP COMMANDS for the command index.

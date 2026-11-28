@@ -1,0 +1,23 @@
+;
+H - LIST RESIDENT COMMANDS
+
+CALLER. Subject to the current caller access policy.
+
+A - Purpose, syntax and examples
+
+:A
+H - LIST RESIDENT COMMANDS
+
+CALLER. Subject to the current caller access policy.
+
+Syntax:
+    H
+
+Lists commands installed in the CCP, resident command package and flow-
+control package. The display depends on the installed packages and current
+wheel state.
+
+H is a resident command list, not the full HELPC documentation viewer. Use
+HELP COMMANDS for this reference.
+
+See HELP COMMANDS for the command index.

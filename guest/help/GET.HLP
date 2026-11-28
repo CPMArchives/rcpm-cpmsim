@@ -1,0 +1,8 @@
+;
+* GET - TWO DIFFERENT COMMANDS
+* = SYSOP ONLY. Choose the implementation you mean.
+
+A - * Resident GET: load memory
+B - * SYSUTLS:GET: console input
+:A:HELP:RGET.HLP
+:B:HELP:CPMGET.HLP

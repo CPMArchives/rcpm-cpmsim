@@ -1,0 +1,31 @@
+;
+* IF.COM - EXTENDED CONDITION TESTS
+
+SYSOP ONLY. Private utility; use the local sysop console.
+
+A - Purpose, syntax and examples
+
+:A
+* IF.COM - EXTENDED CONDITION TESTS
+
+SYSOP ONLY. Private utility; use the local sysop console.
+
+Syntax:
+    SYSUTLS:IF condition arguments
+    SYSUTLS:IF argument1=argument2
+    SYSUTLS:IF register-number [value]
+
+Provides the extended Z-System IF tests. The resident flow processor can
+delegate tests that it does not implement to this program. Only the first
+two letters of a condition name are significant. A leading ~ negates
+conditions except the argument1=argument2 form.
+
+Supported names printed by this binary include EXIST, EMPTY, ERROR, NULL,
+INPUT, REG, WHEEL, TCAP, ARCHIVE, RO, SYS, AMBIG, COMPR, VALUE and ZEX,
+plus comparison operators.
+
+A condition starts a flow level; balance it with FI. Use HELP IF for the
+resident forms and flow-control commands. The disk-based extended test
+utility is private in this installation.
+
+See HELP COMMANDS for the command index.

@@ -1,0 +1,24 @@
+;
+* SYSOP RESIDENT COMMANDS
+* = SYSOP ONLY. These installed CCP/RCP entries require wheel.
+
+A - * GET
+B - * GO
+C - * JUMP
+D - * ERA
+E - * P
+F - * POKE
+G - * PORT
+H - * REG
+I - * TYPE (resident, wheel required)
+J - * WHL
+:A:HELP:RGET.HLP
+:B:HELP:GO.HLP
+:C:HELP:JUMP.HLP
+:D:HELP:ERA.HLP
+:E:HELP:P.HLP
+:F:HELP:POKE.HLP
+:G:HELP:PORT.HLP
+:H:HELP:REG.HLP
+:I:HELP:RTYPE.HLP
+:J:HELP:WHL.HLP

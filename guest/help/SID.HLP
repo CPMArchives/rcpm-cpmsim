@@ -1,0 +1,24 @@
+;
+* SID - SYMBOLIC DEBUGGER
+
+SYSOP ONLY. Private utility; use the local sysop console.
+
+A - Purpose, syntax and examples
+
+:A
+* SID - SYMBOLIC DEBUGGER
+
+SYSOP ONLY. Private utility; use the local sysop console.
+
+Syntax:
+    SYSUTLS:SID [program [symbols]]
+
+Loads the CP/M symbolic debugger for private program development. The
+supplied SID is an 8080-style debugger; use its command set rather than
+assuming a Z80 monitor syntax.
+
+Debugger commands can examine/change memory, set breakpoints and execute
+loaded code. A typical private session starts with SYSUTLS:SID
+I0:TEST.COM. Use copied files and avoid debugging the live caller service.
+
+See HELP COMMANDS for the command index.

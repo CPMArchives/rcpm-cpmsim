@@ -1,0 +1,22 @@
+;
+NOTE - COMMAND-SEQUENCE COMMENT
+
+CALLER. Subject to the current caller access policy.
+
+A - Purpose, syntax and examples
+
+:A
+NOTE - COMMAND-SEQUENCE COMMENT
+
+CALLER. Subject to the current caller access policy.
+
+Syntax:
+    NOTE [text]
+
+Does nothing and returns to the command processor. Use it to annotate a
+command sequence. Example: NOTE BEGIN FILE CHECK
+
+It does not send or save a note. Use public MESSAGE to leave a note for
+the sysop.
+
+See HELP COMMANDS for the command index.

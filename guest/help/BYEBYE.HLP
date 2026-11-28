@@ -1,0 +1,23 @@
+;
+* BYEBYE - STOP THE LOCAL EMULATOR
+
+SYSOP ONLY. Private utility; use the local sysop console.
+
+A - Purpose, syntax and examples
+
+:A
+* BYEBYE - STOP THE LOCAL EMULATOR
+
+SYSOP ONLY. Private utility; use the local sysop console.
+
+Syntax:
+    SYSUTLS:BYEBYE
+
+Halts cpmsim and returns to the host terminal. Use only after the caller
+has logged off and guest writes have finished.
+
+This is the local shutdown command. Public BYE logs off a caller instead.
+After the halt message, the host updater can safely acquire the
+installation lock.
+
+See HELP COMMANDS for the command index.

@@ -1,0 +1,23 @@
+;
+* POKE - WRITE MEMORY BYTES
+
+SYSOP ONLY. Private utility; use the local sysop console.
+
+A - Purpose, syntax and examples
+
+:A
+* POKE - WRITE MEMORY BYTES
+
+SYSOP ONLY. Private utility; use the local sysop console.
+
+Syntax:
+    POKE hex-address hex-byte [hex-byte ...]
+
+Writes bytes directly to the selected memory address. A quoted string form
+is also supported by the resident implementation.
+
+There is no file backup or memory protection implied. An incorrect address
+can corrupt BYE, the command processor or buffered data. Use only for
+deliberate private diagnostics on copied systems.
+
+See HELP COMMANDS for the command index.

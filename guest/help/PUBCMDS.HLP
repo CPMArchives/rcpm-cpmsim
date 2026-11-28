@@ -1,0 +1,34 @@
+;
+PUBLIC DISK COMMANDS
+CALLER commands, subject to the current access policy.
+
+A - BYE - End your call
+B - CHAT - A word with the sysop
+C - CLS - Clear the terminal display
+D - DIR - List files on a disk
+E - HELP - The online help command
+F - LDIR - List the members of a library
+G - LT - Read text and library members
+H - MESSAGE - Leave a note for the sysop
+I - MOUNT - Exchanging library disks
+J - NDSCAN - Refresh named directories
+K - RBBS - The bulletin board and private mail
+L - SDZ - Super directory
+M - TYPE - Display an ordinary text file
+N - UPLOAD - Send files to the sysop
+O - YSEND - Download a file using ymodem
+:A:HELP:BYE.HLP
+:B:HELP:CHAT.HLP
+:C:HELP:CLS.HLP
+:D:HELP:DIR.HLP
+:E:HELP:HELPCMD.HLP
+:F:HELP:LDIR.HLP
+:G:HELP:LT.HLP
+:H:HELP:MESSAGE.HLP
+:I:HELP:MOUNT.HLP
+:J:HELP:NDSCAN.HLP
+:K:HELP:RBBS.HLP
+:L:HELP:SDZ.HLP
+:M:HELP:TYPE.HLP
+:N:HELP:UPLOAD.HLP
+:O:HELP:YSEND.HLP

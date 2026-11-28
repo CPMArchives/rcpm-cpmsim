@@ -1,0 +1,24 @@
+;
+* RESET.COM - RESET THE EMULATED MACHINE
+
+SYSOP ONLY. Private utility; use the local sysop console.
+
+A - Purpose, syntax and examples
+
+:A
+* RESET.COM - RESET THE EMULATED MACHINE
+
+SYSOP ONLY. Private utility; use the local sysop console.
+
+Syntax:
+    SYSUTLS:RESET
+
+Requests a hardware reset through cpmsim control port 160. It restarts the
+emulated machine; it is not a directory refresh or resident disk reset.
+
+Do not use while a caller is connected or while files are being written.
+For a controlled host stop use SYSUTLS:BYEBYE after activity finishes.
+Resident R performs a different, disk-reset operation. MOUNT handles
+collection volume changes.
+
+See HELP COMMANDS for the command index.

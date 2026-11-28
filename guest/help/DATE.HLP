@@ -1,0 +1,24 @@
+;
+* DATE - DISPLAY OR SET GUEST DATE/TIME
+
+SYSOP ONLY. Private utility; use the local sysop console.
+
+A - Purpose, syntax and examples
+
+:A
+* DATE - DISPLAY OR SET GUEST DATE/TIME
+
+SYSOP ONLY. Private utility; use the local sysop console.
+
+Syntax:
+    SYSUTLS:DATE
+    SYSUTLS:DATE SET
+    SYSUTLS:DATE mm/dd/yy hh:mm:ss
+
+Without arguments, displays the CP/M clock. DATE SET prompts for a new
+date and time. The explicit date/time form sets it directly.
+
+This controls the guest clock; it is not a macOS timezone command.
+Incorrect changes can affect timestamps and bulletin-board records.
+
+See HELP COMMANDS for the command index.

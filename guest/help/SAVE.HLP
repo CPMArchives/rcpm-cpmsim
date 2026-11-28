@@ -1,0 +1,25 @@
+;
+* SAVE - WRITE MEMORY TO A FILE
+
+SYSOP ONLY. Private utility; use the local sysop console.
+
+A - Purpose, syntax and examples
+
+:A
+* SAVE - WRITE MEMORY TO A FILE
+
+SYSOP ONLY. Private utility; use the local sysop console.
+
+Syntax:
+    SYSUTLS:SAVE
+
+Arms CP/M 3 SAVE, then returns to the command line so you can run a
+program that loads the desired data into memory. When that program exits,
+SAVE asks for an output filename and beginning/ending hexadecimal
+addresses. Return at the filename prompt cancels.
+
+This installed CP/M 3 command does NOT use the CP/M 2 SAVE pages filename
+syntax. It can overwrite files after confirmation and can expose resident
+data. Use only during private development on backed-up media.
+
+See HELP COMMANDS for the command index.

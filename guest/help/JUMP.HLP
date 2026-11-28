@@ -1,0 +1,23 @@
+;
+* JUMP - EXECUTE AT A MEMORY ADDRESS
+
+SYSOP ONLY. Private utility; use the local sysop console.
+
+A - Purpose, syntax and examples
+
+:A
+* JUMP - EXECUTE AT A MEMORY ADDRESS
+
+SYSOP ONLY. Private utility; use the local sysop console.
+
+Syntax:
+    JUMP hex-address [command-tail]
+
+Transfers execution to a specified hexadecimal address and supplies the
+optional command tail.
+
+An incorrect address can execute data or damage the running environment.
+Reserved for private program development; it is not an ordinary way to
+start a COM file.
+
+See HELP COMMANDS for the command index.

@@ -1,0 +1,38 @@
+;
+COMMAND NAMES, ACCESS AND THE ASTERISK
+
+CALLER. Subject to the current caller access policy.
+
+A - Purpose, syntax and examples
+
+:A
+COMMAND NAMES, ACCESS AND THE ASTERISK
+
+CALLER. Subject to the current caller access policy.
+
+Syntax:
+    HELP COMMANDS
+
+An asterisk (*) marks a SYSOP ONLY command or section. Those entries
+document maintenance tools; reading help does not grant permission to
+execute them. Caller commands remain subject to the current BYE
+read/write/execute policy.
+
+Public disk programs are in A0:. Private utilities are in SYSUTLS: (I13:);
+hidden startup files and A15: backends are also private. Resident CCP/RCP
+entries marked * require wheel. Resident flow commands do not bypass those
+restrictions.
+
+Names can overlap. GET is the resident memory loader; SYSUTLS:GET
+redirects console input. R resets disk state; SYSUTLS:RESET resets the
+machine. Public TYPE differs from wheel-protected resident TYPE. Public
+DIR differs from SYSUTLS:CPMDIR. IF is resident flow control; SYSUTLS:IF
+supplies extended tests. SYSUTLS:NAME edits a directory name; typing NAME:
+selects a directory.
+
+DU: and NAME: selection syntax does not need a separate command page. The
+reference covers installed named command programs and resident package
+entries, not every program that might exist inside an optional mounted
+collection.
+
+See HELP COMMANDS for the command index.

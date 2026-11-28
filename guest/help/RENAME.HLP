@@ -1,0 +1,23 @@
+;
+* RENAME - CHANGE A FILE NAME
+
+SYSOP ONLY. Private utility; use the local sysop console.
+
+A - Purpose, syntax and examples
+
+:A
+* RENAME - CHANGE A FILE NAME
+
+SYSOP ONLY. Private utility; use the local sysop console.
+
+Syntax:
+    SYSUTLS:RENAME newname=oldname
+
+Renames an existing file without copying its contents. Example:
+SYSUTLS:RENAME I0:NEW.TXT=I0:OLD.TXT
+
+Both names must refer to the same drive; do not use this as a move between
+disks. Check the new name and any overwrite prompt. Changing a COM
+filename can change command lookup and startup behavior.
+
+See HELP COMMANDS for the command index.

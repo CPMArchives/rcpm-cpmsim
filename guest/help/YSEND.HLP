@@ -1,6 +1,8 @@
 ;
 YSEND - DOWNLOAD A FILE USING YMODEM
 
+CALLER. Subject to current caller access policy.
+
 A - Download a file using YMODEM
 
 :A

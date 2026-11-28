@@ -1,0 +1,23 @@
+;
+FI - END ONE IF LEVEL
+
+CALLER. Subject to the current caller access policy.
+
+A - Purpose, syntax and examples
+
+:A
+FI - END ONE IF LEVEL
+
+CALLER. Subject to the current caller access policy.
+
+Syntax:
+    FI
+
+Closes the current conditional level and returns to its parent. Each
+nested IF needs its own FI.
+
+Example: IF NULL;ECHO HELLO;FI
+
+Use IFQ to inspect the conditional state if a command seems to be skipped.
+
+See HELP COMMANDS for the command index.

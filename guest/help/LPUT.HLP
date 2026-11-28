@@ -1,0 +1,24 @@
+;
+* LPUT - CREATE OR UPDATE A LIBRARY
+
+SYSOP ONLY. Private utility; use the local sysop console.
+
+A - Purpose, syntax and examples
+
+:A
+* LPUT - CREATE OR UPDATE A LIBRARY
+
+SYSOP ONLY. Private utility; use the local sysop console.
+
+Syntax:
+    SYSUTLS:LPUT [dir:]library [dir:]filespec[,filespec...] [+nn]
+
+Adds or replaces library members, creating the LBR if necessary. +nn
+specifies extra directory entries when supported by this version. Example
+on copied files: SYSUTLS:LPUT I0:TEST I0:NOTE.TXT
+
+Even a library-only invocation checks its format and updates CRC
+information; it is not a read-only inspection command. Back up the entire
+LBR first. Use LDIR for a directory listing.
+
+See HELP COMMANDS for the command index.

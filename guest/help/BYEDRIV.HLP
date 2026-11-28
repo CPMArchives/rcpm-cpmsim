@@ -1,0 +1,24 @@
+;
+* BYEDRIV - BYE DRIVER SUPPORT
+
+SYSOP ONLY. Private utility; use the local sysop console.
+
+A - Purpose, syntax and examples
+
+:A
+* BYEDRIV - BYE DRIVER SUPPORT
+
+SYSOP ONLY. Private utility; use the local sysop console.
+
+Syntax:
+    A0:BYEDRIV
+
+Private driver/support loader used by the installed BYE service. It is not
+the caller logoff command and is not intended for direct invocation during
+a session.
+
+Retain its matched driver/configuration files and original attributes. Use
+public BYE to log off, AUTH for policy inspection in private sysop mode,
+and the host launcher for normal startup.
+
+See HELP COMMANDS for the command index.

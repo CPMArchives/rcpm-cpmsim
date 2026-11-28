@@ -1,0 +1,30 @@
+;
+* PUT - REDIRECT CONSOLE OR PRINTER OUTPUT
+
+SYSOP ONLY. Private utility; use the local sysop console.
+
+A - Purpose, syntax and examples
+
+:A
+* PUT - REDIRECT CONSOLE OR PRINTER OUTPUT
+
+SYSOP ONLY. Private utility; use the local sysop console.
+
+Syntax:
+    SYSUTLS:PUT CONSOLE FILE filespec [options]
+    SYSUTLS:PUT CONSOLE CONSOLE
+    SYSUTLS:PUT PRINTER FILE filespec [options]
+    SYSUTLS:PUT PRINTER PRINTER
+
+Captures the selected output stream in a disk file. Normally applies to
+the next program; [SYSTEM] keeps redirection active across system
+commands. [ECHO] or [NO ECHO] controls whether the captured stream also
+reaches its device.
+
+Example: SYSUTLS:PUT CONSOLE FILE I0:OUTPUT.TXT
+
+Restore console output with SYSUTLS:PUT CONSOLE CONSOLE and printer output
+with SYSUTLS:PUT PRINTER PRINTER. Check free space and avoid capturing
+credentials or private caller information.
+
+See HELP COMMANDS for the command index.

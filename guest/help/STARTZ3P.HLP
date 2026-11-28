@@ -1,0 +1,24 @@
+;
+* STARTZ3P - SUPPLIED STARTUP ALIAS
+
+SYSOP ONLY. Private utility; use the local sysop console.
+
+A - Purpose, syntax and examples
+
+:A
+* STARTZ3P - SUPPLIED STARTUP ALIAS
+
+SYSOP ONLY. Private utility; use the local sysop console.
+
+Syntax:
+    A0:STARTZ3P
+
+Private compiled startup sequence. The captured alias sets PATH to A0,
+restores console input through I13:GET CONSOLE, selects A0 and runs
+A0:BYE.
+
+It is invoked during startup; do not rerun it inside an active caller
+session. Edit only a backed-up copy while stopped. The host Start-
+RCPM.command launcher remains the normal way to start the installation.
+
+See HELP COMMANDS for the command index.

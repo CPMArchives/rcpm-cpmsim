@@ -1,0 +1,23 @@
+;
+* P - RESIDENT MEMORY DISPLAY
+
+SYSOP ONLY. Private utility; use the local sysop console.
+
+A - Purpose, syntax and examples
+
+:A
+* P - RESIDENT MEMORY DISPLAY
+
+SYSOP ONLY. Private utility; use the local sysop console.
+
+Syntax:
+    P [start-hex [end-hex]]
+
+Displays memory in hexadecimal form. With no address, starts at 0100H and
+displays a default block.
+
+The installed command table token is P (the package describes the function
+as Peek). Memory can contain private session data. Keep output on the
+private console.
+
+See HELP COMMANDS for the command index.

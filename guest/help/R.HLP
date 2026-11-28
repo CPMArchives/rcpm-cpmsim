@@ -1,0 +1,23 @@
+;
+R - RESIDENT DISK RESET
+
+CALLER. Subject to the current caller access policy.
+
+A - Purpose, syntax and examples
+
+:A
+R - RESIDENT DISK RESET
+
+CALLER. Subject to the current caller access policy.
+
+Syntax:
+    R
+
+Resets CP/M disk state so drives can be logged in again. It does not erase
+files. Finish file activity first; use MOUNT for managed collection-volume
+changes.
+
+This installed resident token is R. It is different from SYSUTLS:RESET,
+which resets the whole emulated machine.
+
+See HELP COMMANDS for the command index.

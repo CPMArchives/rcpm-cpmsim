@@ -1,0 +1,26 @@
+;
+* ZHELP - PRIVATE HELPC VIEWER
+
+SYSOP ONLY. Private utility; use the local sysop console.
+
+A - Purpose, syntax and examples
+
+:A
+* ZHELP - PRIVATE HELPC VIEWER
+
+SYSOP ONLY. Private utility; use the local sysop console.
+
+Syntax:
+    SYSUTLS:ZHELP [dir:][helpname]
+    SYSUTLS:ZHELP //
+
+Private utility copy of HELPC; public HELP is the caller entry point. //
+displays its version and configured defaults. Example: SYSUTLS:ZHELP
+HELP:COMMANDS
+
+The enhanced viewer supports qualified internal links and DU-aware
+parent/root navigation. It reads HLP and supported compressed HZP files.
+This command is not CPMHELP, whose database format differs. Keep both
+viewer installations at the tested version.
+
+See HELP COMMANDS for the command index.

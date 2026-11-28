@@ -1,0 +1,27 @@
+;
+* TYPE - PRIVATE RESIDENT TEXT DISPLAY
+
+SYSOP ONLY. Private utility; use the local sysop console.
+
+A - Purpose, syntax and examples
+
+:A
+* TYPE - PRIVATE RESIDENT TEXT DISPLAY
+
+SYSOP ONLY. Private utility; use the local sysop console.
+
+Syntax:
+    TYPE filespec
+
+The resident RCP text display command is wheel-protected. It reads an
+ordinary text file using the resident implementation; it is distinct from
+public A0:TYPE.COM.
+
+To select the public CP/M program explicitly, use A0:TYPE filespec. Public
+HELP TYPE documents that program and its CP/M 3 options. Do not assume
+those options apply to the resident implementation.
+
+Keep wheel disabled for caller sessions. Use LT for supported compressed
+text or library members.
+
+See HELP COMMANDS for the command index.

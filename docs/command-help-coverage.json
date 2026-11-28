@@ -1,0 +1,587 @@
+[
+  {
+    "invocation": "A0:BYE",
+    "kind": "COM",
+    "topic": "BYE",
+    "access": "CALLER",
+    "binary_sha256": "9ebe619f937eed6c44eb798e5b71afd203cced506ad11e4f5116f3a476b3f5ce"
+  },
+  {
+    "invocation": "A0:BYEDRIV",
+    "kind": "COM",
+    "topic": "BYEDRIV",
+    "access": "SYSOP ONLY",
+    "binary_sha256": "323151e15e0c6caefeefa708b5577ab4ca02fcba51542af4cd578783c42ce3e2"
+  },
+  {
+    "invocation": "A0:CHAT",
+    "kind": "COM",
+    "topic": "CHAT",
+    "access": "CALLER",
+    "binary_sha256": "9c7eb6c0351e5910ce9e9a750f35ed05a441941d40e9b626bec23ca4877a4afa"
+  },
+  {
+    "invocation": "A0:CLS",
+    "kind": "COM",
+    "topic": "CLS",
+    "access": "CALLER",
+    "binary_sha256": "7c3e34224f341daaae4c571b0470262b151a30412b7706e4235f09d789d0e97b"
+  },
+  {
+    "invocation": "A0:DIR",
+    "kind": "COM",
+    "topic": "DIR",
+    "access": "CALLER",
+    "binary_sha256": "4fa51cf5210962d0dde5071f12adbf11628b9ccaa5c37846016fcebcb39db952"
+  },
+  {
+    "invocation": "A0:HELP",
+    "kind": "COM",
+    "topic": "HELPCMD",
+    "access": "CALLER",
+    "binary_sha256": "acee542d49766ae046cc3e52f349e372af158898c7972245da9085f53a097a94"
+  },
+  {
+    "invocation": "A0:LDIR",
+    "kind": "COM",
+    "topic": "LDIR",
+    "access": "CALLER",
+    "binary_sha256": "afc35c4783e7a31eb81116fd8d068d069ab947d715cbe58a9600755b7d57b692"
+  },
+  {
+    "invocation": "A0:LT",
+    "kind": "COM",
+    "topic": "LT",
+    "access": "CALLER",
+    "binary_sha256": "d6d6c675875c04ebd975611bbcb6c94cd6f467b732d387c8e4e698e899658720"
+  },
+  {
+    "invocation": "A0:MESSAGE",
+    "kind": "COM",
+    "topic": "MESSAGE",
+    "access": "CALLER",
+    "binary_sha256": "39119b2f1cbd5ed091b7c6d60dac194ef159e5a4d161ee6fca56d4e52259413e"
+  },
+  {
+    "invocation": "A0:MOUNT",
+    "kind": "COM",
+    "topic": "MOUNT",
+    "access": "CALLER",
+    "binary_sha256": "23946082f0a2755b1e7f68be2b36ff23d4b79fcc9f36a9b724b3335d1425d130"
+  },
+  {
+    "invocation": "A0:NDSCAN",
+    "kind": "COM",
+    "topic": "NDSCAN",
+    "access": "CALLER",
+    "binary_sha256": "73d5f651f743d8beb30e24f2e811bda893bbb14ff8a93af98334585011ff848b"
+  },
+  {
+    "invocation": "A0:PATH",
+    "kind": "COM",
+    "topic": "PATH",
+    "access": "SYSOP ONLY",
+    "binary_sha256": "cf9f5f21f7e65b3d3f48cfdc0b934ac87db78d02bb41526f18be7ea28b3e88ad"
+  },
+  {
+    "invocation": "A0:RBBS",
+    "kind": "COM",
+    "topic": "RBBS",
+    "access": "CALLER",
+    "binary_sha256": "4f99914f6a8555366e07983df5366ffcf429b3d1bcf7eb49fe4e96f868f42252"
+  },
+  {
+    "invocation": "A0:SDZ",
+    "kind": "COM",
+    "topic": "SDZ",
+    "access": "CALLER",
+    "binary_sha256": "4fa51cf5210962d0dde5071f12adbf11628b9ccaa5c37846016fcebcb39db952"
+  },
+  {
+    "invocation": "A0:STARTZ3P",
+    "kind": "COM",
+    "topic": "STARTZ3P",
+    "access": "SYSOP ONLY",
+    "binary_sha256": "b8cbc08252f661184e949cb5f0165e605a31264140f28380ca2a0c7ec0490550"
+  },
+  {
+    "invocation": "A0:SUBMIT",
+    "kind": "COM",
+    "topic": "SUBMIT",
+    "access": "SYSOP ONLY",
+    "binary_sha256": "bdec781b8498c84e1b7e92630ed22f198ff32f5418cf67d957db61c9dec58d9b"
+  },
+  {
+    "invocation": "A0:TYPE",
+    "kind": "COM",
+    "topic": "TYPE",
+    "access": "CALLER",
+    "binary_sha256": "cb30ac5c444657efe4114e45dcb2352cfdff2ab527ae56ec5bd76e03f562e3ff"
+  },
+  {
+    "invocation": "A0:UPLOAD",
+    "kind": "COM",
+    "topic": "UPLOAD",
+    "access": "CALLER",
+    "binary_sha256": "09d8bb239612266563a0bc03ef0c56fd295e3dea6a4107cc83dc618a9a7f1dc5"
+  },
+  {
+    "invocation": "A0:VT100DYN",
+    "kind": "COM",
+    "topic": "VT100DYN",
+    "access": "SYSOP ONLY",
+    "binary_sha256": "7531cb831b8d2ebf49720c18c2d3b5053cff4d47cfee9c199a1bdba5987c4aab"
+  },
+  {
+    "invocation": "A0:YSEND",
+    "kind": "COM",
+    "topic": "YSEND",
+    "access": "CALLER",
+    "binary_sha256": "0403d43f7648ef5715d973cebf9c2ab085c98df0b7fef769261970dbd8b2f928"
+  },
+  {
+    "invocation": "A0:Z3PLUS",
+    "kind": "COM",
+    "topic": "Z3PLUS",
+    "access": "SYSOP ONLY",
+    "binary_sha256": "20ad68c5636395b6bbe24d6a03115286efd525789c558529926ea41ae1a535c4"
+  },
+  {
+    "invocation": "A15:BYE",
+    "kind": "COM",
+    "topic": "BYEBACK",
+    "access": "SYSOP ONLY",
+    "binary_sha256": "9ebe619f937eed6c44eb798e5b71afd203cced506ad11e4f5116f3a476b3f5ce"
+  },
+  {
+    "invocation": "A15:RBBS41",
+    "kind": "COM",
+    "topic": "RBBSBACK",
+    "access": "SYSOP ONLY",
+    "binary_sha256": "682920301c4ead2f56e64d83134f60c6d2d7c4b5f2ec521053103c780badc24b"
+  },
+  {
+    "invocation": "I13:ARUNZ",
+    "kind": "COM",
+    "topic": "ARUNZ",
+    "access": "SYSOP ONLY",
+    "binary_sha256": "1d11c37199a74272b76cbe915e5f93ad27ab5a2484cc5f2025d718773f48fd2b"
+  },
+  {
+    "invocation": "I13:AUTH",
+    "kind": "COM",
+    "topic": "AUTH",
+    "access": "SYSOP ONLY",
+    "binary_sha256": "59e91878bfd6395a309dc26abc6cb2c20f7af239946e11a964338bf8b02c9386"
+  },
+  {
+    "invocation": "I13:BYEBYE",
+    "kind": "COM",
+    "topic": "BYEBYE",
+    "access": "SYSOP ONLY",
+    "binary_sha256": "6bc14aeb37ce7ecb72bf482f9a6cb80b4a6cfb6279ac83ee68f7ef4891562427"
+  },
+  {
+    "invocation": "I13:CPMDIR",
+    "kind": "COM",
+    "topic": "CPMDIR",
+    "access": "SYSOP ONLY",
+    "binary_sha256": "fc449a7960f2a330d8a5708e877e1f171f1ceb00dae7a71f7a31726c680781e0"
+  },
+  {
+    "invocation": "I13:CPMHELP",
+    "kind": "COM",
+    "topic": "CPMHELP",
+    "access": "SYSOP ONLY",
+    "binary_sha256": "70ee899db9a0a58bf51785729adebe7afe0aa12c50cffe8a5ca124bb00d3132b"
+  },
+  {
+    "invocation": "I13:DATE",
+    "kind": "COM",
+    "topic": "DATE",
+    "access": "SYSOP ONLY",
+    "binary_sha256": "db70b1da87c3837eacb4fa9b749a01637462e6c8035d35bb2c2db8a2be09e054"
+  },
+  {
+    "invocation": "I13:DEVICE",
+    "kind": "COM",
+    "topic": "DEVICE",
+    "access": "SYSOP ONLY",
+    "binary_sha256": "3361d2799eb32bc87aaee961318ad67890b42b40518c1eb29b54bfc00dddfe79"
+  },
+  {
+    "invocation": "I13:DUMP",
+    "kind": "COM",
+    "topic": "DUMP",
+    "access": "SYSOP ONLY",
+    "binary_sha256": "73269a166a346adc02e09d513f771492679cd7c5d908bcd14aaefbd155111010"
+  },
+  {
+    "invocation": "I13:ED",
+    "kind": "COM",
+    "topic": "ED",
+    "access": "SYSOP ONLY",
+    "binary_sha256": "e1d6fa6d53a27f05c447c496375dc9d9f98fcb67650993d74c3ff7566ccc87b2"
+  },
+  {
+    "invocation": "I13:ERASE",
+    "kind": "COM",
+    "topic": "ERASE",
+    "access": "SYSOP ONLY",
+    "binary_sha256": "4f072d00716e5a07a10cab5d13c247358ee6de2e96f5ce18b71423e809bc2bee"
+  },
+  {
+    "invocation": "I13:FF",
+    "kind": "COM",
+    "topic": "FF",
+    "access": "SYSOP ONLY",
+    "binary_sha256": "2c29cbd49c551074cbf36f1249df6e9754fb79ca4052247dacbb1532cb58d70f"
+  },
+  {
+    "invocation": "I13:GENCOM",
+    "kind": "COM",
+    "topic": "GENCOM",
+    "access": "SYSOP ONLY",
+    "binary_sha256": "bef5091c3b8f0a28549bfa34ade5d99a969f19db0c17ae1feb9d3d350bd0cc42"
+  },
+  {
+    "invocation": "I13:GET",
+    "kind": "COM",
+    "topic": "CPMGET",
+    "access": "SYSOP ONLY",
+    "binary_sha256": "eed674f96d530513808dd7e7ed739ba71eea5c5093f3caa8386aac555c806b6e"
+  },
+  {
+    "invocation": "I13:HEXCOM",
+    "kind": "COM",
+    "topic": "HEXCOM",
+    "access": "SYSOP ONLY",
+    "binary_sha256": "ca86abafd77fd5250707a9446bff35b0873dcf202e72a81ad85c3f7ed646b4a0"
+  },
+  {
+    "invocation": "I13:HIST",
+    "kind": "COM",
+    "topic": "HIST",
+    "access": "SYSOP ONLY",
+    "binary_sha256": "2b99d463c7b7b2dc9949dc64736aa4309f2fe7fa872772f72fcbadf7ebff0024"
+  },
+  {
+    "invocation": "I13:HISTCL",
+    "kind": "COM",
+    "topic": "HISTCL",
+    "access": "SYSOP ONLY",
+    "binary_sha256": "ec8a36625d9f40a3b99489800b814c0caeb9758d3ac95d3a1547c6bfb0871aea"
+  },
+  {
+    "invocation": "I13:IF",
+    "kind": "COM",
+    "topic": "IFFILE",
+    "access": "SYSOP ONLY",
+    "binary_sha256": "4f172a84cd0f06d4054581934080c3a619898e88d5c87f850b4745bedb569dae"
+  },
+  {
+    "invocation": "I13:LBRHELP",
+    "kind": "COM",
+    "topic": "LBRHELP",
+    "access": "SYSOP ONLY",
+    "binary_sha256": "7558a212a9c895abc3770afbddb0265fd36d1ea1fb317e50b96c973555ed3a44"
+  },
+  {
+    "invocation": "I13:LPUT",
+    "kind": "COM",
+    "topic": "LPUT",
+    "access": "SYSOP ONLY",
+    "binary_sha256": "5413394af78910cda42d29021efca3a03e4bc6becfb69cb01f188b266a23f9ce"
+  },
+  {
+    "invocation": "I13:LX",
+    "kind": "COM",
+    "topic": "LX",
+    "access": "SYSOP ONLY",
+    "binary_sha256": "bc6bde64b4f43915d9a6d1f8729b8dc439f0633a56318d0efca0e4e1e53acacf"
+  },
+  {
+    "invocation": "I13:NAME",
+    "kind": "COM",
+    "topic": "NAME",
+    "access": "SYSOP ONLY",
+    "binary_sha256": "08b4ddc7b5fe5dfbab3f948dc4b576ad04524ee12c7af75ba92335070e202680"
+  },
+  {
+    "invocation": "I13:PIP",
+    "kind": "COM",
+    "topic": "PIP",
+    "access": "SYSOP ONLY",
+    "binary_sha256": "cb9535436ca900b502dea751712e0de0c0da950a7ce1640cb63a8e6758fd09c7"
+  },
+  {
+    "invocation": "I13:PPIP",
+    "kind": "COM",
+    "topic": "PPIP",
+    "access": "SYSOP ONLY",
+    "binary_sha256": "4d88bad8ce234268e0ba70b5b1e04a0e8e7352c2cb5fa185812f6b01b974e09e"
+  },
+  {
+    "invocation": "I13:PUT",
+    "kind": "COM",
+    "topic": "PUT",
+    "access": "SYSOP ONLY",
+    "binary_sha256": "db8ca173bf9b488e8b4eba6b1486a7118cbbb1d1d95ff861d28c13e0c4588ed5"
+  },
+  {
+    "invocation": "I13:PWD",
+    "kind": "COM",
+    "topic": "PWD",
+    "access": "SYSOP ONLY",
+    "binary_sha256": "13c93b1a8e9305e9dc41ff5187c9cee7a2e7bfead492be6f34ffb24eb782c704"
+  },
+  {
+    "invocation": "I13:RBBS",
+    "kind": "COM",
+    "topic": "RBBSBACK",
+    "access": "SYSOP ONLY",
+    "binary_sha256": "95fc87d47fcb0fc96f33bd295b36e2b27f0a041dcbdfe11dc8f16f5ecf1c4c77"
+  },
+  {
+    "invocation": "I13:RBUTIL41",
+    "kind": "COM",
+    "topic": "RBUTIL41",
+    "access": "SYSOP ONLY",
+    "binary_sha256": "1bc58990473fe51aac6d860422ebd2dce0dfb21d87e4e20f44b6647df535a767"
+  },
+  {
+    "invocation": "I13:RENAME",
+    "kind": "COM",
+    "topic": "RENAME",
+    "access": "SYSOP ONLY",
+    "binary_sha256": "7c36cf7e3336087fcb47148f590b77eb1d670b6e9d0517e96efa5188daeead2b"
+  },
+  {
+    "invocation": "I13:RESET",
+    "kind": "COM",
+    "topic": "RESET",
+    "access": "SYSOP ONLY",
+    "binary_sha256": "b32c05d3e806b507f92dbbe8a8fd6c9b4d1385cd73d0625965d2ed4457ae57ff"
+  },
+  {
+    "invocation": "I13:SAVE",
+    "kind": "COM",
+    "topic": "SAVE",
+    "access": "SYSOP ONLY",
+    "binary_sha256": "77d232ad77a53743fd04a7e185a7da753f8fb233ffb55f5c4356ec9467dfc25c"
+  },
+  {
+    "invocation": "I13:SET",
+    "kind": "COM",
+    "topic": "SET",
+    "access": "SYSOP ONLY",
+    "binary_sha256": "586119cf7bbca6f0c2c49101b3b7ede88166022f96dc38cb57d9e5a6d559fb32"
+  },
+  {
+    "invocation": "I13:SETDEF",
+    "kind": "COM",
+    "topic": "SETDEF",
+    "access": "SYSOP ONLY",
+    "binary_sha256": "5fa96826c0409dc7518c9f40f692a145e8939b16e9c04db0a7e757e9059c5a51"
+  },
+  {
+    "invocation": "I13:SHOW",
+    "kind": "COM",
+    "topic": "SHOW",
+    "access": "SYSOP ONLY",
+    "binary_sha256": "a65eabc4939e9c649a4d8277fe9cac08fdeeff0c3da9532d0445fdb4c5dc0cee"
+  },
+  {
+    "invocation": "I13:SID",
+    "kind": "COM",
+    "topic": "SID",
+    "access": "SYSOP ONLY",
+    "binary_sha256": "3a3025d4ea695453c470a601b3392462cf0a50b86ec43656c9d636ea079ce61d"
+  },
+  {
+    "invocation": "I13:VIEW",
+    "kind": "COM",
+    "topic": "VIEW",
+    "access": "SYSOP ONLY",
+    "binary_sha256": "0c04b3dea8081867113228d65f2d0c2f739d178896e19a4f8a6a7751b7b605f4"
+  },
+  {
+    "invocation": "I13:ZDE",
+    "kind": "COM",
+    "topic": "ZDE",
+    "access": "SYSOP ONLY",
+    "binary_sha256": "d505cc0c35384993771eec3a03b787c4ab31920b4200287eb49df1ef881047aa"
+  },
+  {
+    "invocation": "I13:ZDENST",
+    "kind": "COM",
+    "topic": "ZDENST",
+    "access": "SYSOP ONLY",
+    "binary_sha256": "e34f7a7f027fa486c1ad2160571e722f5f5f3629a5feef5f6f872472e9e54e78"
+  },
+  {
+    "invocation": "I13:ZHELP",
+    "kind": "COM",
+    "topic": "ZHELP",
+    "access": "SYSOP ONLY",
+    "binary_sha256": "acee542d49766ae046cc3e52f349e372af158898c7972245da9085f53a097a94"
+  },
+  {
+    "invocation": "I13:ZLT",
+    "kind": "COM",
+    "topic": "ZLT",
+    "access": "SYSOP ONLY",
+    "binary_sha256": "d6d6c675875c04ebd975611bbcb6c94cd6f467b732d387c8e4e698e899658720"
+  },
+  {
+    "invocation": "I13:ZSHOW",
+    "kind": "COM",
+    "topic": "ZSHOW",
+    "access": "SYSOP ONLY",
+    "binary_sha256": "cc2f8ac2bfd29becc9229cc4ff4b56b1320b29eff87ca8e66f1489c76cff762c"
+  },
+  {
+    "invocation": "GET",
+    "kind": "CCP",
+    "topic": "RGET",
+    "access": "SYSOP ONLY"
+  },
+  {
+    "invocation": "GO",
+    "kind": "CCP",
+    "topic": "GO",
+    "access": "SYSOP ONLY"
+  },
+  {
+    "invocation": "JUMP",
+    "kind": "CCP",
+    "topic": "JUMP",
+    "access": "SYSOP ONLY"
+  },
+  {
+    "invocation": "CLS",
+    "kind": "RCP",
+    "topic": "CLS",
+    "access": "CALLER"
+  },
+  {
+    "invocation": "ECHO",
+    "kind": "RCP",
+    "topic": "ECHO",
+    "access": "CALLER"
+  },
+  {
+    "invocation": "ERA",
+    "kind": "RCP",
+    "topic": "ERA",
+    "access": "SYSOP ONLY"
+  },
+  {
+    "invocation": "H",
+    "kind": "RCP",
+    "topic": "H",
+    "access": "CALLER"
+  },
+  {
+    "invocation": "NOTE",
+    "kind": "RCP",
+    "topic": "NOTE",
+    "access": "CALLER"
+  },
+  {
+    "invocation": "P",
+    "kind": "RCP",
+    "topic": "P",
+    "access": "SYSOP ONLY"
+  },
+  {
+    "invocation": "POKE",
+    "kind": "RCP",
+    "topic": "POKE",
+    "access": "SYSOP ONLY"
+  },
+  {
+    "invocation": "PORT",
+    "kind": "RCP",
+    "topic": "PORT",
+    "access": "SYSOP ONLY"
+  },
+  {
+    "invocation": "R",
+    "kind": "RCP",
+    "topic": "R",
+    "access": "CALLER"
+  },
+  {
+    "invocation": "REG",
+    "kind": "RCP",
+    "topic": "REG",
+    "access": "SYSOP ONLY"
+  },
+  {
+    "invocation": "SP",
+    "kind": "RCP",
+    "topic": "SP",
+    "access": "CALLER"
+  },
+  {
+    "invocation": "TYPE",
+    "kind": "RCP",
+    "topic": "RTYPE",
+    "access": "SYSOP ONLY"
+  },
+  {
+    "invocation": "WHL",
+    "kind": "RCP",
+    "topic": "WHL",
+    "access": "SYSOP ONLY"
+  },
+  {
+    "invocation": "IF",
+    "kind": "FCP",
+    "topic": "IF",
+    "access": "CALLER"
+  },
+  {
+    "invocation": "ELSE",
+    "kind": "FCP",
+    "topic": "ELSE",
+    "access": "CALLER"
+  },
+  {
+    "invocation": "FI",
+    "kind": "FCP",
+    "topic": "FI",
+    "access": "CALLER"
+  },
+  {
+    "invocation": "XIF",
+    "kind": "FCP",
+    "topic": "XIF",
+    "access": "CALLER"
+  },
+  {
+    "invocation": "AND",
+    "kind": "FCP",
+    "topic": "AND",
+    "access": "CALLER"
+  },
+  {
+    "invocation": "OR",
+    "kind": "FCP",
+    "topic": "OR",
+    "access": "CALLER"
+  },
+  {
+    "invocation": "IFQ",
+    "kind": "FCP",
+    "topic": "IFQ",
+    "access": "CALLER"
+  },
+  {
+    "invocation": "ZIF",
+    "kind": "FCP",
+    "topic": "ZIF",
+    "access": "CALLER"
+  }
+]

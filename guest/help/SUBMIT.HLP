@@ -1,0 +1,24 @@
+;
+* SUBMIT - RUN A CP/M BATCH FILE
+
+SYSOP ONLY. Private utility; use the local sysop console.
+
+A - Purpose, syntax and examples
+
+:A
+* SUBMIT - RUN A CP/M BATCH FILE
+
+SYSOP ONLY. Private utility; use the local sysop console.
+
+Syntax:
+    A0:SUBMIT filespec [arguments]
+
+Reads commands from a SUB batch file. Example in a private test: A0:SUBMIT
+I0:TEST.SUB
+
+Batch lines can execute programs and change files. Parameters such as $1
+are supplied by the arguments. Inspect the whole file and stop on
+unexpected prompts. This is the CP/M batch facility, separate from ARUNZ
+text aliases and compiled startup aliases.
+
+See HELP COMMANDS for the command index.

@@ -1,0 +1,23 @@
+;
+* GO - EXECUTE THE LOADED TRANSIENT
+
+SYSOP ONLY. Private utility; use the local sysop console.
+
+A - Purpose, syntax and examples
+
+:A
+* GO - EXECUTE THE LOADED TRANSIENT
+
+SYSOP ONLY. Private utility; use the local sysop console.
+
+Syntax:
+    GO [command-tail]
+
+Runs the program already loaded at hexadecimal address 0100. Optional text
+becomes its command tail.
+
+There is no filename lookup or fresh load. Only use when the contents of
+memory are known and safe; never assume an earlier command left a reusable
+program there.
+
+See HELP COMMANDS for the command index.

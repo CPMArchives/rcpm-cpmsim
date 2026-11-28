@@ -1,0 +1,25 @@
+;
+* VIEW - SCROLL AND SEARCH TEXT
+
+SYSOP ONLY. Private utility; use the local sysop console.
+
+A - Purpose, syntax and examples
+
+:A
+* VIEW - SCROLL AND SEARCH TEXT
+
+SYSOP ONLY. Private utility; use the local sysop console.
+
+Syntax:
+    SYSUTLS:VIEW filespec [filespec ...]
+
+Displays text with scrolling and search. Space or period advances a line;
+Return or > advances a page; < moves back; B/E goes to the beginning/end;
+L/R scrolls horizontally.
+
+G followed by a search string and Return searches the file. A lowercase
+search is case-insensitive; uppercase requests an exact case match. Ctrl-X
+selects the next file, Ctrl-R the previous file, and Ctrl-C exits. This is
+a private alternative to public TYPE/LT.
+
+See HELP COMMANDS for the command index.

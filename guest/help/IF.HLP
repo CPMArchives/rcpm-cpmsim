@@ -1,0 +1,27 @@
+;
+IF - START A CONDITIONAL COMMAND LEVEL
+
+CALLER. Subject to the current caller access policy.
+
+A - Purpose, syntax and examples
+
+:A
+IF - START A CONDITIONAL COMMAND LEVEL
+
+CALLER. Subject to the current caller access policy.
+
+Syntax:
+    IF condition [arguments]
+
+Starts a conditional level. Commands in a false level are skipped until
+the appropriate ELSE or FI. Prefix a supported condition with ~ to negate
+it. This installed FCP implements ERROR and NULL internally. NULL is true
+when its argument is absent. Other tests, including T/F, need the disk-
+based IF.COM; that extension is private and is not on the public A0: path.
+
+Safe example: IF NULL;ECHO TRUE BRANCH;FI
+
+Always balance IF with FI. For extended disk-based tests see HELP IFFILE.
+Condition evaluation does not grant access to private files or commands.
+
+See HELP COMMANDS for the command index.

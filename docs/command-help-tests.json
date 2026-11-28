@@ -1,0 +1,27 @@
+{
+  "scope": "RCP/M 1.2.3 help source integration; no release archives published",
+  "viewer": "HELPC 1.5r (private local build input)",
+  "topics": 120,
+  "qualified_links_and_parent_returns": 145,
+  "viewer_passed": true,
+  "caller_checks": {
+    "caller_reads_reference_and_access_labels": true,
+    "parent_and_root": true,
+    "private_transient_still_denied": true,
+    "resident_get_still_denied": true,
+    "resident_flow_example": true,
+    "passed": true,
+    "loopback_only": true
+  },
+  "operator_confirmation": "2026-11-28: topic text, parent/root navigation and caller rejection of SYSUTLS:DATE, GET, GO, JUMP, POKE and PORT; ECHO and HELP remained usable.",
+  "historical_source_published": false,
+  "repository_installer": {
+    "passed": true,
+    "old_viewer_refused_before_disk_changes": true,
+    "unknown_second_viewer_leaves_both_disks_unchanged": true,
+    "explicit_private_viewer_upgrade": true,
+    "configuration_and_attributes_retained": true,
+    "installed_topics": 120,
+    "installed_topics_match_operator_tested_payload": true
+  }
+}

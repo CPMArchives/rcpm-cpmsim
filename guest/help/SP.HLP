@@ -1,0 +1,22 @@
+;
+SP - DISPLAY FREE DISK SPACE
+
+CALLER. Subject to the current caller access policy.
+
+A - Purpose, syntax and examples
+
+:A
+SP - DISPLAY FREE DISK SPACE
+
+CALLER. Subject to the current caller access policy.
+
+Syntax:
+    SP [dir:|du:]
+
+Reports free disk space on the selected disk. Example: SP HELP:
+
+Free space is disk-wide, not a private per-user quota. A reported amount
+does not imply that callers can write to that directory; BYE policy still
+governs access.
+
+See HELP COMMANDS for the command index.

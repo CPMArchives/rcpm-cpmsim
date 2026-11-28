@@ -1,0 +1,6 @@
+;
+* RBBS41 - PRIVATE BOARD BACKEND
+* = SYSOP ONLY. Callers use public RBBS.
+
+A - * Backend role and invocation
+:A:HELP:RBBSBACK.HLP

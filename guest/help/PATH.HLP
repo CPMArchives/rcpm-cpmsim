@@ -1,0 +1,25 @@
+;
+* PATH - DISPLAY OR CHANGE Z-SYSTEM PATH
+
+SYSOP ONLY. Private utility; use the local sysop console.
+
+A - Purpose, syntax and examples
+
+:A
+* PATH - DISPLAY OR CHANGE Z-SYSTEM PATH
+
+SYSOP ONLY. Private utility; use the local sysop console.
+
+Syntax:
+    A0:PATH
+    A0:PATH /C directory-list
+
+With no arguments, displays the current Z-System search path. /C replaces
+it; /P prefixes entries; /A appends; /D deletes; /R removes entries from
+the end. Changes require wheel privileges.
+
+The supplied startup uses PATH /C A0 so caller command lookup starts in
+the public command directory. Do not add private SYSUTLS: to a caller
+search path. This changes Z-System lookup, not macOS PATH.
+
+See HELP COMMANDS for the command index.

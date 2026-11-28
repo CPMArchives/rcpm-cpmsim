@@ -1,0 +1,21 @@
+;
+ELSE - SELECT THE OTHER IF BRANCH
+
+CALLER. Subject to the current caller access policy.
+
+A - Purpose, syntax and examples
+
+:A
+ELSE - SELECT THE OTHER IF BRANCH
+
+CALLER. Subject to the current caller access policy.
+
+Syntax:
+    ELSE
+
+Reverses the current IF branch. Use between IF and its matching FI. An
+outer false condition continues to suppress nested commands.
+
+Example: IF NULL X;ECHO SKIPPED;ELSE;ECHO SHOWN;FI
+
+See HELP COMMANDS for the command index.

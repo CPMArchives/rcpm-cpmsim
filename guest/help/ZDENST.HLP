@@ -1,0 +1,23 @@
+;
+* ZDENST - CONFIGURE THE ZDE EDITOR
+
+SYSOP ONLY. Private utility; use the local sysop console.
+
+A - Purpose, syntax and examples
+
+:A
+* ZDENST - CONFIGURE THE ZDE EDITOR
+
+SYSOP ONLY. Private utility; use the local sysop console.
+
+Syntax:
+    SYSUTLS:ZDENST
+
+Interactive installer for the supplied ZDE editor. Selects
+terminal/control-key configuration and writes the configured executable.
+It is a maintenance utility, not an editor invocation.
+
+Back up I13:ZDE.COM before saving changes. Keep the ANSI/VT100 setup used
+by this installation and verify ZDE on a scratch text file afterward.
+
+See HELP COMMANDS for the command index.

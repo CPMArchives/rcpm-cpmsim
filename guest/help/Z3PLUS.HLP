@@ -1,0 +1,25 @@
+;
+* Z3PLUS - LOAD OR REMOVE THE Z-SYSTEM
+
+SYSOP ONLY. Private utility; use the local sysop console.
+
+A - Purpose, syntax and examples
+
+:A
+* Z3PLUS - LOAD OR REMOVE THE Z-SYSTEM
+
+SYSOP ONLY. Private utility; use the local sysop console.
+
+Syntax:
+    A0:Z3PLUS [ON|SMALL|LARGE|OFF]
+
+Installs or changes the Z3PLUS command environment using its configured
+library modules. ON loads it; SMALL/LARGE select memory configurations;
+OFF removes it when possible.
+
+Used by the installed boot sequence. Changing packages while BYE or other
+resident services are active can invalidate their environment. Use the
+host launcher for normal operation and test package changes on stopped
+copied disks.
+
+See HELP COMMANDS for the command index.

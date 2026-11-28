@@ -1,0 +1,24 @@
+;
+* PIP - CP/M FILE COPY
+
+SYSOP ONLY. Private utility; use the local sysop console.
+
+A - Purpose, syntax and examples
+
+:A
+* PIP - CP/M FILE COPY
+
+SYSOP ONLY. Private utility; use the local sysop console.
+
+Syntax:
+    SYSUTLS:PIP destination=source[,source...]
+
+Copies files or device streams. The destination is on the LEFT of the
+equals sign. Example: SYSUTLS:PIP I0:COPY.TXT=I0:SOURCE.TXT
+
+Wildcards and options can affect many files. [V] requests write
+verification; text/binary and device options need care. Check the
+destination and free space first. PIP is private here; caller transfers
+use UPLOAD or YSEND.
+
+See HELP COMMANDS for the command index.

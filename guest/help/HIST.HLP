@@ -1,0 +1,24 @@
+;
+* HIST - COMMAND HISTORY RSX CONTROL
+
+SYSOP ONLY. Private utility; use the local sysop console.
+
+A - Purpose, syntax and examples
+
+:A
+* HIST - COMMAND HISTORY RSX CONTROL
+
+SYSOP ONLY. Private utility; use the local sysop console.
+
+Syntax:
+    SYSUTLS:HIST
+
+Uses the separately installed History RSX. The installed program reports
+whether that RSX is active, removed, or absent; it can change its active
+state.
+
+This is a private console-history tool, not the HELPC navigation history.
+Do not enable shared console history for callers without reviewing whether
+previous input or credentials could be disclosed.
+
+See HELP COMMANDS for the command index.

@@ -1,0 +1,25 @@
+;
+* ZDE - FULL-SCREEN TEXT EDITOR
+
+SYSOP ONLY. Private utility; use the local sysop console.
+
+A - Purpose, syntax and examples
+
+:A
+* ZDE - FULL-SCREEN TEXT EDITOR
+
+SYSOP ONLY. Private utility; use the local sysop console.
+
+Syntax:
+    SYSUTLS:ZDE filespec
+
+Edits plain text with WordStar-style control keys. Example: SYSUTLS:ZDE
+I0:NOTE.TXT
+
+Ctrl-K D saves the file and returns to editing/file selection; Ctrl-K X
+saves and exits; Ctrl-K Q abandons the current edit after confirmation.
+Inspect the on-screen prompts before discarding changes. Use copied text
+for practice. Do not send binary or compressed HLP data through an
+ordinary text editor.
+
+See HELP COMMANDS for the command index.

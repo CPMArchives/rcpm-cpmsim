@@ -1,0 +1,24 @@
+;
+* VT100DYN - TERMINAL SUPPORT LOADER
+
+SYSOP ONLY. Private utility; use the local sysop console.
+
+A - Purpose, syntax and examples
+
+:A
+* VT100DYN - TERMINAL SUPPORT LOADER
+
+SYSOP ONLY. Private utility; use the local sysop console.
+
+Syntax:
+    A0:VT100DYN [N]
+
+Loads/configures the supplied VT100 terminal support for CP/M 3. The
+optional N form requests nonresident operation. Terminal dimensions and
+control sequences must match the active terminal.
+
+This is private startup/maintenance support, not an ordinary caller
+command. Retain the supplied configuration unless testing a different
+terminal on copied disks.
+
+See HELP COMMANDS for the command index.

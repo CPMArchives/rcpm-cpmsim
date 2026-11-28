@@ -403,6 +403,8 @@ WORK is cleared at call boundaries. Saved RBBS messages and your board account r
 
 ## 18. Command reference
 
+For the expanded 1.2.3 online reference, enter `HELP COMMANDS`. Its menus separate public disk programs, resident caller commands and sysop tools. An asterisk (`*`) means **SYSOP ONLY**. Reading a sysop help page does not grant execution permission. Use `^` to return to the parent menu and `.` to return to the root of the current help session.
+
 The following is the standard public transient command set. Sysops may add or restrict programs, and some commands have additional options documented in HELP or their original instructions.
 
 | Command | Purpose | Example |
