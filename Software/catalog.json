@@ -178,6 +178,45 @@
       "generated_libraries": 664,
       "free_bytes": 25886720,
       "qualification": "All original payload SHA-256 values and generated LBR CRCs verified from raw image; native mount/name refresh, archive listing, text viewing, transfer and nested extraction checks. No general program execution qualification."
+    },
+    {
+      "id": "DOSGG",
+      "description": "CPM_DOSGG collection",
+      "archive": "DOSGG.zip",
+      "archive_sha256": "58a9a04bfcc246a286bb72cc284f1e5700408e16bc4e5723f9e3d5ee87fbc312",
+      "archive_bytes": 55335678,
+      "release_tag": "software-collections-2026-11-28",
+      "release_url": "https://github.com/CPMArchives/rcpm-cpmsim/releases/tag/software-collections-2026-11-28",
+      "download": "https://github.com/CPMArchives/rcpm-cpmsim/releases/download/software-collections-2026-11-28/DOSGG.zip",
+      "packaging": "Original supplied ZIP, unchanged; numbered user-area directories; no prebuilt disk image",
+      "qualification": "ZIP CRC integrity and unchanged upload checksum verified; no general execution qualification",
+      "terms": "Original notices apply; no blanket relicensing"
+    },
+    {
+      "id": "OAK",
+      "description": "OAK.oakland Collection",
+      "archive": "OAK.zip",
+      "archive_sha256": "509ab6a8a8fd4eadcf1a06e26faeec863d8c859ddd86c60b9906bf6a1647e5f0",
+      "archive_bytes": 135501311,
+      "release_tag": "software-collections-2026-11-28",
+      "release_url": "https://github.com/CPMArchives/rcpm-cpmsim/releases/tag/software-collections-2026-11-28",
+      "download": "https://github.com/CPMArchives/rcpm-cpmsim/releases/download/software-collections-2026-11-28/OAK.zip",
+      "packaging": "Original supplied ZIP, unchanged; numbered user-area directories; no prebuilt disk image",
+      "qualification": "ZIP CRC integrity and unchanged upload checksum verified; no general execution qualification",
+      "terms": "Original notices apply; no blanket relicensing"
+    },
+    {
+      "id": "TORONTO",
+      "description": "Toronto RCP/M Collection",
+      "archive": "TORONTO.zip",
+      "archive_sha256": "3465ad9ef648d85ba48c2668023b8e8c103fed5b6434d5e9ed216b4069b3b559",
+      "archive_bytes": 59448700,
+      "release_tag": "software-collections-2026-11-28",
+      "release_url": "https://github.com/CPMArchives/rcpm-cpmsim/releases/tag/software-collections-2026-11-28",
+      "download": "https://github.com/CPMArchives/rcpm-cpmsim/releases/download/software-collections-2026-11-28/TORONTO.zip",
+      "packaging": "Original supplied ZIP, unchanged; numbered user-area directories; no prebuilt disk image",
+      "qualification": "ZIP CRC integrity and unchanged upload checksum verified; no general execution qualification",
+      "terms": "Original notices apply; no blanket relicensing"
     }
   ]
 }

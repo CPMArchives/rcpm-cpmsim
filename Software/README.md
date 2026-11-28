@@ -2,9 +2,27 @@
 
 Optional software disks for RCP/M. Download the collections you want and add
 these alongside your existing volumes. They are distributed separately from
-the [main RCP/M download](https://github.com/CPMArchives/rcpm-cpmsim/releases/tag/v1.0).
+the [main RCP/M download](https://github.com/CPMArchives/rcpm-cpmsim/releases/tag/v1.2.3).
 
-## Downloads
+## Archive collection downloads
+
+These are the three supplied ZIPs, published unchanged. They contain numbered
+user-area directories, not the prebuilt disk images described below.
+
+| Collection | Download |
+| --- | --- |
+| CPM_DOSGG collection | [DOSGG.zip](https://github.com/CPMArchives/rcpm-cpmsim/releases/download/software-collections-2026-11-28/DOSGG.zip) |
+| OAK.oakland Collection | [OAK.zip](https://github.com/CPMArchives/rcpm-cpmsim/releases/download/software-collections-2026-11-28/OAK.zip) |
+| Toronto RCP/M Collection | [TORONTO.zip](https://github.com/CPMArchives/rcpm-cpmsim/releases/download/software-collections-2026-11-28/TORONTO.zip) |
+
+[Release notes](https://github.com/CPMArchives/rcpm-cpmsim/releases/tag/software-collections-2026-11-28) · [SHA-256 checksums](https://github.com/CPMArchives/rcpm-cpmsim/releases/download/software-collections-2026-11-28/SHA256SUMS)
+
+Original copyright, distribution and use notices remain applicable, including
+noncommercial and package-specific restrictions. These historical collections
+are not offered under a new blanket license. The ZIPs have passed integrity
+checks; this does not qualify their programs for execution on RCP/M.
+
+## Disk image downloads
 
 | Disk | Contents | Download | Test report |
 | --- | --- | --- | --- |
